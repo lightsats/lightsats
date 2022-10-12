@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "yarn prisma generate",
+    "db:push": "yarn prisma db push",
+    "deploy": "fly deploy"
   },
   "dependencies": {
     "@prisma/client": "4.4.0",

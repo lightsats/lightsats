@@ -6,7 +6,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ### Database setup
 
 1. Install postgresql and create a database (TODO: make this a docker container)
-2. Add .env (see .env.example)
+2. Add .env.local (see .env.example)
 3. yarn prisma push
 
 ### Running the development server
@@ -14,8 +14,6 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 First, run the development server:
 
 ```bash
-npm run dev
-# or
 yarn dev
 ```
 
@@ -36,8 +34,10 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deploy on fly.io
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Install fly.io https://fly.io/docs/speedrun/
+2. Add .env file (currently required for prisma db push)
+3. `yarn deploy`
+4. Deploy a postgresql database on fly.io (lightsats-db)
+5. flyctl postgres attach --app lightsats lightsats-db
