@@ -7,13 +7,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "db:start": "sudo service postgresql start",
     "db:generate": "yarn prisma generate",
     "db:push": "yarn prisma db push",
     "deploy": "fly deploy"
   },
   "dependencies": {
+    "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "4.4.0",
     "next": "12.3.1",
+    "next-auth": "^4.13.0",
+    "nodemailer": "^6.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
