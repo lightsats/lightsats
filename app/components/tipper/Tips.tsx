@@ -2,15 +2,7 @@ import { Tip } from "@prisma/client";
 import { useSession, signIn, signOut } from "next-auth/react";
 import useSWR from "swr";
 import { defaultFetcher } from "../../lib/swr";
-import {
-  Card,
-  Container,
-  Row,
-  Col,
-  Grid,
-  Badge,
-  Spacer,
-} from "@nextui-org/react";
+import { Card, Container, Row, Text, Badge, Spacer } from "@nextui-org/react";
 import NextLink from "next/link";
 import { Routes } from "../../lib/Routes";
 import { TipStatusBadge } from "./TipStatusBadge";
@@ -28,15 +20,15 @@ export function Tips() {
 
   if (tips?.length) {
     return (
-      <Grid.Container xs={4} gap={2} justify="center">
+      <Container gap={0} justify="center">
         {tips.map((tip) => (
-          <Grid xs={12} key={tip.id}>
+          <Row gap={0} key={tip.id} justify="center">
             <NextLink key={tip.id} href={`${Routes.tips}/${tip.id}`}>
-              <a>
+              <a style={{ maxWidth: "400px" }}>
                 <Card isPressable isHoverable>
                   <Card.Body>
                     <Row justify="space-between">
-                      {tip.invoice.substring(0, 24)}...
+                      {tip.invoice.substring(0, 16)}...
                       <Badge> {tip.amount}⚡ </Badge>
                       <Spacer />
                       <TipStatusBadge status={tip.status} />
@@ -45,9 +37,9 @@ export function Tips() {
                 </Card>
               </a>
             </NextLink>
-          </Grid>
+          </Row>
         ))}
-      </Grid.Container>
+      </Container>
     );
   }
 

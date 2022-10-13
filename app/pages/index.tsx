@@ -24,7 +24,7 @@ const Home: NextPage = () => {
             display="flex"
             gap={4}
           >
-            Signed in as {session.user.email}
+            <Text small>Signed in as {session.user.email}</Text>
             &nbsp;
             <Button size="xs" onClick={() => signOut()}>
               Sign out
