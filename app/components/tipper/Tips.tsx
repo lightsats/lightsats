@@ -1,11 +1,12 @@
 import { Tip } from "@prisma/client";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { defaultFetcher } from "../../lib/swr";
 import { Card, Container, Row, Text, Badge, Spacer } from "@nextui-org/react";
 import NextLink from "next/link";
 import { Routes } from "../../lib/Routes";
 import { TipStatusBadge } from "./TipStatusBadge";
+import { formatDistance } from "date-fns";
 
 export function Tips() {
   const { data: session } = useSession();
@@ -33,6 +34,10 @@ export function Tips() {
                       <Spacer />
                       <TipStatusBadge status={tip.status} />
                     </Row>
+                    <Text small>
+                      Expires in{" "}
+                      {formatDistance(new Date(tip.expiry), Date.now())}
+                    </Text>
                   </Card.Body>
                 </Card>
               </a>
