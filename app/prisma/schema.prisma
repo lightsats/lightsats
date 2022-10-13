@@ -30,6 +30,7 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
+// from https://next-auth.js.org/adapters/prisma
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
@@ -38,6 +39,7 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// from https://next-auth.js.org/adapters/prisma
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -64,8 +66,21 @@ model User {
 model Tip {
   id String @id @default(cuid())
   amount Int
-  tipperId String
-  tipper User @relation("tipsSent", fields: [tipperId], references: [id])
+  // FIXME: why does tipper need to be optional (otherwise create fails without providing the tipper)
+  tipperId String?
+  // FIXME: why does tipper need to be optional (otherwise create fails without providing the tipper)
+  tipper User? @relation("tipsSent", fields: [tipperId], references: [id])
   tippeeId String?
   tippee User? @relation("tipsReceived", fields: [tippeeId], references: [id])
+  invoice String
+  invoiceId String
+  status TipStatus
+}
+
+enum TipStatus {
+  UNFUNDED
+  UNCLAIMED
+  CLAIMED
+  WITHDRAWN
+  REFUNDED
 }

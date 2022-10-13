@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import prisma from "../../../lib/prismadb";
+import { User } from "@prisma/client";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -19,6 +20,14 @@ export const authOptions: NextAuthOptions = {
       from: process.env.EMAIL_FROM,
     }),
   ],
+  callbacks: {
+    session: async ({ session, user }) => {
+      return Promise.resolve({
+        ...session,
+        user: user as User,
+      });
+    },
+  },
   debug: false,
 };
 

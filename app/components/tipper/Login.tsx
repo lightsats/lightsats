@@ -7,7 +7,7 @@ export function Login() {
   if (session) {
     return (
       <>
-        Signed in as {JSON.stringify(session.user)} <br />
+        Signed in as {session.user.email} <br />
         <button onClick={() => signOut()}>Sign out</button>
         <NewTipButton />
         <Tips />
