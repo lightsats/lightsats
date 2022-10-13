@@ -75,6 +75,9 @@ model Tip {
   invoice String
   invoiceId String
   status TipStatus
+  created DateTime @default(now())
+  updated DateTime @updatedAt
+  expiry DateTime
 }
 
 enum TipStatus {

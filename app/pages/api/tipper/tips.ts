@@ -5,7 +5,7 @@ import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import { CreateTipRequest } from "../../../types/CreateTipRequest";
 import { appName } from "../../../lib/constants";
-import { assert } from "console";
+import { add } from "date-fns";
 
 type CreateInvoiceRequest = {
   out: false;
@@ -112,6 +112,9 @@ async function handlePostTip(
   const createInvoiceResponseData =
     (await createInvoiceResponse.json()) as CreateInvoiceResponse;
 
+  const expiry = add(new Date(), {
+    months: 1,
+  });
   const tip = await prisma.tip.create({
     data: {
       tipperId: session.user.id,
@@ -119,6 +122,7 @@ async function handlePostTip(
       status: "UNFUNDED",
       invoice: createInvoiceResponseData.payment_request,
       invoiceId: createInvoiceResponseData.payment_hash,
+      expiry,
     },
   });
 
