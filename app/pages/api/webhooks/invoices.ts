@@ -17,7 +17,7 @@ export default async function handler(
     return;
   }
   const invoice: PaidInvoice = req.body as PaidInvoice;
-  console.log("Received invoice", invoice);
+  // console.log("Received invoice", invoice);
   await prisma.tip.updateMany({
     data: {
       status: "UNCLAIMED",

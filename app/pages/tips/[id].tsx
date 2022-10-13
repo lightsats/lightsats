@@ -8,6 +8,7 @@ import { Tip } from "@prisma/client";
 import useSWR from "swr";
 import { defaultFetcher } from "../../lib/swr";
 import QRCode from "react-qr-code";
+import { TipStatusBadge } from "../../components/tipper/TipStatusBadge";
 
 const TipPage: NextPage = () => {
   const router = useRouter();
@@ -23,7 +24,7 @@ const TipPage: NextPage = () => {
   if (tip) {
     return (
       <>
-        <Text>Status: {tip.status}</Text>
+        <TipStatusBadge status={tip.status} />
         {tip.status === "UNFUNDED" && (
           <>
             <Text>Please pay the invoice below.</Text>

@@ -13,6 +13,7 @@ import {
 } from "@nextui-org/react";
 import NextLink from "next/link";
 import { Routes } from "../../lib/Routes";
+import { TipStatusBadge } from "./TipStatusBadge";
 
 export function Tips() {
   const { data: session } = useSession();
@@ -38,21 +39,7 @@ export function Tips() {
                       {tip.invoice.substring(0, 24)}...
                       <Badge> {tip.amount}⚡ </Badge>
                       <Spacer />
-                      <Badge
-                        color={
-                          tip.status === "UNFUNDED"
-                            ? "error"
-                            : tip.status === "UNCLAIMED"
-                            ? "warning"
-                            : tip.status === "CLAIMED"
-                            ? "success"
-                            : tip.status === "REFUNDED"
-                            ? "default"
-                            : "default"
-                        }
-                      >
-                        {tip.status}
-                      </Badge>
+                      <TipStatusBadge status={tip.status} />
                     </Row>
                   </Card.Body>
                 </Card>

@@ -1,9 +1,11 @@
-import { Button, Container, Spacer, Text } from "@nextui-org/react";
+import { Button, Container, Link, Spacer, Text } from "@nextui-org/react";
 import type { NextPage } from "next";
 import { useSession, signOut, signIn } from "next-auth/react";
 import Head from "next/head";
 import { NewTipButton } from "../components/tipper/NewTipButton";
 import { Tips } from "../components/tipper/Tips";
+import NextLink from "next/link";
+import { Routes } from "../lib/Routes";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -32,6 +34,13 @@ const Home: NextPage = () => {
           <NewTipButton />
           <Spacer />
           <Tips />
+          <Spacer y={4} />
+          <Text>Received a gift?</Text>
+          <NextLink href={Routes.withdraw}>
+            <a>
+              <Link color="success">withdraw claimed gifts</Link>
+            </a>
+          </NextLink>
         </>
       ) : (
         <>
