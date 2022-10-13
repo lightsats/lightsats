@@ -1,4 +1,4 @@
-import { Button, Container, Spacer } from "@nextui-org/react";
+import { Button, Container, Spacer, Text } from "@nextui-org/react";
 import type { NextPage } from "next";
 import { useSession, signOut, signIn } from "next-auth/react";
 import Head from "next/head";
@@ -35,6 +35,13 @@ const Home: NextPage = () => {
         </>
       ) : (
         <>
+          <Spacer />
+          <Text h3>
+            Gift Sats without
+            <br />
+            losing them✌🏼
+          </Text>
+          <Spacer />
           <Button onClick={() => signIn()}>Sign in</Button>
         </>
       )}
