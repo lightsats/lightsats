@@ -61,7 +61,7 @@ const Withdraw: NextPage = () => {
       <>
         <Text>
           {
-            "It looks like you don't have any claimed funds to withdraw right now."
+            "It doesn't look like you have any claimed funds to withdraw right now."
           }
         </Text>
         <Spacer />
