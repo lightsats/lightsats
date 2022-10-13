@@ -1,14 +1,17 @@
 import type { NextPage } from "next";
-import { Container, Link, Spacer, Text } from "@nextui-org/react";
+import { Link, Loading, Spacer, Text } from "@nextui-org/react";
 import NextLink from "next/link";
 import { Routes } from "../../lib/Routes";
 import React from "react";
 import { useRouter } from "next/router";
 import { Tip } from "@prisma/client";
-import useSWR from "swr";
+import useSWR, { SWRConfiguration } from "swr";
 import { defaultFetcher } from "../../lib/swr";
 import QRCode from "react-qr-code";
 import { TipStatusBadge } from "../../components/tipper/TipStatusBadge";
+
+// TODO: polling speed should be based on tip status - only UNFUNDED needs a fast poll rate
+const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 const TipPage: NextPage = () => {
   const router = useRouter();
@@ -16,18 +19,23 @@ const TipPage: NextPage = () => {
   const claimUrl = global.window
     ? `${window.location.origin}/${Routes.tips}/${id}/claim`
     : undefined;
+
   const { data: tip } = useSWR<Tip>(
     id ? `/api/tipper/tips/${id}` : null,
-    defaultFetcher
+    defaultFetcher,
+    useTipConfig
   );
 
   if (tip) {
     return (
       <>
         <TipStatusBadge status={tip.status} />
+        <Spacer />
         {tip.status === "UNFUNDED" && (
           <>
-            <Text>Please pay the invoice below.</Text>
+            <Text>Waiting for payment</Text>
+            <Loading type="points" color="currentColor" size="sm" />
+            <Spacer />
             <QRCode value={tip.invoice} />
           </>
         )}
