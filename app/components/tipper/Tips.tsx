@@ -29,9 +29,11 @@ export function Tips() {
                 <Card isPressable isHoverable>
                   <Card.Body>
                     <Row justify="space-between">
-                      {tip.invoice.substring(0, 16)}...
+                      <Text style={{ flex: 1 }}>
+                        {tip.invoice.substring(0, 16)}...
+                      </Text>
                       <Badge> {tip.amount}⚡ </Badge>
-                      <Spacer />
+                      <Spacer x={0.25} />
                       <TipStatusBadge status={tip.status} />
                     </Row>
                     <Text small>
