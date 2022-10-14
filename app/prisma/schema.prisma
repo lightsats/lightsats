@@ -66,10 +66,8 @@ model User {
 model Tip {
   id String @id @default(cuid())
   amount Int
-  // FIXME: why does tipper need to be optional (otherwise create fails without providing the tipper)
-  tipperId String?
-  // FIXME: why does tipper need to be optional (otherwise create fails without providing the tipper)
-  tipper User? @relation("tipsSent", fields: [tipperId], references: [id])
+  tipperId String
+  tipper User @relation("tipsSent", fields: [tipperId], references: [id])
   tippeeId String?
   tippee User? @relation("tipsReceived", fields: [tippeeId], references: [id])
   invoice String
