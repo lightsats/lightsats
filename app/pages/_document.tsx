@@ -22,7 +22,6 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           {CssBaseline.flush()}
-
           <meta name="description" content="Gift Sats without losing them✌🏼." />
           <link rel="icon" href="/favicon.ico" />
         </Head>

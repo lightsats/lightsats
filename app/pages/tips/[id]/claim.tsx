@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { Button, Link, Spacer, Text } from "@nextui-org/react";
+import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
 import React from "react";
 import { useRouter } from "next/router";
 import useSWR from "swr";
@@ -99,7 +99,8 @@ const ClaimTipPage: NextPage = () => {
         )
       ) : (
         <>
-          <Text>Loading tip {id}, please wait...</Text>
+          <Text>Loading tip</Text>
+          <Loading type="spinner" color="currentColor" size="sm" />
         </>
       )}
     </>

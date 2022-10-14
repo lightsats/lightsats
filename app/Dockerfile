@@ -18,7 +18,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 # FIXME: use migrations
 RUN yarn db:generate
-RUN yarn db:push
+RUN yarn db:push:force
 
 RUN yarn build
 

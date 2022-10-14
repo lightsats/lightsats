@@ -31,6 +31,7 @@ const NewTip: NextPage = () => {
         });
         if (result.ok) {
           const tip = (await result.json()) as Tip;
+          // TODO: save the tip in SWR's cache so it is immediately available
           router.push(`${Routes.tips}/${tip.id}`);
         } else {
           alert("Failed to create tip: " + result.statusText);

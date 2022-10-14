@@ -12,6 +12,7 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
         alignItems="center"
         display="flex"
         direction="column"
+        fluid
       >
         <NextLink href={Routes.home}>
           <a>
@@ -27,6 +28,7 @@ export default function Layout({ children }: React.PropsWithChildren<{}>) {
       >
         {children}
       </Container>
+      <Spacer />
     </>
   );
 }

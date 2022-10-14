@@ -2,7 +2,15 @@ import { Tip } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { defaultFetcher } from "../../lib/swr";
-import { Card, Container, Row, Text, Badge, Spacer } from "@nextui-org/react";
+import {
+  Card,
+  Container,
+  Row,
+  Text,
+  Badge,
+  Spacer,
+  Grid,
+} from "@nextui-org/react";
 import NextLink from "next/link";
 import { Routes } from "../../lib/Routes";
 import { TipStatusBadge } from "./TipStatusBadge";
@@ -21,10 +29,10 @@ export function Tips() {
 
   if (tips?.length) {
     return (
-      <Container gap={0} justify="center">
+      <Grid.Container gap={2} justify="center">
         {tips.map((tip) => (
-          <Row gap={0} key={tip.id} justify="center">
-            <NextLink key={tip.id} href={`${Routes.tips}/${tip.id}`}>
+          <Grid xs={12} key={tip.id} justify="center">
+            <NextLink href={`${Routes.tips}/${tip.id}`}>
               <a style={{ maxWidth: "400px" }}>
                 <Card isPressable isHoverable>
                   <Card.Body>
@@ -44,9 +52,9 @@ export function Tips() {
                 </Card>
               </a>
             </NextLink>
-          </Row>
+          </Grid>
         ))}
-      </Container>
+      </Grid.Container>
     );
   }
 

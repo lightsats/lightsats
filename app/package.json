@@ -10,6 +10,7 @@
     "db:start": "sudo service postgresql start",
     "db:generate": "yarn prisma generate",
     "db:push": "yarn prisma db push",
+    "db:push:force": "yarn prisma db push --accept-data-loss",
     "deploy": "fly deploy"
   },
   "dependencies": {
