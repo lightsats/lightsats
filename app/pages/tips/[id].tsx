@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { Link, Loading, Spacer, Text } from "@nextui-org/react";
+import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
 import NextLink from "next/link";
 import { Routes } from "../../lib/Routes";
 import React from "react";
@@ -26,6 +26,20 @@ const TipPage: NextPage = () => {
     useTipConfig
   );
 
+  const copyInvoice = React.useCallback(() => {
+    if (tip) {
+      navigator.clipboard.writeText(tip.invoice);
+      alert("Copied to clipboard");
+    }
+  }, [tip]);
+
+  const copyClaimUrl = React.useCallback(() => {
+    if (claimUrl) {
+      navigator.clipboard.writeText(claimUrl);
+      alert("Copied to clipboard");
+    }
+  }, [claimUrl]);
+
   if (tip) {
     return (
       <>
@@ -36,13 +50,23 @@ const TipPage: NextPage = () => {
             <Text>Waiting for payment</Text>
             <Loading type="points" color="currentColor" size="sm" />
             <Spacer />
-            <QRCode value={tip.invoice} />
+            <NextLink href={`lightning:${tip.invoice}`}>
+              <a>
+                <QRCode value={tip.invoice} />
+              </a>
+            </NextLink>
+            <Spacer />
+            <Text size="small">
+              Tap the QR code above to open your lightning wallet.
+            </Text>
+            <Spacer />
+            <Button onClick={copyInvoice}>Copy</Button>
           </>
         )}
         {tip.status === "UNCLAIMED" && claimUrl && (
           <>
-            <Text style={{ display: "inline-block" }}>
-              Ask your tippee to scan the below code using their camera app or a
+            <Text style={{ textAlign: "center" }}>
+              Ask the tippee to scan the below code using their camera app or a
               QR code scanner app.
             </Text>
             <Spacer />
@@ -51,9 +75,11 @@ const TipPage: NextPage = () => {
                 <QRCode value={claimUrl} />
               </a>
             </NextLink>
+            <Spacer />
+            <Button onClick={copyClaimUrl}>Copy URL</Button>
           </>
         )}
-        <Spacer />
+        <Spacer y={4} />
         <NextLink href={`${Routes.home}`}>
           <a>
             <Link>Back</Link>

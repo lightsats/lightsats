@@ -30,7 +30,7 @@ const Home: NextPage = () => {
               Sign out
             </Button>
           </Container>
-          <Spacer />
+          <Spacer y={2} />
           <NewTipButton />
           <Spacer />
           <Tips />
