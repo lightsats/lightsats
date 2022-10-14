@@ -2,13 +2,12 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-
 ### Database setup
 
 1. Install postgresql and create a database (TODO: make this a docker container)
 2. Add .env.local (see .env.example)
-3. yarn db:generate
-4. yarn db:push
+3. yarn db:generate:local
+4. yarn db:push:local
 
 ### Running the development server
 
@@ -22,7 +21,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/test). This endpoint can be edited in `pages/api/test.ts`.
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
@@ -38,7 +37,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 ## Deploy on fly.io
 
 1. Install fly.io https://fly.io/docs/speedrun/
-2. Add .env file (currently required for prisma db push)
+2. Add .env.production file (currently required for prisma db push)
 3. `yarn deploy`
 4. Deploy a postgresql database on fly.io (lightsats-db)
 5. flyctl postgres attach --app lightsats lightsats-db
