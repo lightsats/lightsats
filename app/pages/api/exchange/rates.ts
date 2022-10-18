@@ -23,15 +23,15 @@ export default async function handler(
   );
   if (!exchangeRates) {
     const btcUsdPrice = await getBtcUsdPrice();
-    console.log("BTCUSD", btcUsdPrice);
+    // console.log("BTCUSD", btcUsdPrice);
     const fiatExchangeRates = await getFiatExchangeRates();
-    console.log("fiatExchangeRates", fiatExchangeRates);
+    // console.log("fiatExchangeRates", fiatExchangeRates);
 
     exchangeRates = {};
     for (const fiatExchangeRate of Object.entries(fiatExchangeRates)) {
       exchangeRates[fiatExchangeRate[0]] = btcUsdPrice * fiatExchangeRate[1];
     }
-    console.log("exchangeRates", exchangeRates);
+    // console.log("exchangeRates", exchangeRates);
 
     exchangeRatesCache.set(
       exchangeRatesCacheKey,

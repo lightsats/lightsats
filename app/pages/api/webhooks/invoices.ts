@@ -13,6 +13,7 @@ export default async function handler(
 ) {
   const { key } = req.query;
   if (key !== process.env.LNBITS_WEBHOOK_SECRET_KEY) {
+    console.log("Received invoice - key mismatch");
     // TODO: add http status codes
     res.status(StatusCodes.UNAUTHORIZED).end();
     return;

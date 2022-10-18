@@ -79,7 +79,14 @@ async function handlePostTip(
     throw new Error("No LNBITS_WEBHOOK_SECRET_KEY provided");
   }
 
-  console.log("req.body: ", req.body);
+  // console.log(
+  //   "create tip",
+  //   "request body",
+  //   req.body,
+  //   "config:",
+  //   process.env.APP_URL,
+  //   process.env.LNBITS_URL
+  // );
   const createTipRequest = req.body as CreateTipRequest;
   // TODO: support creation of multiple tips (createTipRequest.numTips) but pay single invoice
   // when invoice is paid, update the status of all tips with that invoice
