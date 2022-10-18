@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
+import prisma from "lib/prismadb";
 import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../lib/prismadb";
 
 // many other properties come back from the lnbits webhook, but only the ones that are actually used are added here.
 type PaidInvoice = {

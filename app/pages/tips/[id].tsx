@@ -1,14 +1,14 @@
-import type { NextPage } from "next";
 import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
-import NextLink from "next/link";
-import { Routes } from "../../lib/Routes";
-import React from "react";
-import { useRouter } from "next/router";
 import { Tip } from "@prisma/client";
-import useSWR, { SWRConfiguration } from "swr";
-import { defaultFetcher } from "../../lib/swr";
+import { TipStatusBadge } from "components/tipper/TipStatusBadge";
+import { Routes } from "lib/Routes";
+import { defaultFetcher } from "lib/swr";
+import type { NextPage } from "next";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
 import QRCode from "react-qr-code";
-import { TipStatusBadge } from "../../components/tipper/TipStatusBadge";
+import useSWR, { SWRConfiguration } from "swr";
 
 // TODO: polling speed should be based on tip status - only UNFUNDED needs a fast poll rate
 const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };

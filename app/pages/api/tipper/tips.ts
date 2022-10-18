@@ -1,12 +1,12 @@
 import { Tip } from "@prisma/client";
 import { add } from "date-fns";
 import { StatusCodes } from "http-status-codes";
+import { appName } from "lib/constants";
+import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
-import { appName } from "../../../lib/constants";
-import prisma from "../../../lib/prismadb";
-import { CreateTipRequest } from "../../../types/CreateTipRequest";
-import { authOptions } from "../auth/[...nextauth]";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { CreateTipRequest } from "types/CreateTipRequest";
 
 type CreateInvoiceRequest = {
   out: false;

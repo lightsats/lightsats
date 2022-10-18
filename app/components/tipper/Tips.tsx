@@ -1,15 +1,15 @@
 import { Badge, Card, Grid, Row, Spacer, Text } from "@nextui-org/react";
 import { Tip, TipStatus } from "@prisma/client";
+import { FiatPrice } from "components/FiatPrice";
+import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistance } from "date-fns";
+import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
+import { Routes } from "lib/Routes";
+import { defaultFetcher } from "lib/swr";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import useSWR from "swr";
-import { DEFAULT_FIAT_CURRENCY } from "../../lib/constants";
-import { Routes } from "../../lib/Routes";
-import { defaultFetcher } from "../../lib/swr";
-import { ExchangeRates } from "../../types/ExchangeRates";
-import { FiatPrice } from "../FiatPrice";
-import { TipStatusBadge } from "./TipStatusBadge";
+import { ExchangeRates } from "types/ExchangeRates";
 
 const expirableTipStatuses: TipStatus[] = ["UNFUNDED", "UNCLAIMED", "CLAIMED"];
 

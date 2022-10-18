@@ -1,4 +1,4 @@
-import { SATS_TO_BTC } from "./constants";
+import { SATS_TO_BTC } from "lib/constants";
 
 export function getSatsAmount(fiat: number, exchangeRate: number) {
   return Math.ceil((fiat / exchangeRate) * SATS_TO_BTC);

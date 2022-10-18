@@ -1,6 +1,6 @@
-import NextLink from "next/link";
-import { Routes } from "../../lib/Routes";
 import { Button } from "@nextui-org/react";
+import { Routes } from "lib/Routes";
+import NextLink from "next/link";
 
 export function NewTipButton() {
   return (

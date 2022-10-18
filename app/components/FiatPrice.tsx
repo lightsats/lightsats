@@ -1,5 +1,5 @@
 import { Loading } from "@nextui-org/react";
-import { getFiatAmount, roundFiat } from "../lib/utils";
+import { getFiatAmount, roundFiat } from "lib/utils";
 
 type FiatPriceProps = {
   currency: string;

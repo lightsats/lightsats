@@ -1,4 +1,8 @@
 import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
+import { FiatPrice } from "components/FiatPrice";
+import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
+import { Routes } from "lib/Routes";
+import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
@@ -6,13 +10,9 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
-import { FiatPrice } from "../../../components/FiatPrice";
-import { DEFAULT_FIAT_CURRENCY } from "../../../lib/constants";
-import { Routes } from "../../../lib/Routes";
-import { defaultFetcher } from "../../../lib/swr";
-import { ClaimTipRequest } from "../../../types/ClaimTipRequest";
-import { ExchangeRates } from "../../../types/ExchangeRates";
-import { PublicTip } from "../../../types/PublicTip";
+import { ClaimTipRequest } from "types/ClaimTipRequest";
+import { ExchangeRates } from "types/ExchangeRates";
+import { PublicTip } from "types/PublicTip";
 
 const ClaimTipPage: NextPage = () => {
   const router = useRouter();

@@ -1,9 +1,9 @@
 import { Tip } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
-import prisma from "../../../lib/prismadb";
-import { authOptions } from "../auth/[...nextauth]";
+import { authOptions } from "pages/api/auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,

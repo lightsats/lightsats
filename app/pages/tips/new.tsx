@@ -8,17 +8,17 @@ import {
   Spacer,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
+import { FiatPrice } from "components/FiatPrice";
+import { SatsPrice } from "components/SatsPrice";
+import { Routes } from "lib/Routes";
+import { defaultFetcher } from "lib/swr";
+import { getFiatAmount, getSatsAmount } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
-import { FiatPrice } from "../../components/FiatPrice";
-import { SatsPrice } from "../../components/SatsPrice";
-import { Routes } from "../../lib/Routes";
-import { defaultFetcher } from "../../lib/swr";
-import { getFiatAmount, getSatsAmount } from "../../lib/utils";
-import { CreateTipRequest } from "../../types/CreateTipRequest";
-import { ExchangeRates } from "../../types/ExchangeRates";
+import { CreateTipRequest } from "types/CreateTipRequest";
+import { ExchangeRates } from "types/ExchangeRates";
 
 const NewTip: NextPage = () => {
   // TODO: use a proper form

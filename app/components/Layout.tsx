@@ -1,7 +1,7 @@
 import { Container, Spacer, Text } from "@nextui-org/react";
+import { Routes } from "lib/Routes";
 import NextLink from "next/link";
 import React from "react";
-import { Routes } from "../lib/Routes";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type LayoutProps = {};

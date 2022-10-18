@@ -1,7 +1,7 @@
 import { hoursToSeconds } from "date-fns";
 import { NextApiRequest, NextApiResponse } from "next";
 import NodeCache from "node-cache";
-import { ExchangeRates } from "../../../types/ExchangeRates";
+import { ExchangeRates } from "types/ExchangeRates";
 
 const exchangeRatesCacheKey = "exchangeRates";
 

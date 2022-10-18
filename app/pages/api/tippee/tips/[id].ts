@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
+import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../../lib/prismadb";
-import { PublicTip } from "../../../../types/PublicTip";
+import { PublicTip } from "types/PublicTip";
 
 export default async function handler(
   req: NextApiRequest,

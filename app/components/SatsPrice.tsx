@@ -1,5 +1,5 @@
 import { Loading } from "@nextui-org/react";
-import { getSatsAmount } from "../lib/utils";
+import { getSatsAmount } from "lib/utils";
 
 type SatsPriceProps = {
   exchangeRate?: number;

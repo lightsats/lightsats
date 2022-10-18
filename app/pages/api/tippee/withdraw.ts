@@ -1,11 +1,11 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { Tip } from "@prisma/client";
-import prisma from "../../../lib/prismadb";
-import { Session, unstable_getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
-import { WithdrawalRequest } from "../../../types/WithdrawalRequest";
 import * as bolt11 from "bolt11";
 import { StatusCodes } from "http-status-codes";
+import prisma from "lib/prismadb";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { Session, unstable_getServerSession } from "next-auth";
+import { authOptions } from "pages/api/auth/[...nextauth]";
+import { WithdrawalRequest } from "types/WithdrawalRequest";
 
 type PayInvoiceRequest = {
   out: true;

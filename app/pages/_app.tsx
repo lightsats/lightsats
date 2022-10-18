@@ -1,9 +1,9 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import { SessionProvider } from "next-auth/react";
 import { NextUIProvider } from "@nextui-org/react";
-import Layout from "../components/Layout";
+import Layout from "components/Layout";
+import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
 import Head from "next/head";
+import "styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

@@ -1,13 +1,13 @@
-import type { NextPage } from "next";
-import { Text, Button, Loading, Spacer, Link, Input } from "@nextui-org/react";
-import React from "react";
-import { WithdrawalRequest } from "../types/WithdrawalRequest";
-import useSWR from "swr";
-import { defaultFetcher } from "../lib/swr";
-import { useSession } from "next-auth/react";
+import { Button, Input, Link, Loading, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
+import { Routes } from "lib/Routes";
+import { defaultFetcher } from "lib/swr";
+import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import NextLink from "next/link";
-import { Routes } from "../lib/Routes";
+import React from "react";
+import useSWR from "swr";
+import { WithdrawalRequest } from "types/WithdrawalRequest";
 
 const Withdraw: NextPage = () => {
   const { data: session } = useSession();
