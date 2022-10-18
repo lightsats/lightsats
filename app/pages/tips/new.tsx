@@ -106,13 +106,7 @@ const NewTip: NextPage = () => {
               onSelectionChange={setDropdownSelectedCurrency}
             >
               {exchangeRateKeys.map((key) => (
-                <Dropdown.Item key={key}>
-                  <FiatPrice
-                    currency={key}
-                    exchangeRate={exchangeRates?.[key]}
-                    sats={amount}
-                  />
-                </Dropdown.Item>
+                <Dropdown.Item key={key}>{key}</Dropdown.Item>
               ))}
             </Dropdown.Menu>
           </Dropdown>
