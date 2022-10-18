@@ -1,5 +1,5 @@
 import { Loading } from "@nextui-org/react";
-import { SATS_TO_BTC } from "../lib/constants";
+import { getFiatAmount, roundFiat } from "../lib/utils";
 
 type FiatPriceProps = {
   currency: string;
@@ -14,7 +14,7 @@ export function FiatPrice({ currency, exchangeRate, sats }: FiatPriceProps) {
   return (
     <>
       {"~$"}
-      {(exchangeRate * (sats / SATS_TO_BTC)).toFixed(2)} {currency}
+      {roundFiat(getFiatAmount(sats, exchangeRate))} {currency}
     </>
   );
 }

@@ -2,6 +2,7 @@ import {
   Button,
   Dropdown,
   Input,
+  Link,
   Loading,
   Row,
   Spacer,
@@ -12,16 +13,19 @@ import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
 import { FiatPrice } from "../../components/FiatPrice";
+import { SatsPrice } from "../../components/SatsPrice";
 import { Routes } from "../../lib/Routes";
 import { defaultFetcher } from "../../lib/swr";
+import { getFiatAmount, getSatsAmount } from "../../lib/utils";
 import { CreateTipRequest } from "../../types/CreateTipRequest";
 import { ExchangeRates } from "../../types/ExchangeRates";
 
 const NewTip: NextPage = () => {
   // TODO: use a proper form
   const router = useRouter();
-  const [amount, setAmount] = React.useState(1000);
+  const [amount, setAmount] = React.useState(1);
   const [isSubmitting, setSubmitting] = React.useState(false);
+  const [inputMethod, setInputMethod] = React.useState<"fiat" | "sats">("fiat");
 
   const [currency, setCurrency] = React.useState("USD");
 
@@ -29,6 +33,19 @@ const NewTip: NextPage = () => {
     `/api/exchange/rates`,
     defaultFetcher
   );
+
+  const currentExchangeRate = exchangeRates?.[currency];
+
+  const toggleInputMethod = React.useCallback(() => {
+    if (currentExchangeRate) {
+      setInputMethod(inputMethod === "fiat" ? "sats" : "fiat");
+      setAmount(
+        inputMethod === "fiat"
+          ? getSatsAmount(amount, currentExchangeRate)
+          : Math.round(getFiatAmount(amount, currentExchangeRate) * 100) / 100
+      );
+    }
+  }, [amount, currentExchangeRate, inputMethod]);
 
   const exchangeRateKeys = React.useMemo(
     () => (exchangeRates ? Object.keys(exchangeRates) : undefined),
@@ -82,22 +99,29 @@ const NewTip: NextPage = () => {
 
   return (
     <>
-      <Row justify="center" align="flex-end">
+      <Row justify="center" align="center">
+        <Link onClick={toggleInputMethod}>{inputMethod}</Link>
+        <Spacer x={0.5} />
         <Input
-          label="Sats"
+          width="100px"
           type="number"
+          inputMode="decimal"
           value={amount.toString()}
-          onChange={(event) => setAmount(parseInt(event.target.value || "0"))}
+          onChange={(event) => setAmount(parseFloat(event.target.value || "0"))}
         />
         <Spacer x={0.5} />
         {exchangeRateKeys && (
           <Dropdown>
             <Dropdown.Button flat>
-              <FiatPrice
-                currency={currency}
-                exchangeRate={exchangeRates?.[currency]}
-                sats={amount}
-              />
+              {inputMethod === "sats" ? (
+                <FiatPrice
+                  currency={currency}
+                  exchangeRate={exchangeRates?.[currency]}
+                  sats={amount}
+                />
+              ) : (
+                currency
+              )}
             </Dropdown.Button>
             <Dropdown.Menu
               aria-label="Dynamic Actions"
@@ -112,8 +136,14 @@ const NewTip: NextPage = () => {
           </Dropdown>
         )}
       </Row>
+      {inputMethod === "fiat" && (
+        <>
+          <Spacer />
+          <SatsPrice exchangeRate={exchangeRates?.[currency]} fiat={amount} />
+        </>
+      )}
       <Spacer />
-      <Button onClick={submitForm} disabled={isSubmitting}>
+      <Button onClick={submitForm} disabled={isSubmitting || amount <= 0}>
         {isSubmitting ? (
           <Loading type="points" color="currentColor" size="sm" />
         ) : (
