@@ -1,4 +1,5 @@
-import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
+import { Button, Loading, Spacer, Text } from "@nextui-org/react";
+import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { Routes } from "lib/Routes";
@@ -6,7 +7,6 @@ import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
@@ -68,11 +68,7 @@ const ClaimTipPage: NextPage = () => {
           <>
             <Text>This tip has already been gifted.</Text>
             <Spacer />
-            <NextLink href={`${Routes.home}`}>
-              <a>
-                <Link>Back</Link>
-              </a>
-            </NextLink>
+            <BackButton />
           </>
         ) : !session ? (
           <>
@@ -102,11 +98,7 @@ const ClaimTipPage: NextPage = () => {
           <>
             <Text>You created this tip so cannot claim it. 😥</Text>
             <Spacer />
-            <NextLink href={`${Routes.home}`}>
-              <a>
-                <Link>Back</Link>
-              </a>
-            </NextLink>
+            <BackButton />
           </>
         ) : (
           <>

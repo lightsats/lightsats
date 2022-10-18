@@ -1,13 +1,6 @@
-import {
-  Badge,
-  Button,
-  Link,
-  Loading,
-  Row,
-  Spacer,
-  Text,
-} from "@nextui-org/react";
+import { Badge, Button, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
+import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { DEFAULT_FIAT_CURRENCY, refundableTipStatuses } from "lib/constants";
@@ -149,11 +142,7 @@ const TipPage: NextPage = () => {
           </>
         )}
         <Spacer y={4} />
-        <NextLink href={`${Routes.home}`}>
-          <a>
-            <Link>Back</Link>
-          </a>
-        </NextLink>
+        <BackButton />
       </>
     );
   } else {

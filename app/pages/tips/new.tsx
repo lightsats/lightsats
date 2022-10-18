@@ -8,6 +8,7 @@ import {
   Spacer,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
+import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { SatsPrice } from "components/SatsPrice";
 import { Routes } from "lib/Routes";
@@ -150,6 +151,8 @@ const NewTip: NextPage = () => {
           <>Confirm</>
         )}
       </Button>
+      <Spacer />
+      <BackButton />
     </>
   );
 };
