@@ -4,9 +4,15 @@ import NodeCache from "node-cache";
 import { ExchangeRates } from "../../../types/ExchangeRates";
 
 const exchangeRatesCacheKey = "exchangeRates";
-const exchangeRatesCache = new NodeCache();
 
-// type CachedExchangeRates
+declare global {
+  // eslint-disable-next-line no-var
+  var exchangeRatesCache: NodeCache | undefined;
+}
+
+const exchangeRatesCache = globalThis.exchangeRatesCache || new NodeCache();
+if (process.env.NODE_ENV !== "production")
+  globalThis.exchangeRatesCache = exchangeRatesCache;
 
 export default async function handler(
   req: NextApiRequest,
@@ -25,7 +31,7 @@ export default async function handler(
     for (const fiatExchangeRate of Object.entries(fiatExchangeRates)) {
       exchangeRates[fiatExchangeRate[0]] = btcUsdPrice * fiatExchangeRate[1];
     }
-    console.log("exchangeRates", fiatExchangeRates);
+    console.log("exchangeRates", exchangeRates);
 
     exchangeRatesCache.set(
       exchangeRatesCacheKey,
@@ -33,7 +39,7 @@ export default async function handler(
       hoursToSeconds(24)
     );
   } else {
-    console.log("Exchange rates are cached");
+    // console.log("Exchange rates are cached");
   }
 
   return res.json(exchangeRates);
