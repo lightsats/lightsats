@@ -3,7 +3,11 @@ import NextLink from "next/link";
 import React from "react";
 import { Routes } from "../lib/Routes";
 
-export default function Layout({ children }: React.PropsWithChildren<{}>) {
+type LayoutProps = Record<string, never>;
+
+export default function Layout({
+  children,
+}: React.PropsWithChildren<LayoutProps>) {
   return (
     <>
       <Spacer />

@@ -1,10 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { Tip } from "@prisma/client";
-import prisma from "../../../../lib/prismadb";
-import { Session, unstable_getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]";
-import { assert } from "console";
 import { StatusCodes } from "http-status-codes";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { Session, unstable_getServerSession } from "next-auth";
+import prisma from "../../../../lib/prismadb";
+import { authOptions } from "../../auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,

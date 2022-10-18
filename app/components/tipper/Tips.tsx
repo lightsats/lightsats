@@ -1,20 +1,12 @@
+import { Badge, Card, Grid, Row, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
-import { useSession } from "next-auth/react";
-import useSWR from "swr";
-import { defaultFetcher } from "../../lib/swr";
-import {
-  Card,
-  Container,
-  Row,
-  Text,
-  Badge,
-  Spacer,
-  Grid,
-} from "@nextui-org/react";
-import NextLink from "next/link";
-import { Routes } from "../../lib/Routes";
-import { TipStatusBadge } from "./TipStatusBadge";
 import { formatDistance } from "date-fns";
+import { useSession } from "next-auth/react";
+import NextLink from "next/link";
+import useSWR from "swr";
+import { Routes } from "../../lib/Routes";
+import { defaultFetcher } from "../../lib/swr";
+import { TipStatusBadge } from "./TipStatusBadge";
 
 export function Tips() {
   const { data: session } = useSession();
