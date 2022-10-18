@@ -1,15 +1,50 @@
-import type { NextPage } from "next";
-import { Input, Button, Loading, Spacer } from "@nextui-org/react";
-import { Routes } from "../../lib/Routes";
-import React from "react";
-import { CreateTipRequest } from "../../types/CreateTipRequest";
+import {
+  Button,
+  Dropdown,
+  Input,
+  Loading,
+  Row,
+  Spacer,
+} from "@nextui-org/react";
 import { Tip } from "@prisma/client";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import React from "react";
+import useSWR from "swr";
+import { FiatPrice } from "../../components/FiatPrice";
+import { Routes } from "../../lib/Routes";
+import { defaultFetcher } from "../../lib/swr";
+import { CreateTipRequest } from "../../types/CreateTipRequest";
+import { ExchangeRates } from "../../types/ExchangeRates";
 
 const NewTip: NextPage = () => {
+  // TODO: use a proper form
   const router = useRouter();
   const [amount, setAmount] = React.useState(1000);
   const [isSubmitting, setSubmitting] = React.useState(false);
+
+  const [currency, setCurrency] = React.useState("USD");
+
+  const { data: exchangeRates } = useSWR<ExchangeRates>(
+    `/api/exchange/rates`,
+    defaultFetcher
+  );
+
+  const exchangeRateKeys = React.useMemo(
+    () => (exchangeRates ? Object.keys(exchangeRates) : undefined),
+    [exchangeRates]
+  );
+
+  const setDropdownSelectedCurrency = React.useCallback(
+    (keys: unknown) => setCurrency(Array.from(keys as Iterable<string>)[0]),
+    []
+  );
+
+  const selectedCurrencies = React.useMemo(
+    () => new Set([currency]),
+    [currency]
+  );
+
   const submitForm = React.useCallback(() => {
     if (isSubmitting) {
       throw new Error("Already submitting");
@@ -23,6 +58,7 @@ const NewTip: NextPage = () => {
       try {
         const createTipRequest: CreateTipRequest = {
           amount,
+          currency,
         };
         const result = await fetch("/api/tipper/tips", {
           method: "POST",
@@ -42,16 +78,46 @@ const NewTip: NextPage = () => {
       }
       setSubmitting(false);
     })();
-  }, [amount, isSubmitting, router]);
+  }, [amount, currency, isSubmitting, router]);
 
   return (
     <>
-      <Input
-        label="Sats"
-        type="number"
-        value={amount.toString()}
-        onChange={(event) => setAmount(parseInt(event.target.value || "0"))}
-      />
+      <Row justify="center" align="flex-end">
+        <Input
+          label="Sats"
+          type="number"
+          value={amount.toString()}
+          onChange={(event) => setAmount(parseInt(event.target.value || "0"))}
+        />
+        <Spacer x={0.5} />
+        {exchangeRateKeys && (
+          <Dropdown>
+            <Dropdown.Button flat>
+              <FiatPrice
+                currency={currency}
+                exchangeRate={exchangeRates?.[currency]}
+                sats={amount}
+              />
+            </Dropdown.Button>
+            <Dropdown.Menu
+              aria-label="Dynamic Actions"
+              selectionMode="single"
+              selectedKeys={selectedCurrencies}
+              onSelectionChange={setDropdownSelectedCurrency}
+            >
+              {exchangeRateKeys.map((key) => (
+                <Dropdown.Item key={key}>
+                  <FiatPrice
+                    currency={key}
+                    exchangeRate={exchangeRates?.[key]}
+                    sats={amount}
+                  />
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        )}
+      </Row>
       <Spacer />
       <Button onClick={submitForm} disabled={isSubmitting}>
         {isSubmitting ? (

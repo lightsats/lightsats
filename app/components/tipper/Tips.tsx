@@ -4,8 +4,11 @@ import { formatDistance } from "date-fns";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import useSWR from "swr";
+import { DEFAULT_FIAT_CURRENCY } from "../../lib/constants";
 import { Routes } from "../../lib/Routes";
 import { defaultFetcher } from "../../lib/swr";
+import { ExchangeRates } from "../../types/ExchangeRates";
+import { FiatPrice } from "../FiatPrice";
 import { TipStatusBadge } from "./TipStatusBadge";
 
 const expirableTipStatuses: TipStatus[] = ["UNFUNDED", "UNCLAIMED", "CLAIMED"];
@@ -14,6 +17,10 @@ export function Tips() {
   const { data: session } = useSession();
   const { data: tips } = useSWR<Tip[]>(
     session ? "/api/tipper/tips" : null,
+    defaultFetcher
+  );
+  const { data: exchangeRates } = useSWR<ExchangeRates>(
+    `/api/exchange/rates`,
     defaultFetcher
   );
 
@@ -34,7 +41,19 @@ export function Tips() {
                       <Text style={{ flex: 1 }}>
                         {tip.invoice.substring(0, 16)}...
                       </Text>
-                      <Badge> {tip.amount}⚡ </Badge>
+                      <Badge>
+                        {" "}
+                        {tip.amount}⚡{" "}
+                        <FiatPrice
+                          currency={tip.currency ?? DEFAULT_FIAT_CURRENCY}
+                          exchangeRate={
+                            exchangeRates?.[
+                              tip.currency ?? DEFAULT_FIAT_CURRENCY
+                            ]
+                          }
+                          sats={tip.amount}
+                        />
+                      </Badge>
                       <Spacer x={0.25} />
                       <TipStatusBadge status={tip.status} />
                     </Row>

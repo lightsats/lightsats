@@ -1,15 +1,18 @@
-import type { NextPage } from "next";
 import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
-import React from "react";
-import { useRouter } from "next/router";
-import useSWR from "swr";
-import { defaultFetcher } from "../../../lib/swr";
-import { PublicTip } from "../../../types/PublicTip";
-import Head from "next/head";
+import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
-import { Routes } from "../../../lib/Routes";
+import Head from "next/head";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
+import useSWR from "swr";
+import { FiatPrice } from "../../../components/FiatPrice";
+import { DEFAULT_FIAT_CURRENCY } from "../../../lib/constants";
+import { Routes } from "../../../lib/Routes";
+import { defaultFetcher } from "../../../lib/swr";
 import { ClaimTipRequest } from "../../../types/ClaimTipRequest";
+import { ExchangeRates } from "../../../types/ExchangeRates";
+import { PublicTip } from "../../../types/PublicTip";
 
 const ClaimTipPage: NextPage = () => {
   const router = useRouter();
@@ -23,6 +26,12 @@ const ClaimTipPage: NextPage = () => {
     session && publicTip && session.user.id === publicTip.tipperId;
   const canClaim = publicTip && !publicTip.hasClaimed && session && !isTipper;
   const [hasClaimed, setClaimed] = React.useState(false);
+  const tipCurrency = publicTip?.currency ?? DEFAULT_FIAT_CURRENCY; // TODO: get from tip, TODO: allow tippee to switch currency
+
+  const { data: exchangeRates } = useSWR<ExchangeRates>(
+    `/api/exchange/rates`,
+    defaultFetcher
+  );
 
   React.useEffect(() => {
     if (canClaim && !hasClaimed) {
@@ -68,7 +77,14 @@ const ClaimTipPage: NextPage = () => {
         ) : !session ? (
           <>
             <Text h3>{"You've been gifted:"}</Text>
-            <Text>{publicTip.amount}⚡</Text>
+            <Text h1>
+              <FiatPrice
+                currency={tipCurrency}
+                exchangeRate={exchangeRates?.[tipCurrency]}
+                sats={publicTip.amount}
+              />
+            </Text>
+            <Text>{publicTip.amount} satoshis⚡</Text>
             <Spacer />
             <Button
               onClick={() =>

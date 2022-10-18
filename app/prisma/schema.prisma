@@ -76,6 +76,7 @@ model Tip {
   created DateTime @default(now())
   updated DateTime @updatedAt
   expiry DateTime
+  currency String?
 }
 
 enum TipStatus {

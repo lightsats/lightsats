@@ -1,12 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { Tip } from "@prisma/client";
-import prisma from "../../../lib/prismadb";
-import { Session, unstable_getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
-import { CreateTipRequest } from "../../../types/CreateTipRequest";
-import { appName } from "../../../lib/constants";
 import { add } from "date-fns";
 import { StatusCodes } from "http-status-codes";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { Session, unstable_getServerSession } from "next-auth";
+import { appName } from "../../../lib/constants";
+import prisma from "../../../lib/prismadb";
+import { CreateTipRequest } from "../../../types/CreateTipRequest";
+import { authOptions } from "../auth/[...nextauth]";
 
 type CreateInvoiceRequest = {
   out: false;
@@ -124,6 +124,7 @@ async function handlePostTip(
       invoice: createInvoiceResponseData.payment_request,
       invoiceId: createInvoiceResponseData.payment_hash,
       expiry,
+      currency: createTipRequest.currency,
     },
   });
 

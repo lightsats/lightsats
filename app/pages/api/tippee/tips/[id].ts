@@ -32,6 +32,7 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     amount: tip.amount,
     tipperId: tip.tipperId,
     hasClaimed: !!tip.tippeeId,
+    currency: tip.currency,
   };
 
   res.status(StatusCodes.OK).json(unclaimedTip);
