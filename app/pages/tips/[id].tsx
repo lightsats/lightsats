@@ -33,6 +33,18 @@ const TipPage: NextPage = () => {
     }
   }, [tip]);
 
+  const deleteTip = React.useCallback(() => {
+    (async () => {
+      router.push(Routes.home);
+      const result = await fetch(`/api/tipper/tips/${id}`, {
+        method: "DELETE",
+      });
+      if (!result.ok) {
+        alert("Failed to delete tip: " + result.statusText);
+      }
+    })();
+  }, [id, router]);
+
   const copyClaimUrl = React.useCallback(() => {
     if (claimUrl) {
       navigator.clipboard.writeText(claimUrl);
@@ -77,6 +89,14 @@ const TipPage: NextPage = () => {
             </NextLink>
             <Spacer />
             <Button onClick={copyClaimUrl}>Copy URL</Button>
+          </>
+        )}
+        {tip.status === "UNFUNDED" && (
+          <>
+            <Spacer />
+            <Button onClick={deleteTip} color="error">
+              Delete Tip
+            </Button>
           </>
         )}
         <Spacer y={4} />
