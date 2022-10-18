@@ -3,7 +3,8 @@ import NextLink from "next/link";
 import React from "react";
 import { Routes } from "../lib/Routes";
 
-type LayoutProps = Record<string, never>;
+// eslint-disable-next-line @typescript-eslint/ban-types
+type LayoutProps = {};
 
 export default function Layout({
   children,
