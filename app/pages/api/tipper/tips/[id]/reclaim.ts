@@ -1,5 +1,6 @@
 import { Tip } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { refundableTipStatuses } from "lib/constants";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
@@ -18,14 +19,14 @@ export default async function handler(
 
   switch (req.method) {
     case "POST":
-      return handleClaimTip(session, req, res);
+      return handleReclaimTip(session, req, res);
     default:
       res.status(StatusCodes.NOT_FOUND).end();
       return;
   }
 }
 
-async function handleClaimTip(
+async function handleReclaimTip(
   session: Session,
   req: NextApiRequest,
   res: NextApiResponse<Tip>
@@ -40,12 +41,11 @@ async function handleClaimTip(
     res.status(StatusCodes.NOT_FOUND).end();
     return;
   }
-  if (
-    tip.tippeeId ||
-    session.user.id === tip.tipperId ||
-    tip.status !== "UNCLAIMED"
-  ) {
-    // already claimed or trying to claim their own tip
+  if (session.user.id !== tip.tipperId) {
+    res.status(StatusCodes.FORBIDDEN).end();
+    return;
+  }
+  if (refundableTipStatuses.indexOf(tip.status) < 0) {
     res.status(StatusCodes.CONFLICT).end();
     return;
   }
@@ -54,7 +54,7 @@ async function handleClaimTip(
       id: id as string,
     },
     data: {
-      status: "CLAIMED",
+      status: "RECLAIMED",
       tippeeId: session.user.id,
     },
   });

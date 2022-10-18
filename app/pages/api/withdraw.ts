@@ -1,4 +1,4 @@
-import { Tip } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import * as bolt11 from "bolt11";
 import { StatusCodes } from "http-status-codes";
 import prisma from "lib/prismadb";
@@ -14,7 +14,7 @@ type PayInvoiceRequest = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Tip | Tip[]>
+  res: NextApiResponse
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
@@ -35,7 +35,7 @@ export default async function handler(
 async function handleWithdrawal(
   session: Session,
   req: NextApiRequest,
-  res: NextApiResponse<Tip>
+  res: NextApiResponse
 ) {
   if (!process.env.LNBITS_URL) {
     throw new Error("No LNBITS_URL provided");
@@ -46,20 +46,38 @@ async function handleWithdrawal(
 
   // TODO: confirm this with a lightning expert
   const withdrawalRequest = req.body as WithdrawalRequest;
+  if (
+    withdrawalRequest.flow !== "tippee" &&
+    withdrawalRequest.flow !== "tipper"
+  ) {
+    throw new Error("Unsupporter withdrawal flow: " + withdrawalRequest.flow);
+  }
+
   const withdrawalInvoicePriceInSats =
     parseInt(bolt11.decode(withdrawalRequest.invoice).millisatoshis || "0") /
     1000;
 
   // FIXME: this needs to execute in a transaction to avoid double withdrawals
+  const whereQuery: Prisma.TipWhereInput =
+    withdrawalRequest.flow === "tippee"
+      ? {
+          tippeeId: {
+            equals: session.user.id,
+          },
+          status: {
+            equals: "CLAIMED",
+          },
+        }
+      : {
+          tipperId: {
+            equals: session.user.id,
+          },
+          status: {
+            equals: "RECLAIMED",
+          },
+        };
   const tips = await prisma.tip.findMany({
-    where: {
-      tippeeId: {
-        equals: session.user.id,
-      },
-      status: {
-        equals: "CLAIMED",
-      },
-    },
+    where: whereQuery,
   });
 
   if (!tips.length) {
@@ -77,9 +95,7 @@ async function handleWithdrawal(
 
   // FIXME: the sats aren't actually "withdrawn" yet, just than an invoice will be generated for them.
   await prisma.tip.updateMany({
-    where: {
-      tippeeId: session.user.id,
-    },
+    where: whereQuery,
     data: {
       status: "WITHDRAWING",
     },
@@ -108,12 +124,14 @@ async function handleWithdrawal(
 
   // console.log("Payment invoice response", payInvoiceResponse);
 
+  // tips were updated - update the status to retrieve the same tips
+  whereQuery.status = {
+    equals: "WITHDRAWING",
+  };
+
   if (!payInvoiceResponse.ok) {
-    // FIXME: this leaves tips in an invalid state
     await prisma.tip.updateMany({
-      where: {
-        tippeeId: session.user.id,
-      },
+      where: whereQuery,
       data: {
         status: "WITHDRAWAL_FAILED",
       },
@@ -123,11 +141,9 @@ async function handleWithdrawal(
   }
 
   await prisma.tip.updateMany({
-    where: {
-      tippeeId: session.user.id,
-    },
+    where: whereQuery,
     data: {
-      status: "WITHDRAWN",
+      status: withdrawalRequest.flow === "tippee" ? "WITHDRAWN" : "REFUNDED",
     },
   });
 

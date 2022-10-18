@@ -4,4 +4,5 @@ export enum Routes {
   newTip = "/tips/new",
   fundTip = "/tips/fund",
   withdraw = "/withdraw",
+  tipperWithdraw = "/withdraw?flow=tipper",
 }

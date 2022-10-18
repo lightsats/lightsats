@@ -7,14 +7,12 @@ export function TipStatusBadge({ status }: { status: TipStatus }) {
       color={
         status === "UNFUNDED"
           ? "error"
-          : status === "UNCLAIMED"
+          : status === "UNCLAIMED" || status === "RECLAIMED"
           ? "warning"
           : status === "CLAIMED"
           ? "primary"
           : status === "WITHDRAWN"
           ? "success"
-          : status === "REFUNDED"
-          ? "default"
           : "default"
       }
     >

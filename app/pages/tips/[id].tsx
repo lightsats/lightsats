@@ -1,6 +1,16 @@
-import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
+import {
+  Badge,
+  Button,
+  Link,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { Tip } from "@prisma/client";
+import { FiatPrice } from "components/FiatPrice";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
+import { DEFAULT_FIAT_CURRENCY, refundableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -9,6 +19,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import QRCode from "react-qr-code";
 import useSWR, { SWRConfiguration } from "swr";
+import { ExchangeRates } from "types/ExchangeRates";
 
 // TODO: polling speed should be based on tip status - only UNFUNDED needs a fast poll rate
 const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
@@ -24,6 +35,10 @@ const TipPage: NextPage = () => {
     id ? `/api/tipper/tips/${id}` : null,
     defaultFetcher,
     useTipConfig
+  );
+  const { data: exchangeRates } = useSWR<ExchangeRates>(
+    `/api/exchange/rates`,
+    defaultFetcher
   );
 
   const copyInvoice = React.useCallback(() => {
@@ -45,6 +60,18 @@ const TipPage: NextPage = () => {
     })();
   }, [id, router]);
 
+  const reclaimTip = React.useCallback(() => {
+    (async () => {
+      router.push(Routes.home);
+      const result = await fetch(`/api/tipper/tips/${id}/reclaim`, {
+        method: "POST",
+      });
+      if (!result.ok) {
+        alert("Failed to reclaim tip: " + result.statusText);
+      }
+    })();
+  }, [id, router]);
+
   const copyClaimUrl = React.useCallback(() => {
     if (claimUrl) {
       navigator.clipboard.writeText(claimUrl);
@@ -55,7 +82,21 @@ const TipPage: NextPage = () => {
   if (tip) {
     return (
       <>
-        <TipStatusBadge status={tip.status} />
+        <Row align="center" justify="center">
+          <TipStatusBadge status={tip.status} />
+          <Spacer x={0.5} />
+          <Badge color="default">{tip.amount}⚡</Badge>
+          <Spacer x={0.5} />
+          <Badge color="default">
+            <FiatPrice
+              currency={tip.currency ?? DEFAULT_FIAT_CURRENCY}
+              exchangeRate={
+                exchangeRates?.[tip.currency ?? DEFAULT_FIAT_CURRENCY]
+              }
+              sats={tip.amount}
+            />
+          </Badge>
+        </Row>
         <Spacer />
         {tip.status === "UNFUNDED" && (
           <>
@@ -96,6 +137,14 @@ const TipPage: NextPage = () => {
             <Spacer />
             <Button onClick={deleteTip} color="error">
               Delete Tip
+            </Button>
+          </>
+        )}
+        {refundableTipStatuses.indexOf(tip.status) >= 0 && (
+          <>
+            <Spacer />
+            <Button onClick={reclaimTip} color="error">
+              Reclaim Tip
             </Button>
           </>
         )}
