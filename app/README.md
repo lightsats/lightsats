@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+1. Run yarn install both in this directory and the parent directory
+
 ### Database setup
 
 1. Install postgresql and create a database (TODO: make this a docker container)
