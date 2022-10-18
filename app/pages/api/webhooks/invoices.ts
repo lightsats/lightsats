@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prismadb";
 
@@ -13,7 +14,7 @@ export default async function handler(
   const { key } = req.query;
   if (key !== process.env.LNBITS_WEBHOOK_SECRET_KEY) {
     // TODO: add http status codes
-    res.status(401).end();
+    res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
   const invoice: PaidInvoice = req.body as PaidInvoice;
@@ -28,5 +29,5 @@ export default async function handler(
       },
     },
   });
-  res.status(200).end();
+  res.status(StatusCodes.OK).end();
 }

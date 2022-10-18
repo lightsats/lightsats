@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../../lib/prismadb";
 import { PublicTip } from "../../../../types/PublicTip";
@@ -10,7 +11,7 @@ export default async function handler(
     case "GET":
       return getTip(req, res);
     default:
-      res.status(404).end();
+      res.status(StatusCodes.NOT_FOUND).end();
       return;
   }
 }
@@ -22,7 +23,7 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     },
   });
   if (!tip) {
-    res.status(404).end();
+    res.status(StatusCodes.NOT_FOUND).end();
     return;
   }
 
@@ -33,5 +34,5 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     hasClaimed: !!tip.tippeeId,
   };
 
-  res.status(200).json(unclaimedTip);
+  res.status(StatusCodes.OK).json(unclaimedTip);
 }

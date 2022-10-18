@@ -3,8 +3,7 @@ import { Tip } from "@prisma/client";
 import prisma from "../../../lib/prismadb";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
-import { CreateTipRequest } from "../../../types/CreateTipRequest";
-import { appName } from "../../../lib/constants";
+import { StatusCodes } from "http-status-codes";
 
 type CreateInvoiceRequest = {
   out: false;
@@ -25,7 +24,7 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
     // TODO: add http status codes
-    res.status(401).end();
+    res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
 
@@ -33,7 +32,7 @@ export default async function handler(
     case "GET":
       return getTips(session, req, res);
     default:
-      res.status(404).end();
+      res.status(StatusCodes.NOT_FOUND).end();
       return;
   }
 }
@@ -50,5 +49,5 @@ async function getTips(
     },
   });
 
-  res.status(200).json(tips);
+  res.status(StatusCodes.OK).json(tips);
 }

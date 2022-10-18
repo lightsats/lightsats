@@ -4,6 +4,7 @@ import prisma from "../../../../lib/prismadb";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 import { assert } from "console";
+import { StatusCodes } from "http-status-codes";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,7 +13,7 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
     // TODO: add http status codes
-    res.status(401).end();
+    res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
 
@@ -20,7 +21,7 @@ export default async function handler(
     case "GET":
       return getTip(session, req, res);
     default:
-      res.status(404).end();
+      res.status(StatusCodes.NOT_FOUND).end();
       return;
   }
 }
@@ -36,9 +37,9 @@ async function getTip(
     },
   });
   if (!tip) {
-    res.status(404).end();
+    res.status(StatusCodes.NOT_FOUND).end();
     return;
   }
 
-  res.status(200).json(tip);
+  res.status(StatusCodes.OK).json(tip);
 }

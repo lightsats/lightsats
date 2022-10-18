@@ -5,6 +5,7 @@ import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import { WithdrawalRequest } from "../../../types/WithdrawalRequest";
 import * as bolt11 from "bolt11";
+import { StatusCodes } from "http-status-codes";
 
 type PayInvoiceRequest = {
   out: true;
@@ -18,7 +19,7 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
     // TODO: add http status codes
-    res.status(401).end();
+    res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
 
@@ -26,7 +27,7 @@ export default async function handler(
     case "POST":
       return handleWithdrawal(session, req, res);
     default:
-      res.status(404).end();
+      res.status(StatusCodes.NOT_FOUND).end();
       return;
   }
 }
@@ -63,14 +64,14 @@ async function handleWithdrawal(
 
   if (!tips.length) {
     // no tips to claim
-    res.status(409).end();
+    res.status(StatusCodes.CONFLICT).end();
     return;
   }
 
   const amount = tips.map((tip) => tip.amount).reduce((a, b) => a + b);
 
   if (withdrawalInvoicePriceInSats !== amount) {
-    res.status(409).end();
+    res.status(StatusCodes.CONFLICT).end();
     return;
   }
 

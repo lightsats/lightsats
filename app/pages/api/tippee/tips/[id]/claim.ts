@@ -3,6 +3,7 @@ import { Tip } from "@prisma/client";
 import prisma from "../../../../../lib/prismadb";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "../../../auth/[...nextauth]";
+import { StatusCodes } from "http-status-codes";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,7 +12,7 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
     // TODO: add http status codes
-    res.status(401).end();
+    res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
 
@@ -19,7 +20,7 @@ export default async function handler(
     case "POST":
       return handleClaimTip(session, req, res);
     default:
-      res.status(404).end();
+      res.status(StatusCodes.NOT_FOUND).end();
       return;
   }
 }
@@ -36,12 +37,12 @@ async function handleClaimTip(
     },
   });
   if (!tip) {
-    res.status(404).end();
+    res.status(StatusCodes.NOT_FOUND).end();
     return;
   }
   if (tip.tippeeId || session.user.id === tip.tipperId) {
     // already claimed or trying to claim their own tip
-    res.status(409).end();
+    res.status(StatusCodes.CONFLICT).end();
     return;
   }
   await prisma.tip.update({
