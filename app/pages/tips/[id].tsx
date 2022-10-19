@@ -4,7 +4,12 @@ import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import copy from "copy-to-clipboard";
-import { DEFAULT_FIAT_CURRENCY, refundableTipStatuses } from "lib/constants";
+import { formatDistance } from "date-fns";
+import {
+  DEFAULT_FIAT_CURRENCY,
+  expirableTipStatuses,
+  refundableTipStatuses,
+} from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -102,6 +107,18 @@ const TipPage: NextPage = () => {
             </>
           )}
         </Row>
+        <Spacer />
+        <Text small>
+          Created {formatDistance(Date.now(), new Date(tip.created))} ago
+        </Text>
+        {expirableTipStatuses.indexOf(tip.status) >= 0 && (
+          <>
+            <Spacer y={0.5} />
+            <Text small>
+              Expires in {formatDistance(new Date(tip.expiry), Date.now())}
+            </Text>
+          </>
+        )}
         <Spacer />
         {tip.status === "UNFUNDED" && (
           <>

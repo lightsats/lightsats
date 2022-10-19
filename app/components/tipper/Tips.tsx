@@ -1,9 +1,9 @@
 import { Badge, Card, Grid, Link, Row, Spacer, Text } from "@nextui-org/react";
-import { Tip, TipStatus } from "@prisma/client";
+import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistance } from "date-fns";
-import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
+import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { useSession } from "next-auth/react";
@@ -11,8 +11,6 @@ import NextLink from "next/link";
 import { CSSProperties } from "react";
 import useSWR from "swr";
 import { ExchangeRates } from "types/ExchangeRates";
-
-const expirableTipStatuses: TipStatus[] = ["UNFUNDED", "UNCLAIMED", "CLAIMED"];
 
 const cardLinkStyle: CSSProperties = { maxWidth: "400px", flex: 1 };
 
