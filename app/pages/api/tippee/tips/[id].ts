@@ -21,6 +21,9 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     where: {
       id: id as string,
     },
+    include: {
+      tipper: true,
+    },
   });
   if (!tip) {
     res.status(StatusCodes.NOT_FOUND).end();
@@ -35,6 +38,10 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     currency: tip.currency,
     note: tip.note,
     tippeeId: tip.tippeeId,
+    tipper: {
+      name: tip.tipper.name,
+      twitterUsername: tip.tipper.twitterUsername,
+    },
   };
 
   res.status(StatusCodes.OK).json(publicTip);

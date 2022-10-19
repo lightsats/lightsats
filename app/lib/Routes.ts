@@ -5,4 +5,5 @@ export enum Routes {
   fundTip = "/tips/fund",
   withdraw = "/withdraw",
   tipperWithdraw = "/withdraw?flow=tipper",
+  profile = "/profile",
 }

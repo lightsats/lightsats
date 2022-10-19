@@ -38,7 +38,6 @@ const formStyle: React.CSSProperties = {
 };
 
 const NewTip: NextPage = () => {
-  // TODO: use a proper form
   const router = useRouter();
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [inputMethod, setInputMethod] = React.useState<"fiat" | "sats">("fiat");

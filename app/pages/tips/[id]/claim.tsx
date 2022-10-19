@@ -4,7 +4,6 @@ import { FiatPrice } from "components/FiatPrice";
 import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { fixNextUIButtonLink } from "lib/utils";
 import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
@@ -20,7 +19,7 @@ const ClaimTipPage: NextPage = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const { id } = router.query;
-  const { data: publicTip } = useSWR<PublicTip>(
+  const { data: publicTip, mutate: mutatePublicTip } = useSWR<PublicTip>(
     id ? `/api/tippee/tips/${id}` : null,
     defaultFetcher
   );
@@ -51,10 +50,12 @@ const ClaimTipPage: NextPage = () => {
               result.statusText +
               ". Please refresh the page to try again."
           );
+        } else {
+          mutatePublicTip();
         }
       })();
     }
-  }, [canClaim, hasClaimed, id, router]);
+  }, [canClaim, hasClaimed, id, mutatePublicTip, router]);
 
   return (
     <>
@@ -67,13 +68,15 @@ const ClaimTipPage: NextPage = () => {
             <>
               <Text>Tip claimed!</Text>
               <Spacer />
-              <NextLink href={Routes.withdraw} passHref>
-                <Button as="a" color="success" onClick={fixNextUIButtonLink}>
-                  Withdraw
-                </Button>
+              <NextLink href={Routes.withdraw}>
+                <a>
+                  <Button as="a" color="success">
+                    Withdraw
+                  </Button>
+                </a>
               </NextLink>
               <Spacer />
-              <Note note={publicTip.note} />
+              <Note tipperName={publicTip.tipper.name} note={publicTip.note} />
             </>
           ) : (
             <>
@@ -84,7 +87,11 @@ const ClaimTipPage: NextPage = () => {
           )
         ) : !session ? (
           <>
-            <Text h3>{"You've been gifted:"}</Text>
+            <Text h3>
+              {publicTip.tipper.name
+                ? `${publicTip.tipper.name} has gifted you:`
+                : "You've been gifted:"}
+            </Text>
             <Text h1>
               <FiatPrice
                 currency={tipCurrency}
@@ -106,7 +113,7 @@ const ClaimTipPage: NextPage = () => {
               Claim my funds
             </Button>
             <Spacer />
-            <Note note={publicTip.note} />
+            <Note tipperName={publicTip.tipper.name} note={publicTip.note} />
           </>
         ) : isTipper ? (
           <>
@@ -132,10 +139,20 @@ const ClaimTipPage: NextPage = () => {
 
 export default ClaimTipPage;
 
-function Note({ note }: { note: string | null }) {
+function Note({
+  tipperName,
+  note,
+}: {
+  tipperName: string | null;
+  note: string | null;
+}) {
   return note ? (
     <>
-      <Text>You were sent a note:</Text>
+      <Text>
+        {tipperName
+          ? `${tipperName} also sent you a note:`
+          : `You were also sent a note:`}
+      </Text>
       <Text>{note}</Text>
     </>
   ) : null;

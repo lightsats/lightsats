@@ -55,7 +55,7 @@ async function handleWithdrawal(
     withdrawalRequest.flow !== "tippee" &&
     withdrawalRequest.flow !== "tipper"
   ) {
-    throw new Error("Unsupporter withdrawal flow: " + withdrawalRequest.flow);
+    throw new Error("Unsupported withdrawal flow: " + withdrawalRequest.flow);
   }
 
   const withdrawalInvoicePriceInSats =
