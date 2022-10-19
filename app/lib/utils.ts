@@ -11,3 +11,7 @@ export function getFiatAmount(sats: number, exchangeRate: number) {
 export function roundFiat(fiat: number) {
   return fiat.toFixed(2);
 }
+
+export const fixNextUIButtonLink = (e: Event) => {
+  e?.preventDefault();
+};

@@ -27,13 +27,15 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     return;
   }
 
-  // only return public fields since this is a public page
-  const unclaimedTip: PublicTip = {
+  // only return public fields since this is a public endpoint
+  const publicTip: PublicTip = {
     amount: tip.amount,
     tipperId: tip.tipperId,
     hasClaimed: !!tip.tippeeId,
     currency: tip.currency,
+    note: tip.note,
+    tippeeId: tip.tippeeId,
   };
 
-  res.status(StatusCodes.OK).json(unclaimedTip);
+  res.status(StatusCodes.OK).json(publicTip);
 }

@@ -6,6 +6,7 @@ import {
   Loading,
   Row,
   Spacer,
+  Textarea,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { BackButton } from "components/BackButton";
@@ -26,6 +27,7 @@ import { ExchangeRates } from "types/ExchangeRates";
 type NewTipFormData = {
   amount: number;
   currency: string;
+  note: string;
 };
 
 const formStyle: React.CSSProperties = {
@@ -46,12 +48,17 @@ const NewTip: NextPage = () => {
     defaultFetcher
   );
 
-  const { control, handleSubmit, watch, setValue } = useForm<NewTipFormData>({
-    defaultValues: {
-      amount: 1,
-      currency: "USD",
-    },
-  });
+  const { control, handleSubmit, watch, setValue, setFocus, register } =
+    useForm<NewTipFormData>({
+      defaultValues: {
+        amount: 1,
+        currency: "USD",
+      },
+    });
+
+  React.useEffect(() => {
+    setFocus("amount");
+  }, [setFocus]);
 
   const watchedAmount = watch("amount");
   const watchedCurrency = watch("currency");
@@ -110,6 +117,7 @@ const NewTip: NextPage = () => {
           const createTipRequest: CreateTipRequest = {
             amount: satsAmount,
             currency: data.currency,
+            note: data.note?.length ? data.note : undefined,
           };
           const result = await fetch("/api/tipper/tips", {
             method: "POST",
@@ -145,6 +153,9 @@ const NewTip: NextPage = () => {
             render={({ field }) => (
               <Input
                 {...field}
+                {...register("amount", {
+                  valueAsNumber: true,
+                })}
                 width="100px"
                 type="number"
                 inputMode="decimal"
@@ -153,31 +164,31 @@ const NewTip: NextPage = () => {
           />
 
           <Spacer x={0.5} />
-          {exchangeRateKeys && (
-            <Dropdown>
-              <Dropdown.Button flat>
-                {inputMethod === "sats" ? (
-                  <FiatPrice
-                    currency={watchedCurrency}
-                    exchangeRate={exchangeRates?.[watchedCurrency]}
-                    sats={watchedAmount}
-                  />
-                ) : (
-                  watchedCurrency
-                )}
-              </Dropdown.Button>
-              <Dropdown.Menu
-                aria-label="Dynamic Actions"
-                selectionMode="single"
-                selectedKeys={selectedCurrencies}
-                onSelectionChange={setDropdownSelectedCurrency}
-              >
-                {exchangeRateKeys.map((key) => (
-                  <Dropdown.Item key={key}>{key}</Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          )}
+          <Dropdown>
+            <Dropdown.Button flat>
+              {inputMethod === "sats" ? (
+                <FiatPrice
+                  currency={watchedCurrency}
+                  exchangeRate={exchangeRates?.[watchedCurrency]}
+                  sats={watchedAmount}
+                />
+              ) : (
+                watchedCurrency
+              )}
+            </Dropdown.Button>
+            <Dropdown.Menu
+              aria-label="Dynamic Actions"
+              selectionMode="single"
+              selectedKeys={selectedCurrencies}
+              onSelectionChange={setDropdownSelectedCurrency}
+            >
+              {exchangeRateKeys
+                ? exchangeRateKeys.map((key) => (
+                    <Dropdown.Item key={key}>{key}</Dropdown.Item>
+                  ))
+                : []}
+            </Dropdown.Menu>
+          </Dropdown>
         </Row>
         {inputMethod === "fiat" && (
           <>
@@ -188,6 +199,19 @@ const NewTip: NextPage = () => {
             />
           </>
         )}
+        <Spacer />
+        <Controller
+          name="note"
+          control={control}
+          render={({ field }) => (
+            <Textarea
+              {...field}
+              placeholder="Optional note (max 255 characters)"
+              maxLength={255}
+              fullWidth
+            />
+          )}
+        />
         <Spacer />
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? (

@@ -90,6 +90,17 @@ const TipPage: NextPage = () => {
               sats={tip.amount}
             />
           </Badge>
+          {tip.note && (
+            <>
+              <Spacer x={0.5} />
+              <Button
+                color="default"
+                auto
+                icon={"💬"}
+                onClick={() => alert(tip.note)}
+              ></Button>
+            </>
+          )}
         </Row>
         <Spacer />
         {tip.status === "UNFUNDED" && (

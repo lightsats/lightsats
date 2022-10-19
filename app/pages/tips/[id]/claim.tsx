@@ -4,9 +4,11 @@ import { FiatPrice } from "components/FiatPrice";
 import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
+import { fixNextUIButtonLink } from "lib/utils";
 import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
@@ -37,22 +39,18 @@ const ClaimTipPage: NextPage = () => {
     if (canClaim && !hasClaimed) {
       setClaimed(true);
       (async () => {
-        try {
-          const claimTipRequest: ClaimTipRequest = {};
-          const result = await fetch(`/api/tippee/tips/${id}/claim`, {
-            method: "POST",
-            body: JSON.stringify(claimTipRequest),
-            headers: { "Content-Type": "application/json" },
-          });
-          if (result.ok) {
-            // TODO: confetti woohoo particle animation
-            router.push(Routes.withdraw);
-          } else {
-            alert("Failed to create tip: " + result.statusText);
-          }
-        } catch (error) {
-          console.error(error);
-          alert("Tip claim failed. Please refresh the page to try again.");
+        const claimTipRequest: ClaimTipRequest = {};
+        const result = await fetch(`/api/tippee/tips/${id}/claim`, {
+          method: "POST",
+          body: JSON.stringify(claimTipRequest),
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!result.ok) {
+          alert(
+            "Failed to claim tip: " +
+              result.statusText +
+              ". Please refresh the page to try again."
+          );
         }
       })();
     }
@@ -65,11 +63,25 @@ const ClaimTipPage: NextPage = () => {
       </Head>
       {publicTip ? (
         publicTip.hasClaimed ? (
-          <>
-            <Text>This tip has already been gifted.</Text>
-            <Spacer />
-            <BackButton />
-          </>
+          publicTip.tippeeId === session?.user.id ? (
+            <>
+              <Text>Tip claimed!</Text>
+              <Spacer />
+              <NextLink href={Routes.withdraw} passHref>
+                <Button as="a" color="success" onClick={fixNextUIButtonLink}>
+                  Withdraw
+                </Button>
+              </NextLink>
+              <Spacer />
+              <Note note={publicTip.note} />
+            </>
+          ) : (
+            <>
+              <Text>This tip has already been gifted.</Text>
+              <Spacer />
+              <BackButton />
+            </>
+          )
         ) : !session ? (
           <>
             <Text h3>{"You've been gifted:"}</Text>
@@ -93,6 +105,8 @@ const ClaimTipPage: NextPage = () => {
             >
               Claim my funds
             </Button>
+            <Spacer />
+            <Note note={publicTip.note} />
           </>
         ) : isTipper ? (
           <>
@@ -116,3 +130,12 @@ const ClaimTipPage: NextPage = () => {
 };
 
 export default ClaimTipPage;
+
+function Note({ note }: { note: string | null }) {
+  return note ? (
+    <>
+      <Text>You were sent a note:</Text>
+      <Text>{note}</Text>
+    </>
+  ) : null;
+}

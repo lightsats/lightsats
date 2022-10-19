@@ -53,9 +53,9 @@ async function getTips(
       },
     },
     // TODO:
-    /*orderBy: {
-
-    }*/
+    orderBy: {
+      created: "desc",
+    },
   });
 
   res.status(StatusCodes.OK).json(tips);
@@ -132,6 +132,7 @@ async function handlePostTip(
       invoiceId: createInvoiceResponseData.payment_hash,
       expiry,
       currency: createTipRequest.currency,
+      note: createTipRequest.note,
     },
   });
 
