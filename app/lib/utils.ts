@@ -1,4 +1,5 @@
 import { SATS_TO_BTC } from "lib/constants";
+import { MouseEventHandler } from "react";
 
 export function getSatsAmount(fiat: number, exchangeRate: number) {
   return Math.ceil((fiat / exchangeRate) * SATS_TO_BTC);
@@ -12,6 +13,8 @@ export function roundFiat(fiat: number) {
   return fiat.toFixed(2);
 }
 
-export const fixNextUIButtonLink = (e: Event) => {
+export const fixNextUIButtonLink: MouseEventHandler<HTMLButtonElement> = (
+  e
+) => {
   e?.preventDefault();
 };
