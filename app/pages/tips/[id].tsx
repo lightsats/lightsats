@@ -17,7 +17,7 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import QRCode from "react-qr-code";
-import useSWR, { SWRConfiguration } from "swr";
+import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
 import { ExchangeRates } from "types/ExchangeRates";
 
 // TODO: polling speed should be based on tip status - only UNFUNDED needs a fast poll rate
@@ -29,6 +29,11 @@ const TipPage: NextPage = () => {
   const claimUrl = global.window
     ? `${window.location.origin}/${Routes.tips}/${id}/claim`
     : undefined;
+  const { mutate } = useSWRConfig();
+  const mutateTips = React.useCallback(
+    () => mutate("/api/tipper/tips"),
+    [mutate]
+  );
 
   const { data: tip } = useSWR<Tip>(
     id ? `/api/tipper/tips/${id}` : null,
@@ -55,9 +60,11 @@ const TipPage: NextPage = () => {
       });
       if (!result.ok) {
         alert("Failed to delete tip: " + result.statusText);
+      } else {
+        mutateTips();
       }
     })();
-  }, [id, router]);
+  }, [id, router, mutateTips]);
 
   const reclaimTip = React.useCallback(() => {
     (async () => {
@@ -67,9 +74,11 @@ const TipPage: NextPage = () => {
       });
       if (!result.ok) {
         alert("Failed to reclaim tip: " + result.statusText);
+      } else {
+        mutateTips();
       }
     })();
-  }, [id, router]);
+  }, [id, mutateTips, router]);
 
   const copyClaimUrl = React.useCallback(() => {
     if (claimUrl) {
