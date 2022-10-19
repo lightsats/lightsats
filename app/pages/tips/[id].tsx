@@ -3,6 +3,7 @@ import { Tip } from "@prisma/client";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
+import copy from "copy-to-clipboard";
 import { DEFAULT_FIAT_CURRENCY, refundableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -36,7 +37,7 @@ const TipPage: NextPage = () => {
 
   const copyInvoice = React.useCallback(() => {
     if (tip) {
-      navigator.clipboard.writeText(tip.invoice);
+      copy(tip.invoice);
       alert("Copied to clipboard");
     }
   }, [tip]);
@@ -67,7 +68,7 @@ const TipPage: NextPage = () => {
 
   const copyClaimUrl = React.useCallback(() => {
     if (claimUrl) {
-      navigator.clipboard.writeText(claimUrl);
+      copy(claimUrl);
       alert("Copied to clipboard");
     }
   }, [claimUrl]);
