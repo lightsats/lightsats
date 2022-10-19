@@ -78,6 +78,9 @@ model Tip {
   expiry DateTime
   currency String?
   note String? @db.VarChar(255)
+  withdrawalInvoiceId String?
+  withdrawalInvoice String?
+  withdrawalFlow String?
 }
 
 enum TipStatus {

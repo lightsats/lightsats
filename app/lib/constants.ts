@@ -10,3 +10,9 @@ export const refundableTipStatuses: TipStatus[] = [
   "CLAIMED",
   "WITHDRAWAL_FAILED",
 ];
+
+export const expirableTipStatuses: TipStatus[] = [
+  "UNFUNDED",
+  "UNCLAIMED",
+  "CLAIMED",
+];

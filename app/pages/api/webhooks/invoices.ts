@@ -5,6 +5,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 // many other properties come back from the lnbits webhook, but only the ones that are actually used are added here.
 type PaidInvoice = {
   payment_hash: string;
+  checking_id: string;
 };
 
 export default async function handler(
@@ -26,7 +27,7 @@ export default async function handler(
     },
     where: {
       invoiceId: {
-        equals: invoice.payment_hash,
+        equals: invoice.checking_id,
       },
     },
   });

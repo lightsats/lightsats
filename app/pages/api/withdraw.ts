@@ -12,6 +12,11 @@ type PayInvoiceRequest = {
   bolt11: string;
 };
 
+type PayInvoiceResponse = {
+  payment_hash: "401d1d3688d16525660eac68def1d8a984274f265d7a2840df303f2274026b99";
+  checking_id: "401d1d3688d16525660eac68def1d8a984274f265d7a2840df303f2274026b99";
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -98,6 +103,7 @@ async function handleWithdrawal(
     where: whereQuery,
     data: {
       status: "WITHDRAWING",
+      withdrawalFlow: withdrawalRequest.flow,
     },
   });
 
@@ -122,12 +128,35 @@ async function handleWithdrawal(
     }
   );
 
+  console.log(
+    "withdraw - payInvoiceResponse",
+    payInvoiceResponse.status,
+    payInvoiceResponse.statusText
+  );
+  let responseBody: PayInvoiceResponse | undefined;
+  try {
+    responseBody = await payInvoiceResponse.json();
+    console.log("withdraw - responseBody", responseBody);
+  } catch {
+    console.error("Failed to parse withdrawal invoice response body");
+  }
+
   // console.log("Payment invoice response", payInvoiceResponse);
 
   // tips were updated - update the status to retrieve the same tips
   whereQuery.status = {
     equals: "WITHDRAWING",
   };
+
+  if (responseBody) {
+    await prisma.tip.updateMany({
+      where: whereQuery,
+      data: {
+        withdrawalInvoiceId: responseBody.checking_id,
+        withdrawalInvoice: withdrawalRequest.invoice,
+      },
+    });
+  }
 
   if (!payInvoiceResponse.ok) {
     await prisma.tip.updateMany({
