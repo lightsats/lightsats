@@ -79,7 +79,7 @@ const Withdraw: NextPage = () => {
     return <Text>{"Loading balance..."}</Text>;
   }
 
-  const availableBalance = withdrawableTips.length
+  const availableBalance = withdrawableTips?.length
     ? withdrawableTips.map((tip) => tip.amount).reduce((a, b) => a + b)
     : 0;
   return (
