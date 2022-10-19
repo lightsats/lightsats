@@ -116,7 +116,8 @@ const ClaimTipPage: NextPage = () => {
           </>
         ) : (
           <>
-            <Text>{"Claiming tip..."}</Text>
+            <Text>Claiming tip</Text>
+            <Loading type="spinner" color="currentColor" size="sm" />
           </>
         )
       ) : (
