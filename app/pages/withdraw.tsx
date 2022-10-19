@@ -106,17 +106,16 @@ const Withdraw: NextPage = () => {
               "In order to spend your funds you'll first need to withdraw them to a lightning wallet."
             }
           </Text>
-          <Text>
-            Create an invoice for{" "}
-            <strong>exactly {availableBalance} sats</strong> and paste the
-            invoice into the field below.
-          </Text>
-          <Text color="warning">
-            If the invoice amount does not match your available balance, the
-            transaction will fail.
-          </Text>
         </>
       )}
+      <Text>
+        Create an invoice for <strong>exactly {availableBalance} sats</strong>{" "}
+        and paste the invoice into the field below.
+      </Text>
+      <Text color="warning">
+        If the invoice amount does not match your available balance, the
+        transaction will fail.
+      </Text>
       <Spacer />
       <Input
         label="Lightning Invoice"
