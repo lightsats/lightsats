@@ -8,10 +8,13 @@ import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
+import { CSSProperties } from "react";
 import useSWR from "swr";
 import { ExchangeRates } from "types/ExchangeRates";
 
 const expirableTipStatuses: TipStatus[] = ["UNFUNDED", "UNCLAIMED", "CLAIMED"];
+
+const cardLinkStyle: CSSProperties = { maxWidth: "400px", flex: 1 };
 
 export function Tips() {
   const { data: session } = useSession();
@@ -51,13 +54,10 @@ export function Tips() {
           {tips.map((tip) => (
             <Grid xs={12} key={tip.id} justify="center">
               <NextLink href={`${Routes.tips}/${tip.id}`}>
-                <a style={{ maxWidth: "400px" }}>
+                <a style={cardLinkStyle}>
                   <Card isPressable isHoverable>
                     <Card.Body>
-                      <Row justify="space-between">
-                        <Text style={{ flex: 1 }}>
-                          {tip.invoice.substring(0, 16)}...
-                        </Text>
+                      <Row justify="space-between" align="center">
                         <Badge>
                           {" "}
                           {tip.amount}⚡{" "}
@@ -74,12 +74,20 @@ export function Tips() {
                         <Spacer x={0.25} />
                         <TipStatusBadge status={tip.status} />
                       </Row>
-                      {expirableTipStatuses.indexOf(tip.status) >= 0 && (
+                      <Spacer y={0.5} />
+                      <Row justify="space-between" align="center">
                         <Text small>
-                          Expires in{" "}
-                          {formatDistance(new Date(tip.expiry), Date.now())}
+                          Created{" "}
+                          {formatDistance(Date.now(), new Date(tip.created))}{" "}
+                          ago
                         </Text>
-                      )}
+                        {expirableTipStatuses.indexOf(tip.status) >= 0 && (
+                          <Text small>
+                            Expires in{" "}
+                            {formatDistance(new Date(tip.expiry), Date.now())}
+                          </Text>
+                        )}
+                      </Row>
                     </Card.Body>
                   </Card>
                 </a>
