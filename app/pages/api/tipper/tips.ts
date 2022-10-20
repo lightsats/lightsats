@@ -88,6 +88,13 @@ async function handlePostTip(
   //   process.env.LNBITS_URL
   // );
   const createTipRequest = req.body as CreateTipRequest;
+  if (
+    createTipRequest.amount <= 0 ||
+    Math.floor(createTipRequest.amount) !== createTipRequest.amount
+  ) {
+    throw new Error("Only tips with positive, whole amounts are allowed");
+  }
+
   // TODO: support creation of multiple tips (createTipRequest.numTips) but pay single invoice
   // when invoice is paid, update the status of all tips with that invoice
   const createInvoiceRequest: CreateInvoiceRequest = {
