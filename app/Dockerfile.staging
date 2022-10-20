@@ -4,6 +4,8 @@ FROM node:16-alpine AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY . .
+# overwrite the production .env
+COPY .env.staging .env.production
 RUN yarn install --frozen-lockfile
 
 # If using npm with a `package-lock.json` comment out above and use below instead
