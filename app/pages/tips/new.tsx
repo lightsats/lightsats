@@ -155,6 +155,7 @@ const NewTip: NextPage = () => {
                 {...register("amount", {
                   valueAsNumber: true,
                 })}
+                min={0}
                 width="100px"
                 type="number"
                 inputMode="decimal"
