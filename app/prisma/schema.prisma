@@ -82,6 +82,9 @@ model Tip {
   withdrawalInvoiceId String?
   withdrawalInvoice String?
   withdrawalFlow String?
+  payInvoiceStatus Int?
+  payInvoiceStatusText String?
+  payInvoiceErrorBody String?
 }
 
 enum TipStatus {

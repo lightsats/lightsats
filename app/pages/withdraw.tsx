@@ -50,7 +50,8 @@ const Withdraw: NextPage = () => {
         if (result.ok) {
           alert("Funds withdrawn!");
         } else {
-          alert("Failed to withdraw: " + result.statusText);
+          const body = await result.text();
+          alert("Failed to withdraw: " + result.statusText + `\n${body}`);
         }
       } catch (error) {
         console.error(error);

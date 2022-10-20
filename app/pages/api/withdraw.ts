@@ -154,6 +154,12 @@ async function handleWithdrawal(
       data: {
         withdrawalInvoiceId: responseBody.checking_id,
         withdrawalInvoice: withdrawalRequest.invoice,
+        payInvoiceStatus: payInvoiceResponse.status,
+        payInvoiceStatusText: payInvoiceResponse.statusText,
+        payInvoiceErrorBody:
+          !payInvoiceResponse.ok && responseBody
+            ? JSON.stringify(responseBody)
+            : null,
       },
     });
   }
@@ -166,15 +172,19 @@ async function handleWithdrawal(
       },
     });
 
-    throw new Error("Invoice payment failed: " + payInvoiceResponse.statusText);
+    res.status(StatusCodes.BAD_GATEWAY).json({
+      status: payInvoiceResponse.status,
+      statusText: payInvoiceResponse.statusText,
+      body: responseBody,
+    });
+  } else {
+    await prisma.tip.updateMany({
+      where: whereQuery,
+      data: {
+        status: withdrawalRequest.flow === "tippee" ? "WITHDRAWN" : "REFUNDED",
+      },
+    });
+
+    res.status(204).end();
   }
-
-  await prisma.tip.updateMany({
-    where: whereQuery,
-    data: {
-      status: withdrawalRequest.flow === "tippee" ? "WITHDRAWN" : "REFUNDED",
-    },
-  });
-
-  res.status(204).end();
 }
