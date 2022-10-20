@@ -1,4 +1,4 @@
-export type WithdrawalFlow = "tipper" | "tippee";
+import { WithdrawalFlow } from "@prisma/client";
 
 export type WithdrawalRequest = {
   invoice: string;

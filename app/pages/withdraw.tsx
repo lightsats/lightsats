@@ -7,7 +7,7 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
+import { Tip, WithdrawalFlow } from "@prisma/client";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
 import { PublicTip } from "types/PublicTip";
-import { WithdrawalFlow, WithdrawalRequest } from "types/WithdrawalRequest";
+import { WithdrawalRequest } from "types/WithdrawalRequest";
 
 const Withdraw: NextPage = () => {
   const { data: session } = useSession();

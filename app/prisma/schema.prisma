@@ -81,7 +81,7 @@ model Tip {
   note String? @db.VarChar(255)
   withdrawalInvoiceId String?
   withdrawalInvoice String?
-  withdrawalFlow String?
+  withdrawalFlow WithdrawalFlow?
   payInvoiceStatus Int?
   payInvoiceStatusText String?
   payInvoiceErrorBody String?
@@ -94,6 +94,11 @@ enum TipStatus {
   WITHDRAWN
   REFUNDED
   WITHDRAWING
-  WITHDRAWAL_FAILED
+  WITHDRAWAL_FAILED // no longer used (failure will revert to original status)
   RECLAIMED
+}
+
+enum WithdrawalFlow {
+  tipper
+  tippee
 }

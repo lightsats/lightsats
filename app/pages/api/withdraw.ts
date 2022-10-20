@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, TipStatus } from "@prisma/client";
 import * as bolt11 from "bolt11";
 import { StatusCodes } from "http-status-codes";
 import prisma from "lib/prismadb";
@@ -62,25 +62,26 @@ async function handleWithdrawal(
     parseInt(bolt11.decode(withdrawalRequest.invoice).millisatoshis || "0") /
     1000;
 
-  // FIXME: this needs to execute in a transaction to avoid double withdrawals
-  const whereQuery: Prisma.TipWhereInput =
-    withdrawalRequest.flow === "tippee"
+  const initialStatus: TipStatus =
+    withdrawalRequest.flow === "tippee" ? "CLAIMED" : "RECLAIMED";
+
+  // TODO: consider running the below code in a transaction
+  const whereQuery: Prisma.TipWhereInput = {
+    status: {
+      equals: initialStatus,
+    },
+    ...(withdrawalRequest.flow === "tippee"
       ? {
           tippeeId: {
             equals: session.user.id,
-          },
-          status: {
-            equals: "CLAIMED",
           },
         }
       : {
           tipperId: {
             equals: session.user.id,
           },
-          status: {
-            equals: "RECLAIMED",
-          },
-        };
+        }),
+  };
   const tips = await prisma.tip.findMany({
     where: whereQuery,
   });
@@ -165,10 +166,11 @@ async function handleWithdrawal(
   }
 
   if (!payInvoiceResponse.ok) {
+    // revert to initial status so the user can retry
     await prisma.tip.updateMany({
       where: whereQuery,
       data: {
-        status: "WITHDRAWAL_FAILED",
+        status: initialStatus,
       },
     });
 
