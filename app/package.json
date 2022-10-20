@@ -15,7 +15,7 @@
     "db:generate:production": "dotenv -e .env.production -- yarn prisma generate",
     "db:push:production:force": "dotenv -e .env.production -- yarn prisma db push --accept-data-loss",
     "deploy:staging": "fly deploy -c fly-staging.toml",
-    "deploy:production": "fly deploy -c fly-production.toml",
+    "deploy:production": "cli-confirm \"Do you really want to do a production deployment?\" && fly deploy -c fly-production.toml",
     "prettier": "yarn prettier --write ."
   },
   "dependencies": {
@@ -42,6 +42,7 @@
     "@types/react-dom": "18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "@typescript-eslint/parser": "^5.40.1",
+    "cli-confirm": "^1.0.1",
     "dotenv-cli": "^6.0.0",
     "eslint": "8.25.0",
     "eslint-config-next": "12.3.1",

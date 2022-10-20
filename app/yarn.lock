@@ -1347,6 +1347,11 @@ cipher-base@^1.0.1:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
+cli-confirm@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/cli-confirm/-/cli-confirm-1.0.1.tgz#a3cfb7a9de71d6b5cc34df9e7b8a73d73d77970a"
+  integrity sha512-AF9fOBZPflNFm2wtq5BNqLr2ZmOB0nwgYQn0tgfbk5OYDMmLFbP+FrelmGK5apvp67ybbpUVTBZZffgR2yv+CQ==
+
 clone@2.x:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
