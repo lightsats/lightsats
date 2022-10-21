@@ -4,21 +4,23 @@ import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
+import { Scoreboard } from "types/Scoreboard";
 import { ScoreboardEntry } from "types/ScoreboardEntry";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ScoreboardEntry[]>
+  res: NextApiResponse<Scoreboard>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   // TODO: cache scoreboard
   const users = await prisma.user.findMany({
     include: {
       tipsSent: true,
+      tipsReceived: true,
     },
   });
 
-  const scoreboardEntries: ScoreboardEntry[] = users
+  const entries: ScoreboardEntry[] = users
     .filter((user) => user.tipsSent.length > 0)
     .map((user) => {
       const withdrawnTips = user.tipsSent.filter(
@@ -39,7 +41,17 @@ export default async function handler(
       };
     });
 
-  scoreboardEntries.sort((a, b) => b.satsSent - a.satsSent);
+  entries.sort((a, b) => b.satsSent - a.satsSent);
 
-  res.status(StatusCodes.OK).json(scoreboardEntries);
+  const numUsersOnboarded = users.filter((user) =>
+    user.tipsReceived.some((tip) => tip.status === "WITHDRAWN")
+  ).length;
+
+  const scoreboard: Scoreboard = {
+    entries,
+    numUsersOnboarded,
+    totalSatsSent: entries.map((e) => e.satsSent).reduce((a, b) => a + b),
+  };
+
+  res.status(StatusCodes.OK).json(scoreboard);
 }

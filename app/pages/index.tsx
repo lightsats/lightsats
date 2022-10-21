@@ -55,6 +55,11 @@ const Home: NextPage = () => {
             </NextLink>
           </Row>
           <Spacer y={1} />
+          <Text color="error">
+            PLEASE WITHDRAW YOUR SATS - WALLET RESTRUCTURE COMING SOON!
+          </Text>
+          <Spacer y={1} />
+
           <NewTipButton />
           <Spacer />
           <Tips />
