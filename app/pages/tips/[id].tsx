@@ -126,7 +126,7 @@ const TipPage: NextPage = () => {
         <Text small>
           Created {formatDistance(Date.now(), new Date(tip.created))} ago
         </Text>
-        {!hasExpired && (
+        {!hasExpired && expirableTipStatuses.indexOf(tip.status) > -1 && (
           <>
             <Spacer y={0.5} />
             <Text small>
