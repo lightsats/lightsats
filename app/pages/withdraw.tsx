@@ -56,7 +56,11 @@ const Withdraw: NextPage = () => {
         }
       } catch (error) {
         console.error(error);
-        alert("Withdrawal failed. Please try again.");
+        alert(
+          "Withdrawal failed: " +
+            JSON.stringify(error, Object.getOwnPropertyNames(error)) +
+            ". Please try again."
+        );
       }
       setSubmitting(false);
     })();

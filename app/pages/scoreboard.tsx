@@ -1,5 +1,6 @@
 import {
   Badge,
+  Card,
   Grid,
   Loading,
   Row,
@@ -23,26 +24,103 @@ const Scoreboard: NextPage = () => {
 
   return (
     <>
-      <Text h2>Tipping Scoreboard</Text>
+      <Text h2>Scoreboard</Text>
       <Row justify="center" align="center">
         <Badge color="success">
-          {scoreboard.numUsersOnboarded} plebs onboarded
+          {scoreboard.numUsersOnboarded} onboarded🚀
         </Badge>
-        <Spacer />
+        <Spacer x={0.5} />
+        <Badge color="success">{scoreboard.numTipsSent} tips sent🧡</Badge>
+        <Spacer x={0.5} />
         <Badge color="success">{scoreboard.totalSatsSent} sats sent⚡</Badge>
       </Row>
       <Spacer />
-      <Grid.Container gap={2} justify="center">
+      {/* mobile view */}
+      <Grid.Container
+        gap={2}
+        justify="center"
+        xs={12}
+        sm={0}
+        style={{ padding: 0 }}
+      >
+        {scoreboard.entries.map((scoreboardEntry, i) => {
+          return (
+            <Grid
+              key={i}
+              justify="center"
+              style={{
+                width: "100%",
+                paddingLeft: 0,
+                paddingRight: 0,
+              }}
+            >
+              <Card>
+                <Card.Body>
+                  <Row align="center">
+                    <Badge
+                      style={{
+                        background:
+                          i === 0
+                            ? "#AF9500"
+                            : i === 1
+                            ? "#D7D7D7"
+                            : i === 2
+                            ? "#6A3805"
+                            : "#666",
+                      }}
+                    >
+                      #{i + 1}
+                    </Badge>
+                    <NextUIUser
+                      name={scoreboardEntry.name ?? "anon"}
+                      src={scoreboardEntry.avatarURL}
+                    />
+                  </Row>
+                  <Spacer />
+                  <Row>
+                    <Badge color="success">
+                      {scoreboardEntry.satsSent} sats⚡
+                    </Badge>
+                    <Spacer x={0.5} />
+                    <Badge color="success">
+                      {scoreboardEntry.numTipsSent} tips🧡
+                    </Badge>
+                    <Spacer x={0.5} />
+                    <Badge
+                      style={{
+                        background: `rgba(${Math.floor(
+                          (1 - scoreboardEntry.successRate) * 255
+                        )},${Math.floor(
+                          scoreboardEntry.successRate * 255
+                        )},0, 1)`,
+                      }}
+                    >
+                      {Math.round(scoreboardEntry.successRate * 100)}% success
+                      rate
+                    </Badge>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </Grid>
+          );
+        })}
+      </Grid.Container>
+
+      {/* desktop view */}
+      <Grid.Container gap={2} justify="center" xs={0} sm={12}>
         <Grid xs={12} justify="center">
           <Row justify="space-between" align="center">
             <Row justify="center" align="center">
-              <Badge>Placing</Badge>
+              <Badge>#Tips</Badge>
             </Row>
-            <Row justify="center" align="center">
+            <Row justify="flex-start" align="center">
               <Badge>Tipper</Badge>
             </Row>
             <Row justify="center" align="center">
               <Badge>Sats Donated</Badge>
+            </Row>
+            <Row justify="center" align="center">
+              <Badge>#Tips Sent</Badge>
             </Row>
             <Row justify="center" align="center">
               <Badge>Success Rate</Badge>
@@ -77,7 +155,7 @@ const Scoreboard: NextPage = () => {
                     #{i + 1}
                   </Badge>
                 </Row>
-                <Row justify="center" align="center">
+                <Row justify="flex-start" align="center">
                   <NextUIUser
                     name={scoreboardEntry.name ?? "anon"}
                     src={scoreboardEntry.avatarURL}
@@ -85,6 +163,9 @@ const Scoreboard: NextPage = () => {
                 </Row>
                 <Row justify="center" align="center">
                   <Badge color="success">{scoreboardEntry.satsSent}⚡</Badge>
+                </Row>
+                <Row justify="center" align="center">
+                  <Badge color="success">{scoreboardEntry.numTipsSent}🧡</Badge>
                 </Row>
                 <Row justify="center" align="center">
                   <Badge

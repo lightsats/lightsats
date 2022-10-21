@@ -30,6 +30,7 @@ export default function Layout({
         alignItems="center"
         display="flex"
         direction="column"
+        fluid
       >
         {children}
       </Container>

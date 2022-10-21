@@ -6,4 +6,5 @@ export type ScoreboardEntry = {
   successRate: number;
   numTipsWithdrawn: number;
   satsSent: number;
+  numTipsSent: number;
 };

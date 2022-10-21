@@ -32,6 +32,7 @@ export default async function handler(
         satsSent: withdrawnTips.length
           ? withdrawnTips.map((tip) => tip.amount).reduce((a, b) => a + b)
           : 0,
+        numTipsSent: user.tipsSent.length,
         successRate: withdrawnTips.length
           ? withdrawnTips.length / user.tipsSent.length
           : 0,
@@ -50,6 +51,7 @@ export default async function handler(
   const scoreboard: Scoreboard = {
     entries,
     numUsersOnboarded,
+    numTipsSent: entries.map((e) => e.numTipsSent).reduce((a, b) => a + b),
     totalSatsSent: entries.map((e) => e.satsSent).reduce((a, b) => a + b),
   };
 
