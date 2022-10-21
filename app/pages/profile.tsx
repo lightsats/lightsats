@@ -127,6 +127,7 @@ function ProfileInternal({
             />
           )}
         />
+        <Spacer />
         <Controller
           name="twitterUsername"
           control={control}
@@ -139,6 +140,7 @@ function ProfileInternal({
             />
           )}
         />
+        <Spacer />
         <Controller
           name="avatarURL"
           control={control}
