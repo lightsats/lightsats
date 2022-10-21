@@ -1,4 +1,5 @@
 import { Tip } from "@prisma/client";
+import { isAfter } from "date-fns";
 import { StatusCodes } from "http-status-codes";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -40,10 +41,14 @@ async function handleClaimTip(
     res.status(StatusCodes.NOT_FOUND).end();
     return;
   }
+
+  const hasExpired = isAfter(new Date(), new Date(tip.expiry));
+
   if (
     tip.tippeeId ||
     session.user.id === tip.tipperId ||
-    tip.status !== "UNCLAIMED"
+    tip.status !== "UNCLAIMED" ||
+    hasExpired
   ) {
     // already claimed or trying to claim their own tip
     res.status(StatusCodes.CONFLICT).end();

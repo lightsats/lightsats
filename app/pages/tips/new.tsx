@@ -1,17 +1,20 @@
 import {
   Button,
+  Container,
   Dropdown,
   Input,
   Link,
   Loading,
   Row,
   Spacer,
+  Text,
   Textarea,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { SatsPrice } from "components/SatsPrice";
+import { add } from "date-fns";
 import { MIN_TIP_SATS } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -24,10 +27,15 @@ import useSWR from "swr";
 import { CreateTipRequest } from "types/CreateTipRequest";
 import { ExchangeRates } from "types/ExchangeRates";
 
+export const ExpiryUnitValues = ["minutes", "hours", "days"] as const;
+export type ExpiryUnit = typeof ExpiryUnitValues[number];
+
 type NewTipFormData = {
   amount: number;
   currency: string;
   note: string;
+  expiresIn: number;
+  expiryUnit: ExpiryUnit;
 };
 
 const formStyle: React.CSSProperties = {
@@ -52,6 +60,8 @@ const NewTip: NextPage = () => {
       defaultValues: {
         amount: 1,
         currency: "USD",
+        expiresIn: 3,
+        expiryUnit: "days",
       },
     });
 
@@ -61,6 +71,7 @@ const NewTip: NextPage = () => {
 
   const watchedAmount = watch("amount");
   const watchedCurrency = watch("currency");
+  const watchedExpiryUnit = watch("expiryUnit");
 
   const currentExchangeRate = exchangeRates?.[watchedCurrency];
 
@@ -94,6 +105,17 @@ const NewTip: NextPage = () => {
     [watchedCurrency]
   );
 
+  const setDropdownSelectedExpiryUnit = React.useCallback(
+    (keys: unknown) =>
+      setValue("expiryUnit", Array.from(keys as Iterable<ExpiryUnit>)[0]),
+    [setValue]
+  );
+
+  const selectedExpiryUnits = React.useMemo(
+    () => new Set([watchedExpiryUnit]),
+    [watchedExpiryUnit]
+  );
+
   const onSubmit = React.useCallback(
     (data: NewTipFormData) => {
       if (!currentExchangeRate) {
@@ -117,6 +139,9 @@ const NewTip: NextPage = () => {
             amount: satsAmount,
             currency: data.currency,
             note: data.note?.length ? data.note : undefined,
+            expiry: add(new Date(), {
+              [data.expiryUnit]: data.expiresIn,
+            }),
           };
           const result = await fetch("/api/tipper/tips", {
             method: "POST",
@@ -143,61 +168,59 @@ const NewTip: NextPage = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-        <Row justify="center" align="center">
-          <Link onClick={toggleInputMethod}>{inputMethod}</Link>
-          <Spacer x={0.5} />
-          <Controller
-            name="amount"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                {...register("amount", {
-                  valueAsNumber: true,
-                })}
-                min={0}
-                width="100px"
-                type="number"
-                inputMode="decimal"
-              />
-            )}
-          />
-
-          <Spacer x={0.5} />
-          <Dropdown>
-            <Dropdown.Button flat>
-              {inputMethod === "sats" ? (
-                <FiatPrice
-                  currency={watchedCurrency}
-                  exchangeRate={exchangeRates?.[watchedCurrency]}
-                  sats={watchedAmount}
+        <Container gap={0} style={{ width: "100%" }}>
+          <Text>Amount</Text>
+          <Row justify="center" align="center">
+            <Link onClick={toggleInputMethod}>{inputMethod}</Link>
+            <Spacer x={0.5} />
+            <Controller
+              name="amount"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  {...register("amount", {
+                    valueAsNumber: true,
+                  })}
+                  min={0}
+                  type="number"
+                  inputMode="decimal"
+                  aria-label="amount"
+                  width="100px"
                 />
-              ) : (
-                watchedCurrency
               )}
-            </Dropdown.Button>
-            <Dropdown.Menu
-              aria-label="Dynamic Actions"
-              selectionMode="single"
-              selectedKeys={selectedCurrencies}
-              onSelectionChange={setDropdownSelectedCurrency}
-            >
-              {exchangeRateKeys
-                ? exchangeRateKeys.map((key) => (
-                    <Dropdown.Item key={key}>{key}</Dropdown.Item>
-                  ))
-                : []}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Row>
-        {inputMethod === "fiat" && (
-          <>
-            <Spacer />
-            <SatsPrice
-              exchangeRate={exchangeRates?.[watchedCurrency]}
-              fiat={watchedAmount}
             />
-          </>
+
+            <Spacer x={0.5} />
+            <Dropdown>
+              <Dropdown.Button flat>{watchedCurrency}</Dropdown.Button>
+              <Dropdown.Menu
+                aria-label="Select Currency"
+                selectionMode="single"
+                selectedKeys={selectedCurrencies}
+                onSelectionChange={setDropdownSelectedCurrency}
+              >
+                {exchangeRateKeys
+                  ? exchangeRateKeys.map((key) => (
+                      <Dropdown.Item key={key}>{key}</Dropdown.Item>
+                    ))
+                  : []}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Row>
+        </Container>
+        <Spacer />
+        {inputMethod === "sats" ? (
+          <FiatPrice
+            currency={watchedCurrency}
+            exchangeRate={exchangeRates?.[watchedCurrency]}
+            sats={!isNaN(watchedAmount) ? watchedAmount : 0}
+          />
+        ) : (
+          <SatsPrice
+            exchangeRate={exchangeRates?.[watchedCurrency]}
+            fiat={!isNaN(watchedAmount) ? watchedAmount : 0}
+          />
         )}
         <Spacer />
         <Controller
@@ -206,18 +229,53 @@ const NewTip: NextPage = () => {
           render={({ field }) => (
             <Textarea
               {...field}
-              placeholder="Optional note (max 255 characters)"
+              label="Note to tippee (optional)"
+              placeholder="Thank you for your amazing service!"
               maxLength={255}
               fullWidth
             />
           )}
         />
         <Spacer />
+        <Row gap={0} justify="space-between" align="flex-end">
+          <Controller
+            name="expiresIn"
+            control={control}
+            render={({ field }) => (
+              <Input
+                label="Expires in"
+                {...field}
+                {...register("expiresIn", {
+                  valueAsNumber: true,
+                })}
+                min={1}
+                width="100px"
+                type="number"
+                inputMode="decimal"
+              />
+            )}
+          />
+          <Spacer />
+          <Dropdown>
+            <Dropdown.Button flat>{watchedExpiryUnit}</Dropdown.Button>
+            <Dropdown.Menu
+              aria-label="Select Expiry Unit"
+              selectionMode="single"
+              selectedKeys={selectedExpiryUnits}
+              onSelectionChange={setDropdownSelectedExpiryUnit}
+            >
+              {ExpiryUnitValues.map((value) => (
+                <Dropdown.Item key={value}>{value}</Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        </Row>
+        <Spacer y={2} />
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
-            <>Confirm</>
+            <>Create Tip</>
           )}
         </Button>
         <Spacer />

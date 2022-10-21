@@ -119,7 +119,7 @@ function ProfileInternal({ user }: { user: User }) {
           {isSubmitting ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
-            <>Confirm</>
+            <>Update Profile</>
           )}
         </Button>
         <Spacer />

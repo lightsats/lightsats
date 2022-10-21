@@ -4,7 +4,7 @@ import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import copy from "copy-to-clipboard";
-import { formatDistance } from "date-fns";
+import { formatDistance, isAfter } from "date-fns";
 import {
   DEFAULT_FIAT_CURRENCY,
   expirableTipStatuses,
@@ -40,6 +40,12 @@ const TipPage: NextPage = () => {
     defaultFetcher,
     useTipConfig
   );
+
+  const hasExpired =
+    tip &&
+    expirableTipStatuses.indexOf(tip.status) >= 0 &&
+    isAfter(new Date(), new Date(tip.expiry));
+
   const { data: exchangeRates } = useSWR<ExchangeRates>(
     `/api/exchange/rates`,
     defaultFetcher
@@ -120,7 +126,7 @@ const TipPage: NextPage = () => {
         <Text small>
           Created {formatDistance(Date.now(), new Date(tip.created))} ago
         </Text>
-        {expirableTipStatuses.indexOf(tip.status) >= 0 && (
+        {!hasExpired && (
           <>
             <Spacer y={0.5} />
             <Text small>
@@ -129,7 +135,7 @@ const TipPage: NextPage = () => {
           </>
         )}
         <Spacer />
-        {tip.status === "UNFUNDED" && (
+        {!hasExpired && tip.status === "UNFUNDED" && (
           <>
             <Text>Waiting for payment</Text>
             <Loading type="points" color="currentColor" size="sm" />
@@ -147,7 +153,7 @@ const TipPage: NextPage = () => {
             <Button onClick={copyInvoice}>Copy</Button>
           </>
         )}
-        {tip.status === "UNCLAIMED" && claimUrl && (
+        {!hasExpired && tip.status === "UNCLAIMED" && claimUrl && (
           <>
             <Text style={{ textAlign: "center" }}>
               Ask the tippee to scan the below code using their camera app or a
@@ -161,6 +167,12 @@ const TipPage: NextPage = () => {
             </NextLink>
             <Spacer />
             <Button onClick={copyClaimUrl}>Copy URL</Button>
+          </>
+        )}
+        {hasExpired && (
+          <>
+            <Spacer />
+            <Text color="error">This tip has expired.</Text>
           </>
         )}
         {tip.status === "UNFUNDED" && (

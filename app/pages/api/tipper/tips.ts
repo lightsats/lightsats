@@ -127,9 +127,11 @@ async function handlePostTip(
   const createInvoiceResponseData =
     (await createInvoiceResponse.json()) as CreateInvoiceResponse;
 
-  const expiry = add(new Date(), {
-    months: 1,
-  });
+  const expiry =
+    createTipRequest.expiry ??
+    add(new Date(), {
+      months: 1,
+    });
   const tip = await prisma.tip.create({
     data: {
       tipperId: session.user.id,

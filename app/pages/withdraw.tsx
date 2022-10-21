@@ -8,6 +8,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Tip, WithdrawalFlow } from "@prisma/client";
+import { formatDistance, isBefore } from "date-fns";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -65,11 +66,20 @@ const Withdraw: NextPage = () => {
     () =>
       tips?.filter(
         (tip) =>
-          (flow === "tippee" && tip.status === "CLAIMED") ||
+          (flow === "tippee" &&
+            tip.status === "CLAIMED" &&
+            isBefore(new Date(), new Date(tip.expiry))) ||
           (flow === "tipper" && tip.status === "RECLAIMED")
       ),
     [flow, tips]
   );
+
+  const nextExpiry = withdrawableTips?.find(
+    (tip) =>
+      !withdrawableTips.some((other) =>
+        isBefore(new Date(other.expiry), new Date(tip.expiry))
+      )
+  )?.expiry;
 
   const tipIds = React.useMemo(
     () => (flow === "tippee" ? tips?.map((tip) => tip.id) : []),
@@ -152,6 +162,14 @@ const Withdraw: NextPage = () => {
               <>Withdraw</>
             )}
           </Button>
+          {nextExpiry && (
+            <>
+              <Spacer y={0.5} />
+              <Text small color="error">
+                Expiring in {formatDistance(new Date(nextExpiry), Date.now())}
+              </Text>
+            </>
+          )}
         </>
       )}
       {tipIds && <Spacer />}

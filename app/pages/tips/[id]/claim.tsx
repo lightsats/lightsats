@@ -1,7 +1,8 @@
 import { Button, Loading, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
-import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
+import { formatDistance, isAfter } from "date-fns";
+import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -25,9 +26,17 @@ const ClaimTipPage: NextPage = () => {
   );
   const isTipper =
     session && publicTip && session.user.id === publicTip.tipperId;
-  const canClaim = publicTip && !publicTip.hasClaimed && session && !isTipper;
+
   const [hasClaimed, setClaimed] = React.useState(false);
   const tipCurrency = publicTip?.currency ?? DEFAULT_FIAT_CURRENCY; // TODO: get from tip, TODO: allow tippee to switch currency
+
+  const hasExpired =
+    publicTip &&
+    expirableTipStatuses.indexOf(publicTip.status) >= 0 &&
+    isAfter(new Date(), new Date(publicTip.expiry));
+
+  const canClaim =
+    publicTip && !publicTip.hasClaimed && session && !isTipper && !hasExpired;
 
   const { data: exchangeRates } = useSWR<ExchangeRates>(
     `/api/exchange/rates`,
@@ -101,17 +110,30 @@ const ClaimTipPage: NextPage = () => {
             </Text>
             <Text>{publicTip.amount} satoshis⚡</Text>
             <Spacer />
-            <Button
-              onClick={() =>
-                signIn("email", {
-                  callbackUrl:
-                    window.location
-                      .href /* redirect back to same page on login */,
-                })
-              }
-            >
-              Claim my funds
-            </Button>
+            {hasExpired ? (
+              <Text color="error">This tip has expired.</Text>
+            ) : (
+              <Button
+                onClick={() =>
+                  signIn("email", {
+                    callbackUrl:
+                      window.location
+                        .href /* redirect back to same page on login */,
+                  })
+                }
+              >
+                Claim my funds
+              </Button>
+            )}
+            {!hasExpired && (
+              <>
+                <Spacer y={0.5} />
+                <Text small color="error">
+                  Expires in{" "}
+                  {formatDistance(new Date(publicTip.expiry), Date.now())}
+                </Text>
+              </>
+            )}
             <Spacer />
             <Note tipperName={publicTip.tipper.name} note={publicTip.note} />
           </>

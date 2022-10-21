@@ -75,6 +75,9 @@ async function handleWithdrawal(
           tippeeId: {
             equals: session.user.id,
           },
+          expiry: {
+            gt: new Date(), // cannot withdraw expired tips
+          },
         }
       : {
           tipperId: {

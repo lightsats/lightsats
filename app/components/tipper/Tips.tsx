@@ -2,7 +2,7 @@ import { Badge, Card, Grid, Link, Row, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
-import { formatDistance } from "date-fns";
+import { formatDistance, isAfter } from "date-fns";
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -49,49 +49,63 @@ export function Tips() {
           </>
         )}
         <Grid.Container gap={2} justify="center">
-          {tips.map((tip) => (
-            <Grid xs={12} key={tip.id} justify="center">
-              <NextLink href={`${Routes.tips}/${tip.id}`}>
-                <a style={cardLinkStyle}>
-                  <Card isPressable isHoverable>
-                    <Card.Body>
-                      <Row justify="space-between" align="center">
-                        <Badge>
-                          {" "}
-                          {tip.amount}⚡{" "}
-                          <FiatPrice
-                            currency={tip.currency ?? DEFAULT_FIAT_CURRENCY}
-                            exchangeRate={
-                              exchangeRates?.[
-                                tip.currency ?? DEFAULT_FIAT_CURRENCY
-                              ]
-                            }
-                            sats={tip.amount}
-                          />
-                        </Badge>
-                        <Spacer x={0.25} />
-                        <TipStatusBadge status={tip.status} />
-                      </Row>
-                      <Spacer y={0.5} />
-                      <Row justify="space-between" align="center">
-                        <Text small>
-                          Created{" "}
-                          {formatDistance(Date.now(), new Date(tip.created))}{" "}
-                          ago
-                        </Text>
-                        {expirableTipStatuses.indexOf(tip.status) >= 0 && (
+          {tips.map((tip) => {
+            const hasExpired =
+              expirableTipStatuses.indexOf(tip.status) >= 0 &&
+              isAfter(new Date(), new Date(tip.expiry));
+            return (
+              <Grid xs={12} key={tip.id} justify="center">
+                <NextLink href={`${Routes.tips}/${tip.id}`}>
+                  <a style={cardLinkStyle}>
+                    <Card isPressable isHoverable>
+                      <Card.Body>
+                        <Row justify="space-between" align="center">
+                          <Badge>
+                            {" "}
+                            {tip.amount}⚡{" "}
+                            <FiatPrice
+                              currency={tip.currency ?? DEFAULT_FIAT_CURRENCY}
+                              exchangeRate={
+                                exchangeRates?.[
+                                  tip.currency ?? DEFAULT_FIAT_CURRENCY
+                                ]
+                              }
+                              sats={tip.amount}
+                            />
+                          </Badge>
+                          <Spacer x={0.25} />
+                          <TipStatusBadge status={tip.status} />
+                        </Row>
+                        <Spacer y={0.5} />
+                        <Row justify="space-between" align="center">
                           <Text small>
-                            Expires in{" "}
-                            {formatDistance(new Date(tip.expiry), Date.now())}
+                            Created{" "}
+                            {formatDistance(Date.now(), new Date(tip.created))}{" "}
+                            ago
                           </Text>
-                        )}
-                      </Row>
-                    </Card.Body>
-                  </Card>
-                </a>
-              </NextLink>
-            </Grid>
-          ))}
+                          {!hasExpired &&
+                            expirableTipStatuses.indexOf(tip.status) >= 0 && (
+                              <Text small>
+                                Expires in{" "}
+                                {formatDistance(
+                                  new Date(tip.expiry),
+                                  Date.now()
+                                )}
+                              </Text>
+                            )}
+                          {hasExpired && (
+                            <Text color="error" small>
+                              Expired
+                            </Text>
+                          )}
+                        </Row>
+                      </Card.Body>
+                    </Card>
+                  </a>
+                </NextLink>
+              </Grid>
+            );
+          })}
         </Grid.Container>
       </>
     );
