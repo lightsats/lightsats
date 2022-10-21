@@ -32,7 +32,7 @@ const Home: NextPage = () => {
 
       {session ? (
         <>
-          <Row justify="center" align="center" display="flex">
+          <Row justify="center" align="center">
             <NextUIUser src={user?.avatarURL ?? undefined} name={user?.name} />
             <NextLink href={Routes.profile}>
               <a>

@@ -17,7 +17,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import useSWR from "swr";
+import useSWR, { KeyedMutator } from "swr";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
 
 type ProfileFormData = {
@@ -35,7 +35,7 @@ const formStyle: React.CSSProperties = {
 
 const Profile: NextPage = () => {
   const { data: session } = useSession();
-  const { data: user } = useSWR<User>(
+  const { data: user, mutate: mutateUser } = useSWR<User>(
     session ? `/api/users/${session.user.id}` : null,
     defaultFetcher
   );
@@ -43,10 +43,20 @@ const Profile: NextPage = () => {
   if (!session || !user) {
     return null;
   }
-  return <ProfileInternal session={session} user={user} />;
+  return (
+    <ProfileInternal mutateUser={mutateUser} session={session} user={user} />
+  );
 };
 
-function ProfileInternal({ session, user }: { session: Session; user: User }) {
+function ProfileInternal({
+  mutateUser,
+  session,
+  user,
+}: {
+  mutateUser: KeyedMutator<User>;
+  session: Session;
+  user: User;
+}) {
   const router = useRouter();
   const [isSubmitting, setSubmitting] = React.useState(false);
 
@@ -81,6 +91,7 @@ function ProfileInternal({ session, user }: { session: Session; user: User }) {
           headers: { "Content-Type": "application/json" },
         });
         if (result.ok) {
+          await mutateUser();
           router.push(Routes.home);
         } else {
           alert("Failed to update profile: " + result.statusText);
@@ -88,7 +99,7 @@ function ProfileInternal({ session, user }: { session: Session; user: User }) {
         setSubmitting(false);
       })();
     },
-    [isSubmitting, router, user]
+    [isSubmitting, mutateUser, router, user.id]
   );
 
   return (
