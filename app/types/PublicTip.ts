@@ -13,5 +13,5 @@ export type PublicTip = Pick<
   | "tippeeName"
 > & {
   hasClaimed: boolean;
-  tipper: Pick<User, "name" | "twitterUsername">;
+  tipper: Pick<User, "name" | "twitterUsername" | "avatarURL">;
 };

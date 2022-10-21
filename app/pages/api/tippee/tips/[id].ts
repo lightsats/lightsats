@@ -41,6 +41,7 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     tipper: {
       name: tip.tipper.name,
       twitterUsername: tip.tipper.twitterUsername,
+      avatarURL: tip.tipper.avatarURL,
     },
     status: tip.status,
     expiry: tip.expiry,

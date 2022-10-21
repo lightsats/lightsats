@@ -1,4 +1,11 @@
-import { Button, Loading, Spacer, Text } from "@nextui-org/react";
+import {
+  Button,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+  User as NextUIUser,
+} from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { formatDistance, isAfter } from "date-fns";
@@ -36,7 +43,11 @@ const ClaimTipPage: NextPage = () => {
     isAfter(new Date(), new Date(publicTip.expiry));
 
   const canClaim =
-    publicTip && !publicTip.hasClaimed && session && !isTipper && !hasExpired;
+    publicTip &&
+    publicTip.status === "UNCLAIMED" &&
+    session &&
+    !isTipper &&
+    !hasExpired;
 
   const { data: exchangeRates } = useSWR<ExchangeRates>(
     `/api/exchange/rates`,
@@ -94,7 +105,7 @@ const ClaimTipPage: NextPage = () => {
               <BackButton />
             </>
           )
-        ) : !session ? (
+        ) : !session || !canClaim ? (
           <>
             {
               <Text h5>
@@ -102,11 +113,21 @@ const ClaimTipPage: NextPage = () => {
                 {publicTip.tippeeName && ` ${publicTip.tippeeName}`}!
               </Text>
             }
-            <Text h3>
-              {publicTip.tipper.name
-                ? `${publicTip.tipper.name} has gifted you:`
-                : "You've been gifted:"}
-            </Text>
+            <Row justify="center" align="center">
+              {publicTip.tipper.avatarURL && (
+                <NextUIUser
+                  src={publicTip.tipper.avatarURL}
+                  name={undefined}
+                  size="xl"
+                  style={{ padding: 0 }}
+                />
+              )}
+              <Text h3>
+                {publicTip.tipper.name
+                  ? `${publicTip.tipper.name} has gifted you:`
+                  : "You've been gifted:"}
+              </Text>
+            </Row>
             <Text h1>
               <FiatPrice
                 currency={tipCurrency}

@@ -54,6 +54,7 @@ model User {
   email String? @unique
   phoneNumber String? @unique
   name String?
+  avatarURL String?
   twitterUsername String?
   tipsSent Tip[] @relation("tipsSent")
   tipsReceived Tip[] @relation("tipsReceived")

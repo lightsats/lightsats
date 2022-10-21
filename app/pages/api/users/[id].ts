@@ -53,8 +53,9 @@ async function updateUser(
       id: user.id,
     },
     data: {
-      name: updateUserRequest.name,
-      twitterUsername: updateUserRequest.twitterUsername,
+      name: updateUserRequest.name ?? null,
+      twitterUsername: updateUserRequest.twitterUsername ?? null,
+      avatarURL: updateUserRequest.avatarURL ?? null,
     },
   });
 

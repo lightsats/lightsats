@@ -1,4 +1,11 @@
-import { Button, Container, Link, Row, Spacer, Text } from "@nextui-org/react";
+import {
+  Button,
+  Link,
+  Row,
+  Spacer,
+  Text,
+  User as NextUIUser,
+} from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { Tips } from "components/tipper/Tips";
@@ -25,33 +32,19 @@ const Home: NextPage = () => {
 
       {session ? (
         <>
-          <Container
-            justify="center"
-            alignItems="center"
-            display="flex"
-            gap={4}
-          >
-            <Text small>Signed in as {session.user.email}</Text>
-            &nbsp;
-            <Button size="xs" onClick={() => signOut()}>
-              Sign out
-            </Button>
-          </Container>
-          <Spacer />
-          {user && <Text>Name: {user.name || "unset"}</Text>}
-          {user && (
-            <Text>Twitter username: {user.twitterUsername || "unset"}</Text>
-          )}
-          <Row justify="center">
-            <Spacer x={0.5} />
+          <Row justify="center" align="center" display="flex">
+            <NextUIUser src={user?.avatarURL ?? undefined} name={user?.name} />
             <NextLink href={Routes.profile}>
               <a>
-                <Button size="sm">Update Profile</Button>
+                <Button size="xs">View profile</Button>
               </a>
             </NextLink>
+            <Spacer x={0.5} />
+            <Button color="secondary" size="xs" onClick={() => signOut()}>
+              Sign out
+            </Button>
           </Row>
-
-          <Spacer y={2} />
+          <Spacer y={1} />
           <NewTipButton />
           <Spacer />
           <Tips />

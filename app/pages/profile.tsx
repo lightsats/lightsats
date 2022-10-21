@@ -1,10 +1,18 @@
-import { Button, Input, Loading, Spacer, Text } from "@nextui-org/react";
+import {
+  Button,
+  Input,
+  Loading,
+  Spacer,
+  Text,
+  User as NextUIUser,
+} from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { BackButton } from "components/BackButton";
 import { MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
+import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
@@ -15,6 +23,7 @@ import { UpdateUserRequest } from "types/UpdateUserRequest";
 type ProfileFormData = {
   name: string;
   twitterUsername: string;
+  avatarURL: string;
 };
 
 const formStyle: React.CSSProperties = {
@@ -31,13 +40,13 @@ const Profile: NextPage = () => {
     defaultFetcher
   );
 
-  if (!user) {
+  if (!session || !user) {
     return null;
   }
-  return <ProfileInternal user={user} />;
+  return <ProfileInternal session={session} user={user} />;
 };
 
-function ProfileInternal({ user }: { user: User }) {
+function ProfileInternal({ session, user }: { session: Session; user: User }) {
   const router = useRouter();
   const [isSubmitting, setSubmitting] = React.useState(false);
 
@@ -45,6 +54,7 @@ function ProfileInternal({ user }: { user: User }) {
     defaultValues: {
       name: user.name ?? undefined,
       twitterUsername: user.twitterUsername ?? undefined,
+      avatarURL: user.avatarURL ?? undefined,
     },
   });
 
@@ -63,6 +73,7 @@ function ProfileInternal({ user }: { user: User }) {
         const updateUserRequest: UpdateUserRequest = {
           name: data.name,
           twitterUsername: data.twitterUsername,
+          avatarURL: data.avatarURL,
         };
         const result = await fetch(`/api/users/${user.id}`, {
           method: "PUT",
@@ -82,7 +93,11 @@ function ProfileInternal({ user }: { user: User }) {
 
   return (
     <>
-      <Text style={{ textAlign: "center" }}>
+      <NextUIUser src={user.avatarURL ?? undefined} name={user.name} />
+      <Spacer />
+      <Text>Logged in as {session.user.email}</Text>
+      <Spacer />
+      <Text style={{ textAlign: "center", maxWidth: "350px" }}>
         Fill out the fields below to increase the authenticity of your tips and
         provide a way for tippees to contact you.
       </Text>
@@ -110,6 +125,19 @@ function ProfileInternal({ user }: { user: User }) {
               label="Twitter Username"
               placeholder="jack"
               fullWidth
+            />
+          )}
+        />
+        <Controller
+          name="avatarURL"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              label="Avatar URL"
+              placeholder="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
+              fullWidth
+              type="url"
             />
           )}
         />
