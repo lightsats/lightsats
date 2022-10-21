@@ -36,9 +36,17 @@ export default async function handler(
         successRate: withdrawnTips.length
           ? withdrawnTips.length / user.tipsSent.length
           : 0,
-        name: user.name ?? undefined,
-        avatarURL: user.avatarURL ?? undefined,
-        twitterUsername: user.twitterUsername ?? undefined,
+        ...(user.isAnonymous
+          ? {
+              name: undefined,
+              avatarURL: undefined,
+              twitterUsername: undefined,
+            }
+          : {
+              name: user.name ?? undefined,
+              avatarURL: user.avatarURL ?? undefined,
+              twitterUsername: user.twitterUsername ?? undefined,
+            }),
       };
     });
 

@@ -56,6 +56,7 @@ async function updateUser(
       name: updateUserRequest.name ?? null,
       twitterUsername: updateUserRequest.twitterUsername ?? null,
       avatarURL: updateUserRequest.avatarURL ?? null,
+      isAnonymous: updateUserRequest.isAnonymous,
     },
   });
 

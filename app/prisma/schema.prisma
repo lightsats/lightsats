@@ -63,6 +63,7 @@ model User {
   emailVerified DateTime?
   accounts Account[]
   sessions Session[]
+  isAnonymous Boolean @default(false)
 }
 
 model Tip {

@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   Input,
   Loading,
   Spacer,
@@ -24,6 +25,7 @@ type ProfileFormData = {
   name: string;
   twitterUsername: string;
   avatarURL: string;
+  isAnonymous: boolean;
 };
 
 const formStyle: React.CSSProperties = {
@@ -65,6 +67,7 @@ function ProfileInternal({
       name: user.name ?? undefined,
       twitterUsername: user.twitterUsername ?? undefined,
       avatarURL: user.avatarURL ?? undefined,
+      isAnonymous: user.isAnonymous,
     },
   });
 
@@ -84,6 +87,7 @@ function ProfileInternal({
           name: data.name,
           twitterUsername: data.twitterUsername,
           avatarURL: data.avatarURL,
+          isAnonymous: data.isAnonymous,
         };
         const result = await fetch(`/api/users/${user.id}`, {
           method: "PUT",
@@ -158,6 +162,20 @@ function ProfileInternal({
               placeholder="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
               fullWidth
               type="url"
+            />
+          )}
+        />
+        <Spacer />
+        <Controller
+          name="isAnonymous"
+          control={control}
+          render={({ field }) => (
+            <Checkbox
+              {...field}
+              value={undefined}
+              isSelected={field.value}
+              label="Anonymous on scoreboard"
+              size="sm"
             />
           )}
         />
