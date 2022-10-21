@@ -8,12 +8,12 @@ import {
 } from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { BackButton } from "components/BackButton";
-import { MAX_USER_NAME_LENGTH } from "lib/constants";
+import { DEFAULT_NAME, MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -104,9 +104,16 @@ function ProfileInternal({
 
   return (
     <>
-      <NextUIUser src={user.avatarURL ?? undefined} name={user.name} />
+      <NextUIUser
+        src={user.avatarURL ?? undefined}
+        name={user.name ?? DEFAULT_NAME}
+      />
       <Spacer />
       <Text>Logged in as {session.user.email}</Text>
+      <Spacer />
+      <Button color="error" size="xs" onClick={() => signOut()}>
+        Sign out
+      </Button>
       <Spacer />
       <Text style={{ textAlign: "center", maxWidth: "350px" }}>
         Fill out the fields below to increase the authenticity of your tips and

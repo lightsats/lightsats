@@ -9,10 +9,11 @@ import {
 import { User } from "@prisma/client";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { Tips } from "components/tipper/Tips";
+import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import NextLink from "next/link";
 import useSWR from "swr";
@@ -33,16 +34,25 @@ const Home: NextPage = () => {
       {session ? (
         <>
           <Row justify="center" align="center">
-            <NextUIUser src={user?.avatarURL ?? undefined} name={user?.name} />
+            <NextUIUser
+              src={user?.avatarURL ?? undefined}
+              name={user?.name ?? DEFAULT_NAME}
+            />
             <NextLink href={Routes.profile}>
               <a>
-                <Button size="xs">View profile</Button>
+                <Button color="secondary" size="xs">
+                  Profile
+                </Button>
               </a>
             </NextLink>
             <Spacer x={0.5} />
-            <Button color="secondary" size="xs" onClick={() => signOut()}>
-              Sign out
-            </Button>
+            <NextLink href={Routes.scoreboard}>
+              <a>
+                <Button color="success" size="xs">
+                  Scoreboard
+                </Button>
+              </a>
+            </NextLink>
           </Row>
           <Spacer y={1} />
           <NewTipButton />
