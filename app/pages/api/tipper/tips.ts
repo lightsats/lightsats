@@ -142,6 +142,7 @@ async function handlePostTip(
       expiry,
       currency: createTipRequest.currency,
       note: createTipRequest.note,
+      tippeeName: createTipRequest.tippeeName,
     },
   });
 

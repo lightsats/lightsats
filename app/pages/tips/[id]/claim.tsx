@@ -96,6 +96,12 @@ const ClaimTipPage: NextPage = () => {
           )
         ) : !session ? (
           <>
+            {
+              <Text h5>
+                Hello
+                {publicTip.tippeeName && ` ${publicTip.tippeeName}`}!
+              </Text>
+            }
             <Text h3>
               {publicTip.tipper.name
                 ? `${publicTip.tipper.name} has gifted you:`

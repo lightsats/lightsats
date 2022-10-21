@@ -36,6 +36,7 @@ type NewTipFormData = {
   note: string;
   expiresIn: number;
   expiryUnit: ExpiryUnit;
+  tippeeName: string;
 };
 
 const formStyle: React.CSSProperties = {
@@ -142,6 +143,7 @@ const NewTip: NextPage = () => {
             expiry: add(new Date(), {
               [data.expiryUnit]: data.expiresIn,
             }),
+            tippeeName: data.tippeeName?.length ? data.tippeeName : undefined,
           };
           const result = await fetch("/api/tipper/tips", {
             method: "POST",
@@ -222,6 +224,20 @@ const NewTip: NextPage = () => {
             fiat={!isNaN(watchedAmount) ? watchedAmount : 0}
           />
         )}
+        <Spacer />
+        <Controller
+          name="tippeeName"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              label="Tippee name (optional)"
+              placeholder="Hal Finney"
+              maxLength={255}
+              fullWidth
+            />
+          )}
+        />
         <Spacer />
         <Controller
           name="note"

@@ -44,6 +44,7 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     },
     status: tip.status,
     expiry: tip.expiry,
+    tippeeName: tip.tippeeName,
   };
 
   res.status(StatusCodes.OK).json(publicTip);

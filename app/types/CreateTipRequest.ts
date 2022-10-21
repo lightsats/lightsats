@@ -1,6 +1,7 @@
 export type CreateTipRequest = {
   amount: number;
   currency: string;
-  note?: string;
   expiry: Date;
+  tippeeName?: string;
+  note?: string;
 };
