@@ -16,7 +16,9 @@
     "db:push:production:force": "dotenv -e .env.production -- yarn prisma db push --accept-data-loss",
     "deploy:staging": "fly deploy -c fly-staging.toml",
     "deploy:production": "cli-confirm \"Do you really want to do a production deployment?\" && fly deploy -c fly-production.toml",
-    "prettier": "yarn prettier --write ."
+    "prettier": "yarn prettier --write .",
+    "logs:staging": "fly logs -a lightsats",
+    "logs:production": "fly logs -a lightsats-prod"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.5",
