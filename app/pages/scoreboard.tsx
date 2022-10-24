@@ -2,6 +2,7 @@ import {
   Badge,
   Card,
   Grid,
+  Link,
   Loading,
   Row,
   Spacer,
@@ -10,6 +11,7 @@ import {
 } from "@nextui-org/react";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
+import Image from "next/image";
 import useSWR from "swr";
 import { Scoreboard as ScoreboardType } from "types/Scoreboard";
 
@@ -75,6 +77,19 @@ const Scoreboard: NextPage = () => {
                       name={scoreboardEntry.name ?? "anon"}
                       src={scoreboardEntry.avatarURL}
                     />
+                    {scoreboardEntry.twitterUsername && (
+                      <Link
+                        href={`https://twitter.com/${scoreboardEntry.twitterUsername}`}
+                        target="_blank"
+                      >
+                        <Image
+                          alt="twitter"
+                          src="/icons/twitter.svg"
+                          width={16}
+                          height={16}
+                        />
+                      </Link>
+                    )}
                   </Row>
                   <Spacer />
                   <Row>
@@ -111,7 +126,7 @@ const Scoreboard: NextPage = () => {
         <Grid xs={12} justify="center">
           <Row justify="space-between" align="center">
             <Row justify="center" align="center">
-              <Badge>#Tips</Badge>
+              <Badge>Placing</Badge>
             </Row>
             <Row justify="flex-start" align="center">
               <Badge>Tipper</Badge>
@@ -160,6 +175,19 @@ const Scoreboard: NextPage = () => {
                     name={scoreboardEntry.name ?? "anon"}
                     src={scoreboardEntry.avatarURL}
                   />
+                  {scoreboardEntry.twitterUsername && (
+                    <Link
+                      href={`https://twitter.com/${scoreboardEntry.twitterUsername}`}
+                      target="_blank"
+                    >
+                      <Image
+                        alt="twitter"
+                        src="/icons/twitter.svg"
+                        width={16}
+                        height={16}
+                      />
+                    </Link>
+                  )}
                 </Row>
                 <Row justify="center" align="center">
                   <Badge color="success">{scoreboardEntry.satsSent}⚡</Badge>
