@@ -55,8 +55,8 @@ const Home: NextPage = () => {
             </NextLink>
           </Row>
           <Spacer y={1} />
-          <Text color="error">
-            IN BETA - PLEASE ONLY TIP SMALL AMOUNTS YOU ARE WILLING TO LOSE!
+          <Text color="error" size="small" b>
+            BETA - PLEASE ONLY TIP AMOUNTS YOU ARE WILLING TO LOSE!
           </Text>
           <Spacer y={1} />
           <NewTipButton />

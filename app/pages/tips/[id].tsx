@@ -27,7 +27,7 @@ const TipPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const claimUrl = global.window
-    ? `${window.location.origin}/${Routes.tips}/${id}/claim`
+    ? `${window.location.origin}${Routes.tips}/${id}/claim`
     : undefined;
   const { mutate } = useSWRConfig();
   const mutateTips = React.useCallback(

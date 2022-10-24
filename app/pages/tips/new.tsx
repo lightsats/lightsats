@@ -245,7 +245,7 @@ const NewTip: NextPage = () => {
                 <Text size="small">
                   {"+"}
                   {!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
-                  {" sat / "}
+                  {" sats / "}
                   <FiatPrice
                     sats={!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
                     currency={watchedCurrency}
