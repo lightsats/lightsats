@@ -75,6 +75,11 @@ function ProfileInternal({
     setFocus("name");
   }, [setFocus]);
 
+  const executeSignout = React.useCallback(() => {
+    signOut();
+    router.push(Routes.home);
+  }, [router]);
+
   const onSubmit = React.useCallback(
     (data: ProfileFormData) => {
       if (isSubmitting) {
@@ -115,7 +120,7 @@ function ProfileInternal({
       <Spacer />
       <Text>Logged in as {session.user.email}</Text>
       <Spacer />
-      <Button color="error" size="xs" onClick={() => signOut()}>
+      <Button color="error" size="xs" onClick={executeSignout}>
         Sign out
       </Button>
       <Spacer />
