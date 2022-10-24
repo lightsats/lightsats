@@ -7,6 +7,7 @@ export const MIN_TIP_SATS = 1;
 export const MAX_USER_NAME_LENGTH = 50;
 export const DEFAULT_NAME = "anon";
 export const FEE_PERCENT = 1;
+export const MINIMUM_FEE_SATS = 10;
 
 export const refundableTipStatuses: TipStatus[] = [
   "UNCLAIMED",

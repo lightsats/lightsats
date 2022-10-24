@@ -16,7 +16,12 @@ import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { SatsPrice } from "components/SatsPrice";
 import { add } from "date-fns";
-import { appName, FEE_PERCENT, MIN_TIP_SATS } from "lib/constants";
+import {
+  appName,
+  FEE_PERCENT,
+  MINIMUM_FEE_SATS,
+  MIN_TIP_SATS,
+} from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { calculateFee, getFiatAmount, getSatsAmount } from "lib/utils";
@@ -239,7 +244,7 @@ const NewTip: NextPage = () => {
         {watchedExchangeRate ? (
           <Row justify="center" align="center">
             <Tooltip
-              content={`The ${FEE_PERCENT}% fee covers outbound routing and ${appName} infrastructure costs`}
+              content={`The ${FEE_PERCENT}% (minimum ${MINIMUM_FEE_SATS} sats) fee covers outbound routing and ${appName} infrastructure costs`}
             >
               <Link>
                 <Text size="small">
