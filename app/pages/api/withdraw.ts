@@ -8,16 +8,6 @@ import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { WithdrawalRequest } from "types/WithdrawalRequest";
 
-type PayInvoiceRequest = {
-  out: true;
-  bolt11: string;
-};
-
-type PayInvoiceResponse = {
-  payment_hash: "401d1d3688d16525660eac68def1d8a984274f265d7a2840df303f2274026b99";
-  checking_id: "401d1d3688d16525660eac68def1d8a984274f265d7a2840df303f2274026b99";
-};
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
