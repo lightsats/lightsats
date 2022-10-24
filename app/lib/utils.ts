@@ -1,4 +1,4 @@
-import { SATS_TO_BTC } from "lib/constants";
+import { FEE_PERCENT, SATS_TO_BTC } from "lib/constants";
 import { MouseEventHandler } from "react";
 
 export function getSatsAmount(fiat: number, exchangeRate: number) {
@@ -18,3 +18,8 @@ export const fixNextUIButtonLink: MouseEventHandler<HTMLButtonElement> = (
 ) => {
   e?.preventDefault();
 };
+
+export function calculateFee(amount: number) {
+  // always round fees UP to nearest sat value, to simplify calculations and make sure fees are always sufficient
+  return Math.ceil(amount * (FEE_PERCENT / 100));
+}

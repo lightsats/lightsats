@@ -1,6 +1,7 @@
 import { Prisma, TipStatus } from "@prisma/client";
 import * as bolt11 from "bolt11";
 import { StatusCodes } from "http-status-codes";
+import { createInvoice, getWalletBalance, payInvoice } from "lib/lnbits";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
@@ -96,73 +97,48 @@ async function handleWithdrawal(
   }
 
   const amount = tips.map((tip) => tip.amount).reduce((a, b) => a + b);
+  const fees = tips.map((tip) => tip.fee).reduce((a, b) => a + b);
 
   if (withdrawalInvoicePriceInSats !== amount) {
     res.status(StatusCodes.CONFLICT).end();
     return;
   }
 
-  // FIXME: the sats aren't actually "withdrawn" yet, just than an invoice will be generated for them.
-  await prisma.tip.updateMany({
-    where: whereQuery,
-    data: {
-      status: "WITHDRAWING",
-      withdrawalFlow: withdrawalRequest.flow,
+  const userWallet = await prisma.lnbitsWallet.findUnique({
+    where: {
+      userId: session.user.id,
     },
   });
+  if (!userWallet) {
+    throw new Error("User " + session.user.id + " has no staging wallet");
+  }
+
+  // await prisma.tip.updateMany({
+  //   where: whereQuery,
+  //   data: {
+  //     status: "WITHDRAWING",
+  //     withdrawalFlow: withdrawalRequest.flow,
+  //   },
+  // });
 
   // curl -X POST https://legend.lnbits.com/api/v1/payments -d '{"out": true, "bolt11": <string>}' -H "X-Api-Key: 76c2153437ea421b8f2a0067e786d340" -H "Content-type: application/json"
 
-  const payInvoiceRequest: PayInvoiceRequest = {
-    out: true,
-    bolt11: withdrawalRequest.invoice,
-  };
-
-  const payInvoiceRequestHeaders = new Headers();
-  payInvoiceRequestHeaders.append("Content-Type", "application/json");
-  payInvoiceRequestHeaders.append("Accept", "application/json");
-  payInvoiceRequestHeaders.append("X-Api-Key", process.env.LNBITS_API_KEY);
-
-  const payInvoiceResponse = await fetch(
-    `${process.env.LNBITS_URL}/api/v1/payments`,
-    {
-      method: "POST",
-      body: JSON.stringify(payInvoiceRequest),
-      headers: payInvoiceRequestHeaders,
-    }
+  const { payInvoiceResponse, payInvoiceResponseBody } = await payInvoice(
+    withdrawalRequest.invoice,
+    userWallet.adminKey
   );
 
-  console.log(
-    "withdraw - payInvoiceResponse",
-    payInvoiceResponse.status,
-    payInvoiceResponse.statusText
-  );
-  let responseBody: PayInvoiceResponse | undefined;
-  try {
-    responseBody = await payInvoiceResponse.json();
-    console.log("withdraw - responseBody", responseBody);
-  } catch {
-    console.error("Failed to parse withdrawal invoice response body");
-  }
-
-  // console.log("Payment invoice response", payInvoiceResponse);
-
-  // tips were updated - update the status to retrieve the same tips
-  whereQuery.status = {
-    equals: "WITHDRAWING",
-  };
-
-  if (responseBody) {
+  if (payInvoiceResponseBody) {
     await prisma.tip.updateMany({
       where: whereQuery,
       data: {
-        withdrawalInvoiceId: responseBody.checking_id,
+        withdrawalInvoiceId: payInvoiceResponseBody.checking_id,
         withdrawalInvoice: withdrawalRequest.invoice,
         payInvoiceStatus: payInvoiceResponse.status,
         payInvoiceStatusText: payInvoiceResponse.statusText,
         payInvoiceErrorBody:
-          !payInvoiceResponse.ok && responseBody
-            ? JSON.stringify(responseBody)
+          !payInvoiceResponse.ok && payInvoiceResponseBody
+            ? JSON.stringify(payInvoiceResponseBody)
             : null,
       },
     });
@@ -170,17 +146,18 @@ async function handleWithdrawal(
 
   if (!payInvoiceResponse.ok) {
     // revert to initial status so the user can retry
-    await prisma.tip.updateMany({
-      where: whereQuery,
-      data: {
-        status: initialStatus,
-      },
-    });
+    console.error(
+      "Failed to withdraw funds for user " +
+        session.user.id +
+        ": " +
+        payInvoiceResponse.status,
+      payInvoiceResponseBody
+    );
 
     res.status(StatusCodes.BAD_GATEWAY).json({
       status: payInvoiceResponse.status,
       statusText: payInvoiceResponse.statusText,
-      body: responseBody,
+      body: payInvoiceResponseBody,
     });
   } else {
     await prisma.tip.updateMany({
@@ -189,6 +166,31 @@ async function handleWithdrawal(
         status: withdrawalRequest.flow === "tippee" ? "WITHDRAWN" : "REFUNDED",
       },
     });
+
+    try {
+      const remainingWalletBalance = await getWalletBalance(
+        userWallet.adminKey
+      );
+      console.log(
+        `User has a remaining balance of ${remainingWalletBalance}/${fees} fees`
+      );
+      if (remainingWalletBalance > 0) {
+        const { invoice } = await createInvoice(
+          remainingWalletBalance,
+          process.env.LNBITS_API_KEY,
+          "withdraw unspent fees",
+          undefined
+        );
+        await payInvoice(invoice, userWallet.adminKey);
+      }
+    } catch (error) {
+      console.error(
+        "Failed to withdraw remaining balance from user " +
+          session.user.id +
+          " staging wallet",
+        error
+      );
+    }
 
     res.status(204).end();
   }

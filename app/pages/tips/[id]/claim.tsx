@@ -100,7 +100,7 @@ const ClaimTipPage: NextPage = () => {
             </>
           ) : (
             <>
-              <Text>This tip has already been gifted.</Text>
+              <Text>This tip is no longer available.</Text>
               <Spacer />
               <BackButton />
             </>

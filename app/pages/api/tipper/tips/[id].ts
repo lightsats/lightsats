@@ -45,7 +45,41 @@ async function deleteTip(
   req: NextApiRequest,
   res: NextApiResponse<Tip>
 ) {
+  if (!process.env.LNBITS_API_KEY) {
+    throw new Error("No LNBITS_API_KEY provided");
+  }
+
   if (tip.status === TipStatus.UNFUNDED) {
+    const lnbitsWallet = await prisma.lnbitsWallet.findUnique({
+      where: {
+        tipId: tip.id,
+      },
+    });
+    if (lnbitsWallet) {
+      const deleteWalletRequestHeaders = new Headers();
+      deleteWalletRequestHeaders.append(
+        "X-Api-Key",
+        process.env.LNBITS_API_KEY
+      );
+
+      const deleteLnbitsUserResponse = await fetch(
+        `${process.env.LNBITS_URL}/usermanager/api/v1/users/${lnbitsWallet.lnbitsUserId}`,
+        {
+          method: "DELETE",
+          headers: deleteWalletRequestHeaders,
+        }
+      );
+      console.log(
+        "Tip",
+        tip.id,
+        "Delete tip lnbits user + wallet response: ",
+        deleteLnbitsUserResponse.status,
+        deleteLnbitsUserResponse.statusText
+      );
+    } else {
+      console.warn("No lnbits user+wallet for tip " + tip.id);
+    }
+
     await prisma.tip.delete({
       where: {
         id: tip.id,

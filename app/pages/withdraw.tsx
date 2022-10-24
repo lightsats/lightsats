@@ -78,12 +78,14 @@ const Withdraw: NextPage = () => {
     [flow, tips]
   );
 
-  const nextExpiry = withdrawableTips?.find(
-    (tip) =>
-      !withdrawableTips.some((other) =>
-        isBefore(new Date(other.expiry), new Date(tip.expiry))
-      )
-  )?.expiry;
+  const nextExpiry =
+    flow === "tippee" &&
+    withdrawableTips?.find(
+      (tip) =>
+        !withdrawableTips.some((other) =>
+          isBefore(new Date(other.expiry), new Date(tip.expiry))
+        )
+    )?.expiry;
 
   const tipIds = React.useMemo(
     () => (flow === "tippee" ? tips?.map((tip) => tip.id) : []),

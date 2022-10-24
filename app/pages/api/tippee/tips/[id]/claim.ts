@@ -2,6 +2,7 @@ import { Tip } from "@prisma/client";
 import { isAfter } from "date-fns";
 import { StatusCodes } from "http-status-codes";
 import prisma from "lib/prismadb";
+import { stageTip } from "lib/stageTip";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -36,6 +37,9 @@ async function handleClaimTip(
     where: {
       id: id as string,
     },
+    include: {
+      lnbitsWallet: true,
+    },
   });
   if (!tip) {
     res.status(StatusCodes.NOT_FOUND).end();
@@ -54,6 +58,7 @@ async function handleClaimTip(
     res.status(StatusCodes.CONFLICT).end();
     return;
   }
+  await stageTip(session.user.id, tip, "tippee");
   await prisma.tip.update({
     where: {
       id: id as string,

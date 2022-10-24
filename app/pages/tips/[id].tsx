@@ -52,7 +52,7 @@ const TipPage: NextPage = () => {
   );
 
   const copyInvoice = React.useCallback(() => {
-    if (tip) {
+    if (tip?.invoice) {
       copy(tip.invoice);
       alert("Copied to clipboard");
     }
@@ -99,7 +99,14 @@ const TipPage: NextPage = () => {
         <Row align="center" justify="center">
           <TipStatusBadge status={tip.status} />
           <Spacer x={0.5} />
-          <Badge color="default">{tip.amount}⚡</Badge>
+          <Badge color="default">
+            <Text size="small" color="white">
+              {tip.amount}⚡{" "}
+            </Text>
+            <Text size="x-small" color="white">
+              +{tip.fee}
+            </Text>
+          </Badge>
           <Spacer x={0.5} />
           <Badge color="default">
             <FiatPrice
@@ -135,7 +142,7 @@ const TipPage: NextPage = () => {
           </>
         )}
         <Spacer />
-        {!hasExpired && tip.status === "UNFUNDED" && (
+        {!hasExpired && tip.status === "UNFUNDED" && tip.invoice && (
           <>
             <Text>Waiting for payment</Text>
             <Loading type="points" color="currentColor" size="sm" />
@@ -200,6 +207,23 @@ const TipPage: NextPage = () => {
             )}
           </>
         )}
+        {tip.status === "WITHDRAWN" ||
+          (tip.status === "REFUNDED" && (
+            <>
+              <Spacer />
+              <Text
+                size="small"
+                style={{
+                  textAlign: "center",
+                  wordBreak: "break-all",
+                  maxWidth: "300px",
+                }}
+              >
+                Invoice of {tip.amount} sats has been paid:{" "}
+                {tip.withdrawalInvoice}
+              </Text>
+            </>
+          ))}
         {refundableTipStatuses.indexOf(tip.status) >= 0 && (
           <>
             <Spacer />

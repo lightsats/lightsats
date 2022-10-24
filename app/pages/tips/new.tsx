@@ -9,16 +9,17 @@ import {
   Spacer,
   Text,
   Textarea,
+  Tooltip,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { SatsPrice } from "components/SatsPrice";
 import { add } from "date-fns";
-import { MIN_TIP_SATS } from "lib/constants";
+import { appName, FEE_PERCENT, MIN_TIP_SATS } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { getFiatAmount, getSatsAmount } from "lib/utils";
+import { calculateFee, getFiatAmount, getSatsAmount } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -73,22 +74,28 @@ const NewTip: NextPage = () => {
   const watchedAmount = watch("amount");
   const watchedCurrency = watch("currency");
   const watchedExpiryUnit = watch("expiryUnit");
-
-  const currentExchangeRate = exchangeRates?.[watchedCurrency];
+  const watchedExchangeRate = exchangeRates?.[watchedCurrency];
+  const watchedAmountFee = watchedExchangeRate
+    ? calculateFee(
+        inputMethod === "fiat"
+          ? getSatsAmount(watchedAmount, watchedExchangeRate)
+          : watchedAmount
+      )
+    : 0;
 
   const toggleInputMethod = React.useCallback(() => {
-    if (currentExchangeRate) {
+    if (watchedExchangeRate) {
       setInputMethod(inputMethod === "fiat" ? "sats" : "fiat");
       setValue(
         "amount",
         inputMethod === "fiat"
-          ? getSatsAmount(watchedAmount, currentExchangeRate)
+          ? getSatsAmount(watchedAmount, watchedExchangeRate)
           : Math.round(
-              getFiatAmount(watchedAmount, currentExchangeRate) * 100
+              getFiatAmount(watchedAmount, watchedExchangeRate) * 100
             ) / 100
       );
     }
-  }, [watchedAmount, currentExchangeRate, inputMethod, setValue]);
+  }, [watchedAmount, watchedExchangeRate, inputMethod, setValue]);
 
   const exchangeRateKeys = React.useMemo(
     () => (exchangeRates ? Object.keys(exchangeRates) : undefined),
@@ -119,7 +126,7 @@ const NewTip: NextPage = () => {
 
   const onSubmit = React.useCallback(
     (data: NewTipFormData) => {
-      if (!currentExchangeRate) {
+      if (!watchedExchangeRate) {
         throw new Error("Exchange rates not loaded");
       }
       if (isSubmitting) {
@@ -127,8 +134,11 @@ const NewTip: NextPage = () => {
       }
       const satsAmount =
         inputMethod === "fiat"
-          ? getSatsAmount(data.amount, currentExchangeRate)
+          ? getSatsAmount(data.amount, watchedExchangeRate)
           : data.amount;
+      if (isNaN(satsAmount)) {
+        throw new Error("Invalid tip amount");
+      }
       if (satsAmount < MIN_TIP_SATS) {
         throw new Error("Tip amount is too small");
       }
@@ -164,7 +174,7 @@ const NewTip: NextPage = () => {
         setSubmitting(false);
       })();
     },
-    [currentExchangeRate, inputMethod, isSubmitting, router]
+    [watchedExchangeRate, inputMethod, isSubmitting, router]
   );
 
   return (
@@ -212,17 +222,42 @@ const NewTip: NextPage = () => {
           </Row>
         </Container>
         <Spacer />
-        {inputMethod === "sats" ? (
-          <FiatPrice
-            currency={watchedCurrency}
-            exchangeRate={exchangeRates?.[watchedCurrency]}
-            sats={!isNaN(watchedAmount) ? watchedAmount : 0}
-          />
+        <Row justify="center" align="center">
+          {inputMethod === "sats" ? (
+            <FiatPrice
+              currency={watchedCurrency}
+              exchangeRate={exchangeRates?.[watchedCurrency]}
+              sats={!isNaN(watchedAmount) ? watchedAmount : 0}
+            />
+          ) : (
+            <SatsPrice
+              exchangeRate={exchangeRates?.[watchedCurrency]}
+              fiat={!isNaN(watchedAmount) ? watchedAmount : 0}
+            />
+          )}
+        </Row>
+        {watchedExchangeRate ? (
+          <Row justify="center" align="center">
+            <Tooltip
+              content={`The ${FEE_PERCENT}% fee covers outbound routing and ${appName} infrastructure costs`}
+            >
+              <Link>
+                <Text size="small">
+                  {"+"}
+                  {!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
+                  {" sat / "}
+                  <FiatPrice
+                    sats={!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
+                    currency={watchedCurrency}
+                    exchangeRate={watchedExchangeRate}
+                  />
+                  {" fee"}
+                </Text>
+              </Link>
+            </Tooltip>
+          </Row>
         ) : (
-          <SatsPrice
-            exchangeRate={exchangeRates?.[watchedCurrency]}
-            fiat={!isNaN(watchedAmount) ? watchedAmount : 0}
-          />
+          <Loading type="spinner" color="currentColor" size="sm" />
         )}
         <Spacer />
         <Controller

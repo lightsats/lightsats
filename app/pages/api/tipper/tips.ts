@@ -1,24 +1,17 @@
 import { Tip } from "@prisma/client";
 import { add } from "date-fns";
 import { StatusCodes } from "http-status-codes";
-import { appName } from "lib/constants";
+import {
+  createFundingInvoice,
+  createLnbitsUserAndWallet,
+  generateUserAndWalletName,
+} from "lib/lnbits";
 import prisma from "lib/prismadb";
+import { calculateFee } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { CreateTipRequest } from "types/CreateTipRequest";
-
-type CreateInvoiceRequest = {
-  out: false;
-  amount: number;
-  memo: string;
-  webhook: string;
-};
-
-type CreateInvoiceResponse = {
-  payment_hash: string;
-  payment_request: string;
-};
 
 export default async function handler(
   req: NextApiRequest,
@@ -78,6 +71,9 @@ async function handlePostTip(
   if (!process.env.LNBITS_WEBHOOK_SECRET_KEY) {
     throw new Error("No LNBITS_WEBHOOK_SECRET_KEY provided");
   }
+  if (!process.env.LNBITS_USER_ID) {
+    throw new Error("No LNBITS_USER_ID provided");
+  }
 
   // console.log(
   //   "create tip",
@@ -95,54 +91,76 @@ async function handlePostTip(
     throw new Error("Only tips with positive, whole amounts are allowed");
   }
 
-  // TODO: support creation of multiple tips (createTipRequest.numTips) but pay single invoice
-  // when invoice is paid, update the status of all tips with that invoice
-  const createInvoiceRequest: CreateInvoiceRequest = {
-    out: false,
-    amount: createTipRequest.amount,
-    memo: `${appName} tip`,
-    webhook: `${process.env.APP_URL}/api/webhooks/invoices?key=${process.env.LNBITS_WEBHOOK_SECRET_KEY}`,
-  };
-
-  const createInvoiceRequestHeaders = new Headers();
-  createInvoiceRequestHeaders.append("Content-Type", "application/json");
-  createInvoiceRequestHeaders.append("Accept", "application/json");
-  createInvoiceRequestHeaders.append("X-Api-Key", process.env.LNBITS_API_KEY);
-
-  const createInvoiceResponse = await fetch(
-    `${process.env.LNBITS_URL}/api/v1/payments`,
-    {
-      method: "POST",
-      body: JSON.stringify(createInvoiceRequest),
-      headers: createInvoiceRequestHeaders,
-    }
-  );
-
-  if (!createInvoiceResponse.ok) {
-    throw new Error(
-      "Unable to create invoice: " + createInvoiceResponse.statusText
-    );
-  }
-
-  const createInvoiceResponseData =
-    (await createInvoiceResponse.json()) as CreateInvoiceResponse;
-
   const expiry =
     createTipRequest.expiry ??
     add(new Date(), {
       months: 1,
     });
+  const fee = calculateFee(createTipRequest.amount);
   const tip = await prisma.tip.create({
     data: {
       tipperId: session.user.id,
       amount: createTipRequest.amount,
+      fee,
       status: "UNFUNDED",
-      invoice: createInvoiceResponseData.payment_request,
-      invoiceId: createInvoiceResponseData.payment_hash,
       expiry,
       currency: createTipRequest.currency,
       note: createTipRequest.note,
       tippeeName: createTipRequest.tippeeName,
+      version: 1 /* 0=all tips in same bucket, 1=one wallet per tip */,
+    },
+  });
+
+  const deleteTip = () =>
+    prisma.tip.delete({
+      where: {
+        id: tip.id,
+      },
+    });
+
+  // create a user and wallet for the tip
+  const { createLnbitsUserResponse, createLnbitsUserResponseBody } =
+    await createLnbitsUserAndWallet(generateUserAndWalletName("tip", tip.id));
+
+  if (!createLnbitsUserResponse.ok) {
+    console.error(
+      "Failed to create lnbits user+wallet for tip",
+      createLnbitsUserResponseBody
+    );
+    await deleteTip();
+    throw new Error("Failed to create lnbits user+wallet for tip");
+  }
+
+  const lnbitsWallet = createLnbitsUserResponseBody.wallets[0];
+  try {
+    // save the newly-created lnbits wallet (for creating/paying invoice)
+    await prisma.lnbitsWallet.create({
+      data: {
+        tipId: tip.id,
+        id: lnbitsWallet.id,
+        lnbitsUserId: lnbitsWallet.user,
+        adminKey: lnbitsWallet.adminkey,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to save tip lnbits wallet to database", error);
+    await deleteTip();
+    throw new Error("Failed to save tip lnbits wallet to database");
+  }
+
+  // create the tip's funding invoice
+  const fundingInvoice = await createFundingInvoice(
+    createTipRequest.amount + fee,
+    lnbitsWallet.adminkey
+  );
+
+  await prisma.tip.update({
+    where: {
+      id: tip.id,
+    },
+    data: {
+      invoice: fundingInvoice.invoice,
+      invoiceId: fundingInvoice.invoiceId,
     },
   });
 

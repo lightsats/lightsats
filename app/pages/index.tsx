@@ -56,10 +56,9 @@ const Home: NextPage = () => {
           </Row>
           <Spacer y={1} />
           <Text color="error">
-            PLEASE WITHDRAW YOUR SATS - WALLET RESTRUCTURE COMING SOON!
+            IN BETA - PLEASE ONLY TIP SMALL AMOUNTS YOU ARE WILLING TO LOSE!
           </Text>
           <Spacer y={1} />
-
           <NewTipButton />
           <Spacer />
           <Tips />
