@@ -1,5 +1,6 @@
 import { Tip, TipStatus } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { getWalletBalance } from "lib/lnbits";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
@@ -94,5 +95,28 @@ async function getTip(
   req: NextApiRequest,
   res: NextApiResponse<Tip>
 ) {
+  if (tip.status === 'UNFUNDED') {
+    const wallet = await prisma.lnbitsWallet.findUnique({
+      where: {
+        tipId: tip.id
+      }
+    });
+    if (wallet) {
+      const walletBalance = await getWalletBalance(wallet.adminKey);
+      if (walletBalance === tip.amount + tip.fee) {
+        await prisma.tip.update({
+          data: {
+            status: "UNCLAIMED",
+          },
+          where: {
+            id: tip.id,
+          },
+        });
+        // console.log("Tip has been funded: ", tip.id);
+      }
+    }
+  }
+
+
   res.status(StatusCodes.OK).json(tip);
 }

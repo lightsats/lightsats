@@ -144,7 +144,8 @@ export async function createFundingInvoice(
     amount,
     adminKey,
     `${appName} tip`,
-    `${process.env.APP_URL}/api/webhooks/invoices?key=${process.env.LNBITS_WEBHOOK_SECRET_KEY}`
+    undefined, // webhook no longer used (unreliable)
+    // `${process.env.APP_URL}/api/webhooks/invoices?key=${process.env.LNBITS_WEBHOOK_SECRET_KEY}`
   );
 }
 
@@ -261,7 +262,7 @@ export async function getWalletBalance(walletAdminKey: string) {
   let getWalletResponseBody: GetWalletResponse | undefined;
   try {
     getWalletResponseBody = await getWalletResponse.json();
-    console.log("getWallet", getWalletResponseBody);
+    // console.log("getWallet", getWalletResponseBody);
   } catch {
     console.error("Failed to parse wallet body");
   }

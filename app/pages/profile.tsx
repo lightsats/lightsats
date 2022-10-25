@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { BackButton } from "components/BackButton";
-import { DEFAULT_NAME, MAX_USER_NAME_LENGTH } from "lib/constants";
+import { appName, DEFAULT_NAME, MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -203,8 +203,19 @@ function ProfileInternal({
             <>Update Profile</>
           )}
         </Button>
-        <Spacer />
       </form>
+        <Spacer />
+        <Text
+        size="small"
+        style={{
+          maxWidth: "300px",
+          wordBreak: "break-all",
+          textAlign: "center",
+        }}
+      >
+        {appName} user ID: {session.user.id}
+      </Text>
+      <Spacer/>
       <BackButton />
     </>
   );

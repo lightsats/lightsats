@@ -1,12 +1,11 @@
 import { StatusCodes } from "http-status-codes";
-import prisma from "lib/prismadb";
 import { NextApiRequest, NextApiResponse } from "next";
 
 // many other properties come back from the lnbits webhook, but only the ones that are actually used are added here.
-type PaidInvoice = {
-  payment_hash: string;
-  checking_id: string;
-};
+// type PaidInvoice = {
+//   payment_hash: string;
+//   checking_id: string;
+// };
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,7 +18,12 @@ export default async function handler(
     res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
-  const invoice: PaidInvoice = req.body as PaidInvoice;
+  console.warn("INVOICE WEBHOOK IS DISABLED");
+  // handled in get /api/tipper/tips/[id].tsx
+  // lnbits has no webhook retry mechanism, it is safer
+  // for us to verify the payment ourselves.
+  // for now this is done when the tipper requests the tip (polled on the tip page)
+  /*const invoice: PaidInvoice = req.body as PaidInvoice;
   console.log("Received invoice", invoice);
   await prisma.tip.updateMany({
     data: {
@@ -30,6 +34,7 @@ export default async function handler(
         equals: invoice.checking_id,
       },
     },
-  });
-  res.status(StatusCodes.OK).end();
+  });*/
+  res.status(StatusCodes.GONE).end();
+  //res.status(StatusCodes.OK).end();
 }
