@@ -1,6 +1,7 @@
 import {
   Button,
   Link,
+  Loading,
   Row,
   Spacer,
   Text,
@@ -13,17 +14,22 @@ import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import NextLink from "next/link";
 import useSWR from "swr";
 
 const Home: NextPage = () => {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
+  // console.log("session", session);
   const { data: user } = useSWR<User>(
     session ? `/api/users/${session.user.id}` : null,
     defaultFetcher
   );
+
+  if (sessionStatus === "loading") {
+    return <Loading type="spinner" color="currentColor" size="sm" />;
+  }
 
   return (
     <>
@@ -77,7 +83,17 @@ const Home: NextPage = () => {
             losing them✌🏼
           </Text>
           <Spacer />
-          <Button onClick={() => signIn()}>Sign in</Button>
+          <NextLink href={Routes.lnurlAuthSignin}>
+            <a>
+              <Button>Login with LNURL⚡</Button>
+            </a>
+          </NextLink>
+          {<Spacer />}
+          <NextLink href={Routes.emailSignin}>
+            <a>
+              <Button>Login with Email</Button>
+            </a>
+          </NextLink>
         </>
       )}
     </>

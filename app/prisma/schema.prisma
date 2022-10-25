@@ -104,6 +104,12 @@ model LnbitsWallet {
   adminKey String // for creating/paying invoices ("X-Api-Key")
 }
 
+model LnurlAuthKey {
+  k1 String @id
+  key String?
+  created DateTime @default(now())
+}
+
 enum TipStatus {
   UNFUNDED // tip created but tipper needs to pay invoice to fund the tip
   UNCLAIMED // tip funded but not yet claimed

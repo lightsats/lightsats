@@ -76,7 +76,9 @@ function ProfileInternal({
   }, [setFocus]);
 
   const executeSignout = React.useCallback(() => {
-    signOut();
+    signOut({
+      redirect: false,
+    });
     router.push(Routes.home);
   }, [router]);
 
@@ -118,7 +120,15 @@ function ProfileInternal({
         name={user.name ?? DEFAULT_NAME}
       />
       <Spacer />
-      <Text>Logged in as {session.user.email}</Text>
+      <Text
+        style={{
+          maxWidth: "300px",
+          wordBreak: "break-all",
+          textAlign: "center",
+        }}
+      >
+        Logged in as {session.user.email ?? session.user.lnurlPublicKey}
+      </Text>
       <Spacer />
       <Button color="error" size="xs" onClick={executeSignout}>
         Sign out

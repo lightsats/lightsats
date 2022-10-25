@@ -1,4 +1,13 @@
-import { Badge, Card, Grid, Link, Row, Spacer, Text } from "@nextui-org/react";
+import {
+  Badge,
+  Card,
+  Grid,
+  Link,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
@@ -26,7 +35,7 @@ export function Tips() {
   );
 
   if (session && !tips) {
-    return <>Loading</>;
+    return <Loading type="spinner" color="currentColor" size="sm" />;
   }
 
   const reclaimedTips = tips?.filter((tip) => tip.status === "RECLAIMED");

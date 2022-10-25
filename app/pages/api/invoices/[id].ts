@@ -1,4 +1,3 @@
-// 401d1d3688d16525660eac68def1d8a984274f265d7a2840df303f2274026b99
 import { StatusCodes } from "http-status-codes";
 import type { NextApiRequest, NextApiResponse } from "next";
 

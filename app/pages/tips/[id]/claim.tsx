@@ -13,7 +13,7 @@ import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -140,17 +140,15 @@ const ClaimTipPage: NextPage = () => {
             {hasExpired ? (
               <Text color="error">This tip has expired.</Text>
             ) : (
-              <Button
-                onClick={() =>
-                  signIn("email", {
-                    callbackUrl:
-                      window.location
-                        .href /* redirect back to same page on login */,
-                  })
-                }
+              <NextLink
+                href={`${Routes.emailSignin}?callbackUrl=${encodeURIComponent(
+                  window.location.href
+                )}`}
               >
-                Claim my funds
-              </Button>
+                <a>
+                  <Button>Claim my funds</Button>
+                </a>
+              </NextLink>
             )}
             {!hasExpired && (
               <>
