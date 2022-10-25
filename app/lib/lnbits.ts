@@ -144,7 +144,7 @@ export async function createFundingInvoice(
     amount,
     adminKey,
     `${appName} tip`,
-    undefined, // webhook no longer used (unreliable)
+    undefined // webhook no longer used (unreliable)
     // `${process.env.APP_URL}/api/webhooks/invoices?key=${process.env.LNBITS_WEBHOOK_SECRET_KEY}`
   );
 }
@@ -284,4 +284,59 @@ export async function getWalletBalance(walletAdminKey: string) {
 
   // wallet balance is in millisats
   return getWalletResponseBody.balance / 1000;
+}
+
+type InvoiceStatus = {
+  paid: boolean;
+  preimage: string;
+  details: {
+    checking_id: string;
+    pending: boolean;
+    amount: number;
+    fee: number;
+    memo: string;
+    time: number;
+    bolt11: string;
+    preimage: string;
+    payment_hash: string;
+    extra: unknown;
+    wallet_id: string;
+    webhook: string | null;
+    webhook_status: unknown;
+  };
+};
+
+export async function getInvoiceStatus(walletAdminKey: string, paymentHash: string): Promise<InvoiceStatus> {
+  const getInvoiceRequestHeaders = new Headers();
+  getInvoiceRequestHeaders.append("Accept", "application/json");
+  getInvoiceRequestHeaders.append("X-Api-Key", walletAdminKey);
+
+  const getInvoiceResponse = await fetch(
+    `${process.env.LNBITS_URL}/api/v1/payments/${paymentHash}`,
+    {
+      method: "GET",
+      headers: getInvoiceRequestHeaders,
+    }
+  );
+
+  let invoiceStatus: InvoiceStatus | undefined;
+  try {
+    invoiceStatus = await getInvoiceResponse.json();
+    // console.log("getInvoiceStatus", invoiceStatus);
+  } catch {
+    console.error("Failed to parse invoice status");
+  }
+
+  if (!getInvoiceResponse.ok) {
+    throw new Error(
+      "Unable to get invoice status: " +
+        getInvoiceResponse.statusText +
+        " " +
+        JSON.stringify(invoiceStatus)
+    );
+  }
+  if (!invoiceStatus) {
+    throw new Error("Get wallet did not return a response body");
+  }
+  return invoiceStatus;
 }

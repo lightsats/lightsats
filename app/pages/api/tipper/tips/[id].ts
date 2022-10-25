@@ -1,6 +1,6 @@
 import { Tip, TipStatus } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
-import { getWalletBalance } from "lib/lnbits";
+import { getInvoiceStatus } from "lib/lnbits";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
@@ -101,9 +101,9 @@ async function getTip(
         tipId: tip.id
       }
     });
-    if (wallet) {
-      const walletBalance = await getWalletBalance(wallet.adminKey);
-      if (walletBalance === tip.amount + tip.fee) {
+    if (wallet && tip.invoiceId) {
+      const invoiceStatus = await getInvoiceStatus(wallet.adminKey, tip.invoiceId);
+      if (invoiceStatus.paid) {
         await prisma.tip.update({
           data: {
             status: "UNCLAIMED",
