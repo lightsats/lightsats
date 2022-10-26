@@ -38,6 +38,7 @@ export type ExpiryUnit = typeof ExpiryUnitValues[number];
 
 type NewTipFormData = {
   amount: number;
+  amountString: string;
   currency: string;
   note: string;
   expiresIn: number;
@@ -76,6 +77,7 @@ const NewTip: NextPage = () => {
     setFocus("amount");
   }, [setFocus]);
 
+  const watchedAmountString = watch("amountString");
   const watchedAmount = watch("amount");
   const watchedCurrency = watch("currency");
   const watchedExpiryUnit = watch("expiryUnit");
@@ -87,6 +89,13 @@ const NewTip: NextPage = () => {
           : watchedAmount
       )
     : 0;
+
+  React.useEffect(() => {
+    const parsedValue = parseFloat(watchedAmountString);
+    if (!isNaN(parsedValue)) {
+      setValue("amount", parsedValue);
+    }
+  }, [setValue, watchedAmountString]);
 
   const toggleInputMethod = React.useCallback(() => {
     if (watchedExchangeRate) {
@@ -147,6 +156,9 @@ const NewTip: NextPage = () => {
       if (satsAmount < MIN_TIP_SATS) {
         throw new Error("Tip amount is too small");
       }
+      if (Math.round(satsAmount) !== satsAmount) {
+        throw new Error("sat amount must be a whole value");
+      }
       setSubmitting(true);
 
       (async () => {
@@ -191,14 +203,14 @@ const NewTip: NextPage = () => {
             <Link onClick={toggleInputMethod}>{inputMethod}</Link>
             <Spacer x={0.5} />
             <Controller
-              name="amount"
+              name="amountString"
               control={control}
               render={({ field }) => (
                 <Input
                   {...field}
-                  {...register("amount", {
-                    valueAsNumber: true,
-                  })}
+                  // {...register("amount", {
+                  //   valueAsNumber: true,
+                  // }) causes iOS decimal input bug, resetting field value }
                   min={0}
                   type="number"
                   inputMode="decimal"
