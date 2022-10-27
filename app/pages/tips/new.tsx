@@ -66,7 +66,7 @@ const NewTip: NextPage = () => {
   const { control, handleSubmit, watch, setValue, setFocus, register } =
     useForm<NewTipFormData>({
       defaultValues: {
-        amount: 1,
+        amountString: "1",
         currency: "USD",
         expiresIn: 3,
         expiryUnit: "days",
@@ -101,12 +101,13 @@ const NewTip: NextPage = () => {
     if (watchedExchangeRate) {
       setInputMethod(inputMethod === "fiat" ? "sats" : "fiat");
       setValue(
-        "amount",
-        inputMethod === "fiat"
+        "amountString",
+        (inputMethod === "fiat"
           ? getSatsAmount(watchedAmount, watchedExchangeRate)
           : Math.round(
               getFiatAmount(watchedAmount, watchedExchangeRate) * 100
             ) / 100
+        ).toString()
       );
     }
   }, [watchedAmount, watchedExchangeRate, inputMethod, setValue]);

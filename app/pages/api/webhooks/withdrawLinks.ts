@@ -17,7 +17,7 @@ export default async function handler(
     res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
-  console.warn("INVOICE WEBHOOK IS DISABLED");
+  console.warn("LNURL WITHDRAW LINK WEBHOOK IS DISABLED", req.body);
   // handled in get /api/tipper/tips/[id].tsx
   // lnbits has no webhook retry mechanism, it is safer
   // for us to verify the payment ourselves.

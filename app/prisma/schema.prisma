@@ -65,6 +65,7 @@ model User {
   accounts Account[]
   sessions Session[]
   isAnonymous Boolean @default(false)
+  withdrawalLinks WithdrawalLink[]
 }
 
 model Tip {
@@ -88,10 +89,12 @@ model Tip {
   withdrawalInvoiceId String?
   withdrawalInvoice String?
   withdrawalFlow WithdrawalFlow?
+  withdrawalMethod WithdrawalMethod?
   payInvoiceStatus Int?
   payInvoiceStatusText String?
   payInvoiceErrorBody String?
   version Int @default(0)
+  withdrawalLinkTip WithdrawalLinkTip[]
 }
 
 model LnbitsWallet {
@@ -110,6 +113,29 @@ model LnurlAuthKey {
   created DateTime @default(now())
 }
 
+model WithdrawalLink {
+  id String @id // lnbits withdrawal link ID
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  withdrawalCode String @unique // used to create below memo
+  memo String @unique // used to link lnbits withdraw link title to lnbits paid invoice memo (TODO: find a better way to do this)
+  linkTips WithdrawalLinkTip[]
+  used Boolean @default(false)
+  created DateTime @default(now())
+  amount Int
+  fee Int
+  lnurl String
+}
+
+model WithdrawalLinkTip {
+  tip Tip @relation(fields: [tipId], references: [id])
+  tipId String
+  withdrawalLink WithdrawalLink @relation(fields: [withdrawalLinkId], references: [id], onDelete: Cascade)
+  withdrawalLinkId String
+
+  @@id([tipId, withdrawalLinkId])
+}
+
 enum TipStatus {
   UNFUNDED // tip created but tipper needs to pay invoice to fund the tip
   UNCLAIMED // tip funded but not yet claimed
@@ -125,4 +151,9 @@ enum TipStatus {
 enum WithdrawalFlow {
   tipper
   tippee
+}
+
+enum WithdrawalMethod {
+  lnurlw
+  invoice
 }

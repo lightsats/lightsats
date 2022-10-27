@@ -1,6 +1,6 @@
 import { Tip, TipStatus } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
-import { getInvoiceStatus } from "lib/lnbits";
+import { checkTipHasBeenFunded } from "lib/checkTipHasBeenFunded";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
@@ -12,7 +12,6 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    // TODO: add http status codes
     res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
@@ -95,28 +94,9 @@ async function getTip(
   req: NextApiRequest,
   res: NextApiResponse<Tip>
 ) {
-  if (tip.status === 'UNFUNDED') {
-    const wallet = await prisma.lnbitsWallet.findUnique({
-      where: {
-        tipId: tip.id
-      }
-    });
-    if (wallet && tip.invoiceId) {
-      const invoiceStatus = await getInvoiceStatus(wallet.adminKey, tip.invoiceId);
-      if (invoiceStatus.paid) {
-        await prisma.tip.update({
-          data: {
-            status: "UNCLAIMED",
-          },
-          where: {
-            id: tip.id,
-          },
-        });
-        // console.log("Tip has been funded: ", tip.id);
-      }
-    }
-  }
-
+  // FIXME: this should be in a separate endpoint (GET should be idempotent)
+  // currently used to check if the tip has been funded yet (polled on the tip page)
+  tip = await checkTipHasBeenFunded(tip);
 
   res.status(StatusCodes.OK).json(tip);
 }

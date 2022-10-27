@@ -16,20 +16,38 @@ import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import useSWR from "swr";
+import QRCode from "react-qr-code";
+import useSWR, { SWRConfiguration } from "swr";
+import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
+import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
 import { PublicTip } from "types/PublicTip";
-import { WithdrawalRequest } from "types/WithdrawalRequest";
+
+const checkWithdrawalLinksConfig: SWRConfiguration = { refreshInterval: 1000 };
+const useTipsConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 const Withdraw: NextPage = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const flow = (router.query["flow"] as WithdrawalFlow) ?? "tippee";
+
+  // poll to get updated statuses after withdrawing
   const { data: tips } = useSWR<Tip[]>(
     session ? `/api/${flow}/tips` : null,
-    defaultFetcher
+    defaultFetcher,
+    useTipsConfig
+  );
+
+  // poll withdraw links to check payment
+  // this is unreliable because user might not come back to this page after receiving withdrawal confirmation in their wallet app
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data } = useSWR<unknown>(
+    session ? `/api/users/${session.user.id}/checkWithdrawalLinks` : null,
+    defaultFetcher,
+    checkWithdrawalLinksConfig
   );
 
   const [invoice, setInvoice] = React.useState("");
+  const [withdrawalLinkLnurl, setWithdrawalLinkLnurl] = React.useState("");
   const [isSubmitting, setSubmitting] = React.useState(false);
   const submitForm = React.useCallback(() => {
     if (!invoice) {
@@ -42,8 +60,8 @@ const Withdraw: NextPage = () => {
 
     (async () => {
       try {
-        const withdrawalRequest: WithdrawalRequest = { invoice, flow };
-        const result = await fetch("/api/withdraw", {
+        const withdrawalRequest: InvoiceWithdrawalRequest = { invoice, flow };
+        const result = await fetch("/api/invoices", {
           method: "POST",
           body: JSON.stringify(withdrawalRequest),
           headers: { "Content-Type": "application/json" },
@@ -92,13 +110,38 @@ const Withdraw: NextPage = () => {
     [flow, tips]
   );
 
+  const availableBalance = withdrawableTips?.length
+    ? withdrawableTips.map((tip) => tip.amount).reduce((a, b) => a + b)
+    : 0;
+
+  React.useEffect(() => {
+    if (availableBalance > 0) {
+      (async () => {
+        const withdrawalRequest: LnurlWithdrawalRequest = {
+          amount: availableBalance,
+          flow,
+        };
+        const result = await fetch("/api/withdrawalLinks", {
+          method: "POST",
+          body: JSON.stringify(withdrawalRequest),
+          headers: { "Content-Type": "application/json" },
+        });
+        if (result.ok) {
+          setWithdrawalLinkLnurl(await result.json());
+        } else {
+          const body = await result.text();
+          alert(
+            "Failed to create withdraw link: " + result.statusText + `\n${body}`
+          );
+        }
+      })();
+    }
+  }, [availableBalance, flow]);
+
   if (!session || !tips) {
     return <Text>{"Loading balance..."}</Text>;
   }
 
-  const availableBalance = withdrawableTips?.length
-    ? withdrawableTips.map((tip) => tip.amount).reduce((a, b) => a + b)
-    : 0;
   return (
     <>
       {!availableBalance ? (
@@ -144,6 +187,29 @@ const Withdraw: NextPage = () => {
               </Text>
             </>
           )}
+          <Spacer />
+          {withdrawalLinkLnurl ? (
+            <>
+              <Text>
+                Scan or tap the below link using your lightning wallet to
+                Withdraw.
+              </Text>
+              <Spacer />
+              <Loading type="points" color="currentColor" size="sm" />
+              <Spacer />
+              <NextLink href={`lightning:${withdrawalLinkLnurl}`}>
+                <a>
+                  <QRCode value={withdrawalLinkLnurl} />
+                </a>
+              </NextLink>
+            </>
+          ) : (
+            <>
+              <Loading type="spinner" color="currentColor" size="sm" />
+            </>
+          )}
+          <Spacer y={4} />
+          <Text>Manual withdrawal</Text>
           <Text>
             Create an invoice for{" "}
             <strong>exactly {availableBalance} sats</strong> and paste the

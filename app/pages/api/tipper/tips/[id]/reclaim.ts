@@ -13,7 +13,6 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    // TODO: add http status codes
     res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }

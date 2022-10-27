@@ -12,12 +12,14 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    // TODO: add http status codes
     res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
 
   const { id } = req.query;
+  if (session.user.id !== id) {
+    res.status(StatusCodes.FORBIDDEN).end();
+  }
   const user = await prisma.user.findUnique({
     where: {
       id: id as string,
@@ -26,9 +28,6 @@ export default async function handler(
   if (!user) {
     res.status(StatusCodes.NOT_FOUND).end();
     return;
-  }
-  if (session.user.id !== user.id) {
-    res.status(StatusCodes.FORBIDDEN).end();
   }
 
   switch (req.method) {

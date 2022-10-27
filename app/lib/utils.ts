@@ -23,3 +23,11 @@ export function calculateFee(amount: number) {
   // always round fees UP to nearest sat value, to simplify calculations and make sure fees are always sufficient
   return Math.max(MINIMUM_FEE_SATS, Math.ceil(amount * (FEE_PERCENT / 100)));
 }
+
+export function generateAlphanumeric(length: number): string {
+  return Array.from(Array(length), () =>
+    Math.floor(Math.random() * 36).toString(36)
+  )
+    .join("")
+    .toUpperCase();
+}

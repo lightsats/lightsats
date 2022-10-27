@@ -1,11 +1,11 @@
 import { Tip } from "@prisma/client";
 import { add } from "date-fns";
 import { StatusCodes } from "http-status-codes";
+import { createFundingInvoice } from "lib/lnbits/createInvoice";
 import {
-  createFundingInvoice,
   createLnbitsUserAndWallet,
   generateUserAndWalletName,
-} from "lib/lnbits";
+} from "lib/lnbits/createLnbitsUserAndWallet";
 import prisma from "lib/prismadb";
 import { calculateFee } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -19,7 +19,6 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    // TODO: add http status codes
     res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }

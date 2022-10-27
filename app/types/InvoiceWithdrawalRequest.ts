@@ -1,6 +1,6 @@
 import { WithdrawalFlow } from "@prisma/client";
 
-export type WithdrawalRequest = {
+export type InvoiceWithdrawalRequest = {
   invoice: string;
   flow: WithdrawalFlow;
 };
