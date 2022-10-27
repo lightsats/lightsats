@@ -29,7 +29,7 @@ export async function createWithdrawLink(
     min_withdrawable: amount,
     max_withdrawable: amount,
     uses: 1,
-    is_unique: true,
+    is_unique: false,
     wait_time: 1,
     use_custom: false,
     webhook_url: `${process.env.APP_URL}/withdraw/api/webhooks/withdrawLinks?key=${process.env.LNBITS_WEBHOOK_SECRET_KEY}`,
