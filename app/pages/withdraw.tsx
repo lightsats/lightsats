@@ -8,6 +8,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Tip, WithdrawalFlow } from "@prisma/client";
+import copy from "copy-to-clipboard";
 import { formatDistance, isBefore } from "date-fns";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -138,6 +139,13 @@ const Withdraw: NextPage = () => {
     }
   }, [availableBalance, flow]);
 
+  const copyWithdrawLinkUrl = React.useCallback(() => {
+    if (withdrawalLinkLnurl) {
+      copy(withdrawalLinkLnurl);
+      alert("Copied to clipboard");
+    }
+  }, [withdrawalLinkLnurl]);
+
   if (!session || !tips) {
     return <Text>{"Loading balance..."}</Text>;
   }
@@ -202,6 +210,8 @@ const Withdraw: NextPage = () => {
                   <QRCode value={withdrawalLinkLnurl} />
                 </a>
               </NextLink>
+              <Spacer />
+              <Button onClick={copyWithdrawLinkUrl}>Copy</Button>
             </>
           ) : (
             <>
