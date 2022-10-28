@@ -1,22 +1,14 @@
 import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
-import { User } from "@prisma/client";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { Tips } from "components/tipper/Tips";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import NextLink from "next/link";
-import useSWR from "swr";
 
 const Home: NextPage = () => {
   const { data: session, status: sessionStatus } = useSession();
-  // console.log("session", session);
-  const { data: user } = useSWR<User>(
-    session ? `/api/users/${session.user.id}` : null,
-    defaultFetcher
-  );
 
   if (sessionStatus === "loading") {
     return <Loading type="spinner" color="currentColor" size="sm" />;

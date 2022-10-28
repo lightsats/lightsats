@@ -1,4 +1,4 @@
-import { Avatar, Link, Navbar, Text } from "@nextui-org/react";
+import { Avatar, Link, Navbar, Spacer, Text } from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -68,7 +68,7 @@ export function AppNavbar() {
         </Navbar.Brand>
       </Navbar.Content>
       <Navbar.Content>
-        {session && (
+        {session ? (
           <NextLink href={Routes.profile}>
             <Avatar
               bordered
@@ -78,6 +78,8 @@ export function AppNavbar() {
               src={getUserAvatarUrl(user)}
             />
           </NextLink>
+        ) : (
+          <Spacer x={1} />
         )}
       </Navbar.Content>
 
