@@ -1,3 +1,4 @@
+import { sub } from "date-fns";
 import { StatusCodes } from "http-status-codes";
 import { appName } from "lib/constants";
 import { createWithdrawLink } from "lib/lnbits/createWithdrawLink";
@@ -68,6 +69,11 @@ async function postWithdrawLink(
       userId: session.user.id,
       used: false,
       amount,
+      created: {
+        gt: sub(new Date(), {
+          minutes: 10,
+        }),
+      },
     },
   });
 
@@ -77,7 +83,7 @@ async function postWithdrawLink(
   }
 
   // TODO: consider deleting any unused withdraw links that do not match amount (they are unused and may slow down queries)
-
+  // get a withdraw link and cache it for 10 minutes
   let withdrawalCode: string;
   do {
     withdrawalCode = generateAlphanumeric(5);

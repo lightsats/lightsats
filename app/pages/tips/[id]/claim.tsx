@@ -163,7 +163,7 @@ const ClaimTipPage: NextPage = () => {
                 {publicTip.amount} sats
               </Text>
               <Spacer />
-              <Note tipperName={publicTip.tipper.name} note={publicTip.note} />
+              <Note note={publicTip.note} />
               <Spacer y={2} />
               {hasExpired ? (
                 <Text color="error">This tip has expired.</Text>
@@ -235,13 +235,7 @@ function ClaimFundsContainer({ publicTip }: ClaimFundsContainerProps) {
   );
 }
 
-function Note({
-  tipperName,
-  note,
-}: {
-  tipperName: string | null;
-  note: string | null;
-}) {
+function Note({ note }: { note: string | null }) {
   return note ? (
     <>
       <Row justify="center" align="center">
