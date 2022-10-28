@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import prisma from "lib/prismadb";
+import { getFallbackAvatarId } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PublicTip } from "types/PublicTip";
 
@@ -42,6 +43,7 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
       name: tip.tipper.name,
       twitterUsername: tip.tipper.twitterUsername,
       avatarURL: tip.tipper.avatarURL,
+      fallbackAvatarId: getFallbackAvatarId(tip.tipper),
     },
     status: tip.status,
     expiry: tip.expiry,

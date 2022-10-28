@@ -1,15 +1,27 @@
-import { Avatar, Button, Loading, Row, Spacer, Text } from "@nextui-org/react";
+import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
+import {
+  Avatar,
+  Button,
+  Container,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
+import { Icon } from "components/Icon";
 import { formatDistance, isAfter } from "date-fns";
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
+import { getAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import EmailSignIn from "pages/auth/signin/email";
 import React from "react";
 import useSWR from "swr";
 import { ClaimTipRequest } from "types/ClaimTipRequest";
@@ -65,6 +77,7 @@ const ClaimTipPage: NextPage = () => {
           );
         } else {
           mutatePublicTip();
+          router.push(Routes.withdraw);
         }
       })();
     }
@@ -75,108 +88,150 @@ const ClaimTipPage: NextPage = () => {
       <Head>
         <title>Lightsats⚡ - Claim gift</title>
       </Head>
-      {publicTip ? (
-        publicTip.hasClaimed ? (
-          publicTip.tippeeId === session?.user.id ? (
+      <Container
+        justify="center"
+        alignItems="center"
+        display="flex"
+        direction="column"
+        css={{ maxWidth: "400px" }}
+      >
+        {publicTip ? (
+          publicTip.hasClaimed ? (
+            publicTip.tippeeId === session?.user.id ? (
+              <>
+                <Text>Tip claimed!</Text>
+                <Spacer />
+                <NextLink href={Routes.withdraw}>
+                  <a>
+                    <Button as="a" color="success">
+                      Withdraw
+                    </Button>
+                  </a>
+                </NextLink>
+              </>
+            ) : (
+              <>
+                <Text>This tip is no longer available.</Text>
+                <Spacer />
+                <BackButton />
+              </>
+            )
+          ) : !session || !canClaim ? (
             <>
-              <Text>Tip claimed!</Text>
-              <Spacer />
-              <NextLink href={Routes.withdraw}>
-                <a>
-                  <Button as="a" color="success">
-                    Withdraw
-                  </Button>
-                </a>
-              </NextLink>
+              {publicTip.tippeeName && (
+                <>
+                  <Text h5>
+                    Hello
+                    {` ${publicTip.tippeeName}`}!
+                  </Text>
+                  <Spacer />
+                </>
+              )}
+              <Row justify="center" align="center">
+                {publicTip.tipper.name && (
+                  <>
+                    <Avatar
+                      src={getAvatarUrl(
+                        publicTip.tipper.avatarURL ?? undefined,
+                        publicTip.tipper.fallbackAvatarId
+                      )}
+                      size="md"
+                      bordered
+                    />
+                    <Spacer x={0.5} />
+                  </>
+                )}
+                <Text h4>
+                  {publicTip.tipper.name
+                    ? `${publicTip.tipper.name} has gifted you`
+                    : "You've been gifted"}
+                </Text>
+              </Row>
+              <Spacer y={1} />
+              <Text h1>
+                <FiatPrice
+                  currency={tipCurrency}
+                  exchangeRate={exchangeRates?.[tipCurrency]}
+                  sats={publicTip.amount}
+                  showApprox={false}
+                />
+              </Text>
+              <Spacer y={-0.5} />
+              <Text b color="gray">
+                {publicTip.amount} sats
+              </Text>
               <Spacer />
               <Note tipperName={publicTip.tipper.name} note={publicTip.note} />
+              <Spacer y={2} />
+              {hasExpired ? (
+                <Text color="error">This tip has expired.</Text>
+              ) : (
+                <ClaimFundsContainer publicTip={publicTip} />
+              )}
+              <Spacer />
             </>
-          ) : (
+          ) : isTipper ? (
             <>
-              <Text>This tip is no longer available.</Text>
+              <Text>You created this tip so cannot claim it. 😥</Text>
               <Spacer />
               <BackButton />
             </>
+          ) : (
+            <>
+              <Text>Claiming tip</Text>
+              <Loading type="spinner" color="currentColor" size="sm" />
+            </>
           )
-        ) : !session || !canClaim ? (
-          <>
-            {
-              <Text h5>
-                Hello
-                {publicTip.tippeeName && ` ${publicTip.tippeeName}`}!
-              </Text>
-            }
-            <Row justify="center" align="center">
-              {publicTip.tipper.avatarURL && (
-                <Avatar
-                  src={publicTip.tipper.avatarURL}
-                  size="xl"
-                  style={{ padding: 0 }}
-                />
-              )}
-              <Text h3>
-                {publicTip.tipper.name
-                  ? `${publicTip.tipper.name} has gifted you:`
-                  : "You've been gifted:"}
-              </Text>
-            </Row>
-            <Text h1>
-              <FiatPrice
-                currency={tipCurrency}
-                exchangeRate={exchangeRates?.[tipCurrency]}
-                sats={publicTip.amount}
-              />
-            </Text>
-            <Text>{publicTip.amount} satoshis⚡</Text>
-            <Spacer />
-            {hasExpired ? (
-              <Text color="error">This tip has expired.</Text>
-            ) : (
-              <NextLink
-                href={`${Routes.emailSignin}?callbackUrl=${encodeURIComponent(
-                  window.location.href
-                )}`}
-              >
-                <a>
-                  <Button>Claim my funds</Button>
-                </a>
-              </NextLink>
-            )}
-            {!hasExpired && (
-              <>
-                <Spacer y={0.5} />
-                <Text small color="error">
-                  Expires in{" "}
-                  {formatDistance(new Date(publicTip.expiry), Date.now())}
-                </Text>
-              </>
-            )}
-            <Spacer />
-            <Note tipperName={publicTip.tipper.name} note={publicTip.note} />
-          </>
-        ) : isTipper ? (
-          <>
-            <Text>You created this tip so cannot claim it. 😥</Text>
-            <Spacer />
-            <BackButton />
-          </>
         ) : (
           <>
-            <Text>Claiming tip</Text>
+            <Text>Loading tip</Text>
             <Loading type="spinner" color="currentColor" size="sm" />
           </>
-        )
-      ) : (
-        <>
-          <Text>Loading tip</Text>
-          <Loading type="spinner" color="currentColor" size="sm" />
-        </>
-      )}
+        )}
+      </Container>
     </>
   );
 };
 
 export default ClaimTipPage;
+
+type ClaimFundsContainerProps = {
+  publicTip: PublicTip;
+};
+
+function ClaimFundsContainer({ publicTip }: ClaimFundsContainerProps) {
+  return (
+    <>
+      <EmailSignIn
+        inline
+        callbackUrl={window.location.href}
+        submitText="Claim my funds"
+      />
+      <Spacer y={0.5} />
+      <Text>or</Text>
+      <Spacer y={0.5} />
+
+      <NextLink
+        href={`${Routes.lnurlAuthSignin}?callbackUrl=${encodeURIComponent(
+          window.location.href
+        )}`}
+      >
+        <a style={{ width: "100%" }}>
+          <Button bordered css={{ width: "100%", background: "white" }}>
+            Login with Lightning⚡
+          </Button>
+        </a>
+      </NextLink>
+      <Row justify="center" align="center"></Row>
+      <Spacer y={0.5} />
+      <Row justify="center" align="center">
+        <Text small color="error">
+          Expires in {formatDistance(new Date(publicTip.expiry), Date.now())}
+        </Text>
+      </Row>
+    </>
+  );
+}
 
 function Note({
   tipperName,
@@ -187,12 +242,15 @@ function Note({
 }) {
   return note ? (
     <>
-      <Text>
-        {tipperName
-          ? `${tipperName} also sent you a note:`
-          : `You were also sent a note:`}
-      </Text>
-      <Text>{note}</Text>
+      <Row justify="center" align="center">
+        <Icon>
+          <ChatBubbleOvalLeftIcon />
+        </Icon>
+        <Spacer x={0.25} />
+        <Text i size="small">
+          {note}
+        </Text>
+      </Row>
     </>
   ) : null;
 }

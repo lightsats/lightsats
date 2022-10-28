@@ -20,6 +20,7 @@ const useLnurlStatusConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 export default function LnurlAuthSignIn({ csrfToken }: EmailSignInProps) {
   const router = useRouter();
+  const { callbackUrl } = router.query;
   // only retrieve the qr code once
   const { data: qr } = useSWRImmutable<LnurlAuthLoginInfo>(
     "/api/auth/lnurl/generate-secret",
@@ -38,7 +39,7 @@ export default function LnurlAuthSignIn({ csrfToken }: EmailSignInProps) {
         try {
           const result = await signIn("lnurl", {
             k1: qr.k1,
-            callbackUrl: Routes.home,
+            callbackUrl: callbackUrl ?? Routes.home,
             redirect: false,
           });
 
@@ -53,7 +54,7 @@ export default function LnurlAuthSignIn({ csrfToken }: EmailSignInProps) {
         }
       })();
     }
-  }, [csrfToken, qr, router, status]);
+  }, [callbackUrl, csrfToken, qr, router, status]);
 
   return (
     <>

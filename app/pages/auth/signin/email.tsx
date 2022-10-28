@@ -11,17 +11,28 @@ const formStyle: React.CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
+  width: "100%",
 };
 
 type EmailFormData = {
   email: string;
 };
 
-export default function EmailSignIn() {
+type EmailSignInProps = {
+  inline?: boolean;
+  callbackUrl?: string;
+  submitText?: React.ReactNode;
+};
+
+export default function EmailSignIn({
+  inline,
+  callbackUrl,
+  submitText,
+}: EmailSignInProps) {
   const { control, handleSubmit, setFocus } = useForm<EmailFormData>();
   const [isSubmitting, setSubmitting] = React.useState(false);
   const router = useRouter();
-  const { callbackUrl } = router.query;
+  callbackUrl = callbackUrl ?? (router.query["callbackUrl"] as string);
 
   React.useEffect(() => {
     setFocus("email");
@@ -42,7 +53,7 @@ export default function EmailSignIn() {
           const result = await signIn("email", {
             email: data.email,
             redirect: false,
-            callbackUrl: (callbackUrl as string) ?? Routes.home,
+            callbackUrl: callbackUrl ?? Routes.home,
           });
 
           if (result && result.ok && result.url) {
@@ -63,8 +74,12 @@ export default function EmailSignIn() {
 
   return (
     <>
-      <Text>Enter your email below to login.</Text>
-      <Spacer />
+      {!inline && (
+        <>
+          <Text>Enter your email below to login.</Text>
+          <Spacer />
+        </>
+      )}
       <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
         <Controller
           name="email"
@@ -81,17 +96,21 @@ export default function EmailSignIn() {
           )}
         />
 
-        <Spacer />
-        <Button type="submit" disabled={isSubmitting}>
+        <Spacer y={0.5} />
+        <Button css={{ width: "100%" }} type="submit" disabled={isSubmitting}>
           {isSubmitting ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
-            <>Login</>
+            <>{submitText ?? "Login"}</>
           )}
         </Button>
       </form>
-      <Spacer y={4} />
-      <BackButton />
+      {!inline && (
+        <>
+          <Spacer y={4} />
+          <BackButton />
+        </>
+      )}
     </>
   );
 }

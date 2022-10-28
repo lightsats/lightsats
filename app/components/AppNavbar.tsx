@@ -1,4 +1,9 @@
-import { ChartBarIcon, HomeIcon, UserIcon } from "@heroicons/react/24/solid";
+import {
+  ChartBarIcon,
+  HomeIcon,
+  PlusIcon,
+  UserIcon,
+} from "@heroicons/react/24/solid";
 import { Avatar, Button, Link, Navbar, Spacer, Text } from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { Icon } from "components/Icon";
@@ -7,6 +12,7 @@ import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
 
@@ -19,11 +25,14 @@ type CollapseItem = {
 };
 
 // FIXME: this is a hacky way to close the NextUI collapse. https://github.com/nextui-org/nextui/issues/752
-const toggleNavbar = () => {
-  const toggle = document.getElementById(navbarCollapseToggleId);
-  if (toggle?.getAttribute("aria-pressed") === "true") {
-    toggle?.click();
-  }
+// TODO: check the navbar after route change and end early, rather than a fixed 500ms delay
+const closeNavbar = () => {
+  setTimeout(() => {
+    const toggle = document.getElementById(navbarCollapseToggleId);
+    if (toggle?.getAttribute("aria-pressed") === "true") {
+      toggle?.click();
+    }
+  }, 500);
 };
 
 export function AppNavbar() {
@@ -32,6 +41,8 @@ export function AppNavbar() {
     session ? `/api/users/${session.user.id}` : null,
     defaultFetcher
   );
+  const router = useRouter();
+  const isClaimUrl = router.pathname.endsWith("/claim");
 
   const collapseItems: CollapseItem[] = React.useMemo(
     () => [
@@ -47,6 +58,11 @@ export function AppNavbar() {
               href: Routes.profile,
               icon: <UserIcon />,
             },
+            {
+              name: "New Tip",
+              href: Routes.newTip,
+              icon: <PlusIcon />,
+            },
           ]
         : []),
       {
@@ -60,14 +76,18 @@ export function AppNavbar() {
 
   return (
     <Navbar variant="static">
-      <Navbar.Toggle
-        aria-label="toggle navigation"
-        id={navbarCollapseToggleId}
-      />
+      {!isClaimUrl ? (
+        <Navbar.Toggle
+          aria-label="toggle navigation"
+          id={navbarCollapseToggleId}
+        />
+      ) : (
+        <Spacer x={1} />
+      )}
       <Navbar.Content>
         <Navbar.Brand>
           <NextLink href={Routes.home}>
-            <a onClick={toggleNavbar}>
+            <a onClick={closeNavbar}>
               <Text h1>Lightsats</Text>
             </a>
           </NextLink>
@@ -76,13 +96,15 @@ export function AppNavbar() {
       <Navbar.Content>
         {session ? (
           <NextLink href={Routes.profile}>
-            <Avatar
-              bordered
-              as="button"
-              color="secondary"
-              size="md"
-              src={getUserAvatarUrl(user)}
-            />
+            <a>
+              <Avatar
+                bordered
+                as="button"
+                color="secondary"
+                size="md"
+                src={getUserAvatarUrl(user)}
+              />
+            </a>
           </NextLink>
         ) : (
           <Spacer x={1} />
@@ -93,7 +115,7 @@ export function AppNavbar() {
         {collapseItems.map((item) => (
           <Navbar.CollapseItem key={item.name}>
             <NextLink href={item.href} passHref>
-              <Link onClick={toggleNavbar}>
+              <Link onClick={closeNavbar}>
                 <Button flat icon={<Icon>{item.icon}</Icon>} auto />
                 <Spacer />
                 {item.name}

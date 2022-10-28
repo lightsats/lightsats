@@ -1,11 +1,9 @@
 import { Link } from "@nextui-org/react";
-import { Routes } from "lib/Routes";
-import NextLink from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
 
 export function BackButton() {
-  return (
-    <NextLink href={Routes.home} passHref>
-      <Link>Back</Link>
-    </NextLink>
-  );
+  const router = useRouter();
+  const onBack = React.useCallback(() => router.back(), [router]);
+  return <Link onClick={onBack}>Back</Link>;
 }
