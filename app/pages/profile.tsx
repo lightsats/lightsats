@@ -12,6 +12,7 @@ import { BackButton } from "components/BackButton";
 import { appName, DEFAULT_NAME, MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
+import { getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
@@ -116,7 +117,7 @@ function ProfileInternal({
   return (
     <>
       <NextUIUser
-        src={user.avatarURL ?? undefined}
+        src={getUserAvatarUrl(user)}
         name={user.name ?? DEFAULT_NAME}
       />
       <Spacer />
@@ -204,8 +205,8 @@ function ProfileInternal({
           )}
         </Button>
       </form>
-        <Spacer />
-        <Text
+      <Spacer />
+      <Text
         size="small"
         style={{
           maxWidth: "300px",
@@ -215,7 +216,7 @@ function ProfileInternal({
       >
         {appName} user ID: {session.user.id}
       </Text>
-      <Spacer/>
+      <Spacer />
       <BackButton />
     </>
   );

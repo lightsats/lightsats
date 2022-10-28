@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { StatusCodes } from "http-status-codes";
 import prisma from "lib/prismadb";
+import { getFallbackAvatarId } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -47,6 +48,7 @@ export default async function handler(
               avatarURL: user.avatarURL ?? undefined,
               twitterUsername: user.twitterUsername ?? undefined,
             }),
+        fallbackAvatarId: getFallbackAvatarId(user),
       };
     });
 

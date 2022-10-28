@@ -1,6 +1,5 @@
-import { Container, Spacer, Text } from "@nextui-org/react";
-import { Routes } from "lib/Routes";
-import NextLink from "next/link";
+import { Container, Spacer } from "@nextui-org/react";
+import { AppNavbar } from "components/AppNavbar";
 import React from "react";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -11,20 +10,8 @@ export default function Layout({
 }: React.PropsWithChildren<LayoutProps>) {
   return (
     <>
+      <AppNavbar />
       <Spacer />
-      <Container
-        justify="center"
-        alignItems="center"
-        display="flex"
-        direction="column"
-        fluid
-      >
-        <NextLink href={Routes.home}>
-          <a>
-            <Text h1>Lightsats⚡</Text>
-          </a>
-        </NextLink>
-      </Container>
       <Container
         justify="center"
         alignItems="center"

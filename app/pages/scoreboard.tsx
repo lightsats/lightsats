@@ -10,6 +10,7 @@ import {
   User as NextUIUser,
 } from "@nextui-org/react";
 import { defaultFetcher } from "lib/swr";
+import { getAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import Image from "next/image";
 import useSWR from "swr";
@@ -75,7 +76,10 @@ const Scoreboard: NextPage = () => {
                     </Badge>
                     <NextUIUser
                       name={scoreboardEntry.name ?? "anon"}
-                      src={scoreboardEntry.avatarURL}
+                      src={getAvatarUrl(
+                        scoreboardEntry.avatarURL,
+                        scoreboardEntry.fallbackAvatarId
+                      )}
                     />
                     {scoreboardEntry.twitterUsername && (
                       <Link
@@ -173,7 +177,10 @@ const Scoreboard: NextPage = () => {
                 <Row justify="flex-start" align="center">
                   <NextUIUser
                     name={scoreboardEntry.name ?? "anon"}
-                    src={scoreboardEntry.avatarURL}
+                    src={getAvatarUrl(
+                      scoreboardEntry.avatarURL,
+                      scoreboardEntry.fallbackAvatarId
+                    )}
                   />
                   {scoreboardEntry.twitterUsername && (
                     <Link

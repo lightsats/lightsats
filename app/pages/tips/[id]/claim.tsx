@@ -1,11 +1,4 @@
-import {
-  Button,
-  Loading,
-  Row,
-  Spacer,
-  Text,
-  User as NextUIUser,
-} from "@nextui-org/react";
+import { Avatar, Button, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { formatDistance, isAfter } from "date-fns";
@@ -115,9 +108,8 @@ const ClaimTipPage: NextPage = () => {
             }
             <Row justify="center" align="center">
               {publicTip.tipper.avatarURL && (
-                <NextUIUser
+                <Avatar
                   src={publicTip.tipper.avatarURL}
-                  name={undefined}
                   size="xl"
                   style={{ padding: 0 }}
                 />
