@@ -1,5 +1,7 @@
-import { Avatar, Link, Navbar, Spacer, Text } from "@nextui-org/react";
+import { ChartBarIcon, HomeIcon, UserIcon } from "@heroicons/react/24/solid";
+import { Avatar, Button, Link, Navbar, Spacer, Text } from "@nextui-org/react";
 import { User } from "@prisma/client";
+import { Icon } from "components/Icon";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
@@ -13,6 +15,7 @@ const navbarCollapseToggleId = "app-navbar-collapse-toggle";
 type CollapseItem = {
   name: string;
   href: string;
+  icon: React.ReactNode;
 };
 
 // FIXME: this is a hacky way to close the NextUI collapse. https://github.com/nextui-org/nextui/issues/752
@@ -35,18 +38,21 @@ export function AppNavbar() {
       {
         name: "Home",
         href: Routes.home,
+        icon: <HomeIcon />,
       },
       ...(session
         ? [
             {
               name: "Profile",
               href: Routes.profile,
+              icon: <UserIcon />,
             },
           ]
         : []),
       {
         name: "Scoreboard",
         href: Routes.scoreboard,
+        icon: <ChartBarIcon />,
       },
     ],
     [session]
@@ -87,7 +93,11 @@ export function AppNavbar() {
         {collapseItems.map((item) => (
           <Navbar.CollapseItem key={item.name}>
             <NextLink href={item.href} passHref>
-              <Link onClick={toggleNavbar}>{item.name}</Link>
+              <Link onClick={toggleNavbar}>
+                <Button flat icon={<Icon>{item.icon}</Icon>} auto />
+                <Spacer />
+                {item.name}
+              </Link>
             </NextLink>
           </Navbar.CollapseItem>
         ))}
