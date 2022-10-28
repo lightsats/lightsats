@@ -9,4 +9,7 @@ export enum Routes {
   scoreboard = "/scoreboard",
   emailSignin = "/auth/signin/email",
   lnurlAuthSignin = "/auth/signin/lnurl",
+  bitcoin = "/journey/bitcoin",
+  selectWallet = "/journey/wallet",
+  //linkWallet = "/journey/link",
 }

@@ -42,6 +42,8 @@ const ClaimTipPage: NextPage = () => {
   const [hasClaimed, setClaimed] = React.useState(false);
   const tipCurrency = publicTip?.currency ?? DEFAULT_FIAT_CURRENCY; // TODO: get from tip, TODO: allow tippee to switch currency
 
+  const destinationRoute = Routes.bitcoin;
+
   const hasExpired =
     publicTip &&
     expirableTipStatuses.indexOf(publicTip.status) >= 0 &&
@@ -77,11 +79,11 @@ const ClaimTipPage: NextPage = () => {
           );
         } else {
           mutatePublicTip();
-          router.push(Routes.withdraw);
+          router.push(destinationRoute);
         }
       })();
     }
-  }, [canClaim, hasClaimed, id, mutatePublicTip, router]);
+  }, [canClaim, destinationRoute, hasClaimed, id, mutatePublicTip, router]);
 
   return (
     <>
@@ -101,10 +103,10 @@ const ClaimTipPage: NextPage = () => {
               <>
                 <Text>Tip claimed!</Text>
                 <Spacer />
-                <NextLink href={Routes.withdraw}>
+                <NextLink href={destinationRoute}>
                   <a>
                     <Button as="a" color="success">
-                      Withdraw
+                      Continue
                     </Button>
                   </a>
                 </NextLink>

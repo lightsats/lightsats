@@ -39,7 +39,7 @@ export default function LnurlAuthSignIn({ csrfToken }: EmailSignInProps) {
         try {
           const result = await signIn("lnurl", {
             k1: qr.k1,
-            callbackUrl: callbackUrl ?? Routes.home,
+            callbackUrl: (callbackUrl as string) ?? Routes.home,
             redirect: false,
           });
 

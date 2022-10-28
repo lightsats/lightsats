@@ -94,7 +94,7 @@ export function AppNavbar() {
         </Navbar.Brand>
       </Navbar.Content>
       <Navbar.Content>
-        {session ? (
+        {user ? (
           <NextLink href={Routes.profile}>
             <a>
               <Avatar
