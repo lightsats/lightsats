@@ -8,12 +8,14 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Tip, WithdrawalFlow } from "@prisma/client";
+import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import copy from "copy-to-clipboard";
 import { formatDistance, isBefore } from "date-fns";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -115,6 +117,13 @@ const Withdraw: NextPage = () => {
     ? withdrawableTips.map((tip) => tip.amount).reduce((a, b) => a + b)
     : 0;
 
+  const hasWithdrawnTip = tips?.some((tip) => tip.status === "WITHDRAWN");
+  React.useEffect(() => {
+    if (availableBalance === 0 && flow === "tippee" && hasWithdrawnTip) {
+      router.push(Routes.journeyCongratulations);
+    }
+  }, [availableBalance, flow, router, hasWithdrawnTip]);
+
   React.useEffect(() => {
     if (availableBalance > 0) {
       (async () => {
@@ -152,6 +161,10 @@ const Withdraw: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Lightsats⚡ - Withdraw</title>
+      </Head>
+      {flow === "tippee" && <MyBitcoinJourneyHeader />}
       {!availableBalance ? (
         <>
           <Text>
@@ -166,40 +179,15 @@ const Withdraw: NextPage = () => {
         </>
       ) : (
         <>
-          {flow === "tippee" ? (
-            <Text>
-              Woohoo! you have {availableBalance} satoshis⚡ ready to withdraw.
-            </Text>
-          ) : (
-            <Text>
-              You have {availableBalance} reclaimed satoshis⚡ ready to
-              withdraw.
-            </Text>
-          )}
-          {flow === "tippee" && (
-            <>
-              <Spacer />
-              <Text>{"you can use Bitcoin online in a variety of ways:"}</Text>
-              <ul>
-                <li>load a virtual credit card</li>
-                <li>buy gift cards</li>
-                <li>post on stacker.news</li>
-                <li>HODL</li>
-                <li>and much more!</li>
-              </ul>
+          <Text>
+            You have {availableBalance} reclaimed satoshis⚡ ready to withdraw.
+          </Text>
 
-              <Text>
-                {
-                  "In order to spend your funds you'll first need to withdraw them to a lightning wallet."
-                }
-              </Text>
-            </>
-          )}
           <Spacer />
           {withdrawalLinkLnurl ? (
             <>
               <Text>
-                Scan or tap the below link using your lightning wallet to
+                Scan, tap or copy the below link into your lightning wallet to
                 Withdraw.
               </Text>
               <Spacer />

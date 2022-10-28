@@ -82,8 +82,7 @@ async function postWithdrawLink(
     return;
   }
 
-  // TODO: consider deleting any unused withdraw links that do not match amount (they are unused and may slow down queries)
-  // get a withdraw link and cache it for 10 minutes
+  // try to find an existing withdraw link for the same value
   let withdrawalCode: string;
   do {
     withdrawalCode = generateAlphanumeric(5);
@@ -94,6 +93,9 @@ async function postWithdrawLink(
       },
     })
   );
+
+  // TODO: consider deleting any unused withdraw links that do not match amount (they are unused and may slow down queries)
+  // delete BOTH the DB withdrawal link and the lnbits withdraw link!
 
   // Do NOT change the memo value, currently required to associate payments to pay links in lnbits.
   // we need to retrieve the payment from lnbits in order to get the invoice routing fee.

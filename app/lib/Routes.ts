@@ -9,7 +9,17 @@ export enum Routes {
   scoreboard = "/scoreboard",
   emailSignin = "/auth/signin/email",
   lnurlAuthSignin = "/auth/signin/lnurl",
-  bitcoin = "/journey/bitcoin",
-  selectWallet = "/journey/wallet",
-  //linkWallet = "/journey/link",
+  journeyClaimed = "/journey/claimed",
+  journeyBitcoin = "/journey/bitcoin",
+  journeySelectWallet = "/journey/wallet",
+  journeyCongratulations = "/journey/congratulations",
+  journeyNextSteps = "/journey/next",
 }
+
+export const bitcoinJourneyPages = [
+  Routes.journeyClaimed,
+  Routes.journeyBitcoin,
+  Routes.journeySelectWallet,
+  Routes.withdraw,
+  Routes.journeyCongratulations,
+];

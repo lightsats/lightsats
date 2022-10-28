@@ -1,8 +1,10 @@
-import { Link, Spacer, Text } from "@nextui-org/react";
+import { Spacer, Text } from "@nextui-org/react";
+import { MyBitcoinJourneyContent } from "components/tippee/MyBitcoinJourneyContent";
+import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
+import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
 import Head from "next/head";
-import NextLink from "next/link";
 
 const WhatIsBitcoinPage: NextPage = () => {
   return (
@@ -10,19 +12,27 @@ const WhatIsBitcoinPage: NextPage = () => {
       <Head>
         <title>Lightsats⚡ - Bitcoin</title>
       </Head>
-      <Text>{"You've been tipped {999999999 sats} in bitcoin."}</Text>
-      <NextLink href="https://bitcoin.org/bitcoin.pdf" passHref>
-        <Link>What is bitcoin?</Link>
-      </NextLink>
-      <Spacer />
-      <NextLink href={Routes.selectWallet} passHref>
-        <Link>Choose a wallet</Link>
-      </NextLink>
+      <MyBitcoinJourneyHeader />
+      <MyBitcoinJourneyContent>
+        <Text>
+          {
+            "Bitcoin is a digital currency that does not require any intermediary to send and receive from one person to another."
+          }
+        </Text>
+        <Spacer />
+        <Text>
+          {
+            "Just like you recieved this tip from someone digitally, it never went through a bank or any entity."
+          }
+        </Text>
+        <Spacer y={3} />
+        <Text>{"You'll need a Bitcoin wallet to withdraw your tip."}</Text>
+      </MyBitcoinJourneyContent>
 
-      <Spacer />
-      <NextLink href={Routes.withdraw} passHref>
-        <Link>I have a lightning wallet</Link>
-      </NextLink>
+      <MyBitcoinJourneyFooter
+        href={Routes.journeySelectWallet}
+        text={<>Bitcoin Wallet?</>}
+      />
     </>
   );
 };

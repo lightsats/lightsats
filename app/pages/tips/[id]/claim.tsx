@@ -1,13 +1,5 @@
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
-import {
-  Avatar,
-  Button,
-  Container,
-  Loading,
-  Row,
-  Spacer,
-  Text,
-} from "@nextui-org/react";
+import { Avatar, Button, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
@@ -42,7 +34,7 @@ const ClaimTipPage: NextPage = () => {
   const [hasClaimed, setClaimed] = React.useState(false);
   const tipCurrency = publicTip?.currency ?? DEFAULT_FIAT_CURRENCY; // TODO: get from tip, TODO: allow tippee to switch currency
 
-  const destinationRoute = Routes.bitcoin;
+  const destinationRoute = Routes.journeyClaimed;
 
   const hasExpired =
     publicTip &&
@@ -90,107 +82,99 @@ const ClaimTipPage: NextPage = () => {
       <Head>
         <title>Lightsats⚡ - Claim gift</title>
       </Head>
-      <Container
-        justify="center"
-        alignItems="center"
-        display="flex"
-        direction="column"
-        css={{ maxWidth: "400px" }}
-      >
-        {publicTip ? (
-          publicTip.hasClaimed ? (
-            publicTip.tippeeId === session?.user.id ? (
-              <>
-                <Text>Tip claimed!</Text>
-                <Spacer />
-                <NextLink href={destinationRoute}>
-                  <a>
-                    <Button as="a" color="success">
-                      Continue
-                    </Button>
-                  </a>
-                </NextLink>
-              </>
-            ) : (
-              <>
-                <Text>This tip is no longer available.</Text>
-                <Spacer />
-                <BackButton />
-              </>
-            )
-          ) : !session || !canClaim ? (
+      {publicTip ? (
+        publicTip.hasClaimed ? (
+          publicTip.tippeeId === session?.user.id ? (
             <>
-              {publicTip.tippeeName && (
-                <>
-                  <Text h5>
-                    Hello
-                    {` ${publicTip.tippeeName}`}!
-                  </Text>
-                  <Spacer />
-                </>
-              )}
-              <Row justify="center" align="center">
-                {publicTip.tipper.name && (
-                  <>
-                    <Avatar
-                      src={getAvatarUrl(
-                        publicTip.tipper.avatarURL ?? undefined,
-                        publicTip.tipper.fallbackAvatarId
-                      )}
-                      size="md"
-                      bordered
-                    />
-                    <Spacer x={0.5} />
-                  </>
-                )}
-                <Text h4>
-                  {publicTip.tipper.name
-                    ? `${publicTip.tipper.name} has gifted you`
-                    : "You've been gifted"}
-                </Text>
-              </Row>
-              <Spacer y={1} />
-              <Text h1>
-                <FiatPrice
-                  currency={tipCurrency}
-                  exchangeRate={exchangeRates?.[tipCurrency]}
-                  sats={publicTip.amount}
-                  showApprox={false}
-                />
-              </Text>
-              <Spacer y={-0.5} />
-              <Text b color="gray">
-                {publicTip.amount} sats
-              </Text>
+              <Text>Tip claimed!</Text>
               <Spacer />
-              <Note note={publicTip.note} />
-              <Spacer y={2} />
-              {hasExpired ? (
-                <Text color="error">This tip has expired.</Text>
-              ) : (
-                <ClaimFundsContainer publicTip={publicTip} />
-              )}
-              <Spacer />
-            </>
-          ) : isTipper ? (
-            <>
-              <Text>You created this tip so cannot claim it. 😥</Text>
-              <Spacer />
-              <BackButton />
+              <NextLink href={destinationRoute}>
+                <a>
+                  <Button as="a" color="success">
+                    Continue
+                  </Button>
+                </a>
+              </NextLink>
             </>
           ) : (
             <>
-              <Text>Claiming tip</Text>
-              <Loading type="spinner" color="currentColor" size="sm" />
+              <Text>This tip is no longer available.</Text>
+              <Spacer />
+              <BackButton />
             </>
           )
+        ) : !session || !canClaim ? (
+          <>
+            {publicTip.tippeeName && (
+              <>
+                <Text h5>
+                  Hello
+                  {` ${publicTip.tippeeName}`}!
+                </Text>
+                <Spacer />
+              </>
+            )}
+            <Row justify="center" align="center">
+              {publicTip.tipper.name && (
+                <>
+                  <Avatar
+                    src={getAvatarUrl(
+                      publicTip.tipper.avatarURL ?? undefined,
+                      publicTip.tipper.fallbackAvatarId
+                    )}
+                    size="md"
+                    bordered
+                  />
+                  <Spacer x={0.5} />
+                </>
+              )}
+              <Text h4>
+                {publicTip.tipper.name
+                  ? `${publicTip.tipper.name} has gifted you`
+                  : "You've been gifted"}
+              </Text>
+            </Row>
+            <Spacer y={1} />
+            <Text h1>
+              <FiatPrice
+                currency={tipCurrency}
+                exchangeRate={exchangeRates?.[tipCurrency]}
+                sats={publicTip.amount}
+                showApprox={false}
+              />
+            </Text>
+            <Spacer y={-0.5} />
+            <Text b color="gray">
+              {publicTip.amount} sats
+            </Text>
+            <Spacer />
+            <Note note={publicTip.note} />
+            <Spacer y={2} />
+            {hasExpired ? (
+              <Text color="error">This tip has expired.</Text>
+            ) : (
+              <ClaimFundsContainer publicTip={publicTip} />
+            )}
+            <Spacer />
+          </>
+        ) : isTipper ? (
+          <>
+            <Text>You created this tip so cannot claim it. 😥</Text>
+            <Spacer />
+            <BackButton />
+          </>
         ) : (
           <>
-            <Text>Loading tip</Text>
+            <Text>Claiming tip</Text>
             <Loading type="spinner" color="currentColor" size="sm" />
           </>
-        )}
-      </Container>
+        )
+      ) : (
+        <>
+          <Text>Loading tip</Text>
+          <Loading type="spinner" color="currentColor" size="sm" />
+        </>
+      )}
     </>
   );
 };
