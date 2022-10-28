@@ -197,38 +197,42 @@ const NewTip: NextPage = () => {
 
   return (
     <>
+      <Text css={{ maxWidth: "300px" }}>
+        {"Let's"} start by creating your tip. The goal is to onboard the
+        recipient to Bitcoin, so aim to fill out all the fields in order to
+        increase the authenticity of your tip and improve your {"recipient's"}{" "}
+        initial impression.
+      </Text>
+      <Spacer />
       <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
         <Container gap={0} style={{ width: "100%" }}>
-          <Row justify="space-between" align="center">
-            <Text>Amount</Text>
-            <Spacer />
-            <Tooltip
-              content={`The receiver probably does not know about Bitcoin or satoshis yet!`}
-            >
-              <Text size="small">{"in receiver's currency*"}</Text>
-            </Tooltip>
-          </Row>
-          <Row justify="center" align="center">
-            <Link onClick={toggleInputMethod}>{inputMethod}</Link>
-            <Spacer x={0.5} />
-            <Controller
-              name="amountString"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  // {...register("amount", {
-                  //   valueAsNumber: true,
-                  // }) causes iOS decimal input bug, resetting field value }
-                  min={0}
-                  type="number"
-                  inputMode="decimal"
-                  aria-label="amount"
-                  width="100px"
-                />
-              )}
-            />
-
+          <Tooltip
+            content={
+              <>
+                <Text>
+                  {
+                    "Improve the recipient's initial experience by choosing their main language and currency."
+                  }
+                </Text>
+                <Spacer />
+                <Text>
+                  {"They probably don't know about Bitcoin or satoshis yet!"}
+                </Text>
+              </>
+            }
+          >
+            <Text>Recipient Language & Currency</Text>
+          </Tooltip>
+          <Row justify="space-between" align="flex-end">
+            <Dropdown>
+              <Dropdown.Button
+                flat
+                onClick={() => alert("Languages coming soon!")}
+              >
+                English
+              </Dropdown.Button>
+              <Dropdown.Item>English</Dropdown.Item>
+            </Dropdown>
             <Spacer x={0.5} />
             <Dropdown>
               <Dropdown.Button flat>{watchedCurrency}</Dropdown.Button>
@@ -246,6 +250,41 @@ const NewTip: NextPage = () => {
                   : []}
               </Dropdown.Menu>
             </Dropdown>
+          </Row>
+          <Spacer />
+          <Row justify="flex-start" align="center">
+            <Tooltip
+              content={`How much would you like to tip the recipient? Tap to toggle to
+            enter the value in fiat or sats`}
+            >
+              <Text>
+                Amount{" "}
+                <Link css={{ display: "inline" }} onClick={toggleInputMethod}>
+                  in {inputMethod}
+                </Link>
+              </Text>
+            </Tooltip>
+            <Spacer x={0.5} />
+          </Row>
+          <Row>
+            <Controller
+              name="amountString"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  // {...register("amount", {
+                  //   valueAsNumber: true,
+                  // }) causes iOS decimal input bug, resetting field value }
+                  min={0}
+                  type="number"
+                  inputMode="decimal"
+                  aria-label="amount"
+                  fullWidth
+                  // width="100px"
+                />
+              )}
+            />
           </Row>
         </Container>
         <Spacer />
@@ -293,7 +332,7 @@ const NewTip: NextPage = () => {
           render={({ field }) => (
             <Input
               {...field}
-              label="Receiver name (optional)"
+              label="Recipient name (optional)"
               placeholder="Hal Finney"
               maxLength={255}
               fullWidth
@@ -307,7 +346,7 @@ const NewTip: NextPage = () => {
           render={({ field }) => (
             <Textarea
               {...field}
-              label="Note to receiver (optional)"
+              label="Note to recipient (optional)"
               placeholder="Thank you for your amazing service!"
               maxLength={255}
               fullWidth
@@ -315,13 +354,20 @@ const NewTip: NextPage = () => {
           )}
         />
         <Spacer />
+        <Row>
+          <Tooltip
+            content={`Incentivize the recipient to accept the tip before expiry. Expired tips can reclaimed.`}
+          >
+            <Text>Tip expires in</Text>
+          </Tooltip>
+        </Row>
         <Row gap={0} justify="space-between" align="flex-end">
           <Controller
             name="expiresIn"
             control={control}
             render={({ field }) => (
               <Input
-                label="Expires in"
+                aria-label="Tip expires in"
                 {...field}
                 {...register("expiresIn", {
                   valueAsNumber: true,
@@ -333,6 +379,7 @@ const NewTip: NextPage = () => {
               />
             )}
           />
+
           <Spacer />
           <Dropdown>
             <Dropdown.Button flat>{watchedExpiryUnit}</Dropdown.Button>
