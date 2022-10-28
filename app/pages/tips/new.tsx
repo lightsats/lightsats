@@ -199,7 +199,15 @@ const NewTip: NextPage = () => {
     <>
       <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
         <Container gap={0} style={{ width: "100%" }}>
-          <Text>Amount</Text>
+          <Row justify="space-between" align="center">
+            <Text>Amount</Text>
+            <Spacer />
+            <Tooltip
+              content={`The receiver probably does not know about Bitcoin or satoshis yet!`}
+            >
+              <Text size="small">{"in receiver's currency*"}</Text>
+            </Tooltip>
+          </Row>
           <Row justify="center" align="center">
             <Link onClick={toggleInputMethod}>{inputMethod}</Link>
             <Spacer x={0.5} />
@@ -224,6 +232,7 @@ const NewTip: NextPage = () => {
             <Spacer x={0.5} />
             <Dropdown>
               <Dropdown.Button flat>{watchedCurrency}</Dropdown.Button>
+
               <Dropdown.Menu
                 aria-label="Select Currency"
                 selectionMode="single"
@@ -284,7 +293,7 @@ const NewTip: NextPage = () => {
           render={({ field }) => (
             <Input
               {...field}
-              label="Tippee name (optional)"
+              label="Receiver name (optional)"
               placeholder="Hal Finney"
               maxLength={255}
               fullWidth
@@ -298,7 +307,7 @@ const NewTip: NextPage = () => {
           render={({ field }) => (
             <Textarea
               {...field}
-              label="Note to tippee (optional)"
+              label="Note to receiver (optional)"
               placeholder="Thank you for your amazing service!"
               maxLength={255}
               fullWidth
