@@ -3,5 +3,5 @@ html,
 body,
 #__next,
 div[data-overlay-container="true"] {
-  height: 100%;
+  min-height: 100%;
 }

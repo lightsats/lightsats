@@ -13,19 +13,27 @@ export function MyBitcoinJourneyFooter({
   href,
 }: MyBitcoinJourneyFooterProps) {
   return (
-    <FlexBox
-      style={{
-        justifyContent: "flex-end",
-      }}
-    >
-      <Row>
-        <NextLink href={href} passHref>
-          <a>
-            <Button>{text}</Button>
-          </a>
-        </NextLink>
-      </Row>
-      <Spacer y={2} />
-    </FlexBox>
+    <>
+      {/* add space for fixed element below */}
+      <div style={{ height: "60px" }} />
+      <FlexBox
+        style={{
+          position: "fixed",
+          bottom: 0,
+          background: "white",
+          width: "100vw",
+        }}
+      >
+        <Spacer y={1} />
+        <Row justify="center">
+          <NextLink href={href} passHref>
+            <a>
+              <Button>{text}</Button>
+            </a>
+          </NextLink>
+        </Row>
+        <Spacer y={1} />
+      </FlexBox>
+    </>
   );
 }

@@ -26,12 +26,14 @@ const WhatIsBitcoinPage: NextPage = () => {
           }
         </Text>
         <Spacer y={3} />
-        <Text>{"You'll need a Bitcoin wallet to withdraw your tip."}</Text>
+        <Text blockquote>
+          {"You'll need a Bitcoin wallet to withdraw your tip."}
+        </Text>
       </MyBitcoinJourneyContent>
 
       <MyBitcoinJourneyFooter
         href={Routes.journeySelectWallet}
-        text={<>Bitcoin Wallet?</>}
+        text={<>Choose a Wallet</>}
       />
     </>
   );

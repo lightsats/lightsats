@@ -109,8 +109,13 @@ const Withdraw: NextPage = () => {
     )?.expiry;
 
   const tipIds = React.useMemo(
-    () => (flow === "tippee" ? tips?.map((tip) => tip.id) : []),
-    [flow, tips]
+    () =>
+      flow === "tippee"
+        ? tips
+            ?.filter((tip) => tip.tippeeId === session?.user.id)
+            .map((tip) => tip.id)
+        : [],
+    [session, flow, tips]
   );
 
   const availableBalance = withdrawableTips?.length
