@@ -13,7 +13,14 @@ export enum Routes {
   journeyBitcoin = "/journey/bitcoin",
   journeySelectWallet = "/journey/wallet",
   journeyCongratulations = "/journey/congratulations",
-  journeyNextSteps = "/journey/next",
+  guide = "/guide",
+  guideSpend = "/guide/spend",
+  guideEarn = "/guide/earn",
+  guideBuy = "/guide/buy",
+  guideSave = "/guide/save",
+  guideSend = "/guide/send",
+  guideDonate = "/guide/donate",
+  guideLearn = "/guide/learn",
 }
 
 export const bitcoinJourneyPages = [

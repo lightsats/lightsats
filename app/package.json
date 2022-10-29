@@ -28,6 +28,7 @@
     "bolt11": "^1.4.0",
     "copy-to-clipboard": "^3.3.2",
     "date-fns": "^2.29.3",
+    "dom-confetti": "^0.2.2",
     "http-status-codes": "^2.2.0",
     "iso-639-1": "^2.1.15",
     "lnurl": "^0.24.2",

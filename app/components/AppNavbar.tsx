@@ -1,6 +1,7 @@
 import {
   ChartBarIcon,
   HomeIcon,
+  LightBulbIcon,
   PlusIcon,
   UserIcon,
 } from "@heroicons/react/24/solid";
@@ -69,6 +70,11 @@ export function AppNavbar() {
         name: "Scoreboard",
         href: Routes.scoreboard,
         icon: <ChartBarIcon />,
+      },
+      {
+        name: "Guide",
+        href: Routes.guide,
+        icon: <LightBulbIcon />,
       },
     ],
     [session]
