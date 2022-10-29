@@ -1,1 +1,7 @@
-/* no longer used, see styling through NextUI */
+/* TODO: manage global styling with NextUI */
+html,
+body,
+#__next,
+div[data-overlay-container="true"] {
+  height: 100%;
+}

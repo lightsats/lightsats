@@ -13,7 +13,7 @@ export default function Layout({
 }: React.PropsWithChildren<LayoutProps>) {
   const router = useRouter();
   return (
-    <FlexBox style={{ minHeight: "100vh" }}>
+    <FlexBox style={{ minHeight: "100%" }}>
       <AppNavbar />
       <Spacer />
       <Container

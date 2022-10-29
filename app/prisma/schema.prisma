@@ -66,6 +66,8 @@ model User {
   sessions Session[]
   isAnonymous Boolean @default(false)
   withdrawalLinks WithdrawalLink[]
+  journeyStep Int @default(1)
+  inJourney Boolean @default(false)
 }
 
 model Tip {
