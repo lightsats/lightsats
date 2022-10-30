@@ -122,7 +122,7 @@ const blue: LightningWallet = {
 
 const alby: LightningWallet = {
   minBalance: 0,
-  link: "https://getalby.com/",
+  link: "https://lgt.st/alby",
   image: "alby.png",
   name: "Alby Wallet",
   slogan: "Lightning buzz for your Browser!",
