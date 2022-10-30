@@ -1,6 +1,7 @@
 import {
   ChartBarIcon,
   HomeIcon,
+  InformationCircleIcon,
   LightBulbIcon,
   PlusIcon,
   UserIcon,
@@ -72,7 +73,12 @@ export function AppNavbar() {
         icon: <ChartBarIcon />,
       },
       {
-        name: "Guide",
+        name: "About",
+        href: Routes.about,
+        icon: <InformationCircleIcon />,
+      },
+      {
+        name: "Bitcoin Guide",
         href: Routes.guide,
         icon: <LightBulbIcon />,
       },

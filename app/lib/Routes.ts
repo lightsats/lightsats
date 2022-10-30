@@ -21,6 +21,7 @@ export enum Routes {
   guideSend = "/guide/send",
   guideDonate = "/guide/donate",
   guideLearn = "/guide/learn",
+  about = "/about",
 }
 
 export const bitcoinJourneyPages = [

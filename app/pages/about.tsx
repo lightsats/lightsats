@@ -1,0 +1,63 @@
+import { Grid, Link, Row, Spacer, Text } from "@nextui-org/react";
+import type { NextPage } from "next";
+import Head from "next/head";
+
+const AboutPage: NextPage = () => {
+  return (
+    <>
+      <Head>
+        <title>Lightsats⚡ - About</title>
+      </Head>
+      <h2>About</h2>
+      <h3>For Recipients</h3>
+      <Row>
+        <Text>
+          The easiest way to recieve Bitcoin. Lightsats will take you on a
+          simple and rewarding journey to safely withdraw your Bitcoin to a
+          wallet of your choice, and then show all the ways you can use it.
+        </Text>
+      </Row>
+      <Spacer />
+      <Row>
+        <Text>Want to spend it? Save it? Buy? Earn more? We got you!</Text>
+      </Row>
+      <Spacer />
+      <h3>For Tippers</h3>
+      <Row>
+        <Text>
+          Bitcoiners can now finally tip/gift sats without worrying about
+          onboarding the user and also losing their sats.
+        </Text>
+      </Row>
+      <Spacer />
+      <Row>
+        <Text>
+          We will first educate your recipient to download a Lightning Wallet
+          and take them through a full series of user journeys where they can
+          experience firsthand the capabilities of Bitcoin and the Lightning
+          Network.
+        </Text>
+      </Row>
+      <Spacer />
+      <Text>
+        If your recipient {"doesn't"} withdraw their tip in time, you can
+        reclaim your sats!
+      </Text>
+      <h3>Links</h3>
+      <Grid.Container gap={1} justify="center">
+        <Grid>
+          <Link href="https://github.com/lightsats/lightsats" target="_blank">
+            Github
+          </Link>
+        </Grid>
+        <Grid>
+          <Link href="https://twitter.com/lightsats21" target="_blank">
+            Twitter
+          </Link>
+        </Grid>
+      </Grid.Container>
+    </>
+  );
+};
+
+export default AboutPage;
