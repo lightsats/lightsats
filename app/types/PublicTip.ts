@@ -16,4 +16,5 @@ export type PublicTip = Pick<
   tipper: Pick<User, "name" | "twitterUsername" | "avatarURL"> & {
     fallbackAvatarId: string | undefined;
   };
+  tippee: Pick<User, "journeyStep" | "inJourney"> | undefined;
 };

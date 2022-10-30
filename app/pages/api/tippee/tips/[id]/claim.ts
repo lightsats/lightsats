@@ -68,5 +68,14 @@ async function handleClaimTip(
       withdrawalFlow: "tippee",
     },
   });
+  await prisma.user.update({
+    where: {
+      id: session.user.id,
+    },
+    data: {
+      inJourney: true,
+      journeyStep: 1,
+    },
+  });
   res.status(204).end();
 }

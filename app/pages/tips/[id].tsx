@@ -1,4 +1,12 @@
-import { Badge, Button, Loading, Row, Spacer, Text } from "@nextui-org/react";
+import {
+  Badge,
+  Button,
+  Loading,
+  Progress,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
@@ -10,7 +18,7 @@ import {
   expirableTipStatuses,
   refundableTipStatuses,
 } from "lib/constants";
-import { Routes } from "lib/Routes";
+import { bitcoinJourneyPages, Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import NextLink from "next/link";
@@ -19,6 +27,7 @@ import React from "react";
 import QRCode from "react-qr-code";
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
 import { ExchangeRates } from "types/ExchangeRates";
+import { PublicTip } from "types/PublicTip";
 
 // TODO: polling speed should be based on tip status - only UNFUNDED needs a fast poll rate
 const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
@@ -37,6 +46,12 @@ const TipPage: NextPage = () => {
 
   const { data: tip } = useSWR<Tip>(
     id ? `/api/tipper/tips/${id}` : null,
+    defaultFetcher,
+    useTipConfig
+  );
+
+  const { data: publicTip } = useSWR<PublicTip>(
+    tip && tip.status === "CLAIMED" ? `/api/tippee/tips/${id}` : null,
     defaultFetcher,
     useTipConfig
   );
@@ -160,6 +175,31 @@ const TipPage: NextPage = () => {
             <Button onClick={copyInvoice}>Copy</Button>
           </>
         )}
+        {!hasExpired &&
+          tip.status === "CLAIMED" &&
+          (publicTip && publicTip.tippee ? (
+            <>
+              <Text style={{ textAlign: "center" }}>
+                Your recipient is on their Bitcoin Journey!
+              </Text>
+              <Spacer />
+              <Progress
+                value={
+                  (publicTip.tippee.journeyStep / bitcoinJourneyPages.length) *
+                  100
+                }
+                color="success"
+                status="success"
+              />
+              <Text blockquote>
+                On page {bitcoinJourneyPages[publicTip.tippee.journeyStep - 1]}
+              </Text>
+
+              <Spacer />
+            </>
+          ) : (
+            <Loading type="spinner" color="currentColor" size="sm" />
+          ))}
         {!hasExpired && tip.status === "UNCLAIMED" && claimUrl && (
           <>
             <Text style={{ textAlign: "center" }}>

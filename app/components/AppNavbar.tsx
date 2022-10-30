@@ -44,7 +44,7 @@ export function AppNavbar() {
     defaultFetcher
   );
   const router = useRouter();
-  const isClaimUrl = router.pathname.endsWith("/claim");
+  const hideNavbar = router.pathname.endsWith("/claim") || user?.inJourney;
 
   const collapseItems: CollapseItem[] = React.useMemo(
     () => [
@@ -88,7 +88,7 @@ export function AppNavbar() {
 
   return (
     <Navbar variant="static">
-      {!isClaimUrl ? (
+      {!hideNavbar ? (
         <Navbar.Toggle
           aria-label="toggle navigation"
           id={navbarCollapseToggleId}
@@ -99,14 +99,22 @@ export function AppNavbar() {
       <Navbar.Content>
         <Navbar.Brand>
           <NextLink href={Routes.home}>
-            <a onClick={closeNavbar}>
+            <a
+              onClick={
+                hideNavbar
+                  ? (e) => {
+                      e.preventDefault();
+                    }
+                  : closeNavbar
+              }
+            >
               <Text h1>Lightsats</Text>
             </a>
           </NextLink>
         </Navbar.Brand>
       </Navbar.Content>
       <Navbar.Content>
-        {user ? (
+        {user && !hideNavbar ? (
           <NextLink href={Routes.profile}>
             <a>
               <Avatar

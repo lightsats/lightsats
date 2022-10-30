@@ -24,6 +24,7 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     },
     include: {
       tipper: true,
+      tippee: true,
     },
   });
   if (!tip) {
@@ -45,6 +46,12 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
       avatarURL: tip.tipper.avatarURL,
       fallbackAvatarId: getFallbackAvatarId(tip.tipper),
     },
+    tippee: tip.tippee
+      ? {
+          inJourney: tip.tippee.inJourney,
+          journeyStep: tip.tippee.journeyStep,
+        }
+      : undefined,
     status: tip.status,
     expiry: tip.expiry,
     tippeeName: tip.tippeeName,
