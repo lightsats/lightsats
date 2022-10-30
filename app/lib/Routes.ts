@@ -19,6 +19,7 @@ export enum Routes {
   guideBuy = "/guide/buy",
   guideSave = "/guide/save",
   guideSend = "/guide/send",
+  guideTip = "/guide/tip",
   guideDonate = "/guide/donate",
   guideLearn = "/guide/learn",
   about = "/about",

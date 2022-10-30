@@ -97,6 +97,8 @@ model Tip {
   payInvoiceErrorBody String?
   version Int @default(0)
   withdrawalLinkTip WithdrawalLinkTip[]
+  withdrawalId String?
+  withdrawal Withdrawal? @relation(fields: [withdrawalId], references: [id])
 }
 
 model LnbitsWallet {
@@ -136,6 +138,14 @@ model WithdrawalLinkTip {
   withdrawalLinkId String
 
   @@id([tipId, withdrawalLinkId])
+}
+
+model Withdrawal {
+  id String @id @default(cuid())
+  userId String
+  tips Tip[]
+  routingFee Int
+  withdrawalInvoiceId String
 }
 
 enum TipStatus {

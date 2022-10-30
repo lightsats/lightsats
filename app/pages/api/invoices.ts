@@ -113,7 +113,12 @@ async function handleWithdrawal(
     if (!payment.paid) {
       throw new Error("Outgoing payment is not paid: ");
     }
-    await completeWithdrawal(userWallet, payment.details.fee, tips);
+    await completeWithdrawal(
+      userWallet,
+      payment.details.fee,
+      payment.details.checking_id,
+      tips
+    );
     res.status(204).end();
   }
 }

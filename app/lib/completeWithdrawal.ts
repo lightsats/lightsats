@@ -6,6 +6,7 @@ import prisma from "lib/prismadb";
 export async function completeWithdrawal(
   userWallet: LnbitsWallet,
   negativeOutboundFeeMsats: number,
+  withdrawalInvoiceId: string,
   tips: Tip[]
 ) {
   if (!process.env.LNBITS_API_KEY) {
@@ -13,6 +14,9 @@ export async function completeWithdrawal(
   }
   if (negativeOutboundFeeMsats > 0) {
     throw new Error("Routing fee should always be negative ()");
+  }
+  if (!userWallet.userId) {
+    throw new Error("User wallet has no user ID: " + userWallet.id);
   }
   const paidRoutingFeeSats = Math.ceil(
     Math.abs(negativeOutboundFeeMsats) / 1000
@@ -35,6 +39,17 @@ export async function completeWithdrawal(
     },
     data: {
       status: withdrawalFlow === "tippee" ? "WITHDRAWN" : "REFUNDED",
+    },
+  });
+
+  await prisma.withdrawal.create({
+    data: {
+      routingFee: paidRoutingFeeSats,
+      userId: userWallet.userId,
+      withdrawalInvoiceId,
+      tips: {
+        connect: tips.map((tip) => ({ id: tip.id })),
+      },
     },
   });
 

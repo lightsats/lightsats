@@ -39,6 +39,12 @@ const guides: Guide[] = [
     link: Routes.guideSend,
   },
   {
+    name: "Tip",
+    description: "Send a tip directly or onboard a new user with Lightsats!",
+    icon: <BanknotesIcon />,
+    link: Routes.guideTip,
+  },
+  {
     name: "Donate",
     description: "Donate Bitcoin to someone in need",
     icon: <BanknotesIcon />,

@@ -1,3 +1,4 @@
+import { sub } from "date-fns";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { addWithdrawalInvoiceToTips } from "lib/addWithdrawalInvoiceToTips";
 import { completeWithdrawal } from "lib/completeWithdrawal";
@@ -34,6 +35,8 @@ export default async function handler(
 }
 
 export async function checkWithdrawalLinks(userId: string) {
+  // TODO: delete old withdrawal links here
+
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -43,6 +46,11 @@ export async function checkWithdrawalLinks(userId: string) {
       withdrawalLinks: {
         where: {
           used: false,
+          created: {
+            gt: sub(new Date(), {
+              days: 1,
+            }),
+          },
         },
         include: {
           linkTips: {
@@ -111,6 +119,7 @@ export async function checkWithdrawalLinks(userId: string) {
           await completeWithdrawal(
             user.lnbitsWallet,
             matchingPayment.fee,
+            matchingPayment.checking_id,
             tips
           );
           await prisma.withdrawalLink.update({
