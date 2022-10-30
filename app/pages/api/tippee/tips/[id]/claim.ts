@@ -65,6 +65,7 @@ async function handleClaimTip(
     data: {
       status: "CLAIMED",
       tippeeId: session.user.id,
+      withdrawalFlow: "tippee",
     },
   });
   res.status(204).end();

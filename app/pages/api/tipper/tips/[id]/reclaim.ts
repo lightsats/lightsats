@@ -60,6 +60,7 @@ async function handleReclaimTip(
     data: {
       status: "RECLAIMED",
       tippeeId: session.user.id,
+      withdrawalFlow: "tipper",
     },
   });
   res.status(204).end();
