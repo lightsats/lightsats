@@ -1,4 +1,3 @@
-import { sub } from "date-fns";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { addWithdrawalInvoiceToTips } from "lib/addWithdrawalInvoiceToTips";
 import { completeWithdrawal } from "lib/completeWithdrawal";
@@ -35,8 +34,7 @@ export default async function handler(
 }
 
 export async function checkWithdrawalLinks(userId: string) {
-  // TODO: delete old withdrawal links here
-
+  const startTime = Date.now();
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -46,11 +44,6 @@ export async function checkWithdrawalLinks(userId: string) {
       withdrawalLinks: {
         where: {
           used: false,
-          created: {
-            gt: sub(new Date(), {
-              days: 1,
-            }),
-          },
         },
         include: {
           linkTips: {
@@ -74,6 +67,13 @@ export async function checkWithdrawalLinks(userId: string) {
       user.lnbitsWallet.adminKey
     );
 
+    // TODO: is there a way to filter the payments e.g. by memo?
+    const walletPayments = await getPayments(
+      user.lnbitsWallet.adminKey
+      // true,
+      // matchingLnbitsWithdrawLink.open_time
+    );
+
     for (const withdrawalLink of user.withdrawalLinks) {
       if (withdrawalLink.used) {
         throw new Error("expected only unused withdrawal links");
@@ -88,13 +88,6 @@ export async function checkWithdrawalLinks(userId: string) {
           matchingLnbitsWithdrawLink?.used
       );
       if (matchingLnbitsWithdrawLink && matchingLnbitsWithdrawLink.used > 0) {
-        // TODO: is there a way to filter the payments e.g. by memo?
-        const walletPayments = await getPayments(
-          user.lnbitsWallet.adminKey
-          // true,
-          // matchingLnbitsWithdrawLink.open_time
-        );
-
         const matchingPayment = walletPayments.find(
           (payment) =>
             payment.pending === false && payment.memo === withdrawalLink.memo
@@ -134,4 +127,11 @@ export async function checkWithdrawalLinks(userId: string) {
       }
     }
   }
+  console.log(
+    "Checked withdrawal links for user " +
+      userId +
+      " in " +
+      (Date.now() - startTime) +
+      "ms"
+  );
 }

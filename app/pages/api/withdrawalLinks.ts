@@ -1,6 +1,7 @@
 import { sub } from "date-fns";
 import { StatusCodes } from "http-status-codes";
 import { appName } from "lib/constants";
+import { deleteStaleWithdrawalLinks } from "lib/deleteStaleWithdrawalLinks";
 import { createWithdrawLink } from "lib/lnbits/createWithdrawLink";
 import prisma from "lib/prismadb";
 import { generateAlphanumeric } from "lib/utils";
@@ -63,6 +64,8 @@ async function postWithdrawLink(
   if (!userWallet) {
     throw new Error("User " + session.user.id + " has no staging wallet");
   }
+
+  await deleteStaleWithdrawalLinks(userWallet.adminKey, session.user.id);
 
   const existingWithdrawLink = await prisma.withdrawalLink.findFirst({
     where: {
