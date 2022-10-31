@@ -1,4 +1,5 @@
 import {
+  BookOpenIcon,
   ChartBarIcon,
   HomeIcon,
   InformationCircleIcon,
@@ -56,14 +57,14 @@ export function AppNavbar() {
       ...(session
         ? [
             {
-              name: "Profile",
-              href: Routes.profile,
-              icon: <UserIcon />,
-            },
-            {
               name: "New Tip",
               href: Routes.newTip,
               icon: <PlusIcon />,
+            },
+            {
+              name: "Profile",
+              href: Routes.profile,
+              icon: <UserIcon />,
             },
           ]
         : []),
@@ -81,6 +82,11 @@ export function AppNavbar() {
         name: "Bitcoin Guide",
         href: Routes.guide,
         icon: <LightBulbIcon />,
+      },
+      {
+        name: "Bitcoin Whitepaper",
+        href: Routes.whitepaper,
+        icon: <BookOpenIcon />,
       },
     ],
     [session]
