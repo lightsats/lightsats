@@ -88,13 +88,6 @@ model Tip {
   expiry DateTime
   currency String?
   note String? @db.VarChar(255)
-  withdrawalInvoiceId String?
-  withdrawalInvoice String?
-  withdrawalFlow WithdrawalFlow?
-  withdrawalMethod WithdrawalMethod?
-  payInvoiceStatus Int?
-  payInvoiceStatusText String?
-  payInvoiceErrorBody String?
   version Int @default(0)
   withdrawalLinkTip WithdrawalLinkTip[]
   withdrawalId String?
@@ -146,6 +139,16 @@ model Withdrawal {
   tips Tip[]
   routingFee Int
   withdrawalInvoiceId String
+  withdrawalInvoice String
+  withdrawalFlow WithdrawalFlow
+  withdrawalMethod WithdrawalMethod
+}
+
+model WithdrawalError {
+  id String @id @default(cuid())
+  userId String
+  message String
+  created DateTime @default(now())
 }
 
 enum TipStatus {

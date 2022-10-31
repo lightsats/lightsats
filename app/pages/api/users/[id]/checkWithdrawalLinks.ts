@@ -1,5 +1,4 @@
-import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { addWithdrawalInvoiceToTips } from "lib/addWithdrawalInvoiceToTips";
+import { StatusCodes } from "http-status-codes";
 import { completeWithdrawal } from "lib/completeWithdrawal";
 import { getPayments } from "lib/lnbits/getPayments";
 import { getWithdrawLinks } from "lib/lnbits/getWithdrawLinks";
@@ -95,24 +94,18 @@ export async function checkWithdrawalLinks(userId: string) {
 
         if (matchingPayment) {
           const tips = withdrawalLink.linkTips.map((linkTip) => linkTip.tip);
-          await addWithdrawalInvoiceToTips(
-            tips,
-            matchingPayment.checking_id,
-            matchingPayment.bolt11,
-            StatusCodes.OK,
-            ReasonPhrases.OK,
-            null,
-            "lnurlw"
-          );
           console.log(
             "withdrawalLink " + withdrawalLink.memo + " has been used!",
             "routing fee",
             matchingPayment.fee
           );
           await completeWithdrawal(
+            userId,
             user.lnbitsWallet,
             matchingPayment.fee,
             matchingPayment.checking_id,
+            matchingPayment.bolt11,
+            "lnurlw",
             tips
           );
           await prisma.withdrawalLink.update({

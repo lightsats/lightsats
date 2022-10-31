@@ -230,40 +230,7 @@ const TipPage: NextPage = () => {
             </Button>
           </>
         )}
-        {tip.status === "WITHDRAWAL_FAILED" && (
-          <>
-            <Spacer />
-            <Text style={{ textAlign: "center" }}>
-              Withdrawal failed: {tip.payInvoiceStatus}{" "}
-              {tip.payInvoiceStatusText}
-            </Text>
-            <Spacer />
-            {tip.payInvoiceErrorBody && (
-              <>
-                <Text style={{ textAlign: "center" }}>
-                  {tip.payInvoiceErrorBody}
-                </Text>
-              </>
-            )}
-          </>
-        )}
-        {tip.status === "WITHDRAWN" ||
-          (tip.status === "REFUNDED" && (
-            <>
-              <Spacer />
-              <Text
-                size="small"
-                style={{
-                  textAlign: "center",
-                  wordBreak: "break-all",
-                  maxWidth: "300px",
-                }}
-              >
-                Invoice of {tip.amount} sats has been paid:{" "}
-                {tip.withdrawalInvoice}
-              </Text>
-            </>
-          ))}
+
         {refundableTipStatuses.indexOf(tip.status) >= 0 && (
           <>
             <Spacer />

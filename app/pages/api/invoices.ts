@@ -1,6 +1,5 @@
 import * as bolt11 from "bolt11";
 import { StatusCodes } from "http-status-codes";
-import { addWithdrawalInvoiceToTips } from "lib/addWithdrawalInvoiceToTips";
 import { completeWithdrawal } from "lib/completeWithdrawal";
 import { getPayment } from "lib/lnbits/getPayment";
 import { payInvoice } from "lib/lnbits/payInvoice";
@@ -78,19 +77,19 @@ async function handleWithdrawal(
     userWallet.adminKey
   );
 
-  await addWithdrawalInvoiceToTips(
-    tips,
-    payInvoiceResponseBody?.checking_id ?? null,
-    withdrawalRequest.invoice,
-    payInvoiceResponse.status,
-    payInvoiceResponse.statusText,
-    !payInvoiceResponse.ok && payInvoiceResponseBody
-      ? JSON.stringify(payInvoiceResponseBody)
-      : null,
-    "invoice"
-  );
-
   if (!payInvoiceResponse.ok || !payInvoiceResponseBody) {
+    await prisma.withdrawalError.create({
+      data: {
+        message:
+          payInvoiceResponse.status +
+          " " +
+          payInvoiceResponse.statusText +
+          " " +
+          (JSON.stringify(payInvoiceResponseBody) ?? "Unknown error"),
+        userId: session.user.id,
+      },
+    });
+
     // revert to initial status so the user can retry
     console.error(
       "Failed to withdraw funds for user " +
@@ -114,9 +113,12 @@ async function handleWithdrawal(
       throw new Error("Outgoing payment is not paid: ");
     }
     await completeWithdrawal(
+      session.user.id,
       userWallet,
       payment.details.fee,
       payment.details.checking_id,
+      payment.details.bolt11,
+      "invoice",
       tips
     );
     res.status(204).end();
