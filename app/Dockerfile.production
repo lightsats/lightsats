@@ -16,10 +16,10 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # Example:
 # ARG NEXT_PUBLIC_EXAMPLE="value here"
 
-# FIXME: use migrations
-RUN yarn db:generate:production
-RUN yarn db:push:production:force
-RUN yarn db:migrate:resolve:production
+#RUN yarn db:generate:production
+#RUN yarn db:push:production:force
+#RUN yarn db:migrate:resolve:production
+RUN yarn db:migrate:deploy:production
 
 RUN yarn build
 
