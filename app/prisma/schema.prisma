@@ -112,11 +112,10 @@ model LnurlAuthKey {
 }
 
 model WithdrawalLink {
-  id String @id // lnbits withdrawal link ID
+  id String @id
   user User @relation(fields: [userId], references: [id])
   userId String
-  withdrawalCode String @unique // used to create below memo
-  memo String @unique // used to link lnbits withdraw link title to lnbits paid invoice memo (TODO: find a better way to do this)
+  withdrawalFlow WithdrawalFlow
   linkTips WithdrawalLinkTip[]
   used Boolean @default(false)
   created DateTime @default(now())

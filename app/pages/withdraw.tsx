@@ -25,7 +25,6 @@ import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
 import { PublicTip } from "types/PublicTip";
 
-const checkWithdrawalLinksConfig: SWRConfiguration = { refreshInterval: 1000 };
 const useTipsConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 const Withdraw: NextPage = () => {
@@ -38,15 +37,6 @@ const Withdraw: NextPage = () => {
     session ? `/api/${flow}/tips` : null,
     defaultFetcher,
     useTipsConfig
-  );
-
-  // poll withdraw links to check payment
-  // this is unreliable because user might not come back to this page after receiving withdrawal confirmation in their wallet app
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data } = useSWR<unknown>(
-    session ? `/api/users/${session.user.id}/checkWithdrawalLinks` : null,
-    defaultFetcher,
-    checkWithdrawalLinksConfig
   );
 
   const [invoice, setInvoice] = React.useState("");

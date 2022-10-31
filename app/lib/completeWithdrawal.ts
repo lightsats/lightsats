@@ -4,6 +4,7 @@ import {
   WithdrawalFlow,
   WithdrawalMethod,
 } from "@prisma/client";
+import { deleteUnusedWithdrawalLinks } from "lib/deleteStaleWithdrawalLinks";
 import { createInvoice } from "lib/lnbits/createInvoice";
 import { payInvoice } from "lib/lnbits/payInvoice";
 import prisma from "lib/prismadb";
@@ -11,14 +12,38 @@ import prisma from "lib/prismadb";
 export async function completeWithdrawal(
   userId: string,
   userWallet: LnbitsWallet,
-  negativeOutboundFeeMsats: number,
+  possiblyNegativeOutboundFeeMsats: number,
   withdrawalInvoiceId: string,
   withdrawalInvoice: string,
   withdrawalMethod: WithdrawalMethod,
-  tips: Tip[]
+  tips: Tip[],
+  withdrawalLinkId: string | undefined
 ) {
+  if (withdrawalLinkId) {
+    try {
+      await prisma.withdrawalLink.update({
+        where: {
+          id: withdrawalLinkId,
+        },
+        data: {
+          used: true,
+        },
+      });
+    } catch (error) {
+      console.error(
+        "Failed to update withdrawal link " + withdrawalLinkId,
+        error
+      );
+    }
+    try {
+      await deleteUnusedWithdrawalLinks(userId, false);
+    } catch (error) {
+      console.error("Failed to delete unused withdrawal links", error);
+    }
+  }
+
   const paidRoutingFeeSats = Math.ceil(
-    Math.abs(negativeOutboundFeeMsats) / 1000
+    Math.abs(possiblyNegativeOutboundFeeMsats) / 1000
   );
 
   try {
@@ -27,9 +52,6 @@ export async function completeWithdrawal(
     }
     if (!userWallet.userId) {
       throw new Error("User wallet has no user ID: " + userWallet.id);
-    }
-    if (negativeOutboundFeeMsats > 0) {
-      throw new Error("Routing fee should always be negative ()");
     }
 
     if (!tips.length) {
@@ -72,6 +94,9 @@ export async function completeWithdrawal(
         userId: userId,
       },
     });
+
+    // update of tip status failed, don't execute any further logic
+    throw error;
   }
 
   try {

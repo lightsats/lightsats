@@ -1,21 +1,24 @@
 import { sub } from "date-fns";
-import { deleteWithdrawLink } from "lib/lnbits/deleteWithdrawLink";
 import prisma from "lib/prismadb";
 
-export async function deleteStaleWithdrawalLinks(
-  userWalletAdminKey: string,
-  userId: string
+export async function deleteUnusedWithdrawalLinks(
+  userId: string,
+  staleOnly: boolean
 ) {
-  //check withdrawal links more than a day old
   const staleWithdrawalLinks = await prisma.withdrawalLink.findMany({
     where: {
       userId,
       used: false,
-      created: {
-        lt: sub(new Date(), {
-          days: 1,
-        }),
-      },
+      ...(staleOnly
+        ? {
+            // check withdrawal links more than a day old
+            created: {
+              lt: sub(new Date(), {
+                days: 1,
+              }),
+            },
+          }
+        : {}),
     },
   });
 
@@ -31,7 +34,6 @@ export async function deleteStaleWithdrawalLinks(
   );
   for (const withdrawalLink of staleWithdrawalLinks) {
     try {
-      await deleteWithdrawLink(userWalletAdminKey, withdrawalLink.id);
       await prisma.withdrawalLink.delete({
         where: {
           id: withdrawalLink.id,

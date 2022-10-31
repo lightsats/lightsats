@@ -1,15 +1,15 @@
 import { sub } from "date-fns";
 import { StatusCodes } from "http-status-codes";
-import { appName } from "lib/constants";
-import { deleteStaleWithdrawalLinks } from "lib/deleteStaleWithdrawalLinks";
-import { createWithdrawLink } from "lib/lnbits/createWithdrawLink";
+import { deleteUnusedWithdrawalLinks } from "lib/deleteStaleWithdrawalLinks";
+import { getWithdrawalLinkUrl } from "lib/lnurl/getWithdrawalLinkUrl";
 import prisma from "lib/prismadb";
-import { generateAlphanumeric } from "lib/utils";
 import { checkWithdrawalFlow, getWithdrawableTipsQuery } from "lib/withdrawal";
+import * as lnurl from "lnurl";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
+import { v4 as uuidv4 } from "uuid";
 
 export default async function handler(
   req: NextApiRequest,
@@ -65,12 +65,13 @@ async function postWithdrawLink(
     throw new Error("User " + session.user.id + " has no staging wallet");
   }
 
-  await deleteStaleWithdrawalLinks(userWallet.adminKey, session.user.id);
+  await deleteUnusedWithdrawalLinks(session.user.id, true);
 
   const existingWithdrawLink = await prisma.withdrawalLink.findFirst({
     where: {
       userId: session.user.id,
       used: false,
+      withdrawalFlow: withdrawalRequest.flow,
       amount,
       created: {
         gt: sub(new Date(), {
@@ -85,40 +86,16 @@ async function postWithdrawLink(
     return;
   }
 
-  // try to find an existing withdraw link for the same value
-  let withdrawalCode: string;
-  do {
-    withdrawalCode = generateAlphanumeric(5);
-  } while (
-    await prisma.withdrawalLink.findFirst({
-      where: {
-        withdrawalCode,
-      },
-    })
-  );
+  const withdrawalLinkId: string = uuidv4();
+  const lnurlValue = lnurl.encode(getWithdrawalLinkUrl(withdrawalLinkId));
 
-  // TODO: consider deleting any unused withdraw links that do not match amount (they are unused and may slow down queries)
-  // delete BOTH the DB withdrawal link and the lnbits withdraw link!
-
-  // Do NOT change the memo value, currently required to associate payments to pay links in lnbits.
-  // we need to retrieve the payment from lnbits in order to get the invoice routing fee.
-  // The difference between the tip fees for this withdrawal and the invoice routing fee can be
-  // moved to the margin wallet.
-  const memo = `${appName} withdrawal #${withdrawalCode}`;
-
-  const lnbitsWithdrawLink = await createWithdrawLink(
-    amount,
-    userWallet.adminKey,
-    memo
-  );
   await prisma.withdrawalLink.create({
     data: {
-      id: lnbitsWithdrawLink.id,
-      lnurl: lnbitsWithdrawLink.lnurl,
+      id: withdrawalLinkId,
+      lnurl: lnurlValue,
       userId: session.user.id,
       amount,
-      withdrawalCode,
-      memo,
+      withdrawalFlow: withdrawalRequest.flow,
       fee,
       linkTips: {
         createMany: {
@@ -130,5 +107,5 @@ async function postWithdrawLink(
     },
   });
 
-  res.status(StatusCodes.OK).json(lnbitsWithdrawLink.lnurl);
+  res.status(StatusCodes.OK).json(lnurlValue);
 }

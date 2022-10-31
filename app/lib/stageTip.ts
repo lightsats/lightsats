@@ -6,7 +6,6 @@ import {
   createLnbitsUserAndWallet,
   generateUserAndWalletName,
 } from "lib/lnbits/createLnbitsUserAndWallet";
-import { enableLnbitsExtension } from "lib/lnbits/enableLnbitsExtension";
 import { payInvoice } from "lib/lnbits/payInvoice";
 import prisma from "lib/prismadb";
 
@@ -54,11 +53,6 @@ export async function stageTip(
     }
 
     const lnbitsWallet = createLnbitsUserResponseBody.wallets[0];
-
-    // enable lnurl-withdraw extension on user wallet
-    if (!(await enableLnbitsExtension(lnbitsWallet.user, "withdraw"))) {
-      throw new Error("Failed to enable LNURLw extension on user wallet");
-    }
 
     // save the newly-created lnbits wallet (for creating/paying invoice)
     userWallet = await prisma.lnbitsWallet.create({
