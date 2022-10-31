@@ -92,6 +92,7 @@ model Tip {
   withdrawalLinkTip WithdrawalLinkTip[]
   withdrawalId String?
   withdrawal Withdrawal? @relation(fields: [withdrawalId], references: [id])
+  claimLinkViewed Boolean @default(false)
 }
 
 model LnbitsWallet {

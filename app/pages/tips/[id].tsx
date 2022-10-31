@@ -214,6 +214,15 @@ const TipPage: NextPage = () => {
             </NextLink>
             <Spacer />
             <Button onClick={copyClaimUrl}>Copy URL</Button>
+            <Spacer />
+            <Text
+              blockquote
+              color={tip.claimLinkViewed ? "success" : undefined}
+            >
+              {tip.claimLinkViewed
+                ? "This tip has been viewed!"
+                : "This tip hasn't been viewed yet."}
+            </Text>
           </>
         )}
         {hasExpired && (

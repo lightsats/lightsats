@@ -17,7 +17,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # ARG NEXT_PUBLIC_EXAMPLE="value here"
 
 #RUN yarn db:generate:production
-#RUN yarn db:push:production:force
+#RUN yarn db:push:production
 #RUN yarn db:migrate:resolve:production
 RUN yarn db:migrate:deploy:production
 

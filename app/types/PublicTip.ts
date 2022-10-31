@@ -11,6 +11,7 @@ export type PublicTip = Pick<
   | "status"
   | "expiry"
   | "tippeeName"
+  | "claimLinkViewed"
 > & {
   hasClaimed: boolean;
   tipper: Pick<User, "name" | "twitterUsername" | "avatarURL"> & {

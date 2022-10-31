@@ -20,7 +20,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 
 #RUN yarn db:generate:staging
-#RUN yarn db:push:staging:force
+#RUN yarn db:push:staging
 #RUN yarn db:migrate:resolve:staging
 RUN yarn db:migrate:deploy:staging
 

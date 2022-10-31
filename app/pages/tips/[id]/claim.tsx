@@ -36,6 +36,24 @@ const ClaimTipPage: NextPage = () => {
 
   const destinationRoute = Routes.journeyClaimed;
 
+  React.useEffect(() => {
+    if (
+      publicTip &&
+      !publicTip.claimLinkViewed &&
+      (!session || session.user.id !== publicTip.tipperId)
+    ) {
+      (async () => {
+        const result = await fetch(`/api/tippee/tips/${id}/view`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!result.ok) {
+          console.error("Failed to mark tip as viewed: " + result.status);
+        }
+      })();
+    }
+  }, [id, publicTip, session]);
+
   const hasExpired =
     publicTip &&
     expirableTipStatuses.indexOf(publicTip.status) >= 0 &&
@@ -103,7 +121,7 @@ const ClaimTipPage: NextPage = () => {
               <BackButton />
             </>
           )
-        ) : !session || !canClaim ? (
+        ) : !session || canClaim ? (
           <>
             {publicTip.tippeeName && (
               <>
