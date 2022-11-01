@@ -16,10 +16,10 @@ export function MyBitcoinJourneyHeader() {
   );
 
   const router = useRouter();
-  console.log("router.pathname", router.pathname);
+  // console.log("router.pathname", router.pathname);
   const progressIndex =
     bitcoinJourneyPages.findIndex((route) => {
-      console.log(router.pathname, route, router.pathname.indexOf(route) > -1);
+      // console.log(router.pathname, route, router.pathname.indexOf(route) > -1);
       return router.pathname.indexOf(route) > -1;
     }) + 1;
 

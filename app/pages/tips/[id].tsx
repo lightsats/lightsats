@@ -1,6 +1,7 @@
 import {
   Badge,
   Button,
+  Link,
   Loading,
   Progress,
   Row,
@@ -9,6 +10,7 @@ import {
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { BackButton } from "components/BackButton";
+import { ConfettiContainer } from "components/ConfettiContainer";
 import { FiatPrice } from "components/FiatPrice";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import copy from "copy-to-clipboard";
@@ -20,6 +22,7 @@ import {
 } from "lib/constants";
 import { bitcoinJourneyPages, Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
+import { nth } from "lib/utils";
 import type { NextPage } from "next";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -28,6 +31,7 @@ import QRCode from "react-qr-code";
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
 import { ExchangeRates } from "types/ExchangeRates";
 import { PublicTip } from "types/PublicTip";
+import { Scoreboard } from "types/Scoreboard";
 
 // TODO: polling speed should be based on tip status - only UNFUNDED needs a fast poll rate
 const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
@@ -55,6 +59,15 @@ const TipPage: NextPage = () => {
     defaultFetcher,
     useTipConfig
   );
+
+  const { data: scoreboard } = useSWR<Scoreboard>(
+    tip && tip.status === "WITHDRAWN" ? `/api/scoreboard` : null,
+    defaultFetcher
+  );
+
+  const placing = scoreboard
+    ? scoreboard.entries.findIndex((entry) => entry.isMe) + 1
+    : undefined;
 
   const hasExpired =
     tip &&
@@ -157,6 +170,52 @@ const TipPage: NextPage = () => {
           </>
         )}
         <Spacer />
+        {tip.status === "WITHDRAWN" && (
+          <>
+            <ConfettiContainer />
+            <h2>You did it 🎉</h2>
+            <Spacer />
+            <Text>{"You've"} just started someone on their 🍊💊 journey!</Text>
+            <Spacer />
+            <Text blockquote>
+              Rumors say - those who gift bitcoin are a very special kind of
+              people.
+            </Text>
+            <Spacer />
+            {placing ? (
+              <>
+                <Text b>
+                  {"You're"} now at&nbsp;
+                  <Text
+                    color="success"
+                    b
+                    size="large"
+                    style={{ display: "inline" }}
+                  >
+                    {placing}
+                    {nth(placing)}
+                  </Text>
+                  &nbsp; place on the{" "}
+                  <NextLink href={Routes.scoreboard} passHref>
+                    <Link style={{ display: "inline" }}>scoreboard</Link>
+                  </NextLink>
+                  !
+                </Text>
+                <Spacer />
+              </>
+            ) : (
+              <Loading type="spinner" color="currentColor" size="sm" />
+            )}
+            <Spacer />
+            <NextLink href={Routes.newTip} passHref>
+              <a>
+                <Button>Create another tip</Button>
+              </a>
+            </NextLink>
+
+            <Spacer />
+          </>
+        )}
         {!hasExpired && tip.status === "UNFUNDED" && tip.invoice && (
           <>
             <Text>Waiting for payment</Text>
@@ -248,7 +307,7 @@ const TipPage: NextPage = () => {
             </Button>
           </>
         )}
-        <Spacer y={4} />
+        <Spacer y={2} />
         <BackButton />
       </>
     );

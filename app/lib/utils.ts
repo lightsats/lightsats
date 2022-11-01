@@ -55,3 +55,7 @@ export function getFallbackAvatarId(user: User | undefined) {
 
   return (getHashCode(secretId) % 10000).toString();
 }
+
+export function nth(n: number) {
+  return ["st", "nd", "rd"][((((n + 90) % 100) - 10) % 10) - 1] || "th";
+}
