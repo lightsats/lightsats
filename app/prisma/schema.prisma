@@ -68,6 +68,8 @@ model User {
   withdrawalLinks WithdrawalLink[]
   journeyStep Int @default(1)
   inJourney Boolean @default(false)
+
+  roles UserRole[]
 }
 
 model Tip {
@@ -151,6 +153,14 @@ model WithdrawalError {
   created DateTime @default(now())
 }
 
+model UserRole {
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  roleType RoleType
+
+  @@id([userId, roleType])
+}
+
 enum TipStatus {
   UNFUNDED // tip created but tipper needs to pay invoice to fund the tip
   UNCLAIMED // tip funded but not yet claimed
@@ -171,4 +181,8 @@ enum WithdrawalFlow {
 enum WithdrawalMethod {
   lnurlw
   invoice
+}
+
+enum RoleType {
+  SUPERADMIN
 }
