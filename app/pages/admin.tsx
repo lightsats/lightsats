@@ -13,7 +13,6 @@ import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import Head from "next/head";
-import NextLink from "next/link";
 import useSWR from "swr";
 import { AdminDashboard } from "types/Admin";
 
@@ -63,9 +62,13 @@ const AdminPage: NextPage = () => {
       <Row justify="center" align="center">
         <Text blockquote>
           <Text color="error">Warning: do not share this link</Text>
-          <NextLink href={adminDashboard.lnbitsDashboardUrl} passHref>
-            <Link target="_blank">LNBITS Dashboard</Link>
-          </NextLink>
+          <Link
+            onClick={() =>
+              window.open(adminDashboard.lnbitsDashboardUrl, "_blank")
+            }
+          >
+            LNBITS Dashboard
+          </Link>
         </Text>
       </Row>
       <Row justify="center" align="center">
