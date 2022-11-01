@@ -4,5 +4,7 @@ export type AdminDashboard = {
   adminUsers: User[];
   lnbitsDashboardUrl: string;
   tips: Tip[];
-  withdrawals: Withdrawal[];
+  withdrawals: (Withdrawal & {
+    tips: Tip[];
+  })[];
 };

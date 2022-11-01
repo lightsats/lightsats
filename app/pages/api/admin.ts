@@ -57,7 +57,11 @@ async function handleGetAdminDashboard(
       },
     }),
     tips: await prisma.tip.findMany(),
-    withdrawals: await prisma.withdrawal.findMany(),
+    withdrawals: await prisma.withdrawal.findMany({
+      include: {
+        tips: true,
+      },
+    }),
     lnbitsDashboardUrl: `${process.env.LNBITS_URL}/wallet?usr=${process.env.LNBITS_USER_ID}`,
   });
 }

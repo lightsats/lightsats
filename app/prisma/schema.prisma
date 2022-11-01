@@ -144,6 +144,7 @@ model Withdrawal {
   withdrawalInvoice String
   withdrawalFlow WithdrawalFlow
   withdrawalMethod WithdrawalMethod
+  created DateTime @default(now())
 }
 
 model WithdrawalError {

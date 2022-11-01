@@ -24,6 +24,7 @@ export enum Routes {
   guideLearn = "/guide/learn",
   about = "/about",
   whitepaper = "/bitcoin.pdf",
+  admin = "/admin",
 }
 
 export const bitcoinJourneyPages = [

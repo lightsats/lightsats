@@ -24,7 +24,8 @@ export default function Layout({
         fluid
         css={{
           flex: 1,
-          ...(router.pathname !== Routes.scoreboard
+          ...(router.pathname !== Routes.scoreboard &&
+          router.pathname !== Routes.admin
             ? { maxWidth: "400px" }
             : {}),
         }}
