@@ -79,10 +79,13 @@ export function ProfitChart({ withdrawals }: ProfitChartProps) {
     scales: {
       yAxis: {
         min: 0,
-        max: 100,
+        max: Math.max(...withdrawalProfits, ...withdrawalRoutingFees),
         title: {
           text: "sats",
           display: true,
+        },
+        ticks: {
+          callback: (val) => val,
         },
       },
     },

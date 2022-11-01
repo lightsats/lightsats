@@ -43,7 +43,16 @@ export function TipsChart({ tips }: TipsChartProps) {
     new Set(tips.map((w) => format(new Date(w.created), "d/M")))
   );
 
-  const dailyTipCountsByStatus = Object.values(TipStatus).map((status) =>
+  const relevantStatuses: TipStatus[] = [
+    "CLAIMED",
+    "RECLAIMED",
+    "REFUNDED",
+    "UNCLAIMED",
+    "UNFUNDED",
+    "WITHDRAWN",
+  ];
+
+  const dailyTipCountsByStatus = relevantStatuses.map((status) =>
     tipDates.map((date) => {
       return tips.filter(
         (tip) => getDateLabel(tip.created) === date && tip.status === status
@@ -53,7 +62,7 @@ export function TipsChart({ tips }: TipsChartProps) {
 
   const data: ChartData<"line"> = {
     labels: tipDates,
-    datasets: Object.values(TipStatus).map((status, statusIndex) => ({
+    datasets: relevantStatuses.map((status, statusIndex) => ({
       type: "line",
       backgroundColor: getStatusColor(status),
       borderColor: getStatusColor(status),
@@ -66,10 +75,13 @@ export function TipsChart({ tips }: TipsChartProps) {
     scales: {
       yAxis: {
         min: 0,
-        max: 10,
+        max: Math.max(...([] as number[]).concat(...dailyTipCountsByStatus)),
         title: {
           text: "#tips",
           display: true,
+        },
+        ticks: {
+          callback: (val) => val,
         },
       },
     },
