@@ -1,5 +1,5 @@
 import ISO6391 from "iso-639-1";
-import { LightningWallet } from "types/LightningWallet";
+import { Wallet } from "types/Wallet";
 
 const getLanguageCode = (languageName: string) => {
   const code = ISO6391.getCode(languageName);
@@ -9,7 +9,9 @@ const getLanguageCode = (languageName: string) => {
   return code;
 };
 
-const wos: LightningWallet = {
+const wos: Wallet = {
+  category: "wallets",
+  features: ["lnurl-withdraw"],
   minBalance: 0,
   link: "https://lgt.st/walletofsatoshi",
   image: "wos.png",
@@ -44,7 +46,9 @@ const wos: LightningWallet = {
 };
 //
 // https://lgt.st/bluewallet
-const muun: LightningWallet = {
+const muun: Wallet = {
+  category: "wallets",
+  features: ["lnurl-withdraw"],
   minBalance: 0,
   link: "https://lgt.st/muun",
   image: "muun.png",
@@ -54,7 +58,10 @@ const muun: LightningWallet = {
   platforms: ["mobile"],
 };
 
-const breez: LightningWallet = {
+const breez: Wallet = {
+  features: ["lnurl-auth", "lnurl-withdraw"],
+  lightsatsRecommended: true,
+  category: "wallets",
   minBalance: 2000,
   link: "https://lgt.st/breez",
   image: "breez.png",
@@ -71,7 +78,9 @@ const breez: LightningWallet = {
   platforms: ["mobile"],
 };
 
-const blue: LightningWallet = {
+const blue: Wallet = {
+  features: ["lnurl-auth", "lnurl-withdraw"],
+  category: "wallets",
   minBalance: 0,
   link: "https://lgt.st/bluewallet",
   image: "blue.png",
@@ -120,7 +129,10 @@ const blue: LightningWallet = {
   platforms: ["mobile"],
 };
 
-const alby: LightningWallet = {
+const alby: Wallet = {
+  features: ["lnurl-auth", "lnurl-withdraw"],
+  lightsatsRecommended: true,
+  category: "wallets",
   minBalance: 0,
   link: "https://lgt.st/alby",
   image: "alby.png",
@@ -133,4 +145,4 @@ const alby: LightningWallet = {
   ],
   platforms: ["desktop"],
 };
-export const wallets: LightningWallet[] = [wos, blue, muun, breez, alby];
+export const wallets: Wallet[] = [wos, blue, muun, breez, alby];

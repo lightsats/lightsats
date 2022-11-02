@@ -6,7 +6,7 @@ import { MyBitcoinJourneyContent } from "components/tippee/MyBitcoinJourneyConte
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import ISO6391 from "iso-639-1";
-import { getRecommendedWallets } from "lib/getRecommendedWallets";
+import { getRecommendedWallets, sortWallets } from "lib/getRecommendedWallets";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { wallets } from "lib/wallets";
@@ -17,7 +17,7 @@ import NextImage from "next/image";
 import NextLink from "next/link";
 import React from "react";
 import useSWR from "swr";
-import { LightningWallet } from "types/LightningWallet";
+import { Wallet } from "types/LightningWallet";
 
 const SelectWalletPage: NextPage = () => {
   const session = useSession();
@@ -40,10 +40,13 @@ const SelectWalletPage: NextPage = () => {
       ),
     [claimedTips]
   );
-  const otherWallets = React.useMemo(
-    () => wallets.filter((wallet) => recommendedWallets.indexOf(wallet) === -1),
-    [recommendedWallets]
-  );
+  const otherWallets = React.useMemo(() => {
+    const otherWallets = wallets.filter(
+      (wallet) => recommendedWallets.indexOf(wallet) === -1
+    );
+    sortWallets(otherWallets);
+    return otherWallets;
+  }, [recommendedWallets]);
 
   return (
     <>
@@ -83,7 +86,7 @@ const SelectWalletPage: NextPage = () => {
 export default SelectWalletPage;
 
 type WalletCardProps = {
-  wallet: LightningWallet;
+  wallet: Wallet;
 };
 
 function WalletCard({ wallet }: WalletCardProps) {
@@ -142,32 +145,36 @@ function WalletCard({ wallet }: WalletCardProps) {
                 <>
                   <Spacer y={0.5} />
                   <Row style={{ flexWrap: "wrap", gap: "8px" }}>
-                    <Badge
-                      color={hasLanguage ? "success" : "warning"}
-                      size="sm"
-                    >
+                    <Text color="white" size="small">
                       {ISO6391.getNativeName("en")}&nbsp;
                       {getIcon(hasLanguage)}
-                    </Badge>
+                    </Text>
                     {wallet.minBalance > 0 && (
                       <>
-                        <Badge color={"warning"} size="sm">
+                        <Text color="warning" size="small">
                           {wallet.minBalance}⚡ min balance&nbsp;
                           {getIcon(wallet.minBalance === 0)}
-                        </Badge>
+                        </Text>
                       </>
                     )}
-                    <Badge
+                    <Text
                       color={
                         wallet.platforms.indexOf("mobile") === -1
                           ? "warning"
-                          : "success"
+                          : "white"
                       }
-                      size="sm"
+                      size="small"
                     >
                       {wallet.platforms.join(",")}&nbsp;
-                      {getIcon(true)}
-                    </Badge>
+                      {getIcon(wallet.platforms.indexOf("mobile") > -1)}
+                    </Text>
+
+                    {wallet.lightsatsRecommended && (
+                      <Text color="success" size="small">
+                        Recommended
+                        {getIcon(hasLanguage)}
+                      </Text>
+                    )}
                   </Row>
                 </>
               }

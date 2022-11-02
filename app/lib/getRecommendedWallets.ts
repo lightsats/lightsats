@@ -1,17 +1,39 @@
 import ISO6391 from "iso-639-1";
 import { wallets } from "lib/wallets";
-import { LightningWallet } from "types/LightningWallet";
+import { Wallet } from "types/Wallet";
 
 export function getRecommendedWallets(
-  amount: number,
+  tipAmount: number,
   languageCode: string
-): LightningWallet[] {
+): Wallet[] {
   if (!ISO6391.validate(languageCode)) {
     throw new Error("Unsupported language code: " + languageCode);
   }
-  return wallets.filter(
+  const recommendedWallets = wallets.filter(
     (wallet) =>
       wallet.languageCodes.indexOf(languageCode) > -1 &&
-      wallet.minBalance <= amount
+      wallet.minBalance <= tipAmount
   );
+  sortWallets(recommendedWallets);
+
+  return recommendedWallets;
+}
+
+export function sortWallets(wallets: Wallet[]) {
+  wallets.sort((a, b) => getWalletScore(b) - getWalletScore(a));
+}
+
+function getWalletScore(wallet: Wallet) {
+  let score = 0;
+  if (wallet.lightsatsRecommended) {
+    ++score;
+  }
+  if (wallet.features.indexOf("lnurl-auth") > -1) {
+    ++score;
+  }
+  if (wallet.platforms.indexOf("mobile") > -1) {
+    ++score;
+  }
+
+  return score;
 }
