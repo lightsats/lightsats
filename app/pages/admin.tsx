@@ -85,7 +85,21 @@ const AdminPage: NextPage = () => {
         </Text>
       </Row>
       <Row justify="center" align="center">
-        <Text>{adminDashboard.withdrawals.length} withdrawals</Text>
+        <Text>
+          {adminDashboard.withdrawals.length} withdrawals (
+          {
+            adminDashboard.withdrawals.filter(
+              (w) => w.withdrawalFlow === "tippee"
+            ).length
+          }{" "}
+          tippee,{" "}
+          {
+            adminDashboard.withdrawals.filter(
+              (w) => w.withdrawalFlow === "tipper"
+            ).length
+          }{" "}
+          tipper)
+        </Text>
       </Row>
       <Row justify="center" align="center">
         <Text>{totalRoutingFees} sats outbound routing fees</Text>
