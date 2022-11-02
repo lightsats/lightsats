@@ -33,9 +33,10 @@ const AdminPage: NextPage = () => {
     (t) => t.status === "WITHDRAWN" || t.status === "REFUNDED"
   );
 
-  const withdrawnTipFees = completedTips.length
-    ? completedTips.map((t) => t.fee).reduce((a, b) => a + b)
-    : 0;
+  const profit =
+    (completedTips.length
+      ? completedTips.map((t) => t.fee).reduce((a, b) => a + b)
+      : 0) - totalRoutingFees;
   return (
     <>
       <Head>
@@ -90,7 +91,7 @@ const AdminPage: NextPage = () => {
         <Text>{totalRoutingFees} sats outbound routing fees</Text>
       </Row>
       <Row justify="center" align="center">
-        <Text>{withdrawnTipFees} sats unspent routing fees (profit)</Text>
+        <Text>{profit} sats unspent routing fees (profit)</Text>
       </Row>
     </>
   );
