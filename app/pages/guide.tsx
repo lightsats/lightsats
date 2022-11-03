@@ -1,4 +1,5 @@
 import { BanknotesIcon } from "@heroicons/react/24/outline";
+import { WalletIcon } from "@heroicons/react/24/solid";
 import { Button, Col, Grid, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { Routes } from "lib/Routes";
@@ -57,6 +58,12 @@ const guides: Guide[] = [
     icon: <BanknotesIcon />,
     link: Routes.guideLearn,
   },
+  {
+    name: "Wallets",
+    description: "View recommended Lightning wallets",
+    icon: <WalletIcon />,
+    link: Routes.guideWallets,
+  },
 ];
 
 const GuidePage: NextPage = () => {
@@ -86,7 +93,7 @@ function GuideCard({ guide }: GuideCardProps) {
   return (
     <Grid xs={12} justify="center" css={{ px: 0 }}>
       <NextLink href={guide.link}>
-        <a target="_blank" style={{ width: "100%" }}>
+        <a style={{ width: "100%" }}>
           <Row align="center" style={{ height: "100%" }}>
             <Col span={2.5}>
               <Row justify="flex-start">

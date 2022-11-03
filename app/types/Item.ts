@@ -1,6 +1,6 @@
 import { Platform } from "types/Platform";
 
-type ItemCategory =
+export type ItemCategory =
   | "wallets"
   | "spend"
   | "earn"

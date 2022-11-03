@@ -2,6 +2,7 @@ import {
   Avatar,
   Card,
   Col,
+  Grid,
   Loading,
   Row,
   Spacer,
@@ -43,9 +44,11 @@ const WhatIsBitcoinPage: NextPage = () => {
       <MyBitcoinJourneyHeader />
       <h4>Nice work!</h4>
       <h6>{"You've successfully claimed your tip"}</h6>
-      {claimedTips?.map((tip) => (
-        <ClaimedTipCard key={tip.id} tip={tip} />
-      ))}
+      <Grid.Container gap={2}>
+        {claimedTips?.map((tip) => (
+          <ClaimedTipCard key={tip.id} tip={tip} />
+        ))}
+      </Grid.Container>
       <Spacer y={2} />
       <MyBitcoinJourneyContent>
         <Text h4>{"This isn't a normal tip."}</Text>
@@ -80,48 +83,50 @@ function ClaimedTipCard({ tip }: ClaimedTipCardProps) {
   }
 
   return (
-    <Card key={tip.id} css={{ background: "$gray900" }}>
-      <Card.Body>
-        <Row align="center">
-          <Avatar
-            src={getAvatarUrl(
-              publicTip.tipper.avatarURL ?? undefined,
-              publicTip.tipper.fallbackAvatarId
-            )}
-            size="md"
-            bordered
-          />
-          <Spacer x={0.5} />
-          <Col>
-            <Row>
-              <Text b color="white">
-                {publicTip.tipper.name ?? "Anon"}
-              </Text>
-            </Row>
-            <Row>
-              <Text color="white">
-                {formatDistanceStrict(Date.now(), new Date(tip.created))} ago
-              </Text>
-            </Row>
-          </Col>
-          <Col>
-            <Row justify="flex-end">
-              <Text b color="white">
-                <FiatPrice
-                  currency={tip.currency ?? DEFAULT_FIAT_CURRENCY}
-                  sats={tip.amount}
-                  exchangeRate={
-                    exchangeRates?.[tip.currency ?? DEFAULT_FIAT_CURRENCY]
-                  }
-                />
-              </Text>
-            </Row>
-            <Row justify="flex-end">
-              <Text color="white">{tip.amount} sats</Text>
-            </Row>
-          </Col>
-        </Row>
-      </Card.Body>
-    </Card>
+    <Grid key={tip.id} xs={12}>
+      <Card css={{ background: "$gray900" }}>
+        <Card.Body>
+          <Row align="center">
+            <Avatar
+              src={getAvatarUrl(
+                publicTip.tipper.avatarURL ?? undefined,
+                publicTip.tipper.fallbackAvatarId
+              )}
+              size="md"
+              bordered
+            />
+            <Spacer x={0.5} />
+            <Col>
+              <Row>
+                <Text b color="white">
+                  {publicTip.tipper.name ?? "Anon"}
+                </Text>
+              </Row>
+              <Row>
+                <Text color="white">
+                  {formatDistanceStrict(Date.now(), new Date(tip.created))} ago
+                </Text>
+              </Row>
+            </Col>
+            <Col>
+              <Row justify="flex-end">
+                <Text b color="white">
+                  <FiatPrice
+                    currency={tip.currency ?? DEFAULT_FIAT_CURRENCY}
+                    sats={tip.amount}
+                    exchangeRate={
+                      exchangeRates?.[tip.currency ?? DEFAULT_FIAT_CURRENCY]
+                    }
+                  />
+                </Text>
+              </Row>
+              <Row justify="flex-end">
+                <Text color="white">{tip.amount} sats</Text>
+              </Row>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+    </Grid>
   );
 }

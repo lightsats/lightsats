@@ -1,13 +1,5 @@
-import ISO6391 from "iso-639-1";
+import { getLanguageCode } from "lib/items/getLanguageCode";
 import { Wallet } from "types/Wallet";
-
-const getLanguageCode = (languageName: string) => {
-  const code = ISO6391.getCode(languageName);
-  if (!code) {
-    throw new Error("Unknown language: " + languageName);
-  }
-  return code;
-};
 
 const wos: Wallet = {
   category: "wallets",
