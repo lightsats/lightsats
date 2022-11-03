@@ -114,8 +114,8 @@ const AdminPage: NextPage = () => {
       <Row justify="center" align="center">
         <Text>
           {adminDashboard.users.length} users (
-          {adminDashboard.users.map((user) => !!user.email).length} email,{" "}
-          {adminDashboard.users.map((user) => !!user.lnurlPublicKey).length}{" "}
+          {adminDashboard.users.filter((user) => !!user.email).length} email,{" "}
+          {adminDashboard.users.filter((user) => !!user.lnurlPublicKey).length}{" "}
           lnurl-auth)
         </Text>
       </Row>
