@@ -11,7 +11,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js/";
-import { format } from "date-fns";
+import { getDateLabel } from "lib/utils";
 import { Line } from "react-chartjs-2";
 import { AdminDashboard } from "types/Admin";
 Chart.register(
@@ -29,14 +29,13 @@ type ProfitChartProps = {
 };
 
 export function ProfitChart({ withdrawals }: ProfitChartProps) {
-  const getDateLabel = (date: Date) => format(new Date(date), "d/M");
   const withdrawalDates = Array.from(
-    new Set(withdrawals.map((w) => format(new Date(w.created), "d/M")))
+    new Set(withdrawals.map((w) => getDateLabel(new Date(w.created))))
   );
 
   const withdrawalRoutingFees = withdrawalDates.map((date) => {
     const dayWithdrawals = withdrawals
-      .filter((w) => getDateLabel(w.created) === date)
+      .filter((w) => getDateLabel(new Date(w.created)) === date)
       .map((w) => w.routingFee);
     return dayWithdrawals.length > 0
       ? dayWithdrawals.reduce((a, b) => a + b)
@@ -45,7 +44,7 @@ export function ProfitChart({ withdrawals }: ProfitChartProps) {
 
   const withdrawalProfits = withdrawalDates.map((date) => {
     const dayWithdrawals = withdrawals
-      .filter((w) => getDateLabel(w.created) === date)
+      .filter((w) => getDateLabel(new Date(w.created)) === date)
       .map(
         (w) =>
           w.tips.map((tip) => tip.fee).reduce((a, b) => a + b) - w.routingFee

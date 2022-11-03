@@ -10,7 +10,7 @@ import {
   PointElement,
   Title,
 } from "chart.js/";
-import { format } from "date-fns";
+import { getDateLabel } from "lib/utils";
 import { Line } from "react-chartjs-2";
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title);
 
@@ -38,10 +38,14 @@ function getStatusColor(status: TipStatus) {
 }
 
 export function TipsChart({ tips }: TipsChartProps) {
-  const getDateLabel = (date: Date) => format(new Date(date), "d/M");
-  const tipDates = Array.from(
-    new Set(tips.map((w) => format(new Date(w.created), "d/M")))
-  );
+  const tipDates = tips
+    .map((tip) => new Date(tip.created))
+    .filter(
+      (date, i, a) =>
+        a.findIndex((other) => other.toDateString() === date.toDateString()) ===
+        i
+    )
+    .map((date) => getDateLabel(date));
 
   const relevantStatuses: TipStatus[] = [
     "CLAIMED",
@@ -55,7 +59,8 @@ export function TipsChart({ tips }: TipsChartProps) {
   const dailyTipCountsByStatus = relevantStatuses.map((status) =>
     tipDates.map((date) => {
       return tips.filter(
-        (tip) => getDateLabel(tip.created) === date && tip.status === status
+        (tip) =>
+          getDateLabel(new Date(tip.created)) === date && tip.status === status
       ).length;
     })
   );

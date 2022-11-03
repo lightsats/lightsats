@@ -1,4 +1,5 @@
 import { User } from "@prisma/client";
+import { format } from "date-fns";
 import { FEE_PERCENT, MINIMUM_FEE_SATS, SATS_TO_BTC } from "lib/constants";
 import { MouseEventHandler } from "react";
 
@@ -59,3 +60,5 @@ export function getFallbackAvatarId(user: User | undefined) {
 export function nth(n: number) {
   return ["st", "nd", "rd"][((((n + 90) % 100) - 10) % 10) - 1] || "th";
 }
+
+export const getDateLabel = (date: Date) => format(date, "d/M");
