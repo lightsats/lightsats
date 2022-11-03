@@ -63,5 +63,6 @@ async function handleGetAdminDashboard(
       },
     }),
     lnbitsDashboardUrl: `${process.env.LNBITS_URL}/wallet?usr=${process.env.LNBITS_USER_ID}`,
+    users: await prisma.user.findMany(),
   });
 }

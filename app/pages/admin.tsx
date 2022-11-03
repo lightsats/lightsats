@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/react";
 import { ProfitChart } from "components/admin/ProfitChart";
 import { TipsChart } from "components/admin/TipsChart";
+import { differenceInHours } from "date-fns";
 import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
@@ -37,6 +38,9 @@ const AdminPage: NextPage = () => {
     (completedTips.length
       ? completedTips.map((t) => t.fee).reduce((a, b) => a + b)
       : 0) - totalRoutingFees;
+  const withdrawnTips = adminDashboard.tips.filter(
+    (t) => t.status === "WITHDRAWN"
+  );
   return (
     <>
       <Head>
@@ -106,6 +110,62 @@ const AdminPage: NextPage = () => {
       </Row>
       <Row justify="center" align="center">
         <Text>{profit} sats unspent routing fees (profit)</Text>
+      </Row>
+      <Row justify="center" align="center">
+        <Text>
+          {adminDashboard.users.length} users (
+          {adminDashboard.users.map((user) => !!user.email).length} email,{" "}
+          {adminDashboard.users.map((user) => !!user.lnurlPublicKey).length}{" "}
+          lnurl-auth)
+        </Text>
+      </Row>
+      <Row justify="center" align="center">
+        <Text>
+          Average withdrawn tip size:{" "}
+          {withdrawnTips.length
+            ? Math.floor(
+                withdrawnTips.map((tip) => tip.amount).reduce((a, b) => a + b) /
+                  withdrawnTips.length
+              )
+            : 0}{" "}
+          sats
+        </Text>
+      </Row>
+      <Row justify="center" align="center">
+        <Text>
+          Average withdrawn tip expiration duration:{" "}
+          {withdrawnTips.length
+            ? Math.floor(
+                withdrawnTips
+                  .map((tip) =>
+                    differenceInHours(
+                      new Date(tip.expiry),
+                      new Date(tip.created)
+                    )
+                  )
+                  .reduce((a, b) => a + b) / withdrawnTips.length
+              )
+            : 0}{" "}
+          hours
+        </Text>
+      </Row>
+      <Row justify="center" align="center">
+        <Text>
+          Average time to withdrawal:{" "}
+          {withdrawnTips.length
+            ? Math.floor(
+                withdrawnTips
+                  .map((tip) =>
+                    differenceInHours(
+                      new Date(tip.updated), // unreliable unless tip is never updated again after withdrawal
+                      new Date(tip.created)
+                    )
+                  )
+                  .reduce((a, b) => a + b) / withdrawnTips.length
+              )
+            : 0}{" "}
+          hours
+        </Text>
       </Row>
     </>
   );
