@@ -38,14 +38,14 @@ function getStatusColor(status: TipStatus) {
 }
 
 export function TipsChart({ tips }: TipsChartProps) {
-  const tipDates = tips
-    .map((tip) => new Date(tip.created))
-    .filter(
-      (date, i, a) =>
-        a.findIndex((other) => other.toDateString() === date.toDateString()) ===
-        i
+  const tipDates = Array.from(
+    new Set(
+      tips
+        .map((tip) => new Date(tip.created))
+        .sort((a, b) => a.getTime() - b.getTime())
+        .map((date) => getDateLabel(date))
     )
-    .map((date) => getDateLabel(date));
+  );
 
   const relevantStatuses: TipStatus[] = [
     "CLAIMED",
