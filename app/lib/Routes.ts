@@ -25,7 +25,6 @@ export enum Routes {
   guideLearn = "/guide/learn",
   guideWallets = "/guide/wallets",
   about = "/about",
-  whitepaper = "/bitcoin.pdf",
   admin = "/admin",
 }
 

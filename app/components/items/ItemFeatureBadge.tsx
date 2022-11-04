@@ -10,7 +10,7 @@ const getIcon = (success: boolean) => (
 
 export type ItemFeatureBadgeProps = {
   name: string;
-  variant: "success" | "warning";
+  variant: "success" | "warning" | "error";
 };
 
 export function ItemFeatureBadge(feature: ItemFeatureBadgeProps) {

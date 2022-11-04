@@ -8,6 +8,7 @@ import ISO6391 from "iso-639-1";
 import NextImage from "next/image";
 import React from "react";
 import { Item } from "types/Item";
+import { LearnItem } from "types/LearnItem";
 import { Wallet } from "types/Wallet";
 
 type ItemCardProps = {
@@ -48,6 +49,17 @@ function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
       variant: "success",
     });
   }
+  if ((item as LearnItem).difficulty) {
+    itemFeatures.push({
+      name: (item as LearnItem).difficulty,
+      variant:
+        (item as LearnItem).difficulty === "easy"
+          ? "success"
+          : (item as LearnItem).difficulty === "medium"
+          ? "warning"
+          : "error",
+    });
+  }
   return itemFeatures;
 }
 
@@ -60,6 +72,7 @@ export function ItemCard({ item }: ItemCardProps) {
   // TODO: get features based on item type and move to a separate component
   return (
     <Collapse
+      css={{ width: "100%" }}
       title={
         <Row align="center">
           <NextImage
@@ -99,7 +112,7 @@ export function ItemCard({ item }: ItemCardProps) {
               ))}
             </Row>
 
-            <Col span={2}>
+            <Col span={2.5}>
               <Badge
                 css={{
                   background: "$success",

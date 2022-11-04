@@ -1,4 +1,4 @@
-import { Collapse, Spacer } from "@nextui-org/react";
+import { Collapse, CSS, Spacer } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { ItemCard } from "components/items/ItemCard";
 import {
@@ -15,6 +15,8 @@ type ItemsListProps = {
   category: ItemCategory;
   checkTippeeBalance: boolean;
 };
+
+const collapseGroupCss: CSS = { px: 0, width: "100%" };
 
 export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
   const session = useSession();
@@ -52,7 +54,7 @@ export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
   return (
     <>
       {otherItems.length > 0 && <h4>Recommended Wallets</h4>}
-      <Collapse.Group>
+      <Collapse.Group css={collapseGroupCss}>
         {recommendedItems.map((item) => (
           <ItemCard key={item.name} item={item} />
         ))}
@@ -61,7 +63,7 @@ export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
         <>
           <Spacer />
           <h4>More Wallets</h4>
-          <Collapse.Group>
+          <Collapse.Group css={collapseGroupCss}>
             {otherItems.map((item) => (
               <ItemCard key={item.name} item={item} />
             ))}

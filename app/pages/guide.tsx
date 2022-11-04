@@ -1,5 +1,14 @@
-import { BanknotesIcon } from "@heroicons/react/24/outline";
-import { WalletIcon } from "@heroicons/react/24/solid";
+import {
+  BanknotesIcon,
+  BookOpenIcon,
+  CircleStackIcon,
+  CreditCardIcon,
+  CurrencyDollarIcon,
+  GiftIcon,
+  HeartIcon,
+  PaperAirplaneIcon,
+  WalletIcon,
+} from "@heroicons/react/24/solid";
 import { Button, Col, Grid, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
@@ -11,51 +20,52 @@ import { Guide } from "types/Guide";
 const guides: Guide[] = [
   {
     name: "Spend",
-    description: "Purchase gift cards, pre-paid visa cards, pay bills",
-    icon: <BanknotesIcon />,
+    description:
+      "Spend at stores accepting Bitcoin, purchase gift cards, pre-paid visa cards, pay bills",
+    icon: <CreditCardIcon />,
     link: Routes.guideSpend,
   },
   {
     name: "Earn",
-    description: "Ways to earn extra Bitcoin",
+    description: "Earn extra Bitcoin",
     icon: <BanknotesIcon />,
     link: Routes.guideEarn,
   },
   {
     name: "Buy",
     description: "Buy Bitcoin from trusted exchanges",
-    icon: <BanknotesIcon />,
+    icon: <CurrencyDollarIcon />,
     link: Routes.guideBuy,
   },
   {
     name: "Save",
-    description: "Safely Saving Your Bitcoin",
-    icon: <BanknotesIcon />,
+    description: "How to safely store your Bitcoin long-term",
+    icon: <CircleStackIcon />,
     link: Routes.guideSpend,
   },
   {
     name: "Send",
     description: "Send Bitcoin to a loved one",
-    icon: <BanknotesIcon />,
+    icon: <PaperAirplaneIcon />,
     link: Routes.guideSend,
   },
   {
     name: "Tip",
     description: "Send a tip directly or onboard a new user with Lightsats!",
-    icon: <BanknotesIcon />,
+    icon: <GiftIcon />,
     link: Routes.guideTip,
   },
   {
     name: "Donate",
     description: "Donate Bitcoin to someone in need",
-    icon: <BanknotesIcon />,
+    icon: <HeartIcon />,
     link: Routes.guideDonate,
   },
   {
     name: "Learn",
     description:
       'Learn more about Bitcoin and why "Bitcoin Fixes This" - Philosophy, Engineering, Economics, Politics, History...',
-    icon: <BanknotesIcon />,
+    icon: <BookOpenIcon />,
     link: Routes.guideLearn,
   },
   {
