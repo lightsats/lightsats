@@ -21,7 +21,7 @@ import { CSSProperties } from "react";
 import useSWR from "swr";
 import { ExchangeRates } from "types/ExchangeRates";
 
-const cardLinkStyle: CSSProperties = { maxWidth: "400px", flex: 1 };
+const cardLinkStyle: CSSProperties = { flex: 1 };
 
 export function Tips() {
   const { data: session } = useSession();

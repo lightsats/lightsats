@@ -202,7 +202,7 @@ const NewTip: NextPage = () => {
 
   return (
     <>
-      <Text css={{ maxWidth: "300px" }}>
+      <Text>
         {"Let's"} start by creating your tip. The goal is to onboard the
         recipient to Bitcoin, so aim to fill out all the fields in order to
         increase the authenticity of your tip and improve your {"recipient's"}{" "}

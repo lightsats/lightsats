@@ -123,7 +123,6 @@ function ProfileInternal({
       <Spacer />
       <Text
         style={{
-          maxWidth: "300px",
           wordBreak: "break-all",
           textAlign: "center",
         }}
@@ -135,7 +134,7 @@ function ProfileInternal({
         Sign out
       </Button>
       <Spacer />
-      <Text style={{ textAlign: "center", maxWidth: "350px" }}>
+      <Text style={{ textAlign: "center" }}>
         Fill out the fields below to increase the authenticity of your tips and
         provide a way for tippees to contact you.
       </Text>
@@ -209,7 +208,6 @@ function ProfileInternal({
       <Text
         size="small"
         style={{
-          maxWidth: "300px",
           wordBreak: "break-all",
           textAlign: "center",
         }}
