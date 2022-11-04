@@ -32,6 +32,7 @@ import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
 import { ExchangeRates } from "types/ExchangeRates";
 import { PublicTip } from "types/PublicTip";
 import { Scoreboard } from "types/Scoreboard";
+import { requestProvider } from "webln";
 
 // TODO: polling speed should be based on tip status - only UNFUNDED needs a fast poll rate
 const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
@@ -53,6 +54,22 @@ const TipPage: NextPage = () => {
     defaultFetcher,
     useTipConfig
   );
+
+  const tipStatus = tip?.status;
+  const tipInvoice = tip?.invoice;
+
+  React.useEffect(() => {
+    if (tipStatus === "UNFUNDED" && tipInvoice) {
+      (async () => {
+        try {
+          const webln = await requestProvider();
+          webln.sendPayment(tipInvoice);
+        } catch (error) {
+          console.error("Failed to load webln", error);
+        }
+      })();
+    }
+  }, [tipStatus, tipInvoice]);
 
   const { data: publicTip } = useSWR<PublicTip>(
     tip && tip.status === "CLAIMED" ? `/api/tippee/tips/${id}` : null,

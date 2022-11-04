@@ -24,6 +24,7 @@ import useSWR, { SWRConfiguration } from "swr";
 import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
 import { PublicTip } from "types/PublicTip";
+import { requestProvider } from "webln";
 
 const useTipsConfig: SWRConfiguration = { refreshInterval: 1000 };
 
@@ -39,43 +40,51 @@ const Withdraw: NextPage = () => {
     useTipsConfig
   );
 
-  const [invoice, setInvoice] = React.useState("");
+  const [invoiceFieldValue, setInvoiceFieldValue] = React.useState("");
   const [withdrawalLinkLnurl, setWithdrawalLinkLnurl] = React.useState("");
   const [isSubmitting, setSubmitting] = React.useState(false);
+
+  const executeWithdrawal = React.useCallback(
+    (invoice: string) => {
+      if (isSubmitting) {
+        throw new Error("Already submitting");
+      }
+      setSubmitting(true);
+
+      (async () => {
+        try {
+          const withdrawalRequest: InvoiceWithdrawalRequest = { invoice, flow };
+          const result = await fetch("/api/invoices", {
+            method: "POST",
+            body: JSON.stringify(withdrawalRequest),
+            headers: { "Content-Type": "application/json" },
+          });
+          if (result.ok) {
+            alert("Funds withdrawn!");
+          } else {
+            const body = await result.text();
+            alert("Failed to withdraw: " + result.statusText + `\n${body}`);
+          }
+        } catch (error) {
+          console.error(error);
+          alert(
+            "Withdrawal failed: " +
+              JSON.stringify(error, Object.getOwnPropertyNames(error)) +
+              ". Please try again."
+          );
+        }
+        setSubmitting(false);
+      })();
+    },
+    [isSubmitting, flow]
+  );
+
   const submitForm = React.useCallback(() => {
-    if (!invoice) {
+    if (!invoiceFieldValue) {
       throw new Error("No invoice set");
     }
-    if (isSubmitting) {
-      throw new Error("Already submitting");
-    }
-    setSubmitting(true);
-
-    (async () => {
-      try {
-        const withdrawalRequest: InvoiceWithdrawalRequest = { invoice, flow };
-        const result = await fetch("/api/invoices", {
-          method: "POST",
-          body: JSON.stringify(withdrawalRequest),
-          headers: { "Content-Type": "application/json" },
-        });
-        if (result.ok) {
-          alert("Funds withdrawn!");
-        } else {
-          const body = await result.text();
-          alert("Failed to withdraw: " + result.statusText + `\n${body}`);
-        }
-      } catch (error) {
-        console.error(error);
-        alert(
-          "Withdrawal failed: " +
-            JSON.stringify(error, Object.getOwnPropertyNames(error)) +
-            ". Please try again."
-        );
-      }
-      setSubmitting(false);
-    })();
-  }, [invoice, isSubmitting, flow]);
+    executeWithdrawal(invoiceFieldValue);
+  }, [executeWithdrawal, invoiceFieldValue]);
 
   const withdrawableTips = React.useMemo(
     () =>
@@ -140,8 +149,19 @@ const Withdraw: NextPage = () => {
           );
         }
       })();
+      (async () => {
+        try {
+          const webln = await requestProvider();
+          const makeInvoiceResponse = await webln.makeInvoice({
+            amount: availableBalance,
+          });
+          executeWithdrawal(makeInvoiceResponse.paymentRequest);
+        } catch (error) {
+          console.error("Failed to load webln", error);
+        }
+      })();
     }
-  }, [availableBalance, flow]);
+  }, [availableBalance, executeWithdrawal, flow]);
 
   const copyWithdrawLinkUrl = React.useCallback(() => {
     if (withdrawalLinkLnurl) {
@@ -216,11 +236,14 @@ const Withdraw: NextPage = () => {
           <Input
             label="Lightning Invoice"
             fullWidth
-            value={invoice}
-            onChange={(event) => setInvoice(event.target.value)}
+            value={invoiceFieldValue}
+            onChange={(event) => setInvoiceFieldValue(event.target.value)}
           />
           <Spacer />
-          <Button onClick={submitForm} disabled={isSubmitting || !invoice}>
+          <Button
+            onClick={submitForm}
+            disabled={isSubmitting || !invoiceFieldValue}
+          >
             {isSubmitting ? (
               <Loading type="points" color="currentColor" size="sm" />
             ) : (
