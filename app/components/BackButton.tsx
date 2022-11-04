@@ -1,9 +1,10 @@
-import { Link } from "@nextui-org/react";
-import { useRouter } from "next/router";
-import React from "react";
+import { Button } from "@nextui-org/react";
+
+const onBack = () => {
+  alert("BACK");
+  history.back();
+};
 
 export function BackButton() {
-  const router = useRouter();
-  const onBack = React.useCallback(() => router.back(), [router]);
-  return <Link onClick={onBack}>Back</Link>;
+  return <Button onClick={onBack}>Back</Button>;
 }
