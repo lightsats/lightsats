@@ -62,6 +62,7 @@ const TipPage: NextPage = () => {
     if (tipStatus === "UNFUNDED" && tipInvoice) {
       (async () => {
         try {
+          console.log("Launching webln");
           const webln = await requestProvider();
           webln.sendPayment(tipInvoice);
         } catch (error) {

@@ -43,6 +43,7 @@ const Withdraw: NextPage = () => {
   const [invoiceFieldValue, setInvoiceFieldValue] = React.useState("");
   const [withdrawalLinkLnurl, setWithdrawalLinkLnurl] = React.useState("");
   const [isSubmitting, setSubmitting] = React.useState(false);
+  const [hasLaunchedWebln, setLaunchedWebln] = React.useState(false);
 
   const executeWithdrawal = React.useCallback(
     (invoice: string) => {
@@ -149,19 +150,27 @@ const Withdraw: NextPage = () => {
           );
         }
       })();
+    }
+  }, [availableBalance, flow]);
+  React.useEffect(() => {
+    if (availableBalance > 0) {
       (async () => {
         try {
-          const webln = await requestProvider();
-          const makeInvoiceResponse = await webln.makeInvoice({
-            amount: availableBalance,
-          });
-          executeWithdrawal(makeInvoiceResponse.paymentRequest);
+          if (!hasLaunchedWebln) {
+            console.log("Launching webln");
+            setLaunchedWebln(true);
+            const webln = await requestProvider();
+            const makeInvoiceResponse = await webln.makeInvoice({
+              amount: availableBalance,
+            });
+            executeWithdrawal(makeInvoiceResponse.paymentRequest);
+          }
         } catch (error) {
           console.error("Failed to load webln", error);
         }
       })();
     }
-  }, [availableBalance, executeWithdrawal, flow]);
+  }, [availableBalance, executeWithdrawal, flow, hasLaunchedWebln]);
 
   const copyWithdrawLinkUrl = React.useCallback(() => {
     if (withdrawalLinkLnurl) {
