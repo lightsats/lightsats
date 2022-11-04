@@ -5,3 +5,8 @@ body,
 div[data-overlay-container="true"] {
   min-height: 100%;
 }
+
+/* Fix Nextui button text showing through nav bug https://github.com/nextui-org/nextui/issues/724 */
+.nextui-button-text {
+  z-index: 0 !important;
+}
