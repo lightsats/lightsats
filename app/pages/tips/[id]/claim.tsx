@@ -7,11 +7,13 @@ import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { formatDistance, isAfter } from "date-fns";
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
+import { getStaticPaths, getStaticProps } from "lib/i18next";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import EmailSignIn from "pages/auth/signin/email";
@@ -22,6 +24,7 @@ import { ExchangeRates } from "types/ExchangeRates";
 import { PublicTip } from "types/PublicTip";
 
 const ClaimTipPage: NextPage = () => {
+  const { t } = useTranslation("claim");
   const router = useRouter();
   const { data: session } = useSession();
   const { id } = router.query;
@@ -127,8 +130,10 @@ const ClaimTipPage: NextPage = () => {
             {publicTip.tippeeName && (
               <>
                 <Text h5>
-                  Hello
-                  {` ${publicTip.tippeeName}`}!
+                  {t("hello", {
+                    tippeeName: publicTip.tippeeName,
+                    defaultValue: "Hello {{tippeeName}}!",
+                  })}
                 </Text>
                 <Spacer />
               </>
@@ -263,3 +268,5 @@ function Note({ note }: { note: string | null }) {
     </>
   ) : null;
 }
+
+export { getStaticProps, getStaticPaths };
