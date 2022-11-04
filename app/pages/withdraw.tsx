@@ -8,6 +8,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Tip, WithdrawalFlow } from "@prisma/client";
+import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import copy from "copy-to-clipboard";
 import { formatDistance, isBefore } from "date-fns";
@@ -16,7 +17,6 @@ import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import QRCode from "react-qr-code";

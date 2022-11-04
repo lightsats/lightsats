@@ -1,6 +1,6 @@
 import { Button, Row, Spacer } from "@nextui-org/react";
 import { FlexBox } from "components/FlexBox";
-import NextLink from "next/link";
+import { NextLink } from "components/NextLink";
 import React from "react";
 
 type MyBitcoinJourneyFooterProps = {

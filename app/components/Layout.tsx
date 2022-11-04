@@ -1,5 +1,6 @@
 import { Container, Spacer } from "@nextui-org/react";
 import { AppNavbar } from "components/AppNavbar";
+import { ProductionLinkBanner } from "components/dev/ProductionLinkBanner";
 import { FlexBox } from "components/FlexBox";
 import { Routes } from "lib/Routes";
 import { useRouter } from "next/router";
@@ -30,6 +31,9 @@ export default function Layout({
             : {}),
         }}
       >
+        {process.env.NEXT_PUBLIC_SHOW_PRODUCTION_LINK === "true" && (
+          <ProductionLinkBanner />
+        )}
         {children}
       </Container>
       <Spacer />

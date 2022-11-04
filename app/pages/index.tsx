@@ -1,11 +1,11 @@
 import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
+import { NextLink } from "components/NextLink";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { Tips } from "components/tipper/Tips";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import NextLink from "next/link";
 
 const Home: NextPage = () => {
   const { data: session, status: sessionStatus } = useSession();

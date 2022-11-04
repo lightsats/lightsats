@@ -10,13 +10,13 @@ import {
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
+import { NextLink } from "components/NextLink";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistance, isAfter } from "date-fns";
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { useSession } from "next-auth/react";
-import NextLink from "next/link";
 import { CSSProperties } from "react";
 import useSWR from "swr";
 import { ExchangeRates } from "types/ExchangeRates";

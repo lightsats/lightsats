@@ -3,9 +3,9 @@ import {
   ItemFeatureBadge,
   ItemFeatureBadgeProps,
 } from "components/items/ItemFeatureBadge";
+import { NextLink } from "components/NextLink";
 import ISO6391 from "iso-639-1";
 import NextImage from "next/image";
-import NextLink from "next/link";
 import React from "react";
 import { Item } from "types/Item";
 import { Wallet } from "types/Wallet";

@@ -14,6 +14,7 @@ export enum Routes {
   journeySelectWallet = "/journey/wallet",
   journeyCongratulations = "/journey/congratulations",
   guide = "/guide",
+  // TODO: remove below routes - map categories and make each category have a description
   guideSpend = "/guide/spend",
   guideEarn = "/guide/earn",
   guideBuy = "/guide/buy",

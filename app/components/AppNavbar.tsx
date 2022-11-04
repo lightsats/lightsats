@@ -10,11 +10,11 @@ import {
 import { Avatar, Button, Link, Navbar, Spacer, Text } from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { Icon } from "components/Icon";
+import { NextLink } from "components/NextLink";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import { useSession } from "next-auth/react";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";

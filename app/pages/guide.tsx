@@ -2,10 +2,10 @@ import { BanknotesIcon } from "@heroicons/react/24/outline";
 import { WalletIcon } from "@heroicons/react/24/solid";
 import { Button, Col, Grid, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
+import { NextLink } from "components/NextLink";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
 import Head from "next/head";
-import NextLink from "next/link";
 import { Guide } from "types/Guide";
 
 const guides: Guide[] = [

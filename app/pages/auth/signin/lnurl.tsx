@@ -1,9 +1,9 @@
 import { Loading, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
+import { NextLink } from "components/NextLink";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { signIn } from "next-auth/react";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import QRCode from "react-qr-code";
