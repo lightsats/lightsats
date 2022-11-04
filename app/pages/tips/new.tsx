@@ -1,3 +1,4 @@
+import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Container,
@@ -14,6 +15,7 @@ import {
 import { Tip } from "@prisma/client";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
+import { Icon } from "components/Icon";
 import { SatsPrice } from "components/SatsPrice";
 import { add } from "date-fns";
 import {
@@ -46,6 +48,8 @@ type NewTipFormData = {
   tippeeName: string;
 };
 
+type InputMethod = "fiat" | "sats";
+
 const formStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
@@ -56,7 +60,8 @@ const formStyle: React.CSSProperties = {
 const NewTip: NextPage = () => {
   const router = useRouter();
   const [isSubmitting, setSubmitting] = React.useState(false);
-  const [inputMethod, setInputMethod] = React.useState<"fiat" | "sats">("fiat");
+  const [inputMethod, setInputMethod] = React.useState<InputMethod>("fiat");
+  const altInputMethod: InputMethod = inputMethod === "fiat" ? "sats" : "fiat";
 
   const { data: exchangeRates } = useSWR<ExchangeRates>(
     `/api/exchange/rates`,
@@ -223,6 +228,7 @@ const NewTip: NextPage = () => {
           >
             <Text>Recipient Language & Currency</Text>
           </Tooltip>
+          <Spacer y={0.25} />
           <Row justify="space-between" align="flex-end">
             <Dropdown>
               <Dropdown.Button
@@ -253,19 +259,23 @@ const NewTip: NextPage = () => {
           </Row>
           <Spacer />
           <Row justify="flex-start" align="center">
-            <Tooltip
-              content={`How much would you like to tip the recipient? Tap to toggle to
-            enter the value in fiat or sats`}
-            >
+            <Tooltip content={`How much would you like to tip the recipient?`}>
               <Text>
-                Amount{" "}
-                <Link css={{ display: "inline" }} onClick={toggleInputMethod}>
-                  in {inputMethod}
-                </Link>
+                Amount in{" "}
+                {inputMethod === "fiat" ? watchedCurrency : inputMethod}
               </Text>
             </Tooltip>
             <Spacer x={0.5} />
+            <Button size="xs" auto onClick={toggleInputMethod}>
+              Switch to{" "}
+              {altInputMethod === "fiat" ? watchedCurrency : altInputMethod}
+              &nbsp;
+              <Icon width={16} height={16}>
+                <ArrowsRightLeftIcon />
+              </Icon>
+            </Button>
           </Row>
+          <Spacer y={0.25} />
           <Row>
             <Controller
               name="amountString"
