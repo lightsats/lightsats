@@ -19,57 +19,57 @@ import { Guide } from "types/Guide";
 
 const guides: Guide[] = [
   {
-    name: "Spend",
+    name: "Spend 🛒 ",
     description:
       "Spend at stores accepting Bitcoin, purchase gift cards, pre-paid visa cards, pay bills",
     icon: <CreditCardIcon />,
     link: Routes.guideSpend,
   },
   {
-    name: "Earn",
+    name: "Earn 🤑",
     description: "Earn extra Bitcoin",
     icon: <BanknotesIcon />,
     link: Routes.guideEarn,
   },
   {
-    name: "Buy",
+    name: "Buy 🌽",
     description: "Buy Bitcoin from trusted exchanges",
     icon: <CurrencyDollarIcon />,
     link: Routes.guideBuy,
   },
   {
-    name: "Save",
+    name: "Save 🛟",
     description: "How to safely store your Bitcoin long-term",
     icon: <CircleStackIcon />,
     link: Routes.guideSpend,
   },
   {
-    name: "Send",
+    name: "Send ↗️",
     description: "Send Bitcoin to a loved one",
     icon: <PaperAirplaneIcon />,
     link: Routes.guideSend,
   },
   {
-    name: "Tip",
+    name: "Tip 💁🏽‍♀️",
     description: "Send a tip directly or onboard a new user with Lightsats!",
     icon: <GiftIcon />,
     link: Routes.guideTip,
   },
   {
-    name: "Donate",
+    name: "Donate 🧡",
     description: "Donate Bitcoin to someone in need",
     icon: <HeartIcon />,
     link: Routes.guideDonate,
   },
   {
-    name: "Learn",
+    name: "Learn 📙",
     description:
       'Learn more about Bitcoin and why "Bitcoin Fixes This" - Philosophy, Engineering, Economics, Politics, History...',
     icon: <BookOpenIcon />,
     link: Routes.guideLearn,
   },
   {
-    name: "Wallets",
+    name: "Wallets 👛",
     description: "View recommended Lightning wallets",
     icon: <WalletIcon />,
     link: Routes.guideWallets,

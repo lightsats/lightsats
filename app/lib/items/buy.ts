@@ -1,3 +1,126 @@
+import { getLanguageCode } from "lib/items/getLanguageCode";
 import { Item } from "types/Item";
 
-export const buy: Item[] = [];
+export const buy: Item[] = [
+    {
+        category: "buy",
+        link: "https://lgt.st/swan",
+        image: "swan.jpeg",
+        languageCodes: [getLanguageCode("English")],
+        name: "Swan",
+        slogan:
+          "Swan Bitcoin provides savings plans, instant buys, Private Client for businesses and HNWI, Advisor Services for financial advisors, and world-class Bitcoin education.",
+        platforms: ["web","mobile"],
+      },
+      {
+        category: "buy",
+        link: "https://lgt.st/strike",
+        image: "strike.webp",
+        languageCodes: [getLanguageCode("English")],
+        name: "Strike",
+        slogan:
+          "Send and receive money instantly.",
+        platforms: ["web","mobile","desktop"],
+      },
+      {
+        category: "buy",
+        link: "https://lgt.st/cashapp",
+        image: "cashapp.png",
+        languageCodes: [getLanguageCode("English")],
+        name: "Cash App",
+        slogan:
+          "The #1 finance app in the App Store. Pay anyone, instantly. Design a debit card to match your style. Invest in stocks or bitcoin with as little as $1.",
+        platforms: ["web","mobile"],
+      },
+      {
+        category: "buy",
+        link: "https://lgt.st/river",
+        image: "river.jpeg",
+        languageCodes: [getLanguageCode("English")],
+        name: "River",
+        slogan:
+          "Easily buy, sell and mine Bitcoin in the USA. River has world-class security, leading customer support, and zero fees on recurring orders.",
+        platforms: ["web","mobile"],
+      },
+      {
+        category: "buy",
+        link: "https://lgt.st/azteco",
+        image: "azteco.jpeg",
+        languageCodes: [getLanguageCode("English")],
+        name: "Azteco",
+        slogan:
+          "Azteco: the easiest way to buy Bitcoins.",
+        platforms: ["web","mobile"],
+      },
+      {
+        category: "buy",
+        link: "https://lgt.st/noah",
+        image: "noah.jpeg",
+        languageCodes: [getLanguageCode("English")],
+        name: "NOAH",
+        slogan:
+          "Send, Save, Pay and Earn with NOAH, the all-in-one money app of the future.",
+        platforms: ["web","mobile"],
+      },
+      {
+        category: "buy",
+        link: "https://lgt.st/amber",
+        image: "amber.jpeg",
+        languageCodes: [getLanguageCode("English")],
+        name: "amber",
+        slogan:
+          "🌏 Amber app is expanding and bringing easy Bitcoin accumulation to a country near you.",
+        platforms: ["web","mobile"],
+      },
+      {
+        category: "buy",
+        link: "https://lgt.st/shakepay",
+        image: "shakepay.jpeg",
+        languageCodes: [getLanguageCode("English")],
+        name: "shakepay",
+        slogan:
+          "Shakepay allows Canadians to buy/sell bitcoin and pay their friends. We're on a mission to create open access to building wealth.",
+        platforms: ["web","mobile"],
+      },
+      {
+        category: "buy",
+        link: "https://lgt.st/bullbitcoin",
+        image: "bullbitcoin.png",
+        languageCodes: [getLanguageCode("English")],
+        name: "Bull Bitcoin",
+        slogan:
+          "Bull Bitcoin is a non-custodial Bitcoin exchange and payments service. Our mission is to empower Canadians to take back control over their money.",
+        platforms: ["web","mobile"],
+      },
+      {
+        category: "buy",
+        link: "https://lgt.st/pocket",
+        image: "casa.jpeg",
+        languageCodes: [getLanguageCode("English")],
+        name: "Pocket",
+        slogan:
+          "Experience the best way to buy and store Bitcoin. From your bank account directly into your self-custody. One-off or recurring at the most recent exchange rate.",
+        platforms: ["web","mobile"],
+      },
+      {
+        category: "buy",
+        link: "https://lgt.st/casa",
+        image: "pocket.jpeg",
+        languageCodes: [getLanguageCode("English")],
+        name: "Casa",
+        slogan:
+          "Casa is the leading provider of Bitcoin self-custody solutions. Buy, sell, and receive bitcoin with our ultimate blend of security, privacy, and control.",
+        platforms: ["web","mobile"],
+      },
+      {
+        category: "buy",
+        link: "https://lgt.st/peach",
+        image: "peach.jpeg",
+        languageCodes: [getLanguageCode("English")],
+        name: "Peach",
+        slogan:
+          "Peach: Buy and Sell bitcoin the way you want!",
+        platforms: ["web","mobile"],
+      },
+];
+

@@ -12,4 +12,14 @@ export const learn: LearnItem[] = [
     link: "/bitcoin.pdf",
     difficulty: "hard",
   },
+  {
+    category: "learn",
+    image: "bitcoinrocks.jpg",
+    languageCodes: [getLanguageCode("English")],
+    platforms: ["web", "mobile"],
+    name: "Bitcoin Rocks",
+    slogan: "Learn about Bitcoin using our educational articles, videos, and more!",
+    link: "https://lgt.st/bitcoinrocks",
+    difficulty: "easy",
+  },
 ];
