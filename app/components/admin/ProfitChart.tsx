@@ -45,9 +45,10 @@ export function ProfitChart({ withdrawals }: ProfitChartProps) {
   const withdrawalProfits = withdrawalDates.map((date) => {
     const dayWithdrawals = withdrawals
       .filter((w) => getDateLabel(new Date(w.created)) === date)
-      .map(
-        (w) =>
-          w.tips.map((tip) => tip.fee).reduce((a, b) => a + b) - w.routingFee
+      .map((w) =>
+        w.tips.length > 0
+          ? w.tips.map((tip) => tip.fee).reduce((a, b) => a + b) - w.routingFee
+          : 0
       );
     return dayWithdrawals.length > 0
       ? dayWithdrawals.reduce((a, b) => a + b)
@@ -62,7 +63,7 @@ export function ProfitChart({ withdrawals }: ProfitChartProps) {
         backgroundColor: "rgb(99, 255, 132)",
         borderColor: "rgb(99, 255, 132)",
         data: withdrawalProfits,
-        label: "Profits",
+        label: "Unspent Routing Fees",
       },
       {
         type: "line",
