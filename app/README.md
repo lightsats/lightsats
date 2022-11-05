@@ -8,8 +8,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 1. Install postgresql and create a database (TODO: make this a docker container)
 2. Add .env.local (see .env.example)
-3. yarn db:generate:local
-4. yarn db:push:local
+3. yarn db:migrate:local
 
 ### Running the development server
 
