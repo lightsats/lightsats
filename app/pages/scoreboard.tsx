@@ -1,6 +1,8 @@
 import {
   Badge,
   Card,
+  Col,
+  Container,
   Grid,
   Link,
   Loading,
@@ -26,9 +28,117 @@ const Scoreboard: NextPage = () => {
   }
 
   return (
-    <>
+    <Container gap={22}>
       <Text h2>Scoreboard</Text>
-      <Row justify="center" align="center">
+
+      <Grid.Container gap={2} justify="center">
+        <Grid xs={6} sm={4}>
+          <Card>
+            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+              <Col>
+                <Text
+                  size={12}
+                  weight="bold"
+                  transform="uppercase"
+                  color="#ffffffdd"
+                >
+                  Total number of tips
+                </Text>
+                <Text h1 color="white">
+                  1337
+                </Text>
+              </Col>
+            </Card.Header>
+            <Card.Image
+              src="https://nextui.org/images/card-example-4.jpeg"
+              objectFit="cover"
+              width="100%"
+              height={140}
+              alt="Card image background"
+            />
+          </Card>
+        </Grid>
+        <Grid xs={2} sm={4}>
+          <Card>
+            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+              <Col>
+                <Text
+                  size={12}
+                  weight="bold"
+                  transform="uppercase"
+                  color="#ffffffAA"
+                >
+                  Number of people onboarded
+                </Text>
+                <Text h4 color="white">
+                  24
+                </Text>
+              </Col>
+            </Card.Header>
+            <Card.Image
+              src="https://nextui.org/images/card-example-2.jpeg"
+              objectFit="cover"
+              width="100%"
+              height={200}
+              alt="Card image background"
+            />
+          </Card>
+        </Grid>
+        <Grid xs={2} sm={4}>
+          <Card>
+            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+              <Col>
+                <Text
+                  size={12}
+                  weight="bold"
+                  transform="uppercase"
+                  color="#ffffffAA"
+                >
+                  Number of people onboarded
+                </Text>
+                <Text h4 color="white">
+                  Stream the Acme event
+                </Text>
+              </Col>
+            </Card.Header>
+            <Card.Image
+              src="https://nextui.org/images/card-example-2.jpeg"
+              objectFit="cover"
+              width="100%"
+              height={200}
+              alt="Card image background"
+            />
+          </Card>
+        </Grid>
+        <Grid xs={2} sm={4}>
+          <Card>
+            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+              <Col>
+                <Text
+                  size={12}
+                  weight="bold"
+                  transform="uppercase"
+                  color="#ffffffAA"
+                >
+                  Number of people onboarded
+                </Text>
+                <Text h4 color="white">
+                  Stream the Acme event
+                </Text>
+              </Col>
+            </Card.Header>
+            <Card.Image
+              src="https://nextui.org/images/card-example-2.jpeg"
+              objectFit="cover"
+              width="100%"
+              height={200}
+              alt="Card image background"
+            />
+          </Card>
+        </Grid>
+      </Grid.Container>
+
+      {/* <Row justify="center" align="center">
         <Badge color="success">
           {scoreboard.numUsersOnboarded} onboarded🚀
         </Badge>
@@ -36,7 +146,8 @@ const Scoreboard: NextPage = () => {
         <Badge color="success">{scoreboard.numTipsSent} tips sent🧡</Badge>
         <Spacer x={0.5} />
         <Badge color="success">{scoreboard.totalSatsSent} sats sent⚡</Badge>
-      </Row>
+      </Row> */}
+
       <Spacer />
       {/* mobile view */}
       <Grid.Container
@@ -52,7 +163,6 @@ const Scoreboard: NextPage = () => {
               key={i}
               justify="center"
               style={{
-                width: "100%",
                 paddingLeft: 0,
                 paddingRight: 0,
               }}
@@ -125,8 +235,9 @@ const Scoreboard: NextPage = () => {
         })}
       </Grid.Container>
 
+      <Spacer />
       {/* desktop view */}
-      <Grid.Container gap={2} justify="center" xs={0} sm={12}>
+      <Grid.Container justify="center" xs={0} sm={12}>
         <Grid xs={12} justify="center">
           <Row justify="space-between" align="center">
             <Row justify="center" align="center">
@@ -220,7 +331,7 @@ const Scoreboard: NextPage = () => {
           );
         })}
       </Grid.Container>
-    </>
+    </Container>
   );
 };
 

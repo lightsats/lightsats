@@ -1,5 +1,4 @@
-import { Button, Input, Loading, Spacer, Text } from "@nextui-org/react";
-import { BackButton } from "components/BackButton";
+import { Button, Input, Loading, Spacer } from "@nextui-org/react";
 import { Routes } from "lib/Routes";
 import { signIn } from "next-auth/react";
 import { useTranslation } from "next-i18next";
@@ -76,30 +75,30 @@ export default function EmailSignIn({
 
   return (
     <>
-      {!inline && (
-        <>
-          <Text>Enter your email below to login.</Text>
-          <Spacer />
-        </>
-      )}
       <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
         <Controller
           name="email"
           control={control}
           render={({ field }) => (
             <Input
+              bordered
               {...field}
               label={t("email")}
               type="email"
               placeholder="satoshin@gmx.com"
-              fullWidth
               autoComplete="email"
+              fullWidth
             />
           )}
         />
-
-        <Spacer y={0.5} />
-        <Button css={{ width: "100%" }} type="submit" disabled={isSubmitting}>
+        <Spacer />
+        <Button
+          css={{ width: "100%" }}
+          color="primary"
+          type="submit"
+          auto
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
@@ -107,12 +106,6 @@ export default function EmailSignIn({
           )}
         </Button>
       </form>
-      {!inline && (
-        <>
-          <Spacer y={4} />
-          <BackButton />
-        </>
-      )}
     </>
   );
 }

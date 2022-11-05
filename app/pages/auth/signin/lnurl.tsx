@@ -1,5 +1,4 @@
-import { Loading, Spacer, Text } from "@nextui-org/react";
-import { BackButton } from "components/BackButton";
+import { Button, Loading, Spacer, Text } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -58,25 +57,27 @@ export default function LnurlAuthSignIn({ csrfToken }: EmailSignInProps) {
 
   return (
     <>
-      <Text>
-        Scan or tap the code below to login with your LNURL-auth enabled wallet.
-      </Text>
       <Spacer />
+      <Text h3>Scan or click to sign in</Text>
       {qr ? (
         <>
-          <Loading type="points" color="currentColor" size="sm" />
-          <Spacer />
           <NextLink href={`lightning:${qr.encoded}`}>
             <a>
               <QRCode value={qr.encoded} />
             </a>
           </NextLink>
+          <Spacer />
+          <NextLink href={`lightning:${qr.encoded}`}>
+            <a>
+              <Button color="gradient" size="lg">
+                Click to connect
+              </Button>
+            </a>
+          </NextLink>
         </>
       ) : (
-        <Loading type="spinner" color="currentColor" size="sm" />
+        <Loading type="gradient" />
       )}
-      <Spacer y={4} />
-      <BackButton />
     </>
   );
 }

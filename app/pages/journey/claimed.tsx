@@ -10,7 +10,6 @@ import {
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
-import { MyBitcoinJourneyContent } from "components/tippee/MyBitcoinJourneyContent";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import { formatDistanceStrict } from "date-fns";
@@ -42,21 +41,13 @@ const WhatIsBitcoinPage: NextPage = () => {
         <title>Lightsats⚡ - Bitcoin</title>
       </Head>
       <MyBitcoinJourneyHeader />
-      <h4>Nice work!</h4>
-      <h6>{"You've successfully claimed your tip"}</h6>
+      <h2>Nice work!</h2>
+      <h4>{"You've successfully claimed your tip"}</h4>
       <Grid.Container gap={2}>
         {claimedTips?.map((tip) => (
           <ClaimedTipCard key={tip.id} tip={tip} />
         ))}
       </Grid.Container>
-      <Spacer y={2} />
-      <MyBitcoinJourneyContent>
-        <Text h4>{"This isn't a normal tip."}</Text>
-        <Text h3 color="warning">
-          {"It's a Bitcoin tip."}
-        </Text>
-      </MyBitcoinJourneyContent>
-
       <MyBitcoinJourneyFooter
         href={Routes.journeyBitcoin}
         text={<>What is Bitcoin?</>}

@@ -24,8 +24,11 @@ export enum Routes {
   guideDonate = "/guide/donate",
   guideLearn = "/guide/learn",
   guideWallets = "/guide/wallets",
-  about = "/about",
   admin = "/admin",
+  about = "/about",
+  signup = "/signup",
+  login = "/signin",
+  features = "/features",
 }
 
 export const bitcoinJourneyPages = [

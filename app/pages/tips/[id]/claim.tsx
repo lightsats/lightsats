@@ -1,5 +1,4 @@
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
-import { LightBulbIcon } from "@heroicons/react/24/solid";
 import { Avatar, Button, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
@@ -186,15 +185,7 @@ const ClaimTipPage: NextPage = () => {
               </>
             ) : (
               <>
-                <Text blockquote color="secondary">
-                  <Icon width={16} height={16}>
-                    <LightBulbIcon />
-                  </Icon>{" "}
-                  {t("instructions")}
-                </Text>
-                <Spacer y={2} />
                 <TippeeLoginOptions />
-
                 <Row justify="center" align="center"></Row>
                 <Spacer y={0.5} />
                 <Row justify="center" align="center">

@@ -335,8 +335,8 @@ const TipPage: NextPage = () => {
   } else {
     return (
       <>
+        <Loading type="spinner" color="currentColor" size="lg" />
         <Text>Loading invoice</Text>
-        <Loading type="spinner" color="currentColor" size="sm" />
       </>
     );
   }

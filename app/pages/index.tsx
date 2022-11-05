@@ -1,4 +1,12 @@
-import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Image,
+  Link,
+  Loading,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { Tips } from "components/tipper/Tips";
@@ -22,9 +30,11 @@ const Home: NextPage = () => {
 
       {session ? (
         <>
-          <Text color="error" size="small" b>
-            BETA - PLEASE ONLY TIP AMOUNTS YOU ARE WILLING TO LOSE!
-          </Text>
+          <Card>
+            <Card.Body color="$error">
+              ⚠️ This project is currently in BETA, don't be too reckless.
+            </Card.Body>
+          </Card>
           <Spacer y={1} />
           <NewTipButton />
           <Spacer />
@@ -38,21 +48,23 @@ const Home: NextPage = () => {
       ) : (
         <>
           <Spacer />
-          <Text h3>
-            Gift Sats without
-            <br />
-            losing them✌🏼
+          <Image src="images/seed.png" width={200} />
+          <Text
+            size={60}
+            h1
+            css={{
+              textGradient: "45deg, $blue900 -20%, $blue600 50%",
+            }}
+          >
+            Orange pill
+          </Text>
+          <Text h1 size={30} css={{ marginTop: "-0.5em" }}>
+            the world around you.
           </Text>
           <Spacer />
-          <NextLink href={Routes.lnurlAuthSignin}>
+          <NextLink href={Routes.signup}>
             <a>
-              <Button>Login with LNURL⚡</Button>
-            </a>
-          </NextLink>
-          {<Spacer />}
-          <NextLink href={Routes.emailSignin}>
-            <a>
-              <Button>Login with Email</Button>
+              <Button size="lg">Get started &raquo;</Button>
             </a>
           </NextLink>
         </>

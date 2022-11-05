@@ -105,7 +105,7 @@ function GuideCard({ guide }: GuideCardProps) {
       <NextLink href={guide.link}>
         <a style={{ width: "100%" }}>
           <Row align="center" style={{ height: "100%" }}>
-            <Col span={2.5}>
+            <Col span={1.2}>
               <Row justify="flex-start">
                 <Button color="primary" auto flat css={{ px: 8 }}>
                   <Icon>{guide.icon}</Icon>

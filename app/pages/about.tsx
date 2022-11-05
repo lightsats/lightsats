@@ -39,10 +39,13 @@ const AboutPage: NextPage = () => {
         </Text>
       </Row>
       <Spacer />
-      <Text>
-        If your recipient {"doesn't"} withdraw their tip in time, you can
-        reclaim your sats!
-      </Text>
+      <Row>
+        <Text>
+          If your recipient {"doesn't"} withdraw their tip in time, you can
+          reclaim your sats!
+        </Text>
+      </Row>
+      <Spacer />
       <h3>Links</h3>
       <Grid.Container gap={1} justify="center">
         <Grid>
