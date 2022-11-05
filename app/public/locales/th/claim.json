@@ -1,3 +1,9 @@
 {
-  "hello": "สวัสดีคุณ {{tippeeName}}"
+  "hello": "ยินดีด้วย {{tippeeName}}!",
+  "tipperHasGiftedYou": "คุณได้รับของขวัญจาก {{tipperName}}",
+  "youHaveBeenGifted": "คุณได้รับของขวัญ",
+  "thisTipHasExpired": "ขออภัยคุณไม่ได้รับของขวัญในเวลาที่กำหนด",
+  "instructions": "ใส่อีเมลของคุณด้านล่างและกดปุ่มเพื่อรับของขวัญของคุณ",
+  "expiresIn": "ของขวัญนี้สามารถรับได้อีก {{expiry}} เท่านั้น",
+  "claim": "รับของขวัญ"
 }

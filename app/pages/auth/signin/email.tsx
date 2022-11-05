@@ -2,6 +2,7 @@ import { Button, Input, Loading, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { Routes } from "lib/Routes";
 import { signIn } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -29,6 +30,7 @@ export default function EmailSignIn({
   callbackUrl,
   submitText,
 }: EmailSignInProps) {
+  const { t } = useTranslation("common");
   const { control, handleSubmit, setFocus } = useForm<EmailFormData>();
   const [isSubmitting, setSubmitting] = React.useState(false);
   const router = useRouter();
@@ -87,7 +89,7 @@ export default function EmailSignIn({
           render={({ field }) => (
             <Input
               {...field}
-              label="Email"
+              label={t("email")}
               type="email"
               placeholder="satoshin@gmx.com"
               fullWidth

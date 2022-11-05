@@ -4,8 +4,11 @@ import { Avatar, Button, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
+import { LightningLoginButton } from "components/LightningLoginButton";
 import { NextLink } from "components/NextLink";
 import { formatDistance, isAfter } from "date-fns";
+import { useDateFnsLocale } from "hooks/useDateFnsLocale";
+
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18next";
 import { Routes } from "lib/Routes";
@@ -26,6 +29,7 @@ import { PublicTip } from "types/PublicTip";
 const ClaimTipPage: NextPage = () => {
   const { t } = useTranslation("claim");
   const router = useRouter();
+  const dateFnsLocale = useDateFnsLocale(router.locale);
   const { data: session } = useSession();
   const { id } = router.query;
   const { data: publicTip, mutate: mutatePublicTip } = useSWR<PublicTip>(
@@ -132,7 +136,6 @@ const ClaimTipPage: NextPage = () => {
                 <Text h5>
                   {t("hello", {
                     tippeeName: publicTip.tippeeName,
-                    defaultValue: "Hello {{tippeeName}}!",
                   })}
                 </Text>
                 <Spacer />
@@ -154,8 +157,10 @@ const ClaimTipPage: NextPage = () => {
               )}
               <Text h4>
                 {publicTip.tipper.name
-                  ? `${publicTip.tipper.name} has gifted you`
-                  : "You've been gifted"}
+                  ? t("tipperHasGiftedYou", {
+                      tipperName: publicTip.tipper.name,
+                    })
+                  : t("youHaveBeenGifted")}
               </Text>
             </Row>
             <Spacer y={1} />
@@ -177,10 +182,35 @@ const ClaimTipPage: NextPage = () => {
             {hasExpired ? (
               <>
                 <Spacer y={2} />
-                <Text color="error">This tip has expired.</Text>
+                <Text color="error">{t("thisTipHasExpired")}</Text>
               </>
             ) : (
-              <ClaimFundsContainer publicTip={publicTip} />
+              <>
+                <Text blockquote color="secondary">
+                  <Icon width={16} height={16}>
+                    <LightBulbIcon />
+                  </Icon>{" "}
+                  {t("instructions")}
+                </Text>
+                <Spacer y={2} />
+                <TippeeLoginOptions />
+
+                <Row justify="center" align="center"></Row>
+                <Spacer y={0.5} />
+                <Row justify="center" align="center">
+                  <Text small color="error">
+                    {t("expiresIn", {
+                      expiry: formatDistance(
+                        new Date(publicTip.expiry),
+                        Date.now(),
+                        {
+                          locale: dateFnsLocale,
+                        }
+                      ),
+                    })}
+                  </Text>
+                </Row>
+              </>
             )}
             <Spacer />
           </>
@@ -192,13 +222,13 @@ const ClaimTipPage: NextPage = () => {
           </>
         ) : (
           <>
-            <Text>Claiming tip</Text>
+            {/*<Text>Claiming tip</Text>*/}
             <Loading type="spinner" color="currentColor" size="sm" />
           </>
         )
       ) : (
         <>
-          <Text>Loading tip</Text>
+          {/*<Text>Loading tip</Text>*/}
           <Loading type="spinner" color="currentColor" size="sm" />
         </>
       )}
@@ -207,51 +237,6 @@ const ClaimTipPage: NextPage = () => {
 };
 
 export default ClaimTipPage;
-
-type ClaimFundsContainerProps = {
-  publicTip: PublicTip;
-};
-
-function ClaimFundsContainer({ publicTip }: ClaimFundsContainerProps) {
-  return (
-    <>
-      <Text blockquote color="secondary">
-        <Icon width={16} height={16}>
-          <LightBulbIcon />
-        </Icon>{" "}
-        Enter your email below and press the button to claim your gift.
-      </Text>
-      <Spacer y={2} />
-      <EmailSignIn
-        inline
-        callbackUrl={window.location.href}
-        submitText="Claim my funds"
-      />
-      <Spacer y={0.5} />
-      <Text>or</Text>
-      <Spacer y={0.5} />
-
-      <NextLink
-        href={`${Routes.lnurlAuthSignin}?callbackUrl=${encodeURIComponent(
-          window.location.href
-        )}`}
-      >
-        <a style={{ width: "100%" }}>
-          <Button bordered css={{ width: "100%", background: "white" }}>
-            Login with Lightning⚡
-          </Button>
-        </a>
-      </NextLink>
-      <Row justify="center" align="center"></Row>
-      <Spacer y={0.5} />
-      <Row justify="center" align="center">
-        <Text small color="error">
-          Expires in {formatDistance(new Date(publicTip.expiry), Date.now())}
-        </Text>
-      </Row>
-    </>
-  );
-}
 
 function Note({ note }: { note: string | null }) {
   return note ? (
@@ -270,3 +255,20 @@ function Note({ note }: { note: string | null }) {
 }
 
 export { getStaticProps, getStaticPaths };
+
+function TippeeLoginOptions() {
+  const { t } = useTranslation(["claim", "common"]);
+  return (
+    <>
+      <EmailSignIn
+        inline
+        callbackUrl={window.location.href}
+        submitText={t("claim:claim")}
+      />
+      <Spacer y={0.5} />
+      <Text>{t("common:or")}</Text>
+      <Spacer y={0.5} />
+      <LightningLoginButton />
+    </>
+  );
+}

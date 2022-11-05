@@ -9,6 +9,7 @@ import {
 import { Avatar, Button, Link, Navbar, Spacer, Text } from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { Icon } from "components/Icon";
+import { LanguagePicker } from "components/LanguagePicker";
 import { NextLink } from "components/NextLink";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -127,7 +128,7 @@ export function AppNavbar() {
             </a>
           </NextLink>
         ) : (
-          <Spacer x={1} />
+          <LanguagePicker />
         )}
       </Navbar.Content>
 
