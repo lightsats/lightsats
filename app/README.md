@@ -6,7 +6,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ### Database setup
 
-1. Install postgresql and create a database (TODO: make this a docker container)
+1. Run `docker-compose up`
 2. Add .env.local (see .env.example)
 3. yarn db:migrate:local
 
@@ -19,6 +19,12 @@ yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+### Email
+
+Open [http://localhost:8025](http://localhost:8025) to open the development mailbox.
+
+### Webhooks
 
 In order to receive webhook requests, make sure to run a tunnel such as ngrok and update your .env.local file.
 
