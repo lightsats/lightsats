@@ -3,5 +3,6 @@ export type CreateTipRequest = {
   currency: string;
   expiry: Date;
   tippeeName?: string;
+  tippeeLocale: string;
   note?: string;
 };

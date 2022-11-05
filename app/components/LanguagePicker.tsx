@@ -1,13 +1,13 @@
 import { Dropdown } from "@nextui-org/react";
 import { getNativeLanguageName } from "lib/iso6391";
-import { locales } from "lib/locales";
+import { DEFAULT_LOCALE, locales } from "lib/locales";
 import { useRouter } from "next/router";
 import React from "react";
 
 export function LanguagePicker() {
   const router = useRouter();
   const { pathname, asPath, query } = router;
-  const currentLocale = router.locale || "en";
+  const currentLocale = router.locale || DEFAULT_LOCALE;
 
   const setSelectedLocale = React.useCallback(
     (keys: unknown) => {

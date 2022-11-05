@@ -21,6 +21,7 @@ import {
   expirableTipStatuses,
   refundableTipStatuses,
 } from "lib/constants";
+import { DEFAULT_LOCALE } from "lib/locales";
 import { bitcoinJourneyPages, Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { nth } from "lib/utils";
@@ -40,9 +41,7 @@ const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
 const TipPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const claimUrl = global.window
-    ? `${window.location.origin}${Routes.tips}/${id}/claim`
-    : undefined;
+
   const { mutate } = useSWRConfig();
   const mutateTips = React.useCallback(
     () => mutate("/api/tipper/tips"),
@@ -54,6 +53,13 @@ const TipPage: NextPage = () => {
     defaultFetcher,
     useTipConfig
   );
+
+  const claimUrl =
+    global.window && tip
+      ? `${window.location.origin}/${
+          tip.tippeeLocale !== DEFAULT_LOCALE ? `${tip.tippeeLocale}/` : ""
+        }${Routes.tips}/${id}/claim`
+      : undefined;
 
   const tipStatus = tip?.status;
   const tipInvoice = tip?.invoice;
@@ -166,12 +172,9 @@ const TipPage: NextPage = () => {
           {tip.note && (
             <>
               <Spacer x={0.5} />
-              <Button
-                color="default"
-                auto
-                icon={"💬"}
-                onClick={() => alert(tip.note)}
-              ></Button>
+              <Button color="default" auto onClick={() => alert(tip.note)}>
+                💬
+              </Button>
             </>
           )}
         </Row>

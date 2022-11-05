@@ -24,6 +24,8 @@ import {
   MINIMUM_FEE_SATS,
   MIN_TIP_SATS,
 } from "lib/constants";
+import { getNativeLanguageName } from "lib/iso6391";
+import { DEFAULT_LOCALE, locales } from "lib/locales";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { calculateFee, getFiatAmount, getSatsAmount } from "lib/utils";
@@ -46,6 +48,7 @@ type NewTipFormData = {
   expiresIn: number;
   expiryUnit: ExpiryUnit;
   tippeeName: string;
+  tippeeLocale: string;
 };
 
 type InputMethod = "fiat" | "sats";
@@ -75,6 +78,7 @@ const NewTip: NextPage = () => {
         currency: "USD",
         expiresIn: 3,
         expiryUnit: "days",
+        tippeeLocale: DEFAULT_LOCALE,
       },
     });
 
@@ -86,6 +90,7 @@ const NewTip: NextPage = () => {
   const watchedAmount = watch("amount");
   const watchedCurrency = watch("currency");
   const watchedExpiryUnit = watch("expiryUnit");
+  const watchedTippeeLocale = watch("tippeeLocale");
   const watchedExchangeRate = exchangeRates?.[watchedCurrency];
   const watchedAmountFee = watchedExchangeRate
     ? calculateFee(
@@ -144,6 +149,18 @@ const NewTip: NextPage = () => {
     [watchedExpiryUnit]
   );
 
+  const setDropdownTippeeLocale = React.useCallback(
+    (keys: unknown) => {
+      setValue("tippeeLocale", Array.from(keys as Iterable<string>)[0]);
+    },
+    [setValue]
+  );
+
+  const selectedTippeeLocales = React.useMemo(
+    () => new Set([watchedTippeeLocale]),
+    [watchedTippeeLocale]
+  );
+
   const onSubmit = React.useCallback(
     (data: NewTipFormData) => {
       if (!watchedExchangeRate) {
@@ -177,6 +194,7 @@ const NewTip: NextPage = () => {
               [data.expiryUnit]: data.expiresIn,
             }),
             tippeeName: data.tippeeName?.length ? data.tippeeName : undefined,
+            tippeeLocale: data.tippeeLocale,
           };
           const result = await fetch("/api/tipper/tips", {
             method: "POST",
@@ -231,13 +249,22 @@ const NewTip: NextPage = () => {
           <Spacer y={0.25} />
           <Row justify="space-between" align="flex-end">
             <Dropdown>
-              <Dropdown.Button
-                flat
-                onClick={() => alert("Languages coming soon!")}
-              >
-                English
+              <Dropdown.Button flat>
+                {getNativeLanguageName(watchedTippeeLocale)}
               </Dropdown.Button>
-              <Dropdown.Item>English</Dropdown.Item>
+              <Dropdown.Menu
+                aria-label="Select Language"
+                selectionMode="single"
+                selectedKeys={selectedTippeeLocales}
+                onSelectionChange={setDropdownTippeeLocale}
+              >
+                {locales.map((locale) => (
+                  <Dropdown.Item key={locale}>
+                    {locale.toUpperCase()}&nbsp;|&nbsp;
+                    {getNativeLanguageName(locale)}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
             </Dropdown>
             <Spacer x={0.5} />
             <Dropdown>
