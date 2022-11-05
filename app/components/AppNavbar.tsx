@@ -137,7 +137,9 @@ export function AppNavbar() {
           <Navbar.CollapseItem key={item.name}>
             <NextLink href={item.href} passHref>
               <Link onClick={closeNavbar}>
-                <Button flat icon={<Icon>{item.icon}</Icon>} auto />
+                <Button flat auto css={{ px: 8 }}>
+                  <Icon>{item.icon}</Icon>
+                </Button>
                 <Spacer />
                 {item.name}
               </Link>

@@ -19,7 +19,7 @@ import { Guide } from "types/Guide";
 
 const guides: Guide[] = [
   {
-    name: "Spend 🛒 ",
+    name: "Spend 🛒",
     description:
       "Spend at stores accepting Bitcoin, purchase gift cards, pre-paid visa cards, pay bills",
     icon: <CreditCardIcon />,
@@ -38,7 +38,7 @@ const guides: Guide[] = [
     link: Routes.guideBuy,
   },
   {
-    name: "Save 🛟",
+    name: "Save 🏦",
     description: "How to safely store your Bitcoin long-term",
     icon: <CircleStackIcon />,
     link: Routes.guideSpend,
@@ -107,12 +107,9 @@ function GuideCard({ guide }: GuideCardProps) {
           <Row align="center" style={{ height: "100%" }}>
             <Col span={2.5}>
               <Row justify="flex-start">
-                <Button
-                  color="primary"
-                  auto
-                  flat
-                  icon={<Icon>{guide.icon}</Icon>}
-                />
+                <Button color="primary" auto flat css={{ px: 8 }}>
+                  <Icon>{guide.icon}</Icon>
+                </Button>
               </Row>
             </Col>
             <Col>

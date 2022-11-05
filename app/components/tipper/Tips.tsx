@@ -49,10 +49,8 @@ export function Tips() {
               {reclaimedTips.map((tip) => tip.amount).reduce((a, b) => a + b)}⚡{" "}
               reclaimed
             </Text>
-            <NextLink href={Routes.tipperWithdraw}>
-              <a>
-                <Link color="success">withdraw sats</Link>
-              </a>
+            <NextLink href={Routes.tipperWithdraw} passHref>
+              <Link color="success">withdraw sats</Link>
             </NextLink>
             <Spacer />
           </>
