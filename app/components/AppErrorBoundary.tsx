@@ -24,7 +24,7 @@ export class AppErrorBoundary extends React.Component<
     super(props);
 
     // Define a state variable to track whether is an error or not
-    this.state = { hasError: true };
+    this.state = { hasError: false };
   }
 
   static getDerivedStateFromError(error: Error) {
