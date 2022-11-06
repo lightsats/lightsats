@@ -32,33 +32,7 @@ const Scoreboard: NextPage = () => {
       <Text h2>Scoreboard</Text>
 
       <Grid.Container gap={2} justify="center">
-        <Grid xs={6} sm={4}>
-          <Card>
-            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
-              <Col>
-                <Text
-                  size={12}
-                  weight="bold"
-                  transform="uppercase"
-                  color="#ffffffdd"
-                >
-                  Total number of tips
-                </Text>
-                <Text h1 color="white">
-                  1337
-                </Text>
-              </Col>
-            </Card.Header>
-            <Card.Image
-              src="https://nextui.org/images/card-example-4.jpeg"
-              objectFit="cover"
-              width="100%"
-              height={140}
-              alt="Card image background"
-            />
-          </Card>
-        </Grid>
-        <Grid xs={2} sm={4}>
+        <Grid xs={2} sm={3}>
           <Card>
             <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
               <Col>
@@ -68,9 +42,9 @@ const Scoreboard: NextPage = () => {
                   transform="uppercase"
                   color="#ffffffAA"
                 >
-                  Number of people onboarded
+                  Number of tips sent
                 </Text>
-                <Text h4 color="white">
+                <Text h1 color="white">
                   24
                 </Text>
               </Col>
@@ -79,12 +53,12 @@ const Scoreboard: NextPage = () => {
               src="https://nextui.org/images/card-example-2.jpeg"
               objectFit="cover"
               width="100%"
-              height={200}
+              height={150}
               alt="Card image background"
             />
           </Card>
         </Grid>
-        <Grid xs={2} sm={4}>
+        <Grid xs={2} sm={3}>
           <Card>
             <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
               <Col>
@@ -96,8 +70,8 @@ const Scoreboard: NextPage = () => {
                 >
                   Number of people onboarded
                 </Text>
-                <Text h4 color="white">
-                  Stream the Acme event
+                <Text h1 color="white">
+                  21
                 </Text>
               </Col>
             </Card.Header>
@@ -105,12 +79,38 @@ const Scoreboard: NextPage = () => {
               src="https://nextui.org/images/card-example-2.jpeg"
               objectFit="cover"
               width="100%"
-              height={200}
+              height={150}
               alt="Card image background"
             />
           </Card>
         </Grid>
-        <Grid xs={2} sm={4}>
+        <Grid xs={2} sm={3}>
+          <Card>
+            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+              <Col>
+                <Text
+                  size={12}
+                  weight="bold"
+                  transform="uppercase"
+                  color="#ffffffAA"
+                >
+                  Average tip value
+                </Text>
+                <Text h1 color="white">
+                  1337 sats
+                </Text>
+              </Col>
+            </Card.Header>
+            <Card.Image
+              src="https://nextui.org/images/card-example-2.jpeg"
+              objectFit="cover"
+              width="100%"
+              height={150}
+              alt="Card image background"
+            />
+          </Card>
+        </Grid>
+        <Grid xs={2} sm={3}>
           <Card>
             <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
               <Col>
@@ -122,8 +122,8 @@ const Scoreboard: NextPage = () => {
                 >
                   Number of people onboarded
                 </Text>
-                <Text h4 color="white">
-                  Stream the Acme event
+                <Text h1 color="white">
+                  21
                 </Text>
               </Col>
             </Card.Header>
@@ -131,7 +131,7 @@ const Scoreboard: NextPage = () => {
               src="https://nextui.org/images/card-example-2.jpeg"
               objectFit="cover"
               width="100%"
-              height={200}
+              height={150}
               alt="Card image background"
             />
           </Card>

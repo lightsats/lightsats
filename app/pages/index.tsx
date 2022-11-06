@@ -32,7 +32,7 @@ const Home: NextPage = () => {
         <>
           <Card>
             <Card.Body color="$error">
-              ⚠️ This project is currently in BETA, don't be too reckless.
+              ⚠️ This project is currently in BETA, don&apos;t be too reckless.
             </Card.Body>
           </Card>
           <Spacer y={1} />

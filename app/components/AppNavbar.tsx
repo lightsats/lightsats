@@ -201,6 +201,7 @@ export function AppNavbar() {
         {collapseItems.map((item, index) => (
           <Navbar.CollapseItem
             activeColor="secondary"
+            key={item.name}
             css={{
               color: index === collapseItems.length - 1 ? "$error" : "",
             }}
