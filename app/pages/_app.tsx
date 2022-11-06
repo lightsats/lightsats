@@ -5,6 +5,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import "styles/globals.css";
 
+import AppErrorBoundary from "components/AppErrorBoundary";
 import { appWithTranslation } from "next-i18next";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -16,13 +17,15 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
       </Head>
-      <NextUIProvider>
-        <SessionProvider session={pageProps.session}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </SessionProvider>
-      </NextUIProvider>
+      <AppErrorBoundary>
+        <NextUIProvider>
+          <SessionProvider session={pageProps.session}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </SessionProvider>
+        </NextUIProvider>
+      </AppErrorBoundary>
     </>
   );
 }
