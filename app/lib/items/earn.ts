@@ -69,18 +69,6 @@ export const earn: Item[] = [
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAMElEQVR4nGNgYMhkYEgVY6hmYEhjKLDZ+eXo//8v/meYbWFgYMjUY+iQZ6hnYMgCAOZWDELO0RL3AAAAAElFTkSuQmCC",
-    placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAMElEQVR4nGNgYMhkYEgVY6hmYEhjKLDZ+eXo//8v/meYbWFgYMjUY+iQZ6hnYMgCAOZWDELO0RL3AAAAAElFTkSuQmCC",
-    name: "Lolli",
-    slogan:
-      "Lolli is a rewards application that gives you bitcoin when you shop at your favorite stores.",
-    platforms: ["mobile", "desktop"],
-  },
-  {
-    category: "earn",
-    link: "https://lgt.st/lolli",
-    image: "lolli.jpeg",
-    languageCodes: [getLanguageCode("English")],
     name: "Lolli",
     slogan:
       "Lolli is a rewards application that gives you bitcoin when you shop at your favorite stores.",

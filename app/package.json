@@ -29,7 +29,8 @@
     "prettier": "yarn prettier --write .",
     "logs:staging": "fly logs -a lightsats",
     "logs:production": "fly logs -a lightsats-prod",
-    "items:placeholders": "ts-node generatePlaceholders.ts && yarn prettier"
+    "items:placeholders": "cli-confirm \"Confirm no outstanding changes\" && ts-node generateItemPlaceholders.ts && yarn prettier",
+    "items:filesizes": "ts-node checkItemImageFilesizes.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.12",
