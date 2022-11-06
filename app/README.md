@@ -3,12 +3,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ## Getting Started
 
 1. Run yarn install both in this directory and the parent directory
-
-### Database setup
-
-1. Run `docker-compose up`
-2. Add .env.local (see .env.example)
-3. yarn db:migrate:local
+2. Run `yarn docker:start`
+3. Add .env.local (see .env.example)
+4. yarn db:migrate:local
 
 ### Running the development server
 
