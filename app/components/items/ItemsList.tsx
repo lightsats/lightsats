@@ -20,7 +20,6 @@ const collapseGroupCss: CSS = { px: 0, width: "100%" };
 
 export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
   const session = useSession();
-  // TODO: this view can also be shown to tippers
   const { data: tips } = useSWR<Tip[]>(
     checkTippeeBalance && session ? `/api/tippee/tips` : null,
     defaultFetcher

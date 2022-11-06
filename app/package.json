@@ -28,7 +28,8 @@
     "deploy:production": "cli-confirm \"Do you really want to do a production deployment?\" && fly deploy -c fly-production.toml",
     "prettier": "yarn prettier --write .",
     "logs:staging": "fly logs -a lightsats",
-    "logs:production": "fly logs -a lightsats-prod"
+    "logs:production": "fly logs -a lightsats-prod",
+    "items:placeholders": "ts-node generatePlaceholders.ts && yarn prettier"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.12",
@@ -72,8 +73,12 @@
     "eslint-config-next": "12.3.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "plaiceholder": "^2.5.0",
     "prettier": "2.7.1",
     "prisma": "^4.4.0",
+    "sharp": "^0.31.2",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0",
     "typescript": "4.8.4"
   }
 }

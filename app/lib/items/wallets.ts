@@ -7,6 +7,8 @@ const wos: Wallet = {
   minBalance: 0,
   link: "https://lgt.st/walletofsatoshi",
   image: "wos.png",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAPUlEQVR4nGNQVlH6/9kzN0GFgUGeIdRX5f8P7+5KVS1NJQYFJaX1M1QvbNIXk1Jk4BdRDPVVkVdQ4hdRBACfdA3crpCdPAAAAABJRU5ErkJggg==",
   name: "Wallet Of Satoshi",
   slogan: "The world's simplest Bitcoin Lightning Wallet",
   languageCodes: [
@@ -44,6 +46,8 @@ const muun: Wallet = {
   minBalance: 0,
   link: "https://lgt.st/muun",
   image: "muun.png",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AABDmQBGnQA7kQAdcwAAY7bL//+58f8ARZoAAFirJ4rYIofUAE2gAAAgdgAdcgAZbQARZehsEZ3ZbJxEAAAAAElFTkSuQmCC",
   name: "Muun Wallet",
   slogan: "Simple and powerful. Just like bitcoin.",
   languageCodes: [getLanguageCode("English"), getLanguageCode("Spanish")],
@@ -57,6 +61,8 @@ const breez: Wallet = {
   minBalance: 2000,
   link: "https://lgt.st/breez",
   image: "breez.png",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAABnWAAAZ1gEY0crtAAAAP0lEQVR4nAE0AMv/AP////v7/ODn7P///wDz9vcAOFsAHEH19vgA+/v8AERmABY85uvvAP////n6+9vi6P///7k8JI6gkKogAAAAAElFTkSuQmCC",
   name: "Breez Wallet",
   slogan: "LIGHTNING FAST BITCOIN PAYMENTS",
   languageCodes: [
@@ -76,6 +82,8 @@ const blue: Wallet = {
   minBalance: 0,
   link: "https://lgt.st/bluewallet",
   image: "blue.png",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AAAAVgAPYgAPYQAAVAAAXLsAfN0AeNkAWroAg+f/qP//u///l/P/AGfO+nnY/4/k/4Dc/997Gf6eenRqAAAAAElFTkSuQmCC",
   name: "Blue Wallet",
   slogan: "Radically Simple & Powerful Bitcoin Wallet",
   languageCodes: [
@@ -128,6 +136,8 @@ const alby: Wallet = {
   minBalance: 0,
   link: "https://lgt.st/alby",
   image: "alby.png",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
   name: "Alby Wallet",
   slogan: "Lightning buzz for your Browser!",
   languageCodes: [
