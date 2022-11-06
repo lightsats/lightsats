@@ -314,6 +314,7 @@ const NewTip: NextPage = () => {
                   //   valueAsNumber: true,
                   // }) causes iOS decimal input bug, resetting field value }
                   min={0}
+                  step="0.01"
                   type="number"
                   inputMode="decimal"
                   aria-label="amount"
