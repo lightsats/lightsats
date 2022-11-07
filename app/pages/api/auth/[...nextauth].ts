@@ -100,6 +100,20 @@ export const authOptions: NextAuthOptions = {
               });
             }
             return user;
+          } else if (decoded.phoneNumber) {
+            let user = await prisma.user.findUnique({
+              where: {
+                phoneNumber: decoded.phoneNumber,
+              },
+            });
+            if (!user) {
+              user = await prisma.user.create({
+                data: {
+                  phoneNumber: decoded.phoneNumber,
+                },
+              });
+            }
+            return user;
           } else {
             throw new Error(
               "Unsupported two factor authentication type:" +

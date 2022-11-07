@@ -184,7 +184,7 @@ export function AppNavbar() {
       )}
       {!user && (
         <Navbar.Content>
-          <Navbar.Link href={Routes.emailSignin}>Login</Navbar.Link>
+          <Navbar.Link href={Routes.login}>Login</Navbar.Link>
           <Navbar.Item hideIn="xs">
             <NextLink href={Routes.signup}>
               <a>

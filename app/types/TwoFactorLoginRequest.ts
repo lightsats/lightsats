@@ -1,5 +1,6 @@
 export type TwoFactorLoginRequest = {
-  email: string;
+  email?: string;
+  phoneNumber?: string;
   callbackUrl: string;
   locale: string;
 };
