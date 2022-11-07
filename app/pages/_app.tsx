@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 
+import AppErrorBoundary from "components/AppErrorBoundary";
 import { appWithTranslation } from "next-i18next";
 import "styles/globals.css";
 import theme from "./_theme";
@@ -17,13 +18,15 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
       </Head>
-      <NextUIProvider theme={theme}>
-        <SessionProvider session={pageProps.session}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </SessionProvider>
-      </NextUIProvider>
+      <AppErrorBoundary>
+        <NextUIProvider theme={theme}>
+          <SessionProvider session={pageProps.session}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </SessionProvider>
+        </NextUIProvider>
+      </AppErrorBoundary>
     </>
   );
 }

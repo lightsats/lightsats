@@ -16,6 +16,7 @@ export type Item = {
   link: string;
   slogan: string;
   image: string;
+  placeholderDataUrl?: string;
   languageCodes: string[];
   platforms: Platform[];
   category: ItemCategory;

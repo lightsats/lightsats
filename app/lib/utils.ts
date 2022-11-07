@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import { format } from "date-fns";
 import { FEE_PERCENT, MINIMUM_FEE_SATS, SATS_TO_BTC } from "lib/constants";
 import { MouseEventHandler } from "react";
+import { Item } from "types/Item";
 
 export function getSatsAmount(fiat: number, exchangeRate: number) {
   return Math.ceil((fiat / exchangeRate) * SATS_TO_BTC);
@@ -62,3 +63,9 @@ export function nth(n: number) {
 }
 
 export const getDateLabel = (date: Date) => format(date, "d/M");
+
+export const stringifyError = (error: Error) =>
+  JSON.stringify(error, Object.getOwnPropertyNames(error));
+
+export const getItemImageLocation = (item: Item) =>
+  `/items/${item.category}/${item.image}`;

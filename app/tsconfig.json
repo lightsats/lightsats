@@ -16,6 +16,16 @@
     "incremental": true,
     "baseUrl": "."
   },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"],
+    "compilerOptions": {
+      "module": "CommonJS",
+      "baseUrl": ".",
+      "paths": {
+        "lib/*": ["./lib/*"]
+      }
+    }
+  },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

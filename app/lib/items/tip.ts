@@ -7,6 +7,8 @@ export const tip: Item[] = [
     image: "lightsats.jpg",
     languageCodes: [getLanguageCode("English")],
     platforms: ["web"],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAALUlEQVR4nGNgYGDg4uISERFhgIADBw58+/YVyvn9+/eJEyegHBEREVZWViALAB/1CxAyCekdAAAAAElFTkSuQmCC",
     name: "Lightsats",
     slogan: "Gift Sats without losing them✌🏼",
     link: "/",

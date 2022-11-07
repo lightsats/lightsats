@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:start": "sudo service postgresql start",
+    "docker:start": "docker-compose up",
     "db:generate:local": "dotenv -e .env.local -- yarn prisma generate",
     "db:push:local": "cli-confirm \"Do you really want to do a push?\" && dotenv -e .env.local -- yarn prisma db push",
     "db:migrate:init:local": "dotenv -e .env.local -- prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/init/migration.sql",
@@ -27,7 +28,9 @@
     "deploy:production": "cli-confirm \"Do you really want to do a production deployment?\" && fly deploy -c fly-production.toml",
     "prettier": "yarn prettier --write .",
     "logs:staging": "fly logs -a lightsats",
-    "logs:production": "fly logs -a lightsats-prod"
+    "logs:production": "fly logs -a lightsats-prod",
+    "items:placeholders": "cli-confirm \"Confirm no outstanding changes\" && ts-node generateItemPlaceholders.ts && yarn prettier",
+    "items:filesizes": "ts-node checkItemImageFilesizes.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.12",
@@ -71,8 +74,12 @@
     "eslint-config-next": "12.3.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "plaiceholder": "^2.5.0",
     "prettier": "2.7.1",
     "prisma": "^4.4.0",
+    "sharp": "^0.31.2",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0",
     "typescript": "4.8.4"
   }
 }
