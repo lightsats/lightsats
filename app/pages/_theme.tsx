@@ -10,14 +10,19 @@ const theme = createTheme({
       secondary: "#EFEFEF",
       secondaryText: "#333",
 
+      warning: "#ffecb5",
+      warningText: "#664d03",
+      warningBorder: "#ffecb5",
+
       gradient: "linear-gradient(to right, #f7b733, #fc4a1a);",
-      link: "#333",
+      link: "#2E74ED",
       text: "#333",
     },
     space: {},
     fonts: {
       sans: "'Inter', sans-serif;",
     },
+    breakpoints: {},
   },
 });
 

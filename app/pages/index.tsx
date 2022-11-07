@@ -1,12 +1,5 @@
-import {
-  Button,
-  Card,
-  Image,
-  Link,
-  Loading,
-  Spacer,
-  Text,
-} from "@nextui-org/react";
+import { Button, Image, Link, Loading, Spacer, Text } from "@nextui-org/react";
+import { Alert } from "components/Alert";
 import { NextLink } from "components/NextLink";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { Tips } from "components/tipper/Tips";
@@ -30,19 +23,17 @@ const Home: NextPage = () => {
 
       {session ? (
         <>
-          <Card>
-            <Card.Body color="$error">
-              ⚠️ This project is currently in BETA, don&apos;t be too reckless.
-            </Card.Body>
-          </Card>
-          <Spacer y={1} />
+          <Alert>
+            ⚠️ This project is currently in BETA, don&apos;t be too reckless.
+          </Alert>
+          <Spacer />
           <NewTipButton />
           <Spacer />
           <Tips />
           <Spacer y={4} />
           <Text>Received a gift?</Text>
           <NextLink href={Routes.withdraw} passHref>
-            <Link color="success">withdraw claimed gifts</Link>
+            <Link>withdraw claimed gifts</Link>
           </NextLink>
         </>
       ) : (

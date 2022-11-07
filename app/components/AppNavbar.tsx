@@ -18,6 +18,7 @@ import {
 } from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { Icon } from "components/Icon";
+import { LanguagePicker } from "components/LanguagePicker";
 import { NextLink } from "components/NextLink";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -26,7 +27,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
-import { LanguagePicker } from "./LanguagePicker";
 
 const navbarCollapseToggleId = "app-navbar-collapse-toggle";
 
