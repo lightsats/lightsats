@@ -17,7 +17,7 @@ import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -69,15 +69,6 @@ function TippeeProfile({
   session: Session;
   user: User;
 }) {
-  const router = useRouter();
-  // TODO: remove (use nav)
-  const executeSignout = React.useCallback(() => {
-    signOut({
-      redirect: false,
-    });
-    router.push(Routes.home);
-  }, [router]);
-
   const { data: tips } = useSWR<Tip[]>(
     session ? `/api/tippee/tips` : null,
     defaultFetcher
@@ -119,10 +110,6 @@ function TippeeProfile({
       >
         Logged in as {session.user.email ?? session.user.lnurlPublicKey}
       </Text>
-      <Spacer />
-      <Button color="error" size="xs" onClick={executeSignout}>
-        Sign out
-      </Button>
       {!hasWithdrawnTip && (
         <>
           <Spacer />
@@ -179,14 +166,6 @@ function TipperProfile({
     setFocus("name");
   }, [setFocus]);
 
-  // TODO: remove (use nav)
-  const executeSignout = React.useCallback(() => {
-    signOut({
-      redirect: false,
-    });
-    router.push(Routes.home);
-  }, [router]);
-
   const onSubmit = React.useCallback(
     (data: ProfileFormData) => {
       if (isSubmitting) {
@@ -233,10 +212,6 @@ function TipperProfile({
       >
         Logged in as {session.user.email ?? session.user.lnurlPublicKey}
       </Text>
-      <Spacer />
-      <Button color="error" size="xs" onClick={executeSignout}>
-        Sign out
-      </Button>
       <Spacer />
       <Text style={{ textAlign: "center" }}>
         Fill out the fields below to increase the authenticity of your tips and

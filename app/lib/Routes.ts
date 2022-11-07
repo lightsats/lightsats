@@ -6,6 +6,7 @@ export enum Routes {
   withdraw = "/withdraw",
   tipperWithdraw = "/withdraw?flow=tipper",
   profile = "/profile",
+  logout = "/logout",
   scoreboard = "/scoreboard",
   emailSignin = "/auth/signin/email",
   verifySignin = "/auth/signin/verify",
