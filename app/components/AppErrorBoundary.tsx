@@ -60,7 +60,7 @@ export class AppErrorBoundary extends React.Component<
             minHeight: "100vh",
           }}
         >
-          <Text h4>Oops, something went Wrong</Text>
+          <Text h4>Oops, something went wrong</Text>
           <Button auto onClick={() => window.location.reload()}>
             Try again
           </Button>

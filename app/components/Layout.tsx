@@ -15,6 +15,9 @@ export default function Layout({
   const router = useRouter();
   return (
     <FlexBox style={{ minHeight: "100%" }}>
+      {process.env.NEXT_PUBLIC_SHOW_PRODUCTION_LINK === "true" && (
+        <ProductionLinkBanner />
+      )}
       <AppNavbar />
       <Spacer />
       <Container
@@ -31,9 +34,6 @@ export default function Layout({
             : {}),
         }}
       >
-        {process.env.NEXT_PUBLIC_SHOW_PRODUCTION_LINK === "true" && (
-          <ProductionLinkBanner />
-        )}
         {children}
       </Container>
       <Spacer />

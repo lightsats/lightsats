@@ -122,11 +122,13 @@ export function AppNavbar() {
               <Image alt="logo" src="/images/logo.svg" width={150} />
             </a>
           </NextLink>
+          <LanguagePicker />
         </Navbar.Brand>
-        <LanguagePicker />
         {!user && !hideNavbar && (
           <>
-            <Navbar.Link href={Routes.about}>About</Navbar.Link>
+            <Navbar.Link href={Routes.about} hideIn="xs">
+              About
+            </Navbar.Link>
           </>
         )}
         {user?.userType === "tipper" && !hideNavbar && (
@@ -164,7 +166,9 @@ export function AppNavbar() {
               <Dropdown.Menu aria-label="User menu actions">
                 <Dropdown.Item key="profile">
                   <NextLink href={Routes.profile} passHref>
-                    <Link>Profile</Link>
+                    <a>
+                      <Link>Profile</Link>
+                    </a>
                   </NextLink>
                 </Dropdown.Item>
                 <Dropdown.Item key="logout" withDivider>
@@ -179,8 +183,10 @@ export function AppNavbar() {
       )}
       {!user && (
         <Navbar.Content>
-          <Navbar.Link href={Routes.emailSignin}>Login</Navbar.Link>
-          <Navbar.Item hideIn="xs">
+          <Navbar.Link href={Routes.emailSignin} hideIn="xs">
+            Login
+          </Navbar.Link>
+          <Navbar.Item>
             <NextLink href={Routes.signup}>
               <a>
                 <Button auto flat>
