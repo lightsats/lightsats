@@ -1,5 +1,4 @@
-import { Spacer } from "@nextui-org/react";
-import { Alert } from "components/Alert";
+import { Card, Container } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
 
 export function ProductionLinkBanner() {
@@ -7,10 +6,23 @@ export function ProductionLinkBanner() {
     <>
       <NextLink href="https://lightsats.com">
         <a>
-          <Alert>DEV ENVIRONMENT - CLICK HERE TO GO TO PRODUCTION</Alert>
+          <Card
+            color="$warning"
+            variant="flat"
+            css={{
+              backgroundColor: "$warningLight",
+              borderColor: "$warningBorder",
+              borderRadius: 0,
+            }}
+          >
+            <Card.Body>
+              <Container lg css={{ textAlign: "center" }}>
+                ⚠️ This is the <b>development</b> environment.
+              </Container>
+            </Card.Body>
+          </Card>
         </a>
       </NextLink>
-      <Spacer />
     </>
   );
 }
