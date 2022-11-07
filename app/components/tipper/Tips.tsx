@@ -6,7 +6,7 @@ import {
   Loading,
   Row,
   Spacer,
-  Text,
+  Text
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
@@ -55,7 +55,7 @@ export function Tips() {
             <Spacer />
           </>
         )}
-        <Grid.Container justify="center">
+        <Grid.Container justify="center" gap={1}>
           {tips.map((tip) => {
             const hasExpired =
               expirableTipStatuses.indexOf(tip.status) >= 0 &&
