@@ -26,11 +26,6 @@ const Scoreboard: NextPage = () => {
     return <Loading type="spinner" color="currentColor" size="lg" />;
   }
 
-  scoreboard.entries.push(scoreboard.entries[0]);
-  scoreboard.entries.push(scoreboard.entries[0]);
-  scoreboard.entries.push(scoreboard.entries[0]);
-  scoreboard.entries.push(scoreboard.entries[0]);
-
   return (
     <>
       <Text h2>Scoreboard</Text>
@@ -108,7 +103,7 @@ const Scoreboard: NextPage = () => {
                 }}
               >
                 <Card.Body>
-                  <Row align="center">
+                  <Row align="center" justify="space-between">
                     <Text size={22} b>
                       #{i + 1}
                     </Text>
@@ -132,21 +127,20 @@ const Scoreboard: NextPage = () => {
                         />
                       </Link>
                     )}
-                    <Text>{scoreboardEntry.satsSent}</Text>
+                    <Text b size="$xl">
+                      {scoreboardEntry.satsSent} sats
+                    </Text>
                   </Row>
                   <Spacer />
-                  <Row>
-                    <Spacer x={0.5} />
-                    <Badge color="success">
-                      {scoreboardEntry.numTipsSent} tips🧡
-                    </Badge>
+                  <Row justify="center">
+                    <Badge>{scoreboardEntry.numTipsSent} tips🧡</Badge>
                     <Spacer x={0.5} />
                     <Badge
                       style={{
                         background: `rgba(${Math.floor(
-                          (1 - scoreboardEntry.successRate) * 200
+                          (1 - scoreboardEntry.successRate) * 220
                         )},${Math.floor(
-                          scoreboardEntry.successRate * 200
+                          scoreboardEntry.successRate * 220
                         )},0, 1)`,
                       }}
                     >
