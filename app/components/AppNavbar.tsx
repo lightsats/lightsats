@@ -164,11 +164,13 @@ export function AppNavbar() {
               <Dropdown.Menu aria-label="User menu actions">
                 <Dropdown.Item key="profile">
                   <NextLink href={Routes.profile} passHref>
-                    <a>Profile</a>
+                    <Link>Profile</Link>
                   </NextLink>
                 </Dropdown.Item>
-                <Dropdown.Item key="logout" withDivider color="error">
-                  Log Out
+                <Dropdown.Item key="logout" withDivider>
+                  <NextLink href={Routes.logout} passHref>
+                    <Link color="error">Log Out</Link>
+                  </NextLink>
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
