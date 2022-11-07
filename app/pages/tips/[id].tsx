@@ -21,10 +21,9 @@ import {
   expirableTipStatuses,
   refundableTipStatuses,
 } from "lib/constants";
-import { DEFAULT_LOCALE } from "lib/locales";
 import { bitcoinJourneyPages, Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { nth } from "lib/utils";
+import { getLocalePath, nth } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -56,9 +55,9 @@ const TipPage: NextPage = () => {
 
   const claimUrl =
     global.window && tip
-      ? `${window.location.origin}/${
-          tip.tippeeLocale !== DEFAULT_LOCALE ? `${tip.tippeeLocale}/` : ""
-        }${Routes.tips}/${id}/claim`
+      ? `${window.location.origin}/${getLocalePath(tip.tippeeLocale)}${
+          Routes.tips
+        }/${id}/claim`
       : undefined;
 
   const tipStatus = tip?.status;

@@ -1,6 +1,6 @@
 import { Dropdown } from "@nextui-org/react";
-import { getNativeLanguageName } from "lib/iso6391";
-import { DEFAULT_LOCALE, locales } from "lib/locales";
+import { getNativeLanguageName } from "lib/i18n/iso6391";
+import { DEFAULT_LOCALE, locales } from "lib/i18n/locales";
 import { useRouter } from "next/router";
 import React from "react";
 

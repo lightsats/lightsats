@@ -1,5 +1,9 @@
 {
   "email": "อีเมล",
   "loginWithLightning": "เข้าสู่ระบบด้วย Lightning",
-  "or": "หรือ"
+  "or": "หรือ",
+  "verifyEmailSubject": "ยืนยันอีเมลของคุณ",
+  "verifyEmailMessage": "กรุณาคลิกที่ลิงค์ต่อไปนี้เพื่อเข้าสู่ระบบ: <a href=\"{{verifyUrl}}\">ยืนยัน</a>",
+  "codeSent": "ส่งรหัสยืนยันแล้ว",
+  "checkEmail": "กรุณาตรวจสอบข้อความอีเมลของคุณ"
 }

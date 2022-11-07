@@ -3,5 +3,6 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports": true
   },
-  "dotenv.enableAutocloaking": true
+  "dotenv.enableAutocloaking": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }

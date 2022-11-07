@@ -12,13 +12,9 @@ import useSWRImmutable from "swr/immutable";
 import { LnurlAuthLoginInfo } from "types/LnurlAuthLoginInfo";
 import { LnurlAuthStatus } from "types/LnurlAuthStatus";
 
-type EmailSignInProps = {
-  csrfToken: string;
-};
-
 const useLnurlStatusConfig: SWRConfiguration = { refreshInterval: 1000 };
 
-export default function LnurlAuthSignIn({ csrfToken }: EmailSignInProps) {
+export default function LnurlAuthSignIn() {
   const router = useRouter();
   const { callbackUrl } = router.query;
   // only retrieve the qr code once
@@ -54,7 +50,7 @@ export default function LnurlAuthSignIn({ csrfToken }: EmailSignInProps) {
         }
       })();
     }
-  }, [callbackUrl, csrfToken, qr, router, status]);
+  }, [callbackUrl, qr, router, status]);
 
   return (
     <>

@@ -10,7 +10,7 @@ import { formatDistance, isAfter } from "date-fns";
 import { useDateFnsLocale } from "hooks/useDateFnsLocale";
 
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
-import { getStaticPaths, getStaticProps } from "lib/i18next";
+import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getAvatarUrl } from "lib/utils";
