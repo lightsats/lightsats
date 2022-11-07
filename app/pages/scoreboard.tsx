@@ -28,125 +28,51 @@ const Scoreboard: NextPage = () => {
   }
 
   return (
-    <Container gap={22}>
+    <Container>
       <Text h2>Scoreboard</Text>
-
-      <Grid.Container gap={2} justify="center">
-        <Grid xs={2} sm={3}>
-          <Card>
-            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+      <Grid.Container gap={1}>
+        <Grid xs={4}>
+          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+            <Card.Header>
               <Col>
-                <Text
-                  size={12}
-                  weight="bold"
-                  transform="uppercase"
-                  color="#ffffffAA"
-                >
-                  Number of tips sent
+                <Text size={12} weight="bold" transform="uppercase">
+                  # Total tips sent
                 </Text>
-                <Text h1 color="white">
-                  24
-                </Text>
+                <Text h1>{scoreboard.numTipsSent}</Text>
               </Col>
             </Card.Header>
-            <Card.Image
-              src="https://nextui.org/images/card-example-2.jpeg"
-              objectFit="cover"
-              width="100%"
-              height={150}
-              alt="Card image background"
-            />
           </Card>
         </Grid>
-        <Grid xs={2} sm={3}>
-          <Card>
-            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+        <Grid xs={4}>
+          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+            <Card.Header>
               <Col>
-                <Text
-                  size={12}
-                  weight="bold"
-                  transform="uppercase"
-                  color="#ffffffAA"
-                >
-                  Number of people onboarded
+                <Text size={12} weight="bold" transform="uppercase">
+                  # of people onboarded
                 </Text>
-                <Text h1 color="white">
-                  21
-                </Text>
+                <Text h1>{scoreboard.numUsersOnboarded}</Text>
               </Col>
             </Card.Header>
-            <Card.Image
-              src="https://nextui.org/images/card-example-2.jpeg"
-              objectFit="cover"
-              width="100%"
-              height={150}
-              alt="Card image background"
-            />
           </Card>
         </Grid>
-        <Grid xs={2} sm={3}>
-          <Card>
-            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+        <Grid xs={4}>
+          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+            <Card.Header>
               <Col>
-                <Text
-                  size={12}
-                  weight="bold"
-                  transform="uppercase"
-                  color="#ffffffAA"
-                >
-                  Average tip value
+                <Text size={12} weight="bold" transform="uppercase">
+                  Average tip value (sats)
                 </Text>
-                <Text h1 color="white">
-                  1337 sats
+                <Text h1>
+                  {(
+                    scoreboard.totalSatsSent / scoreboard.numTipsSent
+                  ).toFixed()}{" "}
                 </Text>
               </Col>
             </Card.Header>
-            <Card.Image
-              src="https://nextui.org/images/card-example-2.jpeg"
-              objectFit="cover"
-              width="100%"
-              height={150}
-              alt="Card image background"
-            />
-          </Card>
-        </Grid>
-        <Grid xs={2} sm={3}>
-          <Card>
-            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
-              <Col>
-                <Text
-                  size={12}
-                  weight="bold"
-                  transform="uppercase"
-                  color="#ffffffAA"
-                >
-                  Number of people onboarded
-                </Text>
-                <Text h1 color="white">
-                  21
-                </Text>
-              </Col>
-            </Card.Header>
-            <Card.Image
-              src="https://nextui.org/images/card-example-2.jpeg"
-              objectFit="cover"
-              width="100%"
-              height={150}
-              alt="Card image background"
-            />
           </Card>
         </Grid>
       </Grid.Container>
-
-      {/* <Row justify="center" align="center">
-        <Badge color="success">
-          {scoreboard.numUsersOnboarded} onboarded🚀
-        </Badge>
-        <Spacer x={0.5} />
-        <Badge color="success">{scoreboard.numTipsSent} tips sent🧡</Badge>
-        <Spacer x={0.5} />
-        <Badge color="success">{scoreboard.totalSatsSent} sats sent⚡</Badge>
-      </Row> */}
+      <Spacer />
 
       <Spacer />
       {/* mobile view */}
@@ -239,21 +165,25 @@ const Scoreboard: NextPage = () => {
       {/* desktop view */}
       <Grid.Container justify="center" xs={0} sm={12}>
         <Grid xs={12} justify="center">
-          <Row justify="space-between" align="center">
+          <Row
+            justify="space-between"
+            align="center"
+            css={{ paddingBottom: "0.5em", fontWeight: "$bold" }}
+          >
             <Row justify="center" align="center">
-              <Badge>Placing</Badge>
+              #
             </Row>
             <Row justify="flex-start" align="center">
-              <Badge>Tipper</Badge>
+              Tipper
             </Row>
             <Row justify="center" align="center">
-              <Badge>Sats Donated</Badge>
+              Sats Donated
             </Row>
             <Row justify="center" align="center">
-              <Badge>#Tips Sent</Badge>
+              # of tips
             </Row>
             <Row justify="center" align="center">
-              <Badge>Success Rate</Badge>
+              Success Rate
             </Row>
           </Row>
         </Grid>
@@ -308,23 +238,13 @@ const Scoreboard: NextPage = () => {
                   )}
                 </Row>
                 <Row justify="center" align="center">
-                  <Badge color="success">{scoreboardEntry.satsSent}⚡</Badge>
+                  {scoreboardEntry.satsSent}
                 </Row>
                 <Row justify="center" align="center">
-                  <Badge color="success">{scoreboardEntry.numTipsSent}🧡</Badge>
+                  {scoreboardEntry.numTipsSent}
                 </Row>
                 <Row justify="center" align="center">
-                  <Badge
-                    style={{
-                      background: `rgba(${Math.floor(
-                        (1 - scoreboardEntry.successRate) * 255
-                      )},${Math.floor(
-                        scoreboardEntry.successRate * 255
-                      )},0, 1)`,
-                    }}
-                  >
-                    {(scoreboardEntry.successRate * 100).toFixed(2)}%
-                  </Badge>
+                  {(scoreboardEntry.successRate * 100).toFixed(2)}%
                 </Row>
               </Row>
             </Grid>

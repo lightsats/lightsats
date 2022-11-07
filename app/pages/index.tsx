@@ -35,8 +35,8 @@ const Home: NextPage = () => {
           {user?.userType === "tipper" ? (
             <>
               <Alert>
-                ⚠️ This project is currently in BETA, don&apos;t be too
-                reckless.
+                ⚠️ This project is currently in BETA, don&apos;t put more funds
+                into this service than you are willing to lose.
               </Alert>
               <Spacer />
               <NewTipButton />

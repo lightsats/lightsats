@@ -14,7 +14,6 @@ import {
   Link,
   Navbar,
   Spacer,
-  Text,
 } from "@nextui-org/react";
 import { User } from "@prisma/client";
 import { Icon } from "components/Icon";
@@ -169,15 +168,9 @@ export function AppNavbar() {
                 onAction={(actionKey) => console.log({ actionKey })}
               >
                 <Dropdown.Item key="profile">
-                  <Text b>{user.email}</Text>
-                </Dropdown.Item>
-                <Dropdown.Item key="profile" withDivider>
-                  <NextLink href={Routes.profile}>
+                  <NextLink href={Routes.profile} passHref>
                     <a>Profile</a>
                   </NextLink>
-                </Dropdown.Item>
-                <Dropdown.Item key="help_and_feedback">
-                  Help & Feedback
                 </Dropdown.Item>
                 <Dropdown.Item key="logout" withDivider color="error">
                   Log Out
