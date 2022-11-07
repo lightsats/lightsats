@@ -3,8 +3,6 @@ import {
   HomeIcon,
   InformationCircleIcon,
   LightBulbIcon,
-  PlusIcon,
-  UserIcon,
 } from "@heroicons/react/24/solid";
 import {
   Avatar,
@@ -62,24 +60,6 @@ export function AppNavbar() {
         href: Routes.home,
         icon: <HomeIcon />,
       },
-      ...(user?.userType === "tipper"
-        ? [
-            {
-              name: "New Tip",
-              href: Routes.newTip,
-              icon: <PlusIcon />,
-            },
-          ]
-        : []),
-      ...(user
-        ? [
-            {
-              name: "Profile",
-              href: Routes.profile,
-              icon: <UserIcon />,
-            },
-          ]
-        : []),
       {
         name: "Scoreboard",
         href: Routes.scoreboard,
@@ -187,7 +167,7 @@ export function AppNavbar() {
             Login
           </Navbar.Link>
           <Navbar.Item>
-            <NextLink href={Routes.signup}>
+            <NextLink href={Routes.signup} passHref>
               <a>
                 <Button auto flat>
                   Sign Up
