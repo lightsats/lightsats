@@ -2,6 +2,7 @@ import {
   Badge,
   Card,
   Col,
+  Container,
   Grid,
   Link,
   Loading,
@@ -27,7 +28,7 @@ const Scoreboard: NextPage = () => {
   }
 
   return (
-    <>
+    <Container lg>
       <Text h2>Scoreboard</Text>
       <Grid.Container gap={2}>
         <Grid xs={4}>
@@ -255,7 +256,7 @@ const Scoreboard: NextPage = () => {
           );
         })}
       </Grid.Container>
-    </>
+    </Container>
   );
 };
 
