@@ -23,6 +23,7 @@
     "db:push:production": "dotenv -e .env.production -- yarn prisma db push",
     "db:migrate:resolve:production": "dotenv -e .env.production -- prisma migrate resolve --applied init",
     "db:migrate:deploy:production": "dotenv -e .env.production -- prisma migrate deploy",
+    "db:connect:local": "psql postgres://user:password@localhost:5432/lightsats",
     "db:connect:staging": "flyctl postgres connect -a lightsats-db",
     "deploy:staging": "fly deploy -c fly-staging.toml",
     "deploy:production": "cli-confirm \"Do you really want to do a production deployment?\" && fly deploy -c fly-production.toml",

@@ -25,7 +25,7 @@ import useSWR from "swr";
 import { ExchangeRates } from "types/ExchangeRates";
 import { PublicTip } from "types/PublicTip";
 
-const WhatIsBitcoinPage: NextPage = () => {
+const ClaimedPage: NextPage = () => {
   const session = useSession();
   const { data: tips } = useSWR<Tip[]>(
     session ? `/api/tippee/tips` : null,
@@ -56,7 +56,7 @@ const WhatIsBitcoinPage: NextPage = () => {
   );
 };
 
-export default WhatIsBitcoinPage;
+export default ClaimedPage;
 
 type ClaimedTipCardProps = { tip: Tip };
 // this is inefficient as it does 1 call per tipper, but most users will probably only have one tipper

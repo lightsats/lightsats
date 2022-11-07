@@ -2,13 +2,15 @@ import {
   Button,
   Checkbox,
   Input,
+  Link,
   Loading,
   Spacer,
   Text,
   User as NextUIUser,
 } from "@nextui-org/react";
-import { User } from "@prisma/client";
+import { Tip, User } from "@prisma/client";
 import { BackButton } from "components/BackButton";
+import { NextLink } from "components/NextLink";
 import { appName, DEFAULT_NAME, MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -20,6 +22,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR, { KeyedMutator } from "swr";
+import { TransitionUserRequest } from "types/TransitionUserRequest";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
 
 type ProfileFormData = {
@@ -47,11 +50,111 @@ const Profile: NextPage = () => {
     return null;
   }
   return (
-    <ProfileInternal mutateUser={mutateUser} session={session} user={user} />
+    <>
+      {user.userType === "tipper" ? (
+        <TipperProfile mutateUser={mutateUser} session={session} user={user} />
+      ) : (
+        <TippeeProfile mutateUser={mutateUser} session={session} user={user} />
+      )}
+    </>
   );
 };
 
-function ProfileInternal({
+function TippeeProfile({
+  mutateUser,
+  session,
+  user,
+}: {
+  mutateUser: KeyedMutator<User>;
+  session: Session;
+  user: User;
+}) {
+  const router = useRouter();
+  // TODO: remove (use nav)
+  const executeSignout = React.useCallback(() => {
+    signOut({
+      redirect: false,
+    });
+    router.push(Routes.home);
+  }, [router]);
+
+  const { data: tips } = useSWR<Tip[]>(
+    session ? `/api/tippee/tips` : null,
+    defaultFetcher
+  );
+  const hasWithdrawnTip = tips?.some((tip) => tip.status === "WITHDRAWN");
+  const [isSubmitting, setSubmitting] = React.useState(false);
+
+  const becomeTipper = React.useCallback(() => {
+    if (isSubmitting) {
+      throw new Error("Already submitting");
+    }
+    setSubmitting(true);
+
+    (async () => {
+      const transitionRequest: TransitionUserRequest = {
+        to: "tipper",
+      };
+      const result = await fetch(`/api/users/${user.id}/transition`, {
+        method: "POST",
+        body: JSON.stringify(transitionRequest),
+        headers: { "Content-Type": "application/json" },
+      });
+      if (result.ok) {
+        await mutateUser();
+      } else {
+        alert("Failed to update profile: " + result.statusText);
+      }
+      setSubmitting(false);
+    })();
+  }, [isSubmitting, mutateUser, user.id]);
+
+  return (
+    <>
+      <Text
+        style={{
+          wordBreak: "break-all",
+          textAlign: "center",
+        }}
+      >
+        Logged in as {session.user.email ?? session.user.lnurlPublicKey}
+      </Text>
+      <Spacer />
+      <Button color="error" size="xs" onClick={executeSignout}>
+        Sign out
+      </Button>
+      {!hasWithdrawnTip && (
+        <>
+          <Spacer />
+
+          <Text>
+            {"It looks like you haven't completed your withdrawal yet."}
+          </Text>
+          <NextLink href={Routes.journeyClaimed} passHref>
+            <Link css={{ display: "inline" }}>Complete withdrawal</Link>
+          </NextLink>
+        </>
+      )}
+      <Spacer />
+
+      <Text>Orange pill your friends!</Text>
+      <Button
+        color="primary"
+        size="lg"
+        onClick={becomeTipper}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <Loading type="points" color="currentColor" size="sm" />
+        ) : (
+          <>Become a Tipper</>
+        )}
+      </Button>
+    </>
+  );
+}
+
+function TipperProfile({
   mutateUser,
   session,
   user,
@@ -76,6 +179,7 @@ function ProfileInternal({
     setFocus("name");
   }, [setFocus]);
 
+  // TODO: remove (use nav)
   const executeSignout = React.useCallback(() => {
     signOut({
       redirect: false,

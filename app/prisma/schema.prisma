@@ -70,6 +70,7 @@ model User {
   inJourney Boolean @default(false)
 
   roles UserRole[]
+  userType UserType @default(tipper)
 }
 
 model Tip {
@@ -187,4 +188,9 @@ enum WithdrawalMethod {
 
 enum RoleType {
   SUPERADMIN
+}
+
+enum UserType {
+  tipper
+  tippee
 }

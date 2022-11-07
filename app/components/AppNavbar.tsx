@@ -63,13 +63,17 @@ export function AppNavbar() {
         href: Routes.home,
         icon: <HomeIcon />,
       },
-      ...(session
+      ...(user?.userType === "tipper"
         ? [
             {
               name: "New Tip",
               href: Routes.newTip,
               icon: <PlusIcon />,
             },
+          ]
+        : []),
+      ...(user
+        ? [
             {
               name: "Profile",
               href: Routes.profile,
@@ -93,7 +97,7 @@ export function AppNavbar() {
         icon: <LightBulbIcon />,
       },
     ],
-    [session]
+    [user]
   );
 
   return (
@@ -116,7 +120,7 @@ export function AppNavbar() {
                   : closeNavbar
               }
             >
-              <Image src="/images/logo.svg" width={150} />
+              <Image alt="logo" src="/images/logo.svg" width={150} />
             </a>
           </NextLink>
         </Navbar.Brand>
@@ -127,7 +131,7 @@ export function AppNavbar() {
             <Navbar.Link href={Routes.about}>About</Navbar.Link>
           </>
         )}
-        {user && !hideNavbar && (
+        {user?.userType === "tipper" && !hideNavbar && (
           <Navbar.Item hideIn="xs">
             <NextLink href={Routes.newTip}>
               <a>

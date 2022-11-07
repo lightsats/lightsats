@@ -40,7 +40,9 @@ export function getUserAvatarUrl(user: User | undefined) {
   return getAvatarUrl(user?.avatarURL ?? undefined, getFallbackAvatarId(user));
 }
 export function getAvatarUrl(avatarUrl: string | undefined, fallbackId = "1") {
-  return avatarUrl?.length ? avatarUrl : `https://robohash.org/${fallbackId}`;
+  return avatarUrl?.length
+    ? avatarUrl
+    : `https://avatars.dicebear.com/api/miniavs/${fallbackId}.svg`;
 }
 
 // from https://stackoverflow.com/a/34842797/4562693
