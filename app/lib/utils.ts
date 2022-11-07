@@ -72,4 +72,4 @@ export const getItemImageLocation = (item: Item) =>
   `/items/${item.category}/${item.image}`;
 
 export const getLocalePath = (locale = DEFAULT_LOCALE) =>
-  locale !== DEFAULT_LOCALE ? `${locale}/` : "";
+  locale !== DEFAULT_LOCALE ? `/${locale}` : "";

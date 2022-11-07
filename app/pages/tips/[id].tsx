@@ -55,7 +55,7 @@ const TipPage: NextPage = () => {
 
   const claimUrl =
     global.window && tip
-      ? `${window.location.origin}/${getLocalePath(tip.tippeeLocale)}${
+      ? `${window.location.origin}${getLocalePath(tip.tippeeLocale)}${
           Routes.tips
         }/${id}/claim`
       : undefined;
