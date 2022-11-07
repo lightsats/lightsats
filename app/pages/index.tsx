@@ -92,7 +92,7 @@ function TippeeHomepage() {
     <ClaimedPage />
   ) : (
     <>
-      <Text>{"It looks like you don't have any gifts right now."}</Text>
+      <Text>{"It looks like you don't have any tips right now."}</Text>
     </>
   );
 }
