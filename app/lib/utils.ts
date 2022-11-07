@@ -1,6 +1,7 @@
 import { User } from "@prisma/client";
 import { format } from "date-fns";
 import { FEE_PERCENT, MINIMUM_FEE_SATS, SATS_TO_BTC } from "lib/constants";
+import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { MouseEventHandler } from "react";
 import { Item } from "types/Item";
 
@@ -69,3 +70,6 @@ export const stringifyError = (error: Error) =>
 
 export const getItemImageLocation = (item: Item) =>
   `/items/${item.category}/${item.image}`;
+
+export const getLocalePath = (locale = DEFAULT_LOCALE) =>
+  locale !== DEFAULT_LOCALE ? `/${locale}` : "";

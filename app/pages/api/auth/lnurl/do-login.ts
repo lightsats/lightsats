@@ -26,23 +26,6 @@ export default async function handler(
     res.status(StatusCodes.BAD_REQUEST).end();
     return;
   }
-  const lnurlPublicKey = key as string;
-
-  // check if a user exists, if not create one
-  const user = await prisma.user.findUnique({
-    where: {
-      lnurlPublicKey,
-    },
-  });
-
-  console.log("User " + lnurlPublicKey + " exists: " + !!user);
-  if (!user) {
-    await prisma.user.create({
-      data: {
-        lnurlPublicKey,
-      },
-    });
-  }
 
   await prisma.lnurlAuthKey.update({
     where: {

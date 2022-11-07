@@ -24,8 +24,8 @@ import {
   MINIMUM_FEE_SATS,
   MIN_TIP_SATS,
 } from "lib/constants";
-import { getNativeLanguageName } from "lib/iso6391";
-import { DEFAULT_LOCALE, locales } from "lib/locales";
+import { getNativeLanguageName } from "lib/i18n/iso6391";
+import { DEFAULT_LOCALE, locales } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { calculateFee, getFiatAmount, getSatsAmount } from "lib/utils";
