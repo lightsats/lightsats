@@ -126,7 +126,6 @@ export function AppNavbar() {
         <LanguagePicker />
         {!user && !hideNavbar && (
           <>
-            <Navbar.Link href={Routes.features}>Features</Navbar.Link>
             <Navbar.Link href={Routes.about}>About</Navbar.Link>
           </>
         )}
@@ -162,11 +161,7 @@ export function AppNavbar() {
                   />
                 </Dropdown.Trigger>
               </Navbar.Item>
-              <Dropdown.Menu
-                aria-label="User menu actions"
-                color="default"
-                onAction={(actionKey) => console.log({ actionKey })}
-              >
+              <Dropdown.Menu aria-label="User menu actions">
                 <Dropdown.Item key="profile">
                   <NextLink href={Routes.profile} passHref>
                     <a>Profile</a>

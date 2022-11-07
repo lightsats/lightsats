@@ -65,14 +65,16 @@ export default function LnurlAuthSignIn() {
           <Spacer />
           <NextLink href={`lightning:${qr.encoded}`}>
             <a>
-              <Button color="gradient" size="lg">
-                Click to connect
-              </Button>
+              <Button size="lg">Click to connect</Button>
             </a>
           </NextLink>
         </>
       ) : (
-        <Loading type="gradient" />
+        <>
+          <Spacer />
+          <Loading type="default" />
+          Generating QR code...
+        </>
       )}
     </>
   );

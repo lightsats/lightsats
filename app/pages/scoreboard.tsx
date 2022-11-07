@@ -28,9 +28,9 @@ const Scoreboard: NextPage = () => {
   }
 
   return (
-    <Container>
+    <Container md>
       <Text h2>Scoreboard</Text>
-      <Grid.Container gap={1}>
+      <Grid.Container gap={2}>
         <Grid xs={4}>
           <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
             <Card.Header>
@@ -72,8 +72,6 @@ const Scoreboard: NextPage = () => {
           </Card>
         </Grid>
       </Grid.Container>
-      <Spacer />
-
       <Spacer />
       {/* mobile view */}
       <Grid.Container

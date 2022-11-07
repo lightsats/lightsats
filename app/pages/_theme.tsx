@@ -14,7 +14,6 @@ const theme = createTheme({
       warningText: "#664d03",
       warningBorder: "#ffecb5",
 
-      gradient: "linear-gradient(to right, #f7b733, #fc4a1a);",
       link: "#2E74ED",
       text: "#333",
     },
