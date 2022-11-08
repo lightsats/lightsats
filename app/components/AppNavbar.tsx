@@ -49,7 +49,7 @@ const closeNavbar = () => {
 };
 
 export function AppNavbar() {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const { data: user } = useSWR<User>(
     session ? `/api/users/${session.user.id}` : null,
     defaultFetcher
@@ -100,6 +100,10 @@ export function AppNavbar() {
     ],
     [user]
   );
+
+  if (sessionStatus === "loading" || (session && !user)) {
+    return null;
+  }
 
   return (
     <Navbar variant="sticky" css={{ background: "$white" }}>
@@ -184,7 +188,7 @@ export function AppNavbar() {
                 <Dropdown.Item key="profile">
                   <NextLink href={Routes.profile} passHref>
                     <a>
-                      <Text>Profile</Text>
+                      <Text color="primary">Profile</Text>
                     </a>
                   </NextLink>
                 </Dropdown.Item>
