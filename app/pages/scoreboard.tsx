@@ -2,7 +2,6 @@ import {
   Badge,
   Card,
   Col,
-  Container,
   Grid,
   Link,
   Loading,
@@ -24,13 +23,13 @@ const Scoreboard: NextPage = () => {
     defaultFetcher
   );
   if (!scoreboard) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading type="spinner" color="currentColor" size="lg" />;
   }
 
   return (
-    <Container>
+    <>
       <Text h2>Scoreboard</Text>
-      <Grid.Container gap={1}>
+      <Grid.Container gap={2}>
         <Grid xs={4}>
           <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
             <Card.Header>
@@ -73,8 +72,6 @@ const Scoreboard: NextPage = () => {
         </Grid>
       </Grid.Container>
       <Spacer />
-
-      <Spacer />
       {/* mobile view */}
       <Grid.Container
         gap={2}
@@ -89,27 +86,27 @@ const Scoreboard: NextPage = () => {
               key={i}
               justify="center"
               style={{
-                paddingLeft: 0,
-                paddingRight: 0,
+                width: "100%",
               }}
             >
-              <Card>
+              <Card
+                variant="flat"
+                css={{
+                  backgroundColor:
+                    i === 0
+                      ? "$gold"
+                      : i === 1
+                      ? "$silver"
+                      : i === 2
+                      ? "$bronze"
+                      : "$accents0",
+                }}
+              >
                 <Card.Body>
-                  <Row align="center">
-                    <Badge
-                      style={{
-                        background:
-                          i === 0
-                            ? "#AF9500"
-                            : i === 1
-                            ? "#D7D7D7"
-                            : i === 2
-                            ? "#6A3805"
-                            : "#666",
-                      }}
-                    >
+                  <Row align="center" justify="space-between">
+                    <Text size={22} b>
                       #{i + 1}
-                    </Badge>
+                    </Text>
                     <NextUIUser
                       name={scoreboardEntry.name ?? "anon"}
                       src={getAvatarUrl(
@@ -130,23 +127,20 @@ const Scoreboard: NextPage = () => {
                         />
                       </Link>
                     )}
+                    <Text b size="$xl">
+                      {scoreboardEntry.satsSent} sats
+                    </Text>
                   </Row>
                   <Spacer />
-                  <Row>
-                    <Badge color="success">
-                      {scoreboardEntry.satsSent} sats⚡
-                    </Badge>
-                    <Spacer x={0.5} />
-                    <Badge color="success">
-                      {scoreboardEntry.numTipsSent} tips🧡
-                    </Badge>
+                  <Row justify="center">
+                    <Badge>{scoreboardEntry.numTipsSent} tips🧡</Badge>
                     <Spacer x={0.5} />
                     <Badge
                       style={{
                         background: `rgba(${Math.floor(
-                          (1 - scoreboardEntry.successRate) * 255
+                          (1 - scoreboardEntry.successRate) * 220
                         )},${Math.floor(
-                          scoreboardEntry.successRate * 255
+                          scoreboardEntry.successRate * 220
                         )},0, 1)`,
                       }}
                     >
@@ -177,13 +171,13 @@ const Scoreboard: NextPage = () => {
               Tipper
             </Row>
             <Row justify="center" align="center">
-              Sats Donated
+              Sats donated
             </Row>
             <Row justify="center" align="center">
               # of tips
             </Row>
             <Row justify="center" align="center">
-              Success Rate
+              Success rate
             </Row>
           </Row>
         </Grid>
@@ -193,23 +187,33 @@ const Scoreboard: NextPage = () => {
               <Row
                 justify="space-between"
                 align="center"
-                style={{
-                  background: i % 2 === 0 ? "#f5f5f5" : "#fafafa",
+                css={{
+                  backgroundColor:
+                    i === 0
+                      ? "$gold"
+                      : i === 1
+                      ? "$silver"
+                      : i === 2
+                      ? "$bronze"
+                      : i % 2 === 0
+                      ? "$accents0"
+                      : "$accents1",
                   paddingTop: "10px",
                   paddingBottom: "10px",
+                  marginBottom: i === 2 ? 20 : 0,
                 }}
               >
                 <Row justify="center" align="center">
                   <Badge
-                    style={{
+                    css={{
                       background:
                         i === 0
-                          ? "#AF9500"
+                          ? "$gold"
                           : i === 1
-                          ? "#D7D7D7"
+                          ? "$silver"
                           : i === 2
-                          ? "#6A3805"
-                          : "#666",
+                          ? "$bronze"
+                          : "$gray800",
                     }}
                   >
                     #{i + 1}
@@ -251,7 +255,7 @@ const Scoreboard: NextPage = () => {
           );
         })}
       </Grid.Container>
-    </Container>
+    </>
   );
 };
 

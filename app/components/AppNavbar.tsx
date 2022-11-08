@@ -100,7 +100,7 @@ export function AppNavbar() {
   );
 
   return (
-    <Navbar variant="sticky">
+    <Navbar variant="sticky" css={{ background: "$white" }}>
       <Navbar.Content>
         {!hideNavbar && (
           <Navbar.Toggle
@@ -122,12 +122,13 @@ export function AppNavbar() {
               <Image alt="logo" src="/images/logo.svg" width={150} />
             </a>
           </NextLink>
+          <LanguagePicker />
         </Navbar.Brand>
-        <LanguagePicker />
         {!user && !hideNavbar && (
           <>
-            <Navbar.Link href={Routes.features}>Features</Navbar.Link>
-            <Navbar.Link href={Routes.about}>About</Navbar.Link>
+            <Navbar.Link href={Routes.about} hideIn="xs">
+              About
+            </Navbar.Link>
           </>
         )}
         {user?.userType === "tipper" && !hideNavbar && (
@@ -162,14 +163,12 @@ export function AppNavbar() {
                   />
                 </Dropdown.Trigger>
               </Navbar.Item>
-              <Dropdown.Menu
-                aria-label="User menu actions"
-                color="default"
-                onAction={(actionKey) => console.log({ actionKey })}
-              >
+              <Dropdown.Menu aria-label="User menu actions">
                 <Dropdown.Item key="profile">
                   <NextLink href={Routes.profile} passHref>
-                    <Link>Profile</Link>
+                    <a>
+                      <Link>Profile</Link>
+                    </a>
                   </NextLink>
                 </Dropdown.Item>
                 <Dropdown.Item key="logout" withDivider>
@@ -184,7 +183,9 @@ export function AppNavbar() {
       )}
       {!user && (
         <Navbar.Content>
-          <Navbar.Link href={Routes.login}>Login</Navbar.Link>
+          <Navbar.Link href={Routes.login} hideIn="xs">
+            Login
+          </Navbar.Link>
           <Navbar.Item hideIn="xs">
             <NextLink href={Routes.signup}>
               <a>
