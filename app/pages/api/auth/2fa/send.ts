@@ -1,11 +1,11 @@
 import { StatusCodes } from "http-status-codes";
-import { Routes } from "lib/Routes";
-import type { NextApiRequest, NextApiResponse } from "next";
-// import i18nconfig from "next-i18next.config";
 import jwt from "jsonwebtoken";
 import { getApiI18n } from "lib/i18n/api";
+import { Routes } from "lib/Routes";
 import { getLocalePath } from "lib/utils";
+import type { NextApiRequest, NextApiResponse } from "next";
 import * as nodemailer from "nodemailer";
+import twilio from "twilio";
 import { TwoFactorAuthToken } from "types/TwoFactorAuthToken";
 import { TwoFactorLoginRequest } from "types/TwoFactorLoginRequest";
 
@@ -19,10 +19,25 @@ if (
   throw new Error("Email config not setup. Please see .env.example");
 }
 
+let twilioClient: twilio.Twilio | undefined;
+
+if (
+  !process.env.TWILIO_ACCOUNT_SID ||
+  !process.env.TWILIO_AUTH_TOKEN ||
+  !process.env.TWILIO_PHONE_NUMBER ||
+  !process.env.TWILIO_MESSAGING_SERVICE_SID
+) {
+  console.warn("SMS config not setup. Please see .env.example");
+} else {
+  twilioClient = twilio(
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN
+  );
+}
+
 const transport = nodemailer.createTransport({
   host: process.env.EMAIL_SERVER_HOST,
   port: parseInt(process.env.EMAIL_SERVER_PORT),
-  // secure: true, // use SSL
   auth: {
     user: process.env.EMAIL_SERVER_USER,
     pass: process.env.EMAIL_SERVER_PASSWORD,
@@ -41,6 +56,8 @@ export default async function handler(
   const i18n = await getApiI18n(twoFactorLoginRequest.locale);
   const twoFactorAuthToken: TwoFactorAuthToken = {
     email: twoFactorLoginRequest.email,
+    phoneNumber: twoFactorLoginRequest.phoneNumber,
+    callbackUrl: twoFactorLoginRequest.callbackUrl,
   };
   const token = jwt.sign(twoFactorAuthToken, process.env.NEXTAUTH_SECRET, {
     expiresIn: "30 days",
@@ -48,25 +65,47 @@ export default async function handler(
 
   const verifyUrl = `${process.env.APP_URL}${getLocalePath(
     twoFactorLoginRequest.locale
-  )}${Routes.verifySignin}?callbackUrl=${encodeURIComponent(
-    twoFactorLoginRequest.callbackUrl
-  )}&token=${token}`;
+  )}${Routes.verifySignin}/${token}`;
 
-  try {
-    transport.sendMail({
-      to: twoFactorLoginRequest.email,
-      subject: i18n("common:verifyEmailSubject"),
-      html: i18n("common:verifyEmailMessage", {
-        verifyUrl,
-      }) as string,
-      from: `Lightsats <${process.env.EMAIL_FROM}>`,
-    });
-    res.status(StatusCodes.NO_CONTENT).end();
-  } catch (error) {
-    console.error(
-      "Failed to send email to " + twoFactorLoginRequest.email,
-      error
-    );
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+  if (twoFactorLoginRequest.email) {
+    try {
+      transport.sendMail({
+        to: twoFactorLoginRequest.email,
+        subject: i18n("common:verifyEmailSubject"),
+        html: i18n("common:verifyEmailMessage", {
+          verifyUrl,
+        }) as string,
+        from: `Lightsats <${process.env.EMAIL_FROM}>`,
+      });
+      res.status(StatusCodes.NO_CONTENT).end();
+    } catch (error) {
+      console.error(
+        "Failed to send email to " + twoFactorLoginRequest.email,
+        error
+      );
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+    }
+  } else if (twoFactorLoginRequest.phoneNumber) {
+    try {
+      if (!twilioClient) {
+        throw new Error("SMS config not setup. Please see .env.example");
+      }
+      await twilioClient.messages.create({
+        to: twoFactorLoginRequest.phoneNumber,
+        from: process.env.TWILIO_PHONE_NUMBER, // TODO: consider Alphanumeric Sender ID ("Lightsats")
+        body: i18n("common:verifyPhoneMessage") + " " + verifyUrl,
+        messagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID,
+      });
+
+      res.status(StatusCodes.NO_CONTENT).end();
+    } catch (error) {
+      console.error(
+        "Failed to send SMS to " + twoFactorLoginRequest.phoneNumber,
+        error
+      );
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+    }
+  } else {
+    res.status(StatusCodes.BAD_REQUEST).end();
   }
 }

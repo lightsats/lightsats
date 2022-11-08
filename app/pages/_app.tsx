@@ -6,8 +6,8 @@ import Head from "next/head";
 
 import AppErrorBoundary from "components/AppErrorBoundary";
 import { appWithTranslation } from "next-i18next";
-import theme from "pages/_theme";
 import "styles/globals.css";
+import theme from "theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

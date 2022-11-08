@@ -50,7 +50,33 @@ const Profile: NextPage = () => {
     return null;
   }
   return (
+    <ProfileInternal mutateUser={mutateUser} session={session} user={user} />
+  );
+};
+
+type ProfileInternalProps = {
+  mutateUser: KeyedMutator<User>;
+  session: Session;
+  user: User;
+};
+
+function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
+  return (
     <>
+      <NextUIUser
+        src={getUserAvatarUrl(user)}
+        name={user.name ?? DEFAULT_NAME}
+      />
+      <Spacer />
+      <Text
+        style={{
+          wordBreak: "break-all",
+          textAlign: "center",
+        }}
+      >
+        Logged in as {user.email ?? user.phoneNumber ?? user.lnurlPublicKey}
+      </Text>
+
       {user.userType === "tipper" ? (
         <TipperProfile mutateUser={mutateUser} session={session} user={user} />
       ) : (
@@ -58,17 +84,9 @@ const Profile: NextPage = () => {
       )}
     </>
   );
-};
+}
 
-function TippeeProfile({
-  mutateUser,
-  session,
-  user,
-}: {
-  mutateUser: KeyedMutator<User>;
-  session: Session;
-  user: User;
-}) {
+function TippeeProfile({ mutateUser, session, user }: ProfileInternalProps) {
   const { data: tips } = useSWR<Tip[]>(
     session ? `/api/tippee/tips` : null,
     defaultFetcher
@@ -102,18 +120,8 @@ function TippeeProfile({
 
   return (
     <>
-      <Text
-        style={{
-          wordBreak: "break-all",
-          textAlign: "center",
-        }}
-      >
-        Logged in as {session.user.email ?? session.user.lnurlPublicKey}
-      </Text>
       {!hasWithdrawnTip && (
         <>
-          <Spacer />
-
           <Text>
             {"It looks like you haven't completed your withdrawal yet."}
           </Text>
@@ -122,8 +130,6 @@ function TippeeProfile({
           </NextLink>
         </>
       )}
-      <Spacer />
-
       <Text>Orange pill your friends!</Text>
       <Button
         color="primary"
@@ -141,15 +147,7 @@ function TippeeProfile({
   );
 }
 
-function TipperProfile({
-  mutateUser,
-  session,
-  user,
-}: {
-  mutateUser: KeyedMutator<User>;
-  session: Session;
-  user: User;
-}) {
+function TipperProfile({ mutateUser, session, user }: ProfileInternalProps) {
   const router = useRouter();
   const [isSubmitting, setSubmitting] = React.useState(false);
 
@@ -199,20 +197,6 @@ function TipperProfile({
 
   return (
     <>
-      <NextUIUser
-        src={getUserAvatarUrl(user)}
-        name={user.name ?? DEFAULT_NAME}
-      />
-      <Spacer />
-      <Text
-        style={{
-          wordBreak: "break-all",
-          textAlign: "center",
-        }}
-      >
-        Logged in as {session.user.email ?? session.user.lnurlPublicKey}
-      </Text>
-      <Spacer />
       <Text style={{ textAlign: "center" }}>
         Fill out the fields below to increase the authenticity of your tips and
         provide a way for tippees to contact you.

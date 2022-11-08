@@ -1,9 +1,12 @@
 {
   "email": "อีเมล",
+  "phone": "Phone",
   "loginWithLightning": "เข้าสู่ระบบด้วย Lightning",
   "or": "หรือ",
   "verifyEmailSubject": "ยืนยันอีเมลของคุณ",
   "verifyEmailMessage": "กรุณาคลิกที่ลิงค์ต่อไปนี้เพื่อเข้าสู่ระบบ: <a href=\"{{verifyUrl}}\">ยืนยัน</a>",
+  "verifyPhoneMessage": "Lightsats login",
   "codeSent": "ส่งรหัสยืนยันแล้ว",
-  "checkEmail": "กรุณาตรวจสอบข้อความอีเมลของคุณ"
+  "checkEmail": "กรุณาตรวจสอบข้อความอีเมลของคุณ",
+  "checkSMS": "Check your messages"
 }

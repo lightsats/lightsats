@@ -12,8 +12,10 @@ import {
   Link,
   Navbar,
   Spacer,
+  Text,
 } from "@nextui-org/react";
 import { User } from "@prisma/client";
+import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { LanguagePicker } from "components/LanguagePicker";
 import { NextLink } from "components/NextLink";
@@ -45,13 +47,13 @@ const closeNavbar = () => {
 };
 
 export function AppNavbar() {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const { data: user } = useSWR<User>(
     session ? `/api/users/${session.user.id}` : null,
     defaultFetcher
   );
   const router = useRouter();
-  const hideNavbar = router.pathname.endsWith("/claim") || user?.inJourney;
+  const hideNavbar = router.pathname.endsWith("/claim"); // || user?.inJourney;
 
   const collapseItems: CollapseItem[] = React.useMemo(
     () => [
@@ -79,6 +81,10 @@ export function AppNavbar() {
     [user]
   );
 
+  if (sessionStatus === "loading" || (session && !user)) {
+    return null;
+  }
+
   return (
     <Navbar variant="sticky" css={{ background: "$white" }}>
       <Navbar.Content>
@@ -102,7 +108,6 @@ export function AppNavbar() {
               <Image alt="logo" src="/images/logo.svg" width={150} />
             </a>
           </NextLink>
-          <LanguagePicker />
         </Navbar.Brand>
         {!user && !hideNavbar && (
           <>
@@ -143,17 +148,35 @@ export function AppNavbar() {
                   />
                 </Dropdown.Trigger>
               </Navbar.Item>
-              <Dropdown.Menu aria-label="User menu actions">
+              <Dropdown.Menu
+                aria-label="User menu actions"
+                disabledKeys={["language"]}
+              >
+                <Dropdown.Item key="language">
+                  <FlexBox
+                    style={{
+                      flexDirection: "row",
+
+                      width: "100%",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    Language&nbsp;
+                    <LanguagePicker />
+                  </FlexBox>
+                </Dropdown.Item>
                 <Dropdown.Item key="profile">
                   <NextLink href={Routes.profile} passHref>
                     <a>
-                      <Link>Profile</Link>
+                      <Text color="primary">Profile</Text>
                     </a>
                   </NextLink>
                 </Dropdown.Item>
                 <Dropdown.Item key="logout" withDivider>
                   <NextLink href={Routes.logout} passHref>
-                    <Link color="error">Log Out</Link>
+                    <a>
+                      <Text color="error">Log Out</Text>
+                    </a>
                   </NextLink>
                 </Dropdown.Item>
               </Dropdown.Menu>
@@ -163,10 +186,10 @@ export function AppNavbar() {
       )}
       {!user && (
         <Navbar.Content>
-          <Navbar.Link href={Routes.emailSignin} hideIn="xs">
+          <Navbar.Link href={Routes.login} hideIn="xs">
             Login
           </Navbar.Link>
-          <Navbar.Item>
+          <Navbar.Item hideIn="xs">
             <NextLink href={Routes.signup} passHref>
               <a>
                 <Button auto flat>
@@ -175,6 +198,7 @@ export function AppNavbar() {
               </a>
             </NextLink>
           </Navbar.Item>
+          <LanguagePicker />
         </Navbar.Content>
       )}
       <Navbar.Collapse>
