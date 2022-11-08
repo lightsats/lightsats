@@ -9,7 +9,7 @@ export enum Routes {
   logout = "/logout",
   scoreboard = "/scoreboard",
   emailSignin = "/auth/signin/email",
-  verifySignin = "/auth/signin/verify",
+  verifySignin = "/verify",
   lnurlAuthSignin = "/auth/signin/lnurl",
   checkEmail = "/auth/signin/email-sent",
   checkPhone = "/auth/signin/sms-sent",

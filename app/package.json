@@ -48,6 +48,7 @@
     "i18next-fs-backend": "^2.0.0",
     "iso-639-1": "^2.1.15",
     "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.1.2",
     "lnurl": "^0.24.2",
     "next": "12.3.1",
     "next-auth": "^4.13.0",

@@ -1,10 +1,9 @@
 import { StatusCodes } from "http-status-codes";
-import { Routes } from "lib/Routes";
-import type { NextApiRequest, NextApiResponse } from "next";
-// import i18nconfig from "next-i18next.config";
 import jwt from "jsonwebtoken";
 import { getApiI18n } from "lib/i18n/api";
+import { Routes } from "lib/Routes";
 import { getLocalePath } from "lib/utils";
+import type { NextApiRequest, NextApiResponse } from "next";
 import * as nodemailer from "nodemailer";
 import twilio from "twilio";
 import { TwoFactorAuthToken } from "types/TwoFactorAuthToken";
@@ -58,6 +57,7 @@ export default async function handler(
   const twoFactorAuthToken: TwoFactorAuthToken = {
     email: twoFactorLoginRequest.email,
     phoneNumber: twoFactorLoginRequest.phoneNumber,
+    callbackUrl: twoFactorLoginRequest.callbackUrl,
   };
   const token = jwt.sign(twoFactorAuthToken, process.env.NEXTAUTH_SECRET, {
     expiresIn: "30 days",
@@ -65,9 +65,7 @@ export default async function handler(
 
   const verifyUrl = `${process.env.APP_URL}${getLocalePath(
     twoFactorLoginRequest.locale
-  )}${Routes.verifySignin}?callbackUrl=${encodeURIComponent(
-    twoFactorLoginRequest.callbackUrl
-  )}&token=${token}`;
+  )}${Routes.verifySignin}/${token}`;
 
   if (twoFactorLoginRequest.email) {
     try {
@@ -94,10 +92,8 @@ export default async function handler(
       }
       await twilioClient.messages.create({
         to: twoFactorLoginRequest.phoneNumber,
-        from: process.env.TWILIO_PHONE_NUMBER,
-        body: i18n("common:verifyPhoneMessage", {
-          verifyUrl,
-        }) as string,
+        from: process.env.TWILIO_PHONE_NUMBER, // TODO: consider Alphanumeric Sender ID ("Lightsats")
+        body: i18n("common:verifyPhoneMessage") + " " + verifyUrl,
         messagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID,
       });
 

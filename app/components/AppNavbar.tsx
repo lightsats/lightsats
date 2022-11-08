@@ -122,7 +122,6 @@ export function AppNavbar() {
               <Image alt="logo" src="/images/logo.svg" width={150} />
             </a>
           </NextLink>
-          <LanguagePicker />
         </Navbar.Brand>
         {!user && !hideNavbar && (
           <>
@@ -178,11 +177,13 @@ export function AppNavbar() {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+            <LanguagePicker />
           </Navbar.Content>
         </>
       )}
       {!user && (
         <Navbar.Content>
+          <LanguagePicker />
           <Navbar.Link href={Routes.login} hideIn="xs">
             Login
           </Navbar.Link>

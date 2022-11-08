@@ -1,21 +1,22 @@
 import { Loading } from "@nextui-org/react";
+import jwt_decode from "jwt-decode";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { TwoFactorAuthToken } from "types/TwoFactorAuthToken";
 
 export default function Verify2FA() {
   const router = useRouter();
-  const { callbackUrl: encodedCallbackUrl, token } = router.query;
-  const callbackUrl = decodeURIComponent(encodedCallbackUrl as string);
+  const { token } = router.query;
 
   React.useEffect(() => {
-    if (callbackUrl && token) {
-      console.log("callbackUrl", callbackUrl);
+    if (token) {
+      const decodedToken = jwt_decode<TwoFactorAuthToken>(token as string);
       (async () => {
         try {
           const result = await signIn("2fa", {
             token,
-            callbackUrl,
+            callbackUrl: decodedToken.callbackUrl,
             redirect: false,
           });
 
@@ -30,7 +31,7 @@ export default function Verify2FA() {
         }
       })();
     }
-  }, [callbackUrl, router, token]);
+  }, [router, token]);
 
   return (
     <>
