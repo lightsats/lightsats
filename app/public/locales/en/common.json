@@ -1,5 +1,6 @@
 {
   "email": "Email",
+  "phone": "Phone",
   "loginWithLightning": "Login with Lightning",
   "or": "or",
   "verifyEmailSubject": "Verify your Lightsats email address",

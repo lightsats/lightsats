@@ -1,5 +1,6 @@
 {
   "email": "อีเมล",
+  "phone": "Phone",
   "loginWithLightning": "เข้าสู่ระบบด้วย Lightning",
   "or": "หรือ",
   "verifyEmailSubject": "ยืนยันอีเมลของคุณ",
