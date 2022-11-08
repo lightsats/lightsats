@@ -2,7 +2,6 @@ import {
   Badge,
   Card,
   Col,
-  Container,
   Grid,
   Link,
   Loading,
@@ -28,9 +27,9 @@ const Scoreboard: NextPage = () => {
   }
 
   return (
-    <Container lg>
+    <>
       <Text h2>Scoreboard</Text>
-      <Grid.Container gap={2}>
+      <Grid.Container gap={1} css={{ mx: 0, width: "100%" }}>
         <Grid xs={4}>
           <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
             <Card.Header>
@@ -38,7 +37,7 @@ const Scoreboard: NextPage = () => {
                 <Text size={12} weight="bold" transform="uppercase">
                   # Total tips sent
                 </Text>
-                <Text h1>{scoreboard.numTipsSent}</Text>
+                <Text h3>{scoreboard.numTipsSent}</Text>
               </Col>
             </Card.Header>
           </Card>
@@ -48,9 +47,9 @@ const Scoreboard: NextPage = () => {
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
-                  # of people onboarded
+                  # 🍊💊 people
                 </Text>
-                <Text h1>{scoreboard.numUsersOnboarded}</Text>
+                <Text h3>{scoreboard.numUsersOnboarded}</Text>
               </Col>
             </Card.Header>
           </Card>
@@ -60,13 +59,9 @@ const Scoreboard: NextPage = () => {
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
-                  Average tip value (sats)
+                  Total tip value
                 </Text>
-                <Text h1>
-                  {(
-                    scoreboard.totalSatsSent / scoreboard.numTipsSent
-                  ).toFixed()}{" "}
-                </Text>
+                <Text h3>{scoreboard.totalSatsSent.toFixed()} sats</Text>
               </Col>
             </Card.Header>
           </Card>
@@ -88,6 +83,7 @@ const Scoreboard: NextPage = () => {
               justify="center"
               style={{
                 width: "100%",
+                px: 0,
               }}
             >
               <Card
@@ -256,7 +252,7 @@ const Scoreboard: NextPage = () => {
           );
         })}
       </Grid.Container>
-    </Container>
+    </>
   );
 };
 
