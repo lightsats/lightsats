@@ -14,8 +14,10 @@ import {
   Link,
   Navbar,
   Spacer,
+  Text,
 } from "@nextui-org/react";
 import { User } from "@prisma/client";
+import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { LanguagePicker } from "components/LanguagePicker";
 import { NextLink } from "components/NextLink";
@@ -53,7 +55,7 @@ export function AppNavbar() {
     defaultFetcher
   );
   const router = useRouter();
-  const hideNavbar = router.pathname.endsWith("/claim") || user?.inJourney;
+  const hideNavbar = router.pathname.endsWith("/claim"); // || user?.inJourney;
 
   const collapseItems: CollapseItem[] = React.useMemo(
     () => [
@@ -162,28 +164,44 @@ export function AppNavbar() {
                   />
                 </Dropdown.Trigger>
               </Navbar.Item>
-              <Dropdown.Menu aria-label="User menu actions">
+              <Dropdown.Menu
+                aria-label="User menu actions"
+                disabledKeys={["language"]}
+              >
+                <Dropdown.Item key="language">
+                  <FlexBox
+                    style={{
+                      flexDirection: "row",
+
+                      width: "100%",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    Language&nbsp;
+                    <LanguagePicker />
+                  </FlexBox>
+                </Dropdown.Item>
                 <Dropdown.Item key="profile">
                   <NextLink href={Routes.profile} passHref>
                     <a>
-                      <Link>Profile</Link>
+                      <Text>Profile</Text>
                     </a>
                   </NextLink>
                 </Dropdown.Item>
                 <Dropdown.Item key="logout" withDivider>
                   <NextLink href={Routes.logout} passHref>
-                    <Link color="error">Log Out</Link>
+                    <a>
+                      <Text color="error">Log Out</Text>
+                    </a>
                   </NextLink>
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-            <LanguagePicker />
           </Navbar.Content>
         </>
       )}
       {!user && (
         <Navbar.Content>
-          <LanguagePicker />
           <Navbar.Link href={Routes.login} hideIn="xs">
             Login
           </Navbar.Link>
@@ -196,6 +214,7 @@ export function AppNavbar() {
               </a>
             </NextLink>
           </Navbar.Item>
+          <LanguagePicker />
         </Navbar.Content>
       )}
       <Navbar.Collapse>
