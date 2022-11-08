@@ -13,7 +13,11 @@ const AboutPage: NextPage = () => {
       <h2>Sign up</h2>
       <p>Choose your preferred way to sign up for Lightsats.</p>
       <Spacer />
-      <Button href={Routes.emailSignin}>📧 Email</Button>
+      <NextLink href={Routes.emailSignin}>
+        <a>
+          <Button>📧 Email</Button>
+        </a>
+      </NextLink>
       <Text>or</Text>
       <NextLink href={Routes.lnurlAuthSignin} passHref>
         <Link>
@@ -22,7 +26,9 @@ const AboutPage: NextPage = () => {
       </NextLink>
       <Spacer />
       Already have an account?
-      <Link href={Routes.login}>Sign in</Link>
+      <NextLink href={Routes.login} passHref>
+        <Link>Sign in</Link>
+      </NextLink>
     </>
   );
 };
