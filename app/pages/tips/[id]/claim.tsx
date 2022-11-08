@@ -19,6 +19,7 @@ import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import EmailSignIn from "pages/auth/signin/email";
+import PhoneSignIn from "pages/auth/signin/phone";
 import React from "react";
 import useSWR from "swr";
 import { ClaimTipRequest } from "types/ClaimTipRequest";
@@ -251,6 +252,10 @@ function TippeeLoginOptions() {
   const { t } = useTranslation(["claim", "common"]);
   return (
     <>
+      <PhoneSignIn callbackUrl={window.location.href} />
+      <Spacer y={0.5} />
+      <Text>{t("common:or")}</Text>
+      <Spacer y={0.5} />
       <EmailSignIn
         callbackUrl={window.location.href}
         submitText={t("claim:claim")}
