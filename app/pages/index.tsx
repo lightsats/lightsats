@@ -1,4 +1,7 @@
-import { ArrowTrendingUpIcon } from "@heroicons/react/24/solid";
+import {
+  AcademicCapIcon,
+  ArrowTrendingUpIcon,
+} from "@heroicons/react/24/solid";
 import {
   Avatar,
   Button,
@@ -24,6 +27,7 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import ClaimedPage from "pages/journey/claimed";
 import React from "react";
+import CountUp from "react-countup";
 import useSWR from "swr";
 const Home: NextPage = () => {
   const { data: session, status: sessionStatus } = useSession();
@@ -107,13 +111,13 @@ const Home: NextPage = () => {
           </NextLink>
           <Spacer y={3} />
 
-          <Grid.Container gap={2} sm={8}>
+          <Grid.Container gap={3} sm={8}>
             <Grid sm={12} md={4}>
-              <div>
+              <div style={{ textAlign: "center" }}>
                 <Icon width={64} height={64}>
                   <ArrowTrendingUpIcon />
                 </Icon>
-                <Text h3>Bitcoin only</Text>
+                <Text h3>🚫💩🪙Bitcoin only</Text>
                 <Text>
                   No shitcoins included. No shitcoins included. No shitcoins
                   included. No shitcoins included.
@@ -121,30 +125,45 @@ const Home: NextPage = () => {
               </div>
             </Grid>
             <Grid sm={12} md={4}>
-              <div>
+              <div style={{ textAlign: "center" }}>
                 <Icon width={64} height={64}>
-                  <ArrowTrendingUpIcon />
+                  <AcademicCapIcon />
                 </Icon>
-                <Text h3>Bitcoin Back, Your Way</Text>
+                <Text h3>🍊💊 family and friends</Text>
                 <Text>
-                  Choose to get 1-1.5% flat rate back on your purchase, or spin
-                  to win up to 100% back or more on every purchase! ‡
+                  Educational content, watch their progress, etc. help them get
+                  started on their bitcoin journey.
                 </Text>
               </div>
             </Grid>
             <Grid sm={12} md={4}>
-              <div>
+              <div style={{ textAlign: "center" }}>
                 <Icon width={64} height={64}>
                   <ArrowTrendingUpIcon />
                 </Icon>
-                <Text h3>Bitcoin Back, Your Way</Text>
+                <Text h3>🔨 PoW included</Text>
                 <Text>
-                  Choose to get 1-1.5% flat rate back on your purchase, or spin
-                  to win up to 100% back or more on every purchase! ‡
+                  Your tipees have to go through proper onboarding and install
+                  their own wallet to withdraw their tips.
                 </Text>
               </div>
             </Grid>
           </Grid.Container>
+
+          <Spacer y={5} />
+          <div style={{ textAlign: "center" }}>
+            <Text>Proof of work</Text>
+            <Text
+              h1
+              size={120}
+              css={{
+                textGradient: "45deg, #ff9400 -20%, #ffcf00 50%",
+              }}
+            >
+              <CountUp end={123456789} suffix=" SATS" duration={2}></CountUp>
+            </Text>
+            <Text h3>have been tipped to date.</Text>
+          </div>
 
           <Spacer y={5} />
 
