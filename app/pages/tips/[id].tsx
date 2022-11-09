@@ -3,7 +3,6 @@ import {
   Button,
   Link,
   Loading,
-  Progress,
   Row,
   Spacer,
   Text,
@@ -13,29 +12,30 @@ import { BackButton } from "components/BackButton";
 import { ConfettiContainer } from "components/ConfettiContainer";
 import { FiatPrice } from "components/FiatPrice";
 import { NextLink } from "components/NextLink";
+import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTracker";
+import { PayTipInvoice } from "components/tipper/TipPage/PayTipInvoice";
+import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
+import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { notifyError, notifySuccess } from "components/Toasts";
-import copy from "copy-to-clipboard";
 import { formatDistance, isAfter } from "date-fns";
 import {
   DEFAULT_FIAT_CURRENCY,
   expirableTipStatuses,
   refundableTipStatuses,
 } from "lib/constants";
-import { bitcoinJourneyPages, Routes } from "lib/Routes";
+import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { getLocalePath, nth } from "lib/utils";
+import { nth } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import QRCode from "react-qr-code";
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
 import { ExchangeRates } from "types/ExchangeRates";
-import { PublicTip } from "types/PublicTip";
 import { Scoreboard } from "types/Scoreboard";
 import { requestProvider } from "webln";
 
-// TODO: polling speed should be based on tip status - only UNFUNDED needs a fast poll rate
+// poll tip status once per second to receive updates TODO: consider using websockets
 const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 const TipPage: NextPage = () => {
@@ -56,13 +56,6 @@ const TipPage: NextPage = () => {
     defaultFetcher,
     useTipConfig
   );
-
-  const claimUrl =
-    global.window && tip
-      ? `${window.location.origin}${getLocalePath(tip.tippeeLocale)}${
-          Routes.tips
-        }/${id}/claim`
-      : undefined;
 
   const tipStatus = tip?.status;
   const tipInvoice = tip?.invoice;
@@ -88,12 +81,6 @@ const TipPage: NextPage = () => {
     }
   }, [tipStatus, tipInvoice]);
 
-  const { data: publicTip } = useSWR<PublicTip>(
-    tip && tip.status === "CLAIMED" ? `/api/tippee/tips/${id}` : null,
-    defaultFetcher,
-    useTipConfig
-  );
-
   const { data: scoreboard } = useSWR<Scoreboard>(
     tip && tip.status === "WITHDRAWN" ? `/api/scoreboard` : null,
     defaultFetcher
@@ -112,13 +99,6 @@ const TipPage: NextPage = () => {
     `/api/exchange/rates`,
     defaultFetcher
   );
-
-  const copyInvoice = React.useCallback(() => {
-    if (tip?.invoice) {
-      copy(tip.invoice);
-      notifySuccess("Copied to clipboard");
-    }
-  }, [tip]);
 
   const deleteTip = React.useCallback(() => {
     (async () => {
@@ -148,16 +128,35 @@ const TipPage: NextPage = () => {
     })();
   }, [id, mutateTips, router]);
 
-  const copyClaimUrl = React.useCallback(() => {
-    if (claimUrl) {
-      copy(claimUrl);
-      notifySuccess("Copied to clipboard");
-    }
-  }, [claimUrl]);
-
   if (tip) {
     return (
       <>
+        {!hasExpired ? (
+          <>
+            <TipPageStatusHeader status={tip.status} />
+            <Spacer />
+            {(tip.status === "CLAIMED" ||
+              tip.status === "UNFUNDED" ||
+              tip.status === "UNCLAIMED") && (
+              <>
+                <ClaimProgressTracker tipId={tip.id} />
+                <Spacer />
+              </>
+            )}
+
+            {tip.status === "UNFUNDED" && tip.invoice && (
+              <PayTipInvoice invoice={tip.invoice} />
+            )}
+            {tip.status === "UNCLAIMED" && <ShareUnclaimedTip tip={tip} />}
+          </>
+        ) : (
+          <>
+            <Text h2>Oh no! 😔</Text>
+            <Text color="error">This tip has expired.</Text>
+          </>
+        )}
+
+        <Spacer y={4} />
         <Row align="center" justify="center">
           <TipStatusBadge status={tip.status} />
           <Spacer x={0.5} />
@@ -247,80 +246,7 @@ const TipPage: NextPage = () => {
             <Spacer />
           </>
         )}
-        {!hasExpired && tip.status === "UNFUNDED" && tip.invoice && (
-          <>
-            <Text>Waiting for payment</Text>
-            <Loading type="points" color="currentColor" size="sm" />
-            <Spacer />
-            <NextLink href={`lightning:${tip.invoice}`}>
-              <a>
-                <QRCode value={tip.invoice} />
-              </a>
-            </NextLink>
-            <Spacer />
-            <Text size="small">
-              Tap the QR code above to open your lightning wallet.
-            </Text>
-            <Spacer />
-            <Button onClick={copyInvoice}>Copy</Button>
-          </>
-        )}
-        {!hasExpired &&
-          tip.status === "CLAIMED" &&
-          (publicTip && publicTip.tippee ? (
-            <>
-              <Text style={{ textAlign: "center" }}>
-                Your recipient is on their Bitcoin Journey!
-              </Text>
-              <Spacer />
-              <Progress
-                value={
-                  (publicTip.tippee.journeyStep / bitcoinJourneyPages.length) *
-                  100
-                }
-                color="success"
-                status="success"
-              />
-              <Text blockquote>
-                On page {bitcoinJourneyPages[publicTip.tippee.journeyStep - 1]}
-              </Text>
 
-              <Spacer />
-            </>
-          ) : (
-            <Loading type="spinner" color="currentColor" size="sm" />
-          ))}
-        {!hasExpired && tip.status === "UNCLAIMED" && claimUrl && (
-          <>
-            <Text style={{ textAlign: "center" }}>
-              Ask the tippee to scan the below code using their camera app or a
-              QR code scanner app.
-            </Text>
-            <Spacer />
-            <NextLink href={claimUrl}>
-              <a>
-                <QRCode value={claimUrl} />
-              </a>
-            </NextLink>
-            <Spacer />
-            <Button onClick={copyClaimUrl}>Copy URL</Button>
-            <Spacer />
-            <Text
-              blockquote
-              color={tip.claimLinkViewed ? "success" : undefined}
-            >
-              {tip.claimLinkViewed
-                ? "This tip has been viewed!"
-                : "This tip hasn't been viewed yet."}
-            </Text>
-          </>
-        )}
-        {hasExpired && (
-          <>
-            <Spacer />
-            <Text color="error">This tip has expired.</Text>
-          </>
-        )}
         {tip.status === "UNFUNDED" && (
           <>
             <Spacer />

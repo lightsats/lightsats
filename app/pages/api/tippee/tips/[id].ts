@@ -50,9 +50,14 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
       ? {
           inJourney: tip.tippee.inJourney,
           journeyStep: tip.tippee.journeyStep,
+          name: tip.tippee.name,
+          twitterUsername: tip.tippee.twitterUsername,
+          avatarURL: tip.tippee.avatarURL,
+          fallbackAvatarId: getFallbackAvatarId(tip.tippee),
         }
       : undefined,
     status: tip.status,
+    created: tip.created,
     expiry: tip.expiry,
     tippeeName: tip.tippeeName,
     claimLinkViewed: tip.claimLinkViewed,

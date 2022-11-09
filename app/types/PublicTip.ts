@@ -12,10 +12,18 @@ export type PublicTip = Pick<
   | "expiry"
   | "tippeeName"
   | "claimLinkViewed"
+  | "created"
 > & {
   hasClaimed: boolean;
   tipper: Pick<User, "name" | "twitterUsername" | "avatarURL"> & {
     fallbackAvatarId: string | undefined;
   };
-  tippee: Pick<User, "journeyStep" | "inJourney"> | undefined;
+  tippee:
+    | (Pick<
+        User,
+        "journeyStep" | "inJourney" | "name" | "twitterUsername" | "avatarURL"
+      > & {
+        fallbackAvatarId: string | undefined;
+      })
+    | undefined;
 };
