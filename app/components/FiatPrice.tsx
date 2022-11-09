@@ -1,5 +1,6 @@
 import { Loading } from "@nextui-org/react";
-import { getFiatAmount, roundFiat } from "lib/utils";
+
+import { getFiatAmount } from "lib/utils";
 
 type FiatPriceProps = {
   currency: string;
@@ -17,11 +18,20 @@ export function FiatPrice({
   if (!exchangeRate) {
     return <Loading type="spinner" color="currentColor" size="sm" />;
   }
+
+  const fiatAmount = getFiatAmount(sats, exchangeRate);
+  const formattedCurrency = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency,
+  })
+    .formatToParts(fiatAmount)
+    .map((val) => val.value)
+    .join("");
+
   return (
     <>
       {showApprox && "~"}
-      {"$"}
-      {roundFiat(getFiatAmount(sats, exchangeRate))} {currency}
+      {formattedCurrency}
     </>
   );
 }

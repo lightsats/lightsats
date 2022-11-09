@@ -1,12 +1,20 @@
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
-import { Avatar, Button, Loading, Row, Spacer, Text } from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Link,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { LightningLoginButton } from "components/LightningLoginButton";
 import { NextLink } from "components/NextLink";
 import { notifyError } from "components/Toasts";
-import { formatDistance, isAfter } from "date-fns";
+import { isAfter } from "date-fns";
 import { useDateFnsLocale } from "hooks/useDateFnsLocale";
 
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
@@ -21,7 +29,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import EmailSignIn from "pages/auth/signin/email";
 import PhoneSignIn from "pages/auth/signin/phone";
-import React from "react";
+import React, { useState } from "react";
 import useSWR from "swr";
 import { ClaimTipRequest } from "types/ClaimTipRequest";
 import { ExchangeRates } from "types/ExchangeRates";
@@ -153,10 +161,10 @@ const ClaimTipPage: NextPage = () => {
                     size="md"
                     bordered
                   />
-                  <Spacer x={0.5} />
                 </>
               )}
-              <Text h4>
+              <Text b size={16}>
+                &nbsp;
                 {publicTip.tipper.name
                   ? t("tipperHasGiftedYou", {
                       tipperName: publicTip.tipper.name,
@@ -164,7 +172,6 @@ const ClaimTipPage: NextPage = () => {
                   : t("youHaveBeenGifted")}
               </Text>
             </Row>
-            <Spacer y={1} />
             <Text h1>
               <FiatPrice
                 currency={tipCurrency}
@@ -174,9 +181,7 @@ const ClaimTipPage: NextPage = () => {
               />
             </Text>
             <Spacer y={-0.5} />
-            <Text b color="gray">
-              {publicTip.amount} sats
-            </Text>
+            <Text>{publicTip.amount} sats</Text>
             <Spacer />
             <Note note={publicTip.note} />
 
@@ -189,20 +194,6 @@ const ClaimTipPage: NextPage = () => {
               <>
                 <TippeeLoginOptions />
                 <Row justify="center" align="center"></Row>
-                <Spacer y={0.5} />
-                <Row justify="center" align="center">
-                  <Text small color="error">
-                    {t("expiresIn", {
-                      expiry: formatDistance(
-                        new Date(publicTip.expiry),
-                        Date.now(),
-                        {
-                          locale: dateFnsLocale,
-                        }
-                      ),
-                    })}
-                  </Text>
-                </Row>
               </>
             )}
             <Spacer />
@@ -251,20 +242,35 @@ export { getStaticProps, getStaticPaths };
 
 function TippeeLoginOptions() {
   const { t } = useTranslation(["claim", "common"]);
+  const [alternativeLoginMethodsVisible, setAlternativeLoginMethodsVisible] =
+    useState(false);
   return (
     <>
-      <PhoneSignIn callbackUrl={window.location.href} />
-      <Spacer y={0.5} />
-      <Text>{t("common:or")}</Text>
-      <Spacer y={0.5} />
-      <EmailSignIn
-        callbackUrl={window.location.href}
-        submitText={t("claim:claim")}
-      />
-      <Spacer y={0.5} />
-      <Text>{t("common:or")}</Text>
-      <Spacer y={0.5} />
-      <LightningLoginButton />
+      {!alternativeLoginMethodsVisible && (
+        <>
+          <PhoneSignIn
+            callbackUrl={window.location.href}
+            submitText={t("claim:claim")}
+          />
+          <Spacer y={1} />
+          <Link onClick={() => setAlternativeLoginMethodsVisible(true)}>
+            Use an alternative way to sign in
+          </Link>
+        </>
+      )}
+      {alternativeLoginMethodsVisible && (
+        <>
+          <Spacer y={0.5} />
+          <EmailSignIn
+            callbackUrl={window.location.href}
+            submitText={t("claim:claim")}
+          />
+          <Spacer y={0.5} />
+          <Text>{t("common:or")}</Text>
+          <Spacer y={0.5} />
+          <LightningLoginButton />
+        </>
+      )}
     </>
   );
 }
