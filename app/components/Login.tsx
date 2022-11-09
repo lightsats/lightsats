@@ -1,6 +1,7 @@
 import { Link, Row, Spacer, Text } from "@nextui-org/react";
 import { LightningLoginButton } from "components/LightningLoginButton";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import EmailSignIn from "pages/auth/signin/email";
 import PhoneSignIn from "pages/auth/signin/phone";
 import { useState } from "react";
@@ -11,6 +12,7 @@ type LoginProps = {
 
 export function Login(props: LoginProps) {
   const { t } = useTranslation(["claim", "common"]);
+  const router = useRouter();
   const [signupMethod, setSignupMethod] = useState("phone");
   const signupMethods = ["phone", "email", "lightning"];
 
@@ -18,13 +20,13 @@ export function Login(props: LoginProps) {
     <>
       {signupMethod == "phone" && (
         <PhoneSignIn
-          callbackUrl={window.location.href}
+          callbackUrl={router.pathname}
           submitText={props.submitText}
         />
       )}
       {signupMethod == "email" && (
         <EmailSignIn
-          callbackUrl={window.location.href}
+          callbackUrl={router.pathname}
           submitText={props.submitText}
         />
       )}

@@ -1,6 +1,7 @@
 import { Avatar, Button, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
+import { Login } from "components/Login";
 import { NextLink } from "components/NextLink";
 import { notifyError } from "components/Toasts";
 import { isAfter } from "date-fns";
@@ -21,7 +22,6 @@ import useSWR from "swr";
 import { ClaimTipRequest } from "types/ClaimTipRequest";
 import { ExchangeRates } from "types/ExchangeRates";
 import { PublicTip } from "types/PublicTip";
-import { Login } from "../../../components/Login";
 
 const ClaimTipPage: NextPage = () => {
   const { t } = useTranslation("claim");
