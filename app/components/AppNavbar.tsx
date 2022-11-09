@@ -86,7 +86,10 @@ export function AppNavbar() {
   }
 
   return (
-    <Navbar variant="sticky" css={{ background: "$white" }}>
+    <Navbar
+      variant="sticky"
+      css={{ backgroundColor: "$white", $$navbarBackgroundColor: "$white" }}
+    >
       <Navbar.Content>
         {!hideNavbar && (
           <Navbar.Toggle

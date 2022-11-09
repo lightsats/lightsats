@@ -4,12 +4,14 @@ const theme = createTheme({
   type: "light",
   theme: {
     colors: {
+      background: "#F7F7F7",
       default: "#2E74ED",
 
       primary: "#2E74ED",
       secondary: "#EFEFEF",
       secondaryText: "#333",
 
+      error: "$red600",
       warning: "#ffecb5",
       warningText: "#664d03",
       warningBorder: "#ffecb5",
