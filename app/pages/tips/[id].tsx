@@ -8,12 +8,13 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
+import { Tip, TipStatus } from "@prisma/client";
 import { BackButton } from "components/BackButton";
 import { ConfettiContainer } from "components/ConfettiContainer";
 import { FiatPrice } from "components/FiatPrice";
 import { NextLink } from "components/NextLink";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
+import { notifyError, notifySuccess } from "components/Toasts";
 import copy from "copy-to-clipboard";
 import { formatDistance, isAfter } from "date-fns";
 import {
@@ -40,6 +41,9 @@ const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
 const TipPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
+  const [prevTipStatus, setPrevTipStatus] = React.useState<
+    TipStatus | undefined
+  >();
 
   const { mutate } = useSWRConfig();
   const mutateTips = React.useCallback(
@@ -62,6 +66,13 @@ const TipPage: NextPage = () => {
 
   const tipStatus = tip?.status;
   const tipInvoice = tip?.invoice;
+
+  React.useEffect(() => {
+    if (prevTipStatus === "UNFUNDED" && tipStatus === "UNCLAIMED") {
+      notifySuccess("Tip funded");
+    }
+    setPrevTipStatus(tipStatus);
+  }, [prevTipStatus, tipStatus]);
 
   React.useEffect(() => {
     if (tipStatus === "UNFUNDED" && tipInvoice) {
@@ -105,7 +116,7 @@ const TipPage: NextPage = () => {
   const copyInvoice = React.useCallback(() => {
     if (tip?.invoice) {
       copy(tip.invoice);
-      alert("Copied to clipboard");
+      notifySuccess("Copied to clipboard");
     }
   }, [tip]);
 
@@ -116,7 +127,7 @@ const TipPage: NextPage = () => {
         method: "DELETE",
       });
       if (!result.ok) {
-        alert("Failed to delete tip: " + result.statusText);
+        notifyError("Failed to delete tip: " + result.statusText);
       } else {
         mutateTips();
       }
@@ -130,7 +141,7 @@ const TipPage: NextPage = () => {
         method: "POST",
       });
       if (!result.ok) {
-        alert("Failed to reclaim tip: " + result.statusText);
+        notifyError("Failed to reclaim tip: " + result.statusText);
       } else {
         mutateTips();
       }
@@ -140,7 +151,7 @@ const TipPage: NextPage = () => {
   const copyClaimUrl = React.useCallback(() => {
     if (claimUrl) {
       copy(claimUrl);
-      alert("Copied to clipboard");
+      notifySuccess("Copied to clipboard");
     }
   }, [claimUrl]);
 
@@ -334,8 +345,8 @@ const TipPage: NextPage = () => {
   } else {
     return (
       <>
+        <Loading type="spinner" color="currentColor" size="lg" />
         <Text>Loading invoice</Text>
-        <Loading type="spinner" color="currentColor" size="sm" />
       </>
     );
   }

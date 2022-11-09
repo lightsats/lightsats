@@ -1,18 +1,19 @@
 import {
   Badge,
   Card,
+  Col,
   Grid,
-  Link,
   Loading,
   Row,
   Spacer,
   Text,
   User as NextUIUser,
 } from "@nextui-org/react";
+import { TwitterButton } from "components/TwitterButton";
+import { DEFAULT_NAME } from "lib/constants";
 import { defaultFetcher } from "lib/swr";
 import { getAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
-import Image from "next/image";
 import useSWR from "swr";
 import { Scoreboard as ScoreboardType } from "types/Scoreboard";
 
@@ -22,21 +23,50 @@ const Scoreboard: NextPage = () => {
     defaultFetcher
   );
   if (!scoreboard) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading type="spinner" color="currentColor" size="lg" />;
   }
 
   return (
     <>
       <Text h2>Scoreboard</Text>
-      <Row justify="center" align="center">
-        <Badge color="success">
-          {scoreboard.numUsersOnboarded} onboarded🚀
-        </Badge>
-        <Spacer x={0.5} />
-        <Badge color="success">{scoreboard.numTipsSent} tips sent🧡</Badge>
-        <Spacer x={0.5} />
-        <Badge color="success">{scoreboard.totalSatsSent} sats sent⚡</Badge>
-      </Row>
+      <Grid.Container gap={1} css={{ mx: 0, width: "100%" }}>
+        <Grid xs={4}>
+          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+            <Card.Header>
+              <Col>
+                <Text size={12} weight="bold" transform="uppercase">
+                  # Total tips sent
+                </Text>
+                <Text h3>{scoreboard.numTipsSent}</Text>
+              </Col>
+            </Card.Header>
+          </Card>
+        </Grid>
+        <Grid xs={4}>
+          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+            <Card.Header>
+              <Col>
+                <Text size={12} weight="bold" transform="uppercase">
+                  # 🍊💊 people
+                </Text>
+                <Text h3>{scoreboard.numUsersOnboarded}</Text>
+              </Col>
+            </Card.Header>
+          </Card>
+        </Grid>
+        <Grid xs={4}>
+          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+            <Card.Header>
+              <Col>
+                <Text size={12} weight="bold" transform="uppercase">
+                  Total tip value
+                </Text>
+                <Text h3>{scoreboard.totalSatsSent.toFixed()} sats</Text>
+              </Col>
+            </Card.Header>
+          </Card>
+        </Grid>
+      </Grid.Container>
       <Spacer />
       {/* mobile view */}
       <Grid.Container
@@ -51,66 +81,55 @@ const Scoreboard: NextPage = () => {
             <Grid
               key={i}
               justify="center"
-              style={{
+              css={{
                 width: "100%",
-                paddingLeft: 0,
-                paddingRight: 0,
+                px: 0,
               }}
             >
-              <Card>
+              <Card
+                variant="flat"
+                css={{
+                  backgroundColor:
+                    i === 0
+                      ? "$gold"
+                      : i === 1
+                      ? "$silver"
+                      : i === 2
+                      ? "$bronze"
+                      : "$accents0",
+                }}
+              >
                 <Card.Body>
-                  <Row align="center">
-                    <Badge
-                      style={{
-                        background:
-                          i === 0
-                            ? "#AF9500"
-                            : i === 1
-                            ? "#D7D7D7"
-                            : i === 2
-                            ? "#6A3805"
-                            : "#666",
-                      }}
-                    >
+                  <Row align="center" justify="space-between">
+                    <Text size={22} b>
                       #{i + 1}
-                    </Badge>
+                    </Text>
                     <NextUIUser
-                      name={scoreboardEntry.name ?? "anon"}
+                      name={scoreboardEntry.name ?? DEFAULT_NAME}
                       src={getAvatarUrl(
                         scoreboardEntry.avatarURL,
                         scoreboardEntry.fallbackAvatarId
                       )}
                     />
                     {scoreboardEntry.twitterUsername && (
-                      <Link
-                        href={`https://twitter.com/${scoreboardEntry.twitterUsername}`}
-                        target="_blank"
-                      >
-                        <Image
-                          alt="twitter"
-                          src="/icons/twitter.svg"
-                          width={16}
-                          height={16}
-                        />
-                      </Link>
+                      <TwitterButton
+                        username={scoreboardEntry.twitterUsername}
+                      />
                     )}
+                    <Text b size="$xl">
+                      {scoreboardEntry.satsSent} sats
+                    </Text>
                   </Row>
                   <Spacer />
-                  <Row>
-                    <Badge color="success">
-                      {scoreboardEntry.satsSent} sats⚡
-                    </Badge>
-                    <Spacer x={0.5} />
-                    <Badge color="success">
-                      {scoreboardEntry.numTipsSent} tips🧡
-                    </Badge>
+                  <Row justify="center">
+                    <Badge>{scoreboardEntry.numTipsSent} tips🧡</Badge>
                     <Spacer x={0.5} />
                     <Badge
                       style={{
                         background: `rgba(${Math.floor(
-                          (1 - scoreboardEntry.successRate) * 255
+                          (1 - scoreboardEntry.successRate) * 220
                         )},${Math.floor(
-                          scoreboardEntry.successRate * 255
+                          scoreboardEntry.successRate * 220
                         )},0, 1)`,
                       }}
                     >
@@ -125,24 +144,29 @@ const Scoreboard: NextPage = () => {
         })}
       </Grid.Container>
 
+      <Spacer />
       {/* desktop view */}
-      <Grid.Container gap={2} justify="center" xs={0} sm={12}>
+      <Grid.Container justify="center" xs={0} sm={12}>
         <Grid xs={12} justify="center">
-          <Row justify="space-between" align="center">
+          <Row
+            justify="space-between"
+            align="center"
+            css={{ paddingBottom: "0.5em", fontWeight: "$bold" }}
+          >
             <Row justify="center" align="center">
-              <Badge>Placing</Badge>
+              #
             </Row>
             <Row justify="flex-start" align="center">
-              <Badge>Tipper</Badge>
+              Tipper
             </Row>
             <Row justify="center" align="center">
-              <Badge>Sats Donated</Badge>
+              Sats donated
             </Row>
             <Row justify="center" align="center">
-              <Badge>#Tips Sent</Badge>
+              # of tips
             </Row>
             <Row justify="center" align="center">
-              <Badge>Success Rate</Badge>
+              Success rate
             </Row>
           </Row>
         </Grid>
@@ -152,23 +176,33 @@ const Scoreboard: NextPage = () => {
               <Row
                 justify="space-between"
                 align="center"
-                style={{
-                  background: i % 2 === 0 ? "#f5f5f5" : "#fafafa",
+                css={{
+                  backgroundColor:
+                    i === 0
+                      ? "$gold"
+                      : i === 1
+                      ? "$silver"
+                      : i === 2
+                      ? "$bronze"
+                      : i % 2 === 0
+                      ? "$accents0"
+                      : "$accents1",
                   paddingTop: "10px",
                   paddingBottom: "10px",
+                  marginBottom: i === 2 ? 20 : 0,
                 }}
               >
                 <Row justify="center" align="center">
                   <Badge
-                    style={{
+                    css={{
                       background:
                         i === 0
-                          ? "#AF9500"
+                          ? "$gold"
                           : i === 1
-                          ? "#D7D7D7"
+                          ? "$silver"
                           : i === 2
-                          ? "#6A3805"
-                          : "#666",
+                          ? "$bronze"
+                          : "$gray800",
                     }}
                   >
                     #{i + 1}
@@ -176,44 +210,24 @@ const Scoreboard: NextPage = () => {
                 </Row>
                 <Row justify="flex-start" align="center">
                   <NextUIUser
-                    name={scoreboardEntry.name ?? "anon"}
+                    name={scoreboardEntry.name ?? DEFAULT_NAME}
                     src={getAvatarUrl(
                       scoreboardEntry.avatarURL,
                       scoreboardEntry.fallbackAvatarId
                     )}
                   />
                   {scoreboardEntry.twitterUsername && (
-                    <Link
-                      href={`https://twitter.com/${scoreboardEntry.twitterUsername}`}
-                      target="_blank"
-                    >
-                      <Image
-                        alt="twitter"
-                        src="/icons/twitter.svg"
-                        width={16}
-                        height={16}
-                      />
-                    </Link>
+                    <TwitterButton username={scoreboardEntry.twitterUsername} />
                   )}
                 </Row>
                 <Row justify="center" align="center">
-                  <Badge color="success">{scoreboardEntry.satsSent}⚡</Badge>
+                  {scoreboardEntry.satsSent}
                 </Row>
                 <Row justify="center" align="center">
-                  <Badge color="success">{scoreboardEntry.numTipsSent}🧡</Badge>
+                  {scoreboardEntry.numTipsSent}
                 </Row>
                 <Row justify="center" align="center">
-                  <Badge
-                    style={{
-                      background: `rgba(${Math.floor(
-                        (1 - scoreboardEntry.successRate) * 255
-                      )},${Math.floor(
-                        scoreboardEntry.successRate * 255
-                      )},0, 1)`,
-                    }}
-                  >
-                    {(scoreboardEntry.successRate * 100).toFixed(2)}%
-                  </Badge>
+                  {(scoreboardEntry.successRate * 100).toFixed(2)}%
                 </Row>
               </Row>
             </Grid>

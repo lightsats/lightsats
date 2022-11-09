@@ -3,10 +3,12 @@ import Layout from "components/Layout";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import "styles/globals.css";
 
 import AppErrorBoundary from "components/AppErrorBoundary";
+import { Toasts } from "components/Toasts";
 import { appWithTranslation } from "next-i18next";
+import "styles/globals.css";
+import theme from "theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -18,7 +20,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       </Head>
       <AppErrorBoundary>
-        <NextUIProvider>
+        <NextUIProvider theme={theme}>
+          <Toasts />
           <SessionProvider session={pageProps.session}>
             <Layout>
               <Component {...pageProps} />

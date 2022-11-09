@@ -59,7 +59,10 @@ const AdminPage: NextPage = () => {
       <Grid.Container justify="center">
         {adminDashboard.adminUsers.map((user) => (
           <Grid key={user.id}>
-            <NextUser name={user.name ?? "Anon"} src={getUserAvatarUrl(user)} />
+            <NextUser
+              name={user.name ?? "Anonymous"}
+              src={getUserAvatarUrl(user)}
+            />
           </Grid>
         ))}
       </Grid.Container>

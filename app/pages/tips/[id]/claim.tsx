@@ -1,11 +1,11 @@
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
-import { LightBulbIcon } from "@heroicons/react/24/solid";
 import { Avatar, Button, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { LightningLoginButton } from "components/LightningLoginButton";
 import { NextLink } from "components/NextLink";
+import { notifyError } from "components/Toasts";
 import { formatDistance, isAfter } from "date-fns";
 import { useDateFnsLocale } from "hooks/useDateFnsLocale";
 
@@ -20,6 +20,7 @@ import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import EmailSignIn from "pages/auth/signin/email";
+import PhoneSignIn from "pages/auth/signin/phone";
 import React from "react";
 import useSWR from "swr";
 import { ClaimTipRequest } from "types/ClaimTipRequest";
@@ -90,7 +91,7 @@ const ClaimTipPage: NextPage = () => {
           headers: { "Content-Type": "application/json" },
         });
         if (!result.ok) {
-          alert(
+          notifyError(
             "Failed to claim tip: " +
               result.statusText +
               ". Please refresh the page to try again."
@@ -186,15 +187,7 @@ const ClaimTipPage: NextPage = () => {
               </>
             ) : (
               <>
-                <Text blockquote color="secondary">
-                  <Icon width={16} height={16}>
-                    <LightBulbIcon />
-                  </Icon>{" "}
-                  {t("instructions")}
-                </Text>
-                <Spacer y={2} />
                 <TippeeLoginOptions />
-
                 <Row justify="center" align="center"></Row>
                 <Spacer y={0.5} />
                 <Row justify="center" align="center">
@@ -260,8 +253,11 @@ function TippeeLoginOptions() {
   const { t } = useTranslation(["claim", "common"]);
   return (
     <>
+      <PhoneSignIn callbackUrl={window.location.href} />
+      <Spacer y={0.5} />
+      <Text>{t("common:or")}</Text>
+      <Spacer y={0.5} />
       <EmailSignIn
-        inline
         callbackUrl={window.location.href}
         submitText={t("claim:claim")}
       />

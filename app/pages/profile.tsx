@@ -1,25 +1,41 @@
 import {
+  ArrowUpTrayIcon,
+  ClipboardIcon,
+  EyeIcon,
+} from "@heroicons/react/24/solid";
+import {
+  Avatar,
   Button,
-  Checkbox,
+  Card,
+  Col,
   Input,
+  Link,
   Loading,
+  Row,
   Spacer,
+  Switch,
   Text,
-  User as NextUIUser,
 } from "@nextui-org/react";
-import { User } from "@prisma/client";
+import { Tip, User } from "@prisma/client";
 import { BackButton } from "components/BackButton";
-import { appName, DEFAULT_NAME, MAX_USER_NAME_LENGTH } from "lib/constants";
+import { Divider } from "components/Divider";
+import { FlexBox } from "components/FlexBox";
+import { Icon } from "components/Icon";
+import { NextLink } from "components/NextLink";
+import { notifyError, notifySuccess } from "components/Toasts";
+import copy from "copy-to-clipboard";
+import { DEFAULT_NAME, MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR, { KeyedMutator } from "swr";
+import { TransitionUserRequest } from "types/TransitionUserRequest";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
 
 type ProfileFormData = {
@@ -34,6 +50,7 @@ const formStyle: React.CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
+  width: "100%",
 };
 
 const Profile: NextPage = () => {
@@ -51,15 +68,149 @@ const Profile: NextPage = () => {
   );
 };
 
-function ProfileInternal({
-  mutateUser,
-  session,
-  user,
-}: {
+type ProfileInternalProps = {
   mutateUser: KeyedMutator<User>;
   session: Session;
   user: User;
-}) {
+};
+
+function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
+  const copyUserId = React.useCallback(() => {
+    copy(user.id);
+    notifySuccess("User ID Copied to clipboard");
+  }, [user.id]);
+
+  const copyPublicProfile = React.useCallback(() => {
+    const url = `${window.location.origin}${Routes.users}/${user.id}`;
+    copy(url);
+    notifySuccess("Public profile URL copied to clipboard");
+  }, [user.id]);
+
+  return (
+    <>
+      <Row>
+        <Avatar src={getUserAvatarUrl(user)} />
+        <Spacer x={0.5} />
+        <Col>
+          <Text b>{user.name ?? DEFAULT_NAME}</Text>
+          <Row align="center">
+            <Text>
+              @{user.id.slice(0, 6)}...{user.id.slice(user.id.length - 6)}{" "}
+            </Text>
+            <Spacer x={0.25} />
+            <Button
+              auto
+              light
+              color="primary"
+              size="sm"
+              css={{ p: 0 }}
+              onClick={copyUserId}
+            >
+              <Icon width={16} height={16}>
+                <ClipboardIcon />
+              </Icon>
+            </Button>
+          </Row>
+        </Col>
+        <FlexBox style={{ alignSelf: "center" }}>
+          <NextLink href={`${Routes.users}/${user.id}`} passHref>
+            <a>
+              <Button auto flat css={{ px: 8 }} onClick={copyPublicProfile}>
+                <Icon>
+                  <ArrowUpTrayIcon />
+                </Icon>
+              </Button>
+            </a>
+          </NextLink>
+        </FlexBox>
+      </Row>
+      <Divider />
+
+      {user.userType === "tipper" ? (
+        <TipperProfile mutateUser={mutateUser} session={session} user={user} />
+      ) : (
+        <TippeeProfile mutateUser={mutateUser} session={session} user={user} />
+      )}
+
+      <Spacer />
+      <Row>
+        <Text b>Connected accounts</Text>
+      </Row>
+      <Row>
+        <Text>
+          {user.email && "Email: " + user.email}
+          {user.phoneNumber && "Phone: " + user.phoneNumber}
+          {user.lnurlPublicKey && "Wallet: " + user.lnurlPublicKey}
+        </Text>
+      </Row>
+      <Spacer />
+      <BackButton />
+    </>
+  );
+}
+
+function TippeeProfile({ mutateUser, session, user }: ProfileInternalProps) {
+  const { data: tips } = useSWR<Tip[]>(
+    session ? `/api/tippee/tips` : null,
+    defaultFetcher
+  );
+  const hasWithdrawnTip = tips?.some((tip) => tip.status === "WITHDRAWN");
+  const [isSubmitting, setSubmitting] = React.useState(false);
+
+  const becomeTipper = React.useCallback(() => {
+    if (isSubmitting) {
+      throw new Error("Already submitting");
+    }
+    setSubmitting(true);
+
+    (async () => {
+      const transitionRequest: TransitionUserRequest = {
+        to: "tipper",
+      };
+      const result = await fetch(`/api/users/${user.id}/transition`, {
+        method: "POST",
+        body: JSON.stringify(transitionRequest),
+        headers: { "Content-Type": "application/json" },
+      });
+      if (result.ok) {
+        await mutateUser();
+      } else {
+        notifyError("Failed to update profile: " + result.statusText);
+      }
+      setSubmitting(false);
+    })();
+  }, [isSubmitting, mutateUser, user.id]);
+
+  return (
+    <>
+      {!hasWithdrawnTip && (
+        <>
+          <Text>
+            {"It looks like you haven't completed your withdrawal yet."}
+          </Text>
+          <NextLink href={Routes.journeyClaimed} passHref>
+            <Link css={{ display: "inline" }}>Complete withdrawal</Link>
+          </NextLink>
+        </>
+      )}
+      <Text>Orange pill your friends!</Text>
+      <Button
+        color="primary"
+        size="lg"
+        onClick={becomeTipper}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <Loading type="points" color="currentColor" size="sm" />
+        ) : (
+          <>Become a Tipper</>
+        )}
+      </Button>
+    </>
+  );
+}
+
+function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
   const router = useRouter();
   const [isSubmitting, setSubmitting] = React.useState(false);
 
@@ -75,13 +226,6 @@ function ProfileInternal({
   React.useEffect(() => {
     setFocus("name");
   }, [setFocus]);
-
-  const executeSignout = React.useCallback(() => {
-    signOut({
-      redirect: false,
-    });
-    router.push(Routes.home);
-  }, [router]);
 
   const onSubmit = React.useCallback(
     (data: ProfileFormData) => {
@@ -103,10 +247,11 @@ function ProfileInternal({
           headers: { "Content-Type": "application/json" },
         });
         if (result.ok) {
+          notifySuccess("Profile updated");
           await mutateUser();
           router.push(Routes.home);
         } else {
-          alert("Failed to update profile: " + result.statusText);
+          notifyError("Failed to update profile: " + result.statusText);
         }
         setSubmitting(false);
       })();
@@ -116,25 +261,7 @@ function ProfileInternal({
 
   return (
     <>
-      <NextUIUser
-        src={getUserAvatarUrl(user)}
-        name={user.name ?? DEFAULT_NAME}
-      />
-      <Spacer />
-      <Text
-        style={{
-          wordBreak: "break-all",
-          textAlign: "center",
-        }}
-      >
-        Logged in as {session.user.email ?? session.user.lnurlPublicKey}
-      </Text>
-      <Spacer />
-      <Button color="error" size="xs" onClick={executeSignout}>
-        Sign out
-      </Button>
-      <Spacer />
-      <Text style={{ textAlign: "center" }}>
+      <Text size="small">
         Fill out the fields below to increase the authenticity of your tips and
         provide a way for tippees to contact you.
       </Text>
@@ -146,7 +273,7 @@ function ProfileInternal({
           render={({ field }) => (
             <Input
               {...field}
-              label="Name"
+              label="Your Name"
               placeholder="John Galt"
               fullWidth
               maxLength={MAX_USER_NAME_LENGTH}
@@ -163,6 +290,13 @@ function ProfileInternal({
               label="Twitter Username"
               placeholder="jack"
               fullWidth
+              contentLeft="@"
+              css={{
+                fontWeight: "bold",
+                ".nextui-input-content--left": {
+                  pr: 0,
+                },
+              }}
             />
           )}
         />
@@ -181,22 +315,35 @@ function ProfileInternal({
           )}
         />
         <Spacer />
-        <Controller
-          name="isAnonymous"
-          control={control}
-          render={({ field }) => (
-            <Checkbox
-              {...field}
-              value={undefined}
-              isSelected={field.value}
-              label="Anonymous on scoreboard"
-              size="sm"
-            />
-          )}
-        />
+        <Row>
+          <Card variant="bordered">
+            <Card.Body css={{ backgroundColor: "$accents0" }}>
+              <Row align="center" justify="center">
+                <Icon>
+                  <EyeIcon />
+                </Icon>
+                <Spacer x={0.5} />
+                <Text weight="medium">Anonymise my info on scoreboards</Text>
+                <Spacer />
+                <Controller
+                  name="isAnonymous"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      {...field}
+                      color="success"
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
+                  )}
+                />
+              </Row>
+            </Card.Body>
+          </Card>
+        </Row>
 
         <Spacer />
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting} css={{ width: "100%" }}>
           {isSubmitting ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
@@ -204,18 +351,6 @@ function ProfileInternal({
           )}
         </Button>
       </form>
-      <Spacer />
-      <Text
-        size="small"
-        style={{
-          wordBreak: "break-all",
-          textAlign: "center",
-        }}
-      >
-        {appName} user ID: {session.user.id}
-      </Text>
-      <Spacer />
-      <BackButton />
     </>
   );
 }

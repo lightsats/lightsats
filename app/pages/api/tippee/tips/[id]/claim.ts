@@ -74,6 +74,7 @@ async function handleClaimTip(
     data: {
       inJourney: true,
       journeyStep: 1,
+      userType: "tippee",
     },
   });
   res.status(204).end();

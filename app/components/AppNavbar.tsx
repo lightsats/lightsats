@@ -3,11 +3,19 @@ import {
   HomeIcon,
   InformationCircleIcon,
   LightBulbIcon,
-  PlusIcon,
-  UserIcon,
 } from "@heroicons/react/24/solid";
-import { Avatar, Button, Link, Navbar, Spacer, Text } from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  Image,
+  Link,
+  Navbar,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { User } from "@prisma/client";
+import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { LanguagePicker } from "components/LanguagePicker";
 import { NextLink } from "components/NextLink";
@@ -39,13 +47,13 @@ const closeNavbar = () => {
 };
 
 export function AppNavbar() {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const { data: user } = useSWR<User>(
     session ? `/api/users/${session.user.id}` : null,
     defaultFetcher
   );
   const router = useRouter();
-  const hideNavbar = router.pathname.endsWith("/claim") || user?.inJourney;
+  const hideNavbar = router.pathname.endsWith("/claim"); // || user?.inJourney;
 
   const collapseItems: CollapseItem[] = React.useMemo(
     () => [
@@ -54,20 +62,6 @@ export function AppNavbar() {
         href: Routes.home,
         icon: <HomeIcon />,
       },
-      ...(session
-        ? [
-            {
-              name: "New Tip",
-              href: Routes.newTip,
-              icon: <PlusIcon />,
-            },
-            {
-              name: "Profile",
-              href: Routes.profile,
-              icon: <UserIcon />,
-            },
-          ]
-        : []),
       {
         name: "Scoreboard",
         href: Routes.scoreboard,
@@ -84,20 +78,22 @@ export function AppNavbar() {
         icon: <LightBulbIcon />,
       },
     ],
-    [session]
+    [user]
   );
 
+  if (sessionStatus === "loading" || (session && !user)) {
+    return null;
+  }
+
   return (
-    <Navbar variant="static">
-      {!hideNavbar ? (
-        <Navbar.Toggle
-          aria-label="toggle navigation"
-          id={navbarCollapseToggleId}
-        />
-      ) : (
-        <Spacer x={1} />
-      )}
+    <Navbar variant="sticky" css={{ background: "$white" }}>
       <Navbar.Content>
+        {!hideNavbar && (
+          <Navbar.Toggle
+            aria-label="toggle navigation"
+            id={navbarCollapseToggleId}
+          />
+        )}
         <Navbar.Brand>
           <NextLink href={Routes.home}>
             <a
@@ -109,29 +105,124 @@ export function AppNavbar() {
                   : closeNavbar
               }
             >
-              <Text h1>Lightsats</Text>
+              <Image alt="logo" src="/images/logo.svg" width={150} />
             </a>
           </NextLink>
         </Navbar.Brand>
-      </Navbar.Content>
-      <Navbar.Content>
-        {user && !hideNavbar ? (
-          <NextLink href={Routes.profile}>
-            <a>
-              <Avatar
-                bordered
-                as="button"
-                color="secondary"
-                size="md"
-                src={getUserAvatarUrl(user)}
-              />
-            </a>
-          </NextLink>
-        ) : (
-          <LanguagePicker />
+        {!user && !hideNavbar && (
+          <>
+            <Navbar.Link href={Routes.about} hideIn="xs">
+              About
+            </Navbar.Link>
+          </>
+        )}
+        {user?.userType === "tipper" && !hideNavbar && (
+          <Navbar.Item hideIn="xs">
+            <NextLink href={Routes.newTip}>
+              <a>
+                <Button auto size="sm">
+                  Create new tip
+                </Button>
+              </a>
+            </NextLink>
+          </Navbar.Item>
         )}
       </Navbar.Content>
 
+      {user && !hideNavbar && (
+        <>
+          <Navbar.Content
+            css={{
+              jc: "flex-end",
+            }}
+          >
+            <Dropdown placement="bottom-right">
+              <Navbar.Item>
+                <Dropdown.Trigger>
+                  <Avatar
+                    bordered
+                    as="button"
+                    color="secondary"
+                    size="md"
+                    src={getUserAvatarUrl(user)}
+                  />
+                </Dropdown.Trigger>
+              </Navbar.Item>
+              <Dropdown.Menu
+                aria-label="User menu actions"
+                disabledKeys={["language"]}
+              >
+                <Dropdown.Item key="language">
+                  <FlexBox
+                    style={{
+                      flexDirection: "row",
+
+                      width: "100%",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    Language&nbsp;
+                    <LanguagePicker />
+                  </FlexBox>
+                </Dropdown.Item>
+                <Dropdown.Item key="profile">
+                  <NextLink href={Routes.profile} passHref>
+                    <a>
+                      <Text color="primary">Profile</Text>
+                    </a>
+                  </NextLink>
+                </Dropdown.Item>
+                <Dropdown.Item key="logout" withDivider>
+                  <NextLink href={Routes.logout} passHref>
+                    <a>
+                      <Text color="error">Log Out</Text>
+                    </a>
+                  </NextLink>
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Navbar.Content>
+        </>
+      )}
+      {!user && (
+        <Navbar.Content>
+          <Navbar.Link href={Routes.login} hideIn="xs">
+            Login
+          </Navbar.Link>
+          <Navbar.Item hideIn="xs">
+            <NextLink href={Routes.signup} passHref>
+              <a>
+                <Button auto flat>
+                  Sign Up
+                </Button>
+              </a>
+            </NextLink>
+          </Navbar.Item>
+          <LanguagePicker />
+        </Navbar.Content>
+      )}
+      <Navbar.Collapse>
+        {collapseItems.map((item, index) => (
+          <Navbar.CollapseItem
+            activeColor="secondary"
+            key={item.name}
+            css={{
+              color: index === collapseItems.length - 1 ? "$error" : "",
+            }}
+            isActive={index === 2}
+          >
+            <Link
+              color="inherit"
+              css={{
+                minWidth: "100%",
+              }}
+              href="#"
+            >
+              {item.name}
+            </Link>
+          </Navbar.CollapseItem>
+        ))}
+      </Navbar.Collapse>
       <Navbar.Collapse>
         {collapseItems.map((item) => (
           <Navbar.CollapseItem key={item.name}>

@@ -1,16 +1,26 @@
-import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
+import { Button, Image, Loading, Spacer, Text } from "@nextui-org/react";
+import { Tip, User } from "@prisma/client";
+import { Alert } from "components/Alert";
 import { NextLink } from "components/NextLink";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { Tips } from "components/tipper/Tips";
 import { Routes } from "lib/Routes";
+import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import ClaimedPage from "pages/journey/claimed";
+import React from "react";
+import useSWR from "swr";
 
 const Home: NextPage = () => {
   const { data: session, status: sessionStatus } = useSession();
+  const { data: user } = useSWR<User>(
+    session ? `/api/users/${session.user.id}` : null,
+    defaultFetcher
+  );
 
-  if (sessionStatus === "loading") {
+  if (sessionStatus === "loading" || (session && !user)) {
     return <Loading type="spinner" color="currentColor" size="sm" />;
   }
 
@@ -20,39 +30,43 @@ const Home: NextPage = () => {
         <title>Lightsats⚡</title>
       </Head>
 
-      {session ? (
+      {session && user ? (
         <>
-          <Text color="error" size="small" b>
-            BETA - PLEASE ONLY TIP AMOUNTS YOU ARE WILLING TO LOSE!
-          </Text>
-          <Spacer y={1} />
-          <NewTipButton />
-          <Spacer />
-          <Tips />
-          <Spacer y={4} />
-          <Text>Received a gift?</Text>
-          <NextLink href={Routes.withdraw} passHref>
-            <Link color="success">withdraw claimed gifts</Link>
-          </NextLink>
+          {user?.userType === "tipper" ? (
+            <>
+              <Alert>
+                ⚠️ This project is currently in BETA, don&apos;t put more funds
+                into this service than you are willing to lose.
+              </Alert>
+              <Spacer />
+              <NewTipButton />
+              <Spacer />
+              <Tips />
+            </>
+          ) : (
+            <TippeeHomepage />
+          )}
         </>
       ) : (
         <>
           <Spacer />
-          <Text h3>
-            Gift Sats without
-            <br />
-            losing them✌🏼
+          <Image alt="" src="images/seed.png" width={200} />
+          <Text
+            size={60}
+            h1
+            css={{
+              textGradient: "45deg, $blue900 -20%, $blue600 50%",
+            }}
+          >
+            Orange pill
+          </Text>
+          <Text h1 size={30} css={{ marginTop: "-0.5em" }}>
+            the world around you.
           </Text>
           <Spacer />
-          <NextLink href={Routes.lnurlAuthSignin}>
+          <NextLink href={Routes.signup} passHref>
             <a>
-              <Button>Login with LNURL⚡</Button>
-            </a>
-          </NextLink>
-          {<Spacer />}
-          <NextLink href={Routes.emailSignin}>
-            <a>
-              <Button>Login with Email</Button>
+              <Button size="lg">Get started &raquo;</Button>
             </a>
           </NextLink>
         </>
@@ -62,3 +76,23 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+function TippeeHomepage() {
+  const session = useSession();
+  const { data: tips } = useSWR<Tip[]>(
+    session ? `/api/tippee/tips` : null,
+    defaultFetcher
+  );
+  const claimedTips = React.useMemo(
+    () => tips?.filter((tip) => tip.status === "CLAIMED"),
+    [tips]
+  );
+
+  return claimedTips?.length ? (
+    <ClaimedPage />
+  ) : (
+    <>
+      <Text>{"It looks like you don't have any tips right now."}</Text>
+    </>
+  );
+}

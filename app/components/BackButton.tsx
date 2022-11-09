@@ -5,5 +5,9 @@ const onBack = () => {
 };
 
 export function BackButton() {
-  return <Button onClick={onBack}>Back</Button>;
+  return (
+    <Button bordered onClick={onBack}>
+      Back
+    </Button>
+  );
 }

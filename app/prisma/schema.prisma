@@ -70,6 +70,9 @@ model User {
   inJourney Boolean @default(false)
 
   roles UserRole[]
+  userType UserType @default(tipper)
+  created DateTime @default(now())
+  updated DateTime @default(now()) @updatedAt
 }
 
 model Tip {
@@ -187,4 +190,9 @@ enum WithdrawalMethod {
 
 enum RoleType {
   SUPERADMIN
+}
+
+enum UserType {
+  tipper
+  tippee
 }

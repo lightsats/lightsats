@@ -6,7 +6,7 @@ import {
   Loading,
   Row,
   Spacer,
-  Text,
+  Text
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
@@ -55,7 +55,7 @@ export function Tips() {
             <Spacer />
           </>
         )}
-        <Grid.Container gap={2} justify="center">
+        <Grid.Container justify="center" gap={1}>
           {tips.map((tip) => {
             const hasExpired =
               expirableTipStatuses.indexOf(tip.status) >= 0 &&
@@ -64,7 +64,7 @@ export function Tips() {
               <Grid xs={12} key={tip.id} justify="center">
                 <NextLink href={`${Routes.tips}/${tip.id}`}>
                   <a style={cardLinkStyle}>
-                    <Card isPressable isHoverable>
+                    <Card variant="flat" isPressable isHoverable>
                       <Card.Body>
                         <Row justify="space-between" align="center">
                           <Badge>

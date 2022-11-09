@@ -10,11 +10,10 @@ import {
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
-import { MyBitcoinJourneyContent } from "components/tippee/MyBitcoinJourneyContent";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import { formatDistanceStrict } from "date-fns";
-import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
+import { DEFAULT_FIAT_CURRENCY, DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getAvatarUrl } from "lib/utils";
@@ -26,7 +25,7 @@ import useSWR from "swr";
 import { ExchangeRates } from "types/ExchangeRates";
 import { PublicTip } from "types/PublicTip";
 
-const WhatIsBitcoinPage: NextPage = () => {
+const ClaimedPage: NextPage = () => {
   const session = useSession();
   const { data: tips } = useSWR<Tip[]>(
     session ? `/api/tippee/tips` : null,
@@ -42,21 +41,13 @@ const WhatIsBitcoinPage: NextPage = () => {
         <title>Lightsats⚡ - Bitcoin</title>
       </Head>
       <MyBitcoinJourneyHeader />
-      <h4>Nice work!</h4>
-      <h6>{"You've successfully claimed your tip"}</h6>
+      <h2>Nice work!</h2>
+      <h4>{"You've successfully claimed your tip"}</h4>
       <Grid.Container gap={2}>
         {claimedTips?.map((tip) => (
           <ClaimedTipCard key={tip.id} tip={tip} />
         ))}
       </Grid.Container>
-      <Spacer y={2} />
-      <MyBitcoinJourneyContent>
-        <Text h4>{"This isn't a normal tip."}</Text>
-        <Text h3 color="warning">
-          {"It's a Bitcoin tip."}
-        </Text>
-      </MyBitcoinJourneyContent>
-
       <MyBitcoinJourneyFooter
         href={Routes.journeyBitcoin}
         text={<>What is Bitcoin?</>}
@@ -65,7 +56,7 @@ const WhatIsBitcoinPage: NextPage = () => {
   );
 };
 
-export default WhatIsBitcoinPage;
+export default ClaimedPage;
 
 type ClaimedTipCardProps = { tip: Tip };
 // this is inefficient as it does 1 call per tipper, but most users will probably only have one tipper
@@ -99,7 +90,7 @@ function ClaimedTipCard({ tip }: ClaimedTipCardProps) {
             <Col>
               <Row>
                 <Text b color="white">
-                  {publicTip.tipper.name ?? "Anon"}
+                  {publicTip.tipper.name ?? DEFAULT_NAME}
                 </Text>
               </Row>
               <Row>
