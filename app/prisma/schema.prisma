@@ -71,6 +71,8 @@ model User {
 
   roles UserRole[]
   userType UserType @default(tipper)
+  created DateTime @default(now())
+  updated DateTime @default(now()) @updatedAt
 }
 
 model Tip {
