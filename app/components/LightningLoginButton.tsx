@@ -15,9 +15,7 @@ export function LightningLoginButton() {
       )}`}
     >
       <a style={{ width: "100%" }}>
-        <Button bordered css={{ width: "100%", background: "white" }}>
-          {t("loginWithLightning")}⚡
-        </Button>
+        <Button css={{ width: "100%" }}>{t("loginWithLightning")}⚡</Button>
       </a>
     </NextLink>
   );

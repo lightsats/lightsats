@@ -1,6 +1,8 @@
 import { Loading } from "@nextui-org/react";
+import currencySymbol from "currency-symbol";
+import unescape from "lodash.unescape";
 
-import { getFiatAmount } from "lib/utils";
+import { getFiatAmount, roundFiat } from "lib/utils";
 
 type FiatPriceProps = {
   currency: string;
@@ -19,19 +21,14 @@ export function FiatPrice({
     return <Loading type="spinner" color="currentColor" size="sm" />;
   }
 
-  const fiatAmount = getFiatAmount(sats, exchangeRate);
-  const formattedCurrency = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currency,
-  })
-    .formatToParts(fiatAmount)
-    .map((val) => val.value)
-    .join("");
+  const symbol = unescape(currencySymbol.symbol(currency));
+  const fiatAmount = roundFiat(getFiatAmount(sats, exchangeRate));
 
   return (
     <>
       {showApprox && "~"}
-      {formattedCurrency}
+      <span dangerouslySetInnerHTML={{ __html: symbol }}></span>
+      {fiatAmount}
     </>
   );
 }

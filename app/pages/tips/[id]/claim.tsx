@@ -1,4 +1,3 @@
-import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import {
   Avatar,
   Button,
@@ -10,7 +9,6 @@ import {
 } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
-import { Icon } from "components/Icon";
 import { LightningLoginButton } from "components/LightningLoginButton";
 import { NextLink } from "components/NextLink";
 import { notifyError } from "components/Toasts";
@@ -226,13 +224,9 @@ function Note({ note }: { note: string | null }) {
   return note ? (
     <>
       <Row justify="center" align="center">
-        <Icon>
-          <ChatBubbleOvalLeftIcon />
-        </Icon>
+        💬
         <Spacer x={0.25} />
-        <Text i size="small">
-          {note}
-        </Text>
+        <Text size="small">{note}</Text>
       </Row>
     </>
   ) : null;
@@ -242,35 +236,47 @@ export { getStaticProps, getStaticPaths };
 
 function TippeeLoginOptions() {
   const { t } = useTranslation(["claim", "common"]);
-  const [alternativeLoginMethodsVisible, setAlternativeLoginMethodsVisible] =
-    useState(false);
+  const [signupMethod, setSignupMethod] = useState("phone");
+  const signupMethods = ["phone", "email", "lightning"];
+
   return (
     <>
-      {!alternativeLoginMethodsVisible && (
-        <>
-          <PhoneSignIn
-            callbackUrl={window.location.href}
-            submitText={t("claim:claim")}
-          />
-          <Spacer y={1} />
-          <Link onClick={() => setAlternativeLoginMethodsVisible(true)}>
-            Use an alternative way to sign in
-          </Link>
-        </>
+      {signupMethod == "phone" && (
+        <PhoneSignIn
+          callbackUrl={window.location.href}
+          submitText={t("claim:claim")}
+        />
       )}
-      {alternativeLoginMethodsVisible && (
+      {signupMethod == "email" && (
+        <EmailSignIn
+          callbackUrl={window.location.href}
+          submitText={t("claim:claim")}
+        />
+      )}
+      {signupMethod == "lightning" && (
         <>
-          <Spacer y={0.5} />
-          <EmailSignIn
-            callbackUrl={window.location.href}
-            submitText={t("claim:claim")}
-          />
-          <Spacer y={0.5} />
-          <Text>{t("common:or")}</Text>
-          <Spacer y={0.5} />
+          <Spacer />
           <LightningLoginButton />
         </>
       )}
+
+      <Spacer y={1} />
+      <Row justify="center" align="center">
+        <Text>Use &nbsp;</Text>
+        {signupMethods
+          .filter((method) => method != signupMethod)
+          .map((method, i) => {
+            return (
+              <>
+                <Link onClick={() => setSignupMethod(method)}>
+                  {t(`common:${method}`)}
+                </Link>
+                {i == 0 && <Text>&nbsp;{t("or")}&nbsp;</Text>}
+              </>
+            );
+          })}
+        <Text>&nbsp;to sign up</Text>
+      </Row>
     </>
   );
 }

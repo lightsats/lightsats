@@ -1,8 +1,9 @@
 {
-  "email": "Email",
-  "phone": "Phone",
+  "email": "📧 Email",
+  "phone": "📱 Phone",
+  "lightning": "⚡ Lightning",
   "loginWithLightning": "Login with Lightning",
-  "or": "or",
+  "or": "orasdf",
   "verifyEmailSubject": "Verify your Lightsats email address",
   "verifyEmailMessage": "Please click the following link to login: <a href=\"{{verifyUrl}}\">Verify</a>",
   "verifyPhoneMessage": "Lightsats login",
