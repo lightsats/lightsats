@@ -321,7 +321,7 @@ const NewTip: NextPage = () => {
                   inputMode="decimal"
                   aria-label="amount"
                   fullWidth
-                  // width="100px"
+                  bordered
                 />
               )}
             />
@@ -376,6 +376,7 @@ const NewTip: NextPage = () => {
               placeholder="Hal Finney"
               maxLength={255}
               fullWidth
+              bordered
             />
           )}
         />
@@ -390,6 +391,7 @@ const NewTip: NextPage = () => {
               placeholder="Thank you for your amazing service!"
               maxLength={255}
               fullWidth
+              bordered
             />
           )}
         />
@@ -416,6 +418,8 @@ const NewTip: NextPage = () => {
                 width="100px"
                 type="number"
                 inputMode="decimal"
+                bordered
+                color="primary"
               />
             )}
           />
