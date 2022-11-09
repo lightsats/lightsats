@@ -44,6 +44,7 @@ export default async function handler(
         : 0;
 
       const publicUser: PublicUser = {
+        id: user.id,
         created: user.created,
         userType: user.userType,
         ...(user.isAnonymous

@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 
 export type PublicUser = Pick<
   User,
-  "userType" | "name" | "avatarURL" | "twitterUsername" | "created"
+  "id" | "userType" | "name" | "avatarURL" | "twitterUsername" | "created"
 > & {
   fallbackAvatarId: string | undefined;
   numTipsSent: number;

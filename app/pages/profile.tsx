@@ -1,13 +1,7 @@
+import { EyeIcon } from "@heroicons/react/24/solid";
 import {
-  ArrowUpTrayIcon,
-  ClipboardIcon,
-  EyeIcon,
-} from "@heroicons/react/24/solid";
-import {
-  Avatar,
   Button,
   Card,
-  Col,
   Input,
   Link,
   Loading,
@@ -18,16 +12,14 @@ import {
 } from "@nextui-org/react";
 import { Tip, User } from "@prisma/client";
 import { BackButton } from "components/BackButton";
-import { Divider } from "components/Divider";
-import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { notifyError, notifySuccess } from "components/Toasts";
+import { UserCard } from "components/UserCard";
 import copy from "copy-to-clipboard";
-import { DEFAULT_NAME, MAX_USER_NAME_LENGTH } from "lib/constants";
+import { MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -89,42 +81,10 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
   return (
     <>
       <Row>
-        <Avatar src={getUserAvatarUrl(user)} />
-        <Spacer x={0.5} />
-        <Col>
-          <Text b>{user.name ?? DEFAULT_NAME}</Text>
-          <Row align="center">
-            <Text>
-              @{user.id.slice(0, 6)}...{user.id.slice(user.id.length - 6)}{" "}
-            </Text>
-            <Spacer x={0.25} />
-            <Button
-              auto
-              light
-              color="primary"
-              size="sm"
-              css={{ p: 0 }}
-              onClick={copyUserId}
-            >
-              <Icon width={16} height={16}>
-                <ClipboardIcon />
-              </Icon>
-            </Button>
-          </Row>
-        </Col>
-        <FlexBox style={{ alignSelf: "center" }}>
-          <NextLink href={`${Routes.users}/${user.id}`} passHref>
-            <a>
-              <Button auto flat css={{ px: 8 }} onClick={copyPublicProfile}>
-                <Icon>
-                  <ArrowUpTrayIcon />
-                </Icon>
-              </Button>
-            </a>
-          </NextLink>
-        </FlexBox>
+        <UserCard user={user} />
       </Row>
-      <Divider />
+
+      <Spacer />
 
       {user.userType === "tipper" ? (
         <TipperProfile mutateUser={mutateUser} session={session} user={user} />
@@ -261,11 +221,6 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
 
   return (
     <>
-      <Text size="small">
-        Fill out the fields below to increase the authenticity of your tips and
-        provide a way for tippees to contact you.
-      </Text>
-      <Spacer />
       <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
         <Controller
           name="name"
@@ -277,6 +232,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
               placeholder="John Galt"
               fullWidth
               maxLength={MAX_USER_NAME_LENGTH}
+              bordered
             />
           )}
         />
@@ -289,8 +245,9 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
               {...field}
               label="Twitter Username"
               placeholder="jack"
-              fullWidth
               contentLeft="@"
+              fullWidth
+              bordered
               css={{
                 fontWeight: "bold",
                 ".nextui-input-content--left": {
@@ -310,6 +267,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
               label="Avatar URL"
               placeholder="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
               fullWidth
+              bordered
               type="url"
             />
           )}
