@@ -189,15 +189,17 @@ export function AppNavbar() {
       )}
       {!user && (
         <Navbar.Content>
-          <Navbar.Item hideIn="xs">
-            <NextLink href={Routes.signup} passHref>
-              <a>
-                <Button auto flat>
-                  Get started
-                </Button>
-              </a>
-            </NextLink>
-          </Navbar.Item>
+          {!hideNavbar && (
+            <Navbar.Item hideIn="xs">
+              <NextLink href={Routes.signup} passHref>
+                <a>
+                  <Button auto flat>
+                    Get started
+                  </Button>
+                </a>
+              </NextLink>
+            </Navbar.Item>
+          )}
           <LanguagePicker />
         </Navbar.Content>
       )}
