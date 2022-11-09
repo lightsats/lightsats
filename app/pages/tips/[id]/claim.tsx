@@ -1,15 +1,6 @@
-import {
-  Avatar,
-  Button,
-  Link,
-  Loading,
-  Row,
-  Spacer,
-  Text,
-} from "@nextui-org/react";
+import { Avatar, Button, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
-import { LightningLoginButton } from "components/LightningLoginButton";
 import { NextLink } from "components/NextLink";
 import { notifyError } from "components/Toasts";
 import { isAfter } from "date-fns";
@@ -25,13 +16,12 @@ import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import EmailSignIn from "pages/auth/signin/email";
-import PhoneSignIn from "pages/auth/signin/phone";
-import React, { useState } from "react";
+import React from "react";
 import useSWR from "swr";
 import { ClaimTipRequest } from "types/ClaimTipRequest";
 import { ExchangeRates } from "types/ExchangeRates";
 import { PublicTip } from "types/PublicTip";
+import { Login } from "../../../components/Login";
 
 const ClaimTipPage: NextPage = () => {
   const { t } = useTranslation("claim");
@@ -190,7 +180,7 @@ const ClaimTipPage: NextPage = () => {
               </>
             ) : (
               <>
-                <TippeeLoginOptions />
+                <Login submitText={t("claim:claim")} />
                 <Row justify="center" align="center"></Row>
               </>
             )}
@@ -233,50 +223,3 @@ function Note({ note }: { note: string | null }) {
 }
 
 export { getStaticProps, getStaticPaths };
-
-function TippeeLoginOptions() {
-  const { t } = useTranslation(["claim", "common"]);
-  const [signupMethod, setSignupMethod] = useState("phone");
-  const signupMethods = ["phone", "email", "lightning"];
-
-  return (
-    <>
-      {signupMethod == "phone" && (
-        <PhoneSignIn
-          callbackUrl={window.location.href}
-          submitText={t("claim:claim")}
-        />
-      )}
-      {signupMethod == "email" && (
-        <EmailSignIn
-          callbackUrl={window.location.href}
-          submitText={t("claim:claim")}
-        />
-      )}
-      {signupMethod == "lightning" && (
-        <>
-          <Spacer />
-          <LightningLoginButton />
-        </>
-      )}
-
-      <Spacer y={1} />
-      <Row justify="center" align="center">
-        <Text>Use &nbsp;</Text>
-        {signupMethods
-          .filter((method) => method != signupMethod)
-          .map((method, i) => {
-            return (
-              <>
-                <Link onClick={() => setSignupMethod(method)}>
-                  {t(`common:${method}`)}
-                </Link>
-                {i == 0 && <Text>&nbsp;{t("or")}&nbsp;</Text>}
-              </>
-            );
-          })}
-        <Text>&nbsp;to sign up</Text>
-      </Row>
-    </>
-  );
-}
