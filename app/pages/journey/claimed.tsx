@@ -13,7 +13,7 @@ import { FiatPrice } from "components/FiatPrice";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import { formatDistanceStrict } from "date-fns";
-import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
+import { DEFAULT_FIAT_CURRENCY, DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getAvatarUrl } from "lib/utils";
@@ -90,7 +90,7 @@ function ClaimedTipCard({ tip }: ClaimedTipCardProps) {
             <Col>
               <Row>
                 <Text b color="white">
-                  {publicTip.tipper.name ?? "Anon"}
+                  {publicTip.tipper.name ?? DEFAULT_NAME}
                 </Text>
               </Row>
               <Row>

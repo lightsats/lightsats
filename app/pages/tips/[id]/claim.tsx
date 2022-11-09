@@ -5,6 +5,7 @@ import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { LightningLoginButton } from "components/LightningLoginButton";
 import { NextLink } from "components/NextLink";
+import { notifyError } from "components/Toasts";
 import { formatDistance, isAfter } from "date-fns";
 import { useDateFnsLocale } from "hooks/useDateFnsLocale";
 
@@ -90,7 +91,7 @@ const ClaimTipPage: NextPage = () => {
           headers: { "Content-Type": "application/json" },
         });
         if (!result.ok) {
-          alert(
+          notifyError(
             "Failed to claim tip: " +
               result.statusText +
               ". Please refresh the page to try again."

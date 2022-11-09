@@ -1,4 +1,5 @@
 import { Loading } from "@nextui-org/react";
+import { notifyError } from "components/Toasts";
 import jwt_decode from "jwt-decode";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -27,7 +28,7 @@ export default function Verify2FA() {
           }
         } catch (error) {
           console.error(error);
-          alert("login failed");
+          notifyError("login failed");
         }
       })();
     }

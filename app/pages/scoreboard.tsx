@@ -3,17 +3,17 @@ import {
   Card,
   Col,
   Grid,
-  Link,
   Loading,
   Row,
   Spacer,
   Text,
   User as NextUIUser,
 } from "@nextui-org/react";
+import { TwitterButton } from "components/TwitterButton";
+import { DEFAULT_NAME } from "lib/constants";
 import { defaultFetcher } from "lib/swr";
 import { getAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
-import Image from "next/image";
 import useSWR from "swr";
 import { Scoreboard as ScoreboardType } from "types/Scoreboard";
 
@@ -81,7 +81,7 @@ const Scoreboard: NextPage = () => {
             <Grid
               key={i}
               justify="center"
-              style={{
+              css={{
                 width: "100%",
                 px: 0,
               }}
@@ -105,24 +105,16 @@ const Scoreboard: NextPage = () => {
                       #{i + 1}
                     </Text>
                     <NextUIUser
-                      name={scoreboardEntry.name ?? "anon"}
+                      name={scoreboardEntry.name ?? DEFAULT_NAME}
                       src={getAvatarUrl(
                         scoreboardEntry.avatarURL,
                         scoreboardEntry.fallbackAvatarId
                       )}
                     />
                     {scoreboardEntry.twitterUsername && (
-                      <Link
-                        href={`https://twitter.com/${scoreboardEntry.twitterUsername}`}
-                        target="_blank"
-                      >
-                        <Image
-                          alt="twitter"
-                          src="/icons/twitter.svg"
-                          width={16}
-                          height={16}
-                        />
-                      </Link>
+                      <TwitterButton
+                        username={scoreboardEntry.twitterUsername}
+                      />
                     )}
                     <Text b size="$xl">
                       {scoreboardEntry.satsSent} sats
@@ -218,24 +210,14 @@ const Scoreboard: NextPage = () => {
                 </Row>
                 <Row justify="flex-start" align="center">
                   <NextUIUser
-                    name={scoreboardEntry.name ?? "anon"}
+                    name={scoreboardEntry.name ?? DEFAULT_NAME}
                     src={getAvatarUrl(
                       scoreboardEntry.avatarURL,
                       scoreboardEntry.fallbackAvatarId
                     )}
                   />
                   {scoreboardEntry.twitterUsername && (
-                    <Link
-                      href={`https://twitter.com/${scoreboardEntry.twitterUsername}`}
-                      target="_blank"
-                    >
-                      <Image
-                        alt="twitter"
-                        src="/icons/twitter.svg"
-                        width={16}
-                        height={16}
-                      />
-                    </Link>
+                    <TwitterButton username={scoreboardEntry.twitterUsername} />
                   )}
                 </Row>
                 <Row justify="center" align="center">

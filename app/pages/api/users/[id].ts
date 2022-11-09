@@ -1,14 +1,16 @@
 import { User } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import prisma from "lib/prismadb";
+import { getFallbackAvatarId } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
+import { PublicUser } from "types/PublicUser";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<User | never>
+  res: NextApiResponse<User | PublicUser | never>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
@@ -16,10 +18,56 @@ export default async function handler(
     return;
   }
 
-  const { id } = req.query;
-  if (session.user.id !== id) {
+  const { id, publicProfile } = req.query;
+
+  if (session.user.id !== id || publicProfile === "true") {
+    if (req.method === "GET") {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: id as string,
+        },
+        include: {
+          tipsSent: true,
+          tipsReceived: true,
+        },
+      });
+      if (!user) {
+        res.status(StatusCodes.NOT_FOUND).end();
+        return;
+      }
+
+      const sentTips = user.tipsSent.filter(
+        (tip) => tip.status === "WITHDRAWN"
+      );
+      const satsDonated = sentTips.length
+        ? sentTips.map((tip) => tip.amount).reduce((a, b) => a + b)
+        : 0;
+
+      const publicUser: PublicUser = {
+        created: user.created,
+        userType: user.userType,
+        ...(user.isAnonymous
+          ? {
+              name: null,
+              avatarURL: null,
+              twitterUsername: null,
+            }
+          : {
+              name: user.name,
+              avatarURL: user.avatarURL,
+              twitterUsername: user.twitterUsername,
+            }),
+        fallbackAvatarId: getFallbackAvatarId(user),
+        numTipsSent: sentTips.length,
+        numTipsReceived: user.tipsReceived.length,
+        satsDonated,
+      };
+      return res.json(publicUser);
+    }
     res.status(StatusCodes.FORBIDDEN).end();
+    return;
   }
+
   const user = await prisma.user.findUnique({
     where: {
       id: id as string,

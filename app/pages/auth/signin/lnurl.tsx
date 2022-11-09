@@ -1,5 +1,6 @@
 import { Button, Loading, Spacer, Text } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
+import { notifyError } from "components/Toasts";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { signIn } from "next-auth/react";
@@ -45,7 +46,7 @@ export default function LnurlAuthSignIn() {
           }
         } catch (error) {
           console.error(error);
-          alert("login failed");
+          notifyError("login failed");
         }
       })();
     }

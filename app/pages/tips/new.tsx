@@ -17,6 +17,7 @@ import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { SatsPrice } from "components/SatsPrice";
+import { notifyError, notifySuccess } from "components/Toasts";
 import { add } from "date-fns";
 import {
   appName,
@@ -202,15 +203,16 @@ const NewTip: NextPage = () => {
             headers: { "Content-Type": "application/json" },
           });
           if (result.ok) {
+            notifySuccess("Tip created");
             const tip = (await result.json()) as Tip;
             // TODO: save the tip in SWR's cache so it is immediately available
             router.push(`${Routes.tips}/${tip.id}`);
           } else {
-            alert("Failed to create tip: " + result.statusText);
+            notifyError("Failed to create tip: " + result.statusText);
           }
         } catch (error) {
           console.error(error);
-          alert("Tip creation failed. Please try again.");
+          notifyError("Tip creation failed. Please try again.");
         }
         setSubmitting(false);
       })();

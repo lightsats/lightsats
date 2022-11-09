@@ -7,6 +7,7 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
+import { notifyError } from "components/Toasts";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -65,7 +66,7 @@ export default function PhoneSignIn({
         return;
       }
       if (!data.phone) {
-        alert("Please enter a valid phone address");
+        notifyError("Please enter a valid phone address");
         return;
       }
       setSubmitting(true);
@@ -86,12 +87,12 @@ export default function PhoneSignIn({
             console.error(
               "Failed to create phone login link: " + result.status
             );
-            alert("Something went wrong. Please try again.");
+            notifyError("Something went wrong. Please try again.");
           }
           router.push(Routes.checkPhone);
         } catch (error) {
           console.error(error);
-          alert("login failed");
+          notifyError("login failed");
         }
 
         setSubmitting(false);

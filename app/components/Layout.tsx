@@ -19,7 +19,7 @@ export default function Layout({
         <ProductionLinkBanner />
       )}
       <AppNavbar />
-      <Spacer />
+      <Spacer y={2} />
       <Container
         justify="flex-start"
         alignItems="center"

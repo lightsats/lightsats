@@ -1,4 +1,5 @@
 import { Button, Input, Loading, Spacer } from "@nextui-org/react";
+import { notifyError } from "components/Toasts";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { useTranslation } from "next-i18next";
@@ -51,7 +52,7 @@ export default function EmailSignIn({
         return;
       }
       if (!data.email) {
-        alert("Please enter a valid email address");
+        notifyError("Please enter a valid email address");
         return;
       }
       setSubmitting(true);
@@ -72,12 +73,12 @@ export default function EmailSignIn({
             console.error(
               "Failed to create email login link: " + result.status
             );
-            alert("Something went wrong. Please try again.");
+            notifyError("Something went wrong. Please try again.");
           }
           router.push(Routes.checkEmail);
         } catch (error) {
           console.error(error);
-          alert("login failed");
+          notifyError("login failed");
         }
 
         setSubmitting(false);

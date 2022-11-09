@@ -33,6 +33,7 @@ export enum Routes {
   signup = "/signup",
   login = "/signin",
   features = "/features",
+  users = "/users",
 }
 
 export const bitcoinJourneyPages = [

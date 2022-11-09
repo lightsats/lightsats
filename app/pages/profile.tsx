@@ -1,17 +1,30 @@
 import {
+  ArrowUpTrayIcon,
+  ClipboardIcon,
+  EyeIcon,
+} from "@heroicons/react/24/solid";
+import {
+  Avatar,
   Button,
-  Checkbox,
+  Card,
+  Col,
   Input,
   Link,
   Loading,
+  Row,
   Spacer,
+  Switch,
   Text,
-  User as NextUIUser,
 } from "@nextui-org/react";
 import { Tip, User } from "@prisma/client";
 import { BackButton } from "components/BackButton";
+import { Divider } from "components/Divider";
+import { FlexBox } from "components/FlexBox";
+import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
-import { appName, DEFAULT_NAME, MAX_USER_NAME_LENGTH } from "lib/constants";
+import { notifyError, notifySuccess } from "components/Toasts";
+import copy from "copy-to-clipboard";
+import { DEFAULT_NAME, MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
@@ -37,6 +50,7 @@ const formStyle: React.CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
+  width: "100%",
 };
 
 const Profile: NextPage = () => {
@@ -61,27 +75,76 @@ type ProfileInternalProps = {
 };
 
 function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
+  const copyUserId = React.useCallback(() => {
+    copy(user.id);
+    notifySuccess("User ID Copied to clipboard");
+  }, [user.id]);
+
+  const copyPublicProfile = React.useCallback(() => {
+    const url = `${window.location.origin}${Routes.users}/${user.id}`;
+    copy(url);
+    notifySuccess("Public profile URL copied to clipboard");
+  }, [user.id]);
+
   return (
     <>
-      <NextUIUser
-        src={getUserAvatarUrl(user)}
-        name={user.name ?? DEFAULT_NAME}
-      />
-      <Spacer />
-      <Text
-        style={{
-          wordBreak: "break-all",
-          textAlign: "center",
-        }}
-      >
-        Logged in as {user.email ?? user.phoneNumber ?? user.lnurlPublicKey}
-      </Text>
+      <Row>
+        <Avatar src={getUserAvatarUrl(user)} />
+        <Spacer x={0.5} />
+        <Col>
+          <Text b>{user.name ?? DEFAULT_NAME}</Text>
+          <Row align="center">
+            <Text>
+              @{user.id.slice(0, 6)}...{user.id.slice(user.id.length - 6)}{" "}
+            </Text>
+            <Spacer x={0.25} />
+            <Button
+              auto
+              light
+              color="primary"
+              size="sm"
+              css={{ p: 0 }}
+              onClick={copyUserId}
+            >
+              <Icon width={16} height={16}>
+                <ClipboardIcon />
+              </Icon>
+            </Button>
+          </Row>
+        </Col>
+        <FlexBox style={{ alignSelf: "center" }}>
+          <NextLink href={`${Routes.users}/${user.id}`} passHref>
+            <a>
+              <Button auto flat css={{ px: 8 }} onClick={copyPublicProfile}>
+                <Icon>
+                  <ArrowUpTrayIcon />
+                </Icon>
+              </Button>
+            </a>
+          </NextLink>
+        </FlexBox>
+      </Row>
+      <Divider />
 
       {user.userType === "tipper" ? (
         <TipperProfile mutateUser={mutateUser} session={session} user={user} />
       ) : (
         <TippeeProfile mutateUser={mutateUser} session={session} user={user} />
       )}
+
+      <Spacer />
+      <Row>
+        <Text b>Connected accounts</Text>
+      </Row>
+      <Row>
+        <Text>
+          {user.email && "Email: " + user.email}
+          {user.phoneNumber && "Phone: " + user.phoneNumber}
+          {user.lnurlPublicKey && "Wallet: " + user.lnurlPublicKey}
+        </Text>
+      </Row>
+      <Spacer />
+      <BackButton />
     </>
   );
 }
@@ -112,7 +175,7 @@ function TippeeProfile({ mutateUser, session, user }: ProfileInternalProps) {
       if (result.ok) {
         await mutateUser();
       } else {
-        alert("Failed to update profile: " + result.statusText);
+        notifyError("Failed to update profile: " + result.statusText);
       }
       setSubmitting(false);
     })();
@@ -147,7 +210,7 @@ function TippeeProfile({ mutateUser, session, user }: ProfileInternalProps) {
   );
 }
 
-function TipperProfile({ mutateUser, session, user }: ProfileInternalProps) {
+function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
   const router = useRouter();
   const [isSubmitting, setSubmitting] = React.useState(false);
 
@@ -184,10 +247,11 @@ function TipperProfile({ mutateUser, session, user }: ProfileInternalProps) {
           headers: { "Content-Type": "application/json" },
         });
         if (result.ok) {
+          notifySuccess("Profile updated");
           await mutateUser();
           router.push(Routes.home);
         } else {
-          alert("Failed to update profile: " + result.statusText);
+          notifyError("Failed to update profile: " + result.statusText);
         }
         setSubmitting(false);
       })();
@@ -197,7 +261,7 @@ function TipperProfile({ mutateUser, session, user }: ProfileInternalProps) {
 
   return (
     <>
-      <Text style={{ textAlign: "center" }}>
+      <Text size="small">
         Fill out the fields below to increase the authenticity of your tips and
         provide a way for tippees to contact you.
       </Text>
@@ -209,7 +273,7 @@ function TipperProfile({ mutateUser, session, user }: ProfileInternalProps) {
           render={({ field }) => (
             <Input
               {...field}
-              label="Name"
+              label="Your Name"
               placeholder="John Galt"
               fullWidth
               maxLength={MAX_USER_NAME_LENGTH}
@@ -226,6 +290,13 @@ function TipperProfile({ mutateUser, session, user }: ProfileInternalProps) {
               label="Twitter Username"
               placeholder="jack"
               fullWidth
+              contentLeft="@"
+              css={{
+                fontWeight: "bold",
+                ".nextui-input-content--left": {
+                  pr: 0,
+                },
+              }}
             />
           )}
         />
@@ -244,22 +315,35 @@ function TipperProfile({ mutateUser, session, user }: ProfileInternalProps) {
           )}
         />
         <Spacer />
-        <Controller
-          name="isAnonymous"
-          control={control}
-          render={({ field }) => (
-            <Checkbox
-              {...field}
-              value={undefined}
-              isSelected={field.value}
-              label="Anonymous on scoreboard"
-              size="sm"
-            />
-          )}
-        />
+        <Row>
+          <Card variant="bordered">
+            <Card.Body css={{ backgroundColor: "$accents0" }}>
+              <Row align="center" justify="center">
+                <Icon>
+                  <EyeIcon />
+                </Icon>
+                <Spacer x={0.5} />
+                <Text weight="medium">Anonymise my info on scoreboards</Text>
+                <Spacer />
+                <Controller
+                  name="isAnonymous"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      {...field}
+                      color="success"
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
+                  )}
+                />
+              </Row>
+            </Card.Body>
+          </Card>
+        </Row>
 
         <Spacer />
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting} css={{ width: "100%" }}>
           {isSubmitting ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
@@ -267,18 +351,6 @@ function TipperProfile({ mutateUser, session, user }: ProfileInternalProps) {
           )}
         </Button>
       </form>
-      <Spacer />
-      <Text
-        size="small"
-        style={{
-          wordBreak: "break-all",
-          textAlign: "center",
-        }}
-      >
-        {appName} user ID: {session.user.id}
-      </Text>
-      <Spacer />
-      <BackButton />
     </>
   );
 }

@@ -53,7 +53,7 @@ export function getFallbackAvatarId(user: User | undefined) {
   if (!user) {
     return undefined;
   }
-  const secretId = user?.email ?? user?.lnurlPublicKey;
+  const secretId = user?.email ?? user?.phoneNumber ?? user?.lnurlPublicKey;
   if (!secretId) {
     return undefined;
   }
