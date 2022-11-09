@@ -29,7 +29,8 @@ export default function Layout({
         css={{
           flex: 1,
           ...(router.pathname !== Routes.scoreboard &&
-          router.pathname !== Routes.admin
+          router.pathname !== Routes.admin &&
+          router.pathname !== Routes.home
             ? { maxWidth: "600px" }
             : {}),
         }}
