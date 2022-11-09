@@ -236,6 +236,7 @@ export { getStaticProps, getStaticPaths };
 
 function TippeeLoginOptions() {
   const { t } = useTranslation(["claim", "common"]);
+  const router = useRouter();
   const [signupMethod, setSignupMethod] = useState("phone");
   const signupMethods = ["phone", "email", "lightning"];
 
@@ -243,20 +244,20 @@ function TippeeLoginOptions() {
     <>
       {signupMethod == "phone" && (
         <PhoneSignIn
-          callbackUrl={window.location.href}
+          callbackUrl={router.pathname}
           submitText={t("claim:claim")}
         />
       )}
       {signupMethod == "email" && (
         <EmailSignIn
-          callbackUrl={window.location.href}
+          callbackUrl={router.pathname}
           submitText={t("claim:claim")}
         />
       )}
       {signupMethod == "lightning" && (
         <>
           <Spacer />
-          <LightningLoginButton />
+          <LightningLoginButton callbackUrl={router.pathname} />
         </>
       )}
 
