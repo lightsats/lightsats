@@ -64,12 +64,72 @@ export const earn: Item[] = [
       },
       {
         category: "earn",
-        link: "https://lgt.st/lolli",
-        image: "lolli.jpeg",
+        link: "https://lgt.st/fold",
+        image: "fold.webp",
         languageCodes: [getLanguageCode("English")],
-        name: "Lolli",
+        name: "Fold: Bitcoin Cashback Rewards",
         slogan:
-          "Lolli is a rewards application that gives you bitcoin when you shop at your favorite stores.",
-        platforms: ["mobile","desktop"],
+          "Fold is the bitcoin rewards debit card and bitcoin-back shopping app. Earn bitcoin on everything with the Fold bitcoin cashback debit card. Request access to sign up for our bitcoinback debit card.",
+        platforms: ["mobile"],
+      },
+      {
+        category: "earn",
+        link: "https://lgt.st/carrot",
+        image: "carrot.webp",
+        languageCodes: [getLanguageCode("English")],
+        name: "Carrot",
+        slogan:
+          "Carrot gives you a place to earn bitcoin for by reading articles about Bitcoin and supporting your favorite communities, organizations, and initiatives! Ready to earn?",
+        platforms: ["mobile"],
+      },
+      {
+        category: "earn",
+        link: "https://lgt.st/carrot",
+        image: "fountain.webp",
+        languageCodes: [getLanguageCode("English")],
+        name: "Fountain",
+        slogan:
+          "Listen, learn, and earn for the value you bring to Fountain. Available on iOS and Android.",
+        platforms: ["mobile"],
+      },
+      {
+        category: "earn",
+        link: "https://lgt.st/carrot",
+        image: "stackernews.png",
+        languageCodes: [getLanguageCode("English")],
+        name: "stacker news",
+        slogan:
+          "It's like Hacker News but we pay you Bitcoin.",
+        platforms: ["web"],
+      },
+      {
+        category: "earn",
+        link: "https://lgt.st/satsback",
+        image: "satsback.png",
+        languageCodes: [getLanguageCode("English")],
+        name: "Satsback.com",
+        slogan:
+          "Satsback is the evolution of cashback and loyalty rewards - the easiest and safest way to start saving bitcoin with more than 10,000 connected merchants.",
+        platforms: ["web"],
+      },
+      {
+        category: "earn",
+        link: "https://lgt.st/satsback",
+        image: "smiles.jpeg",
+        languageCodes: [getLanguageCode("English")],
+        name: "Smile",
+        slogan:
+          "Bitcoin App for iOS or Android to Earn Free Bitcoin. How To Get Free Bitcoin Instantly. Playing Games. Proof of Work. Win. BTC. Sats. Free Bitcoin.",
+        platforms: ["mobile"],
+      },
+      {
+        category: "earn",
+        link: "https://lgt.st/satsback",
+        image: "webdeveloper.jpeg",
+        languageCodes: [getLanguageCode("English")],
+        name: "Webdeveloper",
+        slogan:
+          "Serving the #webDeveloper community",
+        platforms: ["mobile"],
       },
 ];

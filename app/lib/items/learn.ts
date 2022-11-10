@@ -22,4 +22,14 @@ export const learn: LearnItem[] = [
     link: "https://lgt.st/bitcoinrocks",
     difficulty: "easy",
   },
+  {
+    category: "learn",
+    image: "sayloracademy.png",
+    languageCodes: [getLanguageCode("English")],
+    platforms: ["web", "mobile"],
+    name: "Saylor Academy",
+    slogan: "Bitcoin is increasingly being adopted as pristine collateral, a longer-term store of value, and unstoppable money",
+    link: "https://lgt.st/sayloracademy",
+    difficulty: "hard",
+  },
 ];
