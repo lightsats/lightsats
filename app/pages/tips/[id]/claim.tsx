@@ -180,9 +180,10 @@ const ClaimTipPage: NextPage = () => {
               </>
             ) : (
               <>
-                <Text>{t("claim:instructions")}</Text>
-                <Spacer />
                 <Login
+                  instructionsText={(loginMethod) =>
+                    t(`claim:instructions.${loginMethod}`)
+                  }
                   submitText={t("claim:claim")}
                   callbackUrl={router.pathname}
                 />

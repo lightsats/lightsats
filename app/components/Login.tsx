@@ -6,6 +6,7 @@ import PhoneSignIn from "pages/auth/signin/phone";
 import { useState } from "react";
 
 type LoginProps = {
+  instructionsText?(loginMethod: LoginMethod): string;
   submitText?: string;
   callbackUrl?: string;
 };
@@ -13,12 +14,22 @@ type LoginProps = {
 const loginMethods = ["phone", "email", "lightning"] as const;
 type LoginMethod = typeof loginMethods[number];
 
-export function Login({ submitText, callbackUrl }: LoginProps) {
+export function Login({
+  submitText,
+  callbackUrl,
+  instructionsText,
+}: LoginProps) {
   const { t } = useTranslation(["claim", "common"]);
   const [loginMethod, setLoginMethod] = useState<LoginMethod>("phone");
 
   return (
     <>
+      {instructionsText && (
+        <>
+          <Text>{instructionsText(loginMethod)}</Text>
+          <Spacer />
+        </>
+      )}
       {loginMethod === "phone" && (
         <PhoneSignIn callbackUrl={callbackUrl} submitText={submitText} />
       )}
