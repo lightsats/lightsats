@@ -7,9 +7,9 @@ export const buy: Item[] = [
     link: "https://lgt.st/swan",
     image: "swan.jpeg",
     languageCodes: [getLanguageCode("English")],
+    name: "Swan",
     placeholderDataUrl:
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AM3i9wlHbAA5X8/j+AAAK1LB1+1uja0ABDUABEFn7///vNToAClRANnt/z5oigA0XN3w/32KGWQSLeGBAAAAAElFTkSuQmCC",
-    name: "Swan",
     slogan:
       "Swan Bitcoin provides savings plans, instant buys, Private Client for businesses and HNWI, Advisor Services for financial advisors, and world-class Bitcoin education.",
     platforms: ["web", "mobile"],

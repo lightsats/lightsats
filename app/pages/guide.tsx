@@ -41,7 +41,7 @@ const guides: Guide[] = [
     name: "Save 🏦",
     description: "How to safely store your Bitcoin long-term",
     icon: <CircleStackIcon />,
-    link: Routes.guideSpend,
+    link: Routes.guideSave,
   },
   {
     name: "Send ↗️",
