@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import { getApiI18n } from "lib/i18n/api";
+import prisma from "lib/prismadb";
 import { Routes } from "lib/Routes";
 import { getLocalePath } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -84,12 +85,49 @@ export default async function handler(
         error
       );
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      return;
     }
   } else if (twoFactorLoginRequest.phoneNumber) {
     try {
       if (!twilioClient) {
         throw new Error("SMS config not setup. Please see .env.example");
       }
+
+      if (twoFactorLoginRequest.tipId) {
+        const tip = await prisma.tip.findFirst({
+          where: {
+            id: twoFactorLoginRequest.tipId,
+          },
+        });
+        if (!tip) {
+          res.status(StatusCodes.NOT_FOUND).end();
+          return;
+        }
+        if (tip.numSmsTokens < 1) {
+          res.status(StatusCodes.CONFLICT).end();
+          return;
+        }
+        await prisma.tip.update({
+          where: {
+            id: twoFactorLoginRequest.tipId,
+          },
+          data: {
+            numSmsTokens: tip.numSmsTokens - 1,
+          },
+        });
+      } else {
+        // don't allow users to login with phone number unless they have a phone number
+        const user = await prisma.user.findFirst({
+          where: {
+            phoneNumber: twoFactorLoginRequest.phoneNumber,
+          },
+        });
+        if (!user) {
+          res.status(StatusCodes.NOT_FOUND).end();
+          return;
+        }
+      }
+
       await twilioClient.messages.create({
         to: twoFactorLoginRequest.phoneNumber,
         from: process.env.TWILIO_PHONE_NUMBER, // TODO: consider Alphanumeric Sender ID ("Lightsats")

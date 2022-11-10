@@ -9,6 +9,7 @@ type LoginProps = {
   instructionsText?(loginMethod: LoginMethod): string;
   submitText?: string;
   callbackUrl?: string;
+  tipId?: string;
 };
 
 const loginMethods = ["phone", "email", "lightning"] as const;
@@ -18,6 +19,7 @@ export function Login({
   submitText,
   callbackUrl,
   instructionsText,
+  tipId,
 }: LoginProps) {
   const { t } = useTranslation(["claim", "common"]);
   const [loginMethod, setLoginMethod] = useState<LoginMethod>("phone");
@@ -31,7 +33,11 @@ export function Login({
         </>
       )}
       {loginMethod === "phone" && (
-        <PhoneSignIn callbackUrl={callbackUrl} submitText={submitText} />
+        <PhoneSignIn
+          callbackUrl={callbackUrl}
+          submitText={submitText}
+          tipId={tipId}
+        />
       )}
       {loginMethod === "email" && (
         <EmailSignIn callbackUrl={callbackUrl} submitText={submitText} />

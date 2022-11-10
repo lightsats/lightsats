@@ -214,6 +214,7 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
             }
             submitText={t("claim:claim")}
             callbackUrl={getCurrentUrl(router)}
+            tipId={publicTip.id}
           />
           <Spacer />
           <Row justify="center" align="center">

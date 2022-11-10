@@ -74,8 +74,9 @@ export default function EmailSignIn({
               "Failed to create email login link: " + result.status
             );
             notifyError("Something went wrong. Please try again.");
+          } else {
+            router.push(Routes.checkEmail);
           }
-          router.push(Routes.checkEmail);
         } catch (error) {
           console.error(error);
           notifyError("login failed");

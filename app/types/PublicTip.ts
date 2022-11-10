@@ -3,6 +3,7 @@ import { Tip, User } from "@prisma/client";
 // TODO: add tipperName, expiry etc.
 export type PublicTip = Pick<
   Tip,
+  | "id"
   | "amount"
   | "tipperId"
   | "tippeeId"
