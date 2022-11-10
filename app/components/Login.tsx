@@ -1,41 +1,34 @@
 import { Link, Row, Spacer, Text } from "@nextui-org/react";
 import { LightningLoginButton } from "components/LightningLoginButton";
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 import EmailSignIn from "pages/auth/signin/email";
 import PhoneSignIn from "pages/auth/signin/phone";
 import { useState } from "react";
 
 type LoginProps = {
   submitText?: string;
+  callbackUrl?: string;
 };
 
 const loginMethods = ["phone", "email", "lightning"] as const;
 type LoginMethod = typeof loginMethods[number];
 
-export function Login(props: LoginProps) {
+export function Login({ submitText, callbackUrl }: LoginProps) {
   const { t } = useTranslation(["claim", "common"]);
-  const router = useRouter();
   const [loginMethod, setLoginMethod] = useState<LoginMethod>("phone");
 
   return (
     <>
       {loginMethod === "phone" && (
-        <PhoneSignIn
-          callbackUrl={router.pathname}
-          submitText={props.submitText}
-        />
+        <PhoneSignIn callbackUrl={callbackUrl} submitText={submitText} />
       )}
       {loginMethod === "email" && (
-        <EmailSignIn
-          callbackUrl={router.pathname}
-          submitText={props.submitText}
-        />
+        <EmailSignIn callbackUrl={callbackUrl} submitText={submitText} />
       )}
       {loginMethod === "lightning" && (
         <>
           <Spacer />
-          <LightningLoginButton />
+          <LightningLoginButton callbackUrl={callbackUrl} />
         </>
       )}
 

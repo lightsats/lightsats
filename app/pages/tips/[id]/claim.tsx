@@ -182,7 +182,10 @@ const ClaimTipPage: NextPage = () => {
               <>
                 <Text>{t("claim:instructions")}</Text>
                 <Spacer />
-                <Login submitText={t("claim:claim")} />
+                <Login
+                  submitText={t("claim:claim")}
+                  callbackUrl={router.pathname}
+                />
                 <Row justify="center" align="center"></Row>
               </>
             )}
