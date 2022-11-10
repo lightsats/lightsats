@@ -42,6 +42,8 @@ export const spend: Item[] = [
     image: "thebitcoincompany.jpg",
     languageCodes: [getLanguageCode("English")],
     link: "https://lgt.st/thebitcoincompany",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
     name: "The Bitcoin Company",
     slogan: "The easiest way to spend bitcoin and earn rewards.",
     platforms: ["mobile"],

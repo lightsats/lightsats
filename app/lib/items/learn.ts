@@ -32,8 +32,11 @@ export const learn: LearnItem[] = [
     image: "sayloracademy.png",
     languageCodes: [getLanguageCode("English")],
     platforms: ["web", "mobile"],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AOLj5MbKy97k6PDy8wAgLC8AGyRmgpCbrbQAbXV2Dyo0ABAdYGxtAPf397rAxL3Eyerr690NHAp/k8G8AAAAAElFTkSuQmCC",
     name: "Saylor Academy",
-    slogan: "Bitcoin is increasingly being adopted as pristine collateral, a longer-term store of value, and unstoppable money",
+    slogan:
+      "Bitcoin is increasingly being adopted as pristine collateral, a longer-term store of value, and unstoppable money",
     link: "https://lgt.st/sayloracademy",
     difficulty: "hard",
   },
