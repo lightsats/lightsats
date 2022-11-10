@@ -1,7 +1,7 @@
 import { Link, Row, Spacer, Text } from "@nextui-org/react";
-import { LightningLoginButton } from "components/LightningLoginButton";
 import { useTranslation } from "next-i18next";
 import EmailSignIn from "pages/auth/signin/email";
+import LnurlAuthSignIn from "pages/auth/signin/lnurl";
 import PhoneSignIn from "pages/auth/signin/phone";
 import { useState } from "react";
 
@@ -10,6 +10,7 @@ type LoginProps = {
   submitText?: string;
   callbackUrl?: string;
   tipId?: string;
+  defaultLoginMethod: LoginMethod;
 };
 
 const loginMethods = ["phone", "email", "lightning"] as const;
@@ -20,9 +21,11 @@ export function Login({
   callbackUrl,
   instructionsText,
   tipId,
+  defaultLoginMethod,
 }: LoginProps) {
   const { t } = useTranslation(["claim", "common"]);
-  const [loginMethod, setLoginMethod] = useState<LoginMethod>("phone");
+  const [loginMethod, setLoginMethod] =
+    useState<LoginMethod>(defaultLoginMethod);
 
   return (
     <>
@@ -45,7 +48,7 @@ export function Login({
       {loginMethod === "lightning" && (
         <>
           <Spacer />
-          <LightningLoginButton callbackUrl={callbackUrl} />
+          <LnurlAuthSignIn callbackUrl={callbackUrl} />
         </>
       )}
 
@@ -64,7 +67,6 @@ export function Login({
               </>
             );
           })}
-        <Text></Text>
       </Row>
     </>
   );

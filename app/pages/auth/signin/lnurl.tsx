@@ -14,9 +14,14 @@ import { LnurlAuthStatus } from "types/LnurlAuthStatus";
 
 const useLnurlStatusConfig: SWRConfiguration = { refreshInterval: 1000 };
 
-export default function LnurlAuthSignIn() {
+type LnurlAuthSignInProps = {
+  callbackUrl?: string;
+};
+
+export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const router = useRouter();
-  const { callbackUrl } = router.query;
+  const callbackUrlWithFallback =
+    callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
   // only retrieve the qr code once
   const { data: qr } = useSWRImmutable<LnurlAuthLoginInfo>(
     "/api/auth/lnurl/generate-secret",
@@ -35,7 +40,7 @@ export default function LnurlAuthSignIn() {
         try {
           const result = await signIn("lnurl", {
             k1: qr.k1,
-            callbackUrl: (callbackUrl as string) ?? Routes.home,
+            callbackUrl: callbackUrlWithFallback,
             redirect: false,
           });
 
@@ -50,7 +55,7 @@ export default function LnurlAuthSignIn() {
         }
       })();
     }
-  }, [callbackUrl, qr, router, status]);
+  }, [callbackUrlWithFallback, qr, router, status]);
 
   return (
     <>

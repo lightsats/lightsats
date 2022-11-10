@@ -13,7 +13,7 @@ const SignInPage: NextPage = () => {
       <h2>Sign in</h2>
       <p>Choose your preferred way to sign in to Lightsats.</p>
       <Spacer />
-      <Login />
+      <Login defaultLoginMethod="lightning" />
     </>
   );
 };

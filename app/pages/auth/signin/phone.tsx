@@ -56,7 +56,7 @@ export default function PhoneSignIn({
   const callbackUrlWithFallback =
     callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
 
-  console.log("callbackUrlWithFallback", callbackUrlWithFallback);
+  // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
 
   React.useEffect(() => {
     setFocus("phone");
@@ -102,7 +102,7 @@ export default function PhoneSignIn({
         setSubmitting(false);
       })();
     },
-    [callbackUrlWithFallback, isSubmitting, router]
+    [callbackUrlWithFallback, isSubmitting, router, tipId]
   );
 
   return (
