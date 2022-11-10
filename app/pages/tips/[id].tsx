@@ -52,6 +52,11 @@ const TipPage: NextPage = () => {
     setPrevTipStatus(tipStatus);
   }, [prevTipStatus, tipStatus]);
 
+  const hasExpired =
+    tip &&
+    expirableTipStatuses.indexOf(tip.status) >= 0 &&
+    isAfter(new Date(), new Date(tip.expiry));
+
   React.useEffect(() => {
     if (tipStatus === "UNFUNDED" && !hasExpired && tipInvoice) {
       (async () => {
@@ -74,11 +79,6 @@ const TipPage: NextPage = () => {
   const placing = scoreboard
     ? scoreboard.entries.findIndex((entry) => entry.isMe) + 1
     : undefined;
-
-  const hasExpired =
-    tip &&
-    expirableTipStatuses.indexOf(tip.status) >= 0 &&
-    isAfter(new Date(), new Date(tip.expiry));
 
   const deleteTip = React.useCallback(() => {
     (async () => {
@@ -114,19 +114,22 @@ const TipPage: NextPage = () => {
         {!hasExpired ? (
           <>
             <TipPageStatusHeader status={tip.status} />
-            <Spacer />
-            <ClaimProgressTracker tipId={tip.id} />
-            <Spacer />
-
-            {tip.status === "UNFUNDED" && tip.invoice && (
-              <PayTipInvoice invoice={tip.invoice} />
-            )}
-            {tip.status === "UNCLAIMED" && <ShareUnclaimedTip tip={tip} />}
           </>
         ) : (
           <>
             <Text h2>Oh no! 😔</Text>
             <Text color="error">This tip has expired.</Text>
+          </>
+        )}
+        <Spacer />
+        <ClaimProgressTracker tipId={tip.id} />
+        <Spacer />
+        {!hasExpired && (
+          <>
+            {tip.status === "UNFUNDED" && tip.invoice && (
+              <PayTipInvoice invoice={tip.invoice} />
+            )}
+            {tip.status === "UNCLAIMED" && <ShareUnclaimedTip tip={tip} />}
           </>
         )}
 
