@@ -180,6 +180,8 @@ const ClaimTipPage: NextPage = () => {
               </>
             ) : (
               <>
+                <Text>{t("claim:instructions")}</Text>
+                <Spacer />
                 <Login submitText={t("claim:claim")} />
                 <Row justify="center" align="center"></Row>
               </>
