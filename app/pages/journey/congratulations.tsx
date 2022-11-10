@@ -29,7 +29,11 @@ const CongratulationsPage: NextPage = () => {
       </MyBitcoinJourneyContent>
 
       <Spacer />
-      <MyBitcoinJourneyFooter href={Routes.guide} text={"What's Next?"} />
+      <MyBitcoinJourneyFooter
+        href={Routes.guide}
+        text={"What's Next?"}
+        nextUp="FILL ME"
+      />
     </>
   );
 };

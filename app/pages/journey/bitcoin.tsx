@@ -1,4 +1,6 @@
-import { Spacer, Text } from "@nextui-org/react";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import { Card, Grid, Image, Spacer, Text } from "@nextui-org/react";
+import { Icon } from "components/Icon";
 import { MyBitcoinJourneyContent } from "components/tippee/MyBitcoinJourneyContent";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
@@ -14,6 +16,10 @@ const WhatIsBitcoinPage: NextPage = () => {
       </Head>
       <MyBitcoinJourneyHeader />
       <MyBitcoinJourneyContent>
+        <Image src="/images/guide/diamond-hands.png" width={250} />
+        <Text h3 style={{ width: "100%" }}>
+          Bitcoin is magic internet money
+        </Text>
         <Text>
           {
             "Bitcoin is a digital currency that does not require any intermediary to send and receive from one person to another."
@@ -25,15 +31,28 @@ const WhatIsBitcoinPage: NextPage = () => {
             "Just like you recieved this tip from someone digitally, it never went through a bank or any entity."
           }
         </Text>
-        <Spacer y={3} />
-        <Text blockquote>
-          {"You'll need a Bitcoin wallet to withdraw your tip."}
-        </Text>
+        <Spacer y={1} />
+        <Card variant="flat">
+          <Card.Body>
+            <Grid.Container>
+              <Grid xs={1}>
+                <Icon>
+                  <InformationCircleIcon />
+                </Icon>
+              </Grid>
+              <Grid xs={10}>
+                {
+                  "To withdraw your bitcoin, you'll first need a bitcoin wallet. Find out more in the next step."
+                }
+              </Grid>
+            </Grid.Container>
+          </Card.Body>
+        </Card>
       </MyBitcoinJourneyContent>
-
       <MyBitcoinJourneyFooter
         href={Routes.journeySelectWallet}
-        text={<>Choose a Wallet</>}
+        text={<>Continue</>}
+        nextUp="Download a wallet"
       />
     </>
   );

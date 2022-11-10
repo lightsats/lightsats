@@ -15,18 +15,9 @@ export type ItemFeatureBadgeProps = {
 
 export function ItemFeatureBadge(feature: ItemFeatureBadgeProps) {
   return (
-    <Badge
-      //color={feature.variant === "success" ? "white" : feature.variant}
-      //size="small"
-      css={{
-        background: "transparent",
-        borderColor: "$gray600",
-        color: `$${feature.variant}`,
-        opacity: 0.75,
-      }}
-    >
-      {feature.name}&nbsp;
+    <Badge variant="bordered" color="primary">
       {getIcon(feature.variant === "success")}
+      &nbsp;{feature.name}&nbsp;
     </Badge>
   );
 }

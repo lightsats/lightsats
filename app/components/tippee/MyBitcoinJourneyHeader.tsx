@@ -54,11 +54,11 @@ export function MyBitcoinJourneyHeader() {
 
   return (
     <>
-      <Text size="small" b>
-        My Bitcoin Journey ({progressIndex} / {bitcoinJourneyPages.length})
+      <Text b small transform="uppercase" color="$gray700">
+        Step {progressIndex} of {bitcoinJourneyPages.length}
       </Text>
       <Spacer y={0.5} />
-      <Progress value={progress} color="success" status="success" />
+      <Progress value={progress} color="primary" status="primary" />
       <Spacer />
     </>
   );
