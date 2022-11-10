@@ -2,7 +2,7 @@
   "hello": "Hello {{tippeeName}}!",
   "tipperHasGiftedYou": "{{tipperName}} has gifted you",
   "youHaveBeenGifted": "You've been gifted",
-  "thisTipHasExpired": "This tip has expired.",
+  "expired": "This tip has expired.",
   "instructions.phone": "Enter your phone number below and press the button to claim your gift.",
   "instructions.email": "Enter your email below and press the button to claim your gift.",
   "instructions.lightning": "Login with Lightning",

@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import { format } from "date-fns";
 import { FEE_PERCENT, MINIMUM_FEE_SATS, SATS_TO_BTC } from "lib/constants";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
+import { NextRouter } from "next/router";
 import { MouseEventHandler } from "react";
 import { Item } from "types/Item";
 
@@ -75,3 +76,12 @@ export const getItemImageLocation = (item: Item) =>
 
 export const getLocalePath = (locale = DEFAULT_LOCALE) =>
   locale !== DEFAULT_LOCALE ? `/${locale}` : "";
+
+export const getAppUrl = () =>
+  global.window ? window.location.origin : process.env.APP_URL;
+
+export const getCurrentUrl = (router: NextRouter) => {
+  return global.window
+    ? window.location.href
+    : getAppUrl() + getLocalePath(router.locale) + router.pathname;
+};
