@@ -6,7 +6,7 @@ import {
   Loading,
   Row,
   Spacer,
-  Text
+  Text,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
@@ -64,7 +64,12 @@ export function Tips() {
               <Grid xs={12} key={tip.id} justify="center">
                 <NextLink href={`${Routes.tips}/${tip.id}`}>
                   <a style={cardLinkStyle}>
-                    <Card variant="flat" isPressable isHoverable>
+                    <Card
+                      variant="flat"
+                      isPressable
+                      isHoverable
+                      style={{ backgroundColor: "white" }}
+                    >
                       <Card.Body>
                         <Row justify="space-between" align="center">
                           <Badge>

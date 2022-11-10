@@ -2,22 +2,24 @@ import { Button } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
 import { Routes } from "lib/Routes";
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 
-export function LightningLoginButton() {
+type LightningLoginButtonProps = {
+  callbackUrl?: string;
+};
+
+export function LightningLoginButton({
+  callbackUrl,
+}: LightningLoginButtonProps) {
   const { t } = useTranslation("common");
-  const router = useRouter();
 
   return (
     <NextLink
       href={`${Routes.lnurlAuthSignin}?callbackUrl=${encodeURIComponent(
-        router.pathname
+        callbackUrl ?? Routes.home
       )}`}
     >
       <a style={{ width: "100%" }}>
-        <Button bordered css={{ width: "100%", background: "white" }}>
-          {t("loginWithLightning")}⚡
-        </Button>
+        <Button css={{ width: "100%" }}>⚡ {t("loginWithLightning")}</Button>
       </a>
     </NextLink>
   );

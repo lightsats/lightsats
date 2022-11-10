@@ -1,4 +1,4 @@
-import { Card } from "@nextui-org/react";
+import { Card, Row } from "@nextui-org/react";
 import { ReactNode } from "react";
 
 type Props = {
@@ -15,7 +15,9 @@ export function Alert(props: Props) {
         borderColor: "$warningBorder",
       }}
     >
-      <Card.Body>{props.children}</Card.Body>
+      <Card.Body>
+        <Row justify="center">{props.children}</Row>
+      </Card.Body>
     </Card>
   );
 }
