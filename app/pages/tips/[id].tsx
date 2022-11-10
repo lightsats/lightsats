@@ -17,7 +17,6 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
-import { ExchangeRates } from "types/ExchangeRates";
 import { Scoreboard } from "types/Scoreboard";
 import { requestProvider } from "webln";
 
@@ -54,7 +53,7 @@ const TipPage: NextPage = () => {
   }, [prevTipStatus, tipStatus]);
 
   React.useEffect(() => {
-    if (tipStatus === "UNFUNDED" && tipInvoice) {
+    if (tipStatus === "UNFUNDED" && !hasExpired && tipInvoice) {
       (async () => {
         try {
           console.log("Launching webln");
@@ -65,7 +64,7 @@ const TipPage: NextPage = () => {
         }
       })();
     }
-  }, [tipStatus, tipInvoice]);
+  }, [tipStatus, tipInvoice, hasExpired]);
 
   const { data: scoreboard } = useSWR<Scoreboard>(
     tip && tip.status === "WITHDRAWN" ? `/api/scoreboard` : null,
@@ -80,11 +79,6 @@ const TipPage: NextPage = () => {
     tip &&
     expirableTipStatuses.indexOf(tip.status) >= 0 &&
     isAfter(new Date(), new Date(tip.expiry));
-
-  const { data: exchangeRates } = useSWR<ExchangeRates>(
-    `/api/exchange/rates`,
-    defaultFetcher
-  );
 
   const deleteTip = React.useCallback(() => {
     (async () => {
