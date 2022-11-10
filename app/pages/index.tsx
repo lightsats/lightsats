@@ -61,7 +61,7 @@ const Home: NextPage = () => {
             the world around you.
           </Text>
           <Spacer />
-          <NextLink href={Routes.signup} passHref>
+          <NextLink href={Routes.login} passHref>
             <a>
               <Button size="lg">Get started &raquo;</Button>
             </a>

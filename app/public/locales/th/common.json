@@ -1,6 +1,7 @@
 {
-  "email": "อีเมล",
-  "phone": "Phone",
+  "email": "📧 อีเมล",
+  "phone": "📱 Phone",
+  "lightning": "⚡ Lightning",
   "loginWithLightning": "เข้าสู่ระบบด้วย Lightning",
   "or": "หรือ",
   "verifyEmailSubject": "ยืนยันอีเมลของคุณ",

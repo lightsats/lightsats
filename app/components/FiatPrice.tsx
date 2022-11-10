@@ -1,4 +1,5 @@
 import { Loading } from "@nextui-org/react";
+import getSymbolFromCurrency from "currency-symbol-map";
 import { getFiatAmount, roundFiat } from "lib/utils";
 
 type FiatPriceProps = {
@@ -17,11 +18,15 @@ export function FiatPrice({
   if (!exchangeRate) {
     return <Loading type="spinner" color="currentColor" size="sm" />;
   }
+
+  const symbol = getSymbolFromCurrency(currency);
+  const fiatAmount = roundFiat(getFiatAmount(sats, exchangeRate));
+
   return (
     <>
       {showApprox && "~"}
-      {"$"}
-      {roundFiat(getFiatAmount(sats, exchangeRate))} {currency}
+      <span>{symbol}</span>
+      {fiatAmount}
     </>
   );
 }
