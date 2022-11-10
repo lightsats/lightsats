@@ -30,7 +30,6 @@ export enum Routes {
   guideWallets = "/guide/wallets",
   admin = "/admin",
   about = "/about",
-  signup = "/signup",
   login = "/signin",
   features = "/features",
   users = "/users",

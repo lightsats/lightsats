@@ -7,30 +7,32 @@ import PhoneSignIn from "pages/auth/signin/phone";
 import { useState } from "react";
 
 type LoginProps = {
-  submitText: string;
+  submitText?: string;
 };
+
+const loginMethods = ["phone", "email", "lightning"] as const;
+type LoginMethod = typeof loginMethods[number];
 
 export function Login(props: LoginProps) {
   const { t } = useTranslation(["claim", "common"]);
   const router = useRouter();
-  const [signupMethod, setSignupMethod] = useState("phone");
-  const signupMethods = ["phone", "email", "lightning"];
+  const [loginMethod, setLoginMethod] = useState<LoginMethod>("phone");
 
   return (
     <>
-      {signupMethod == "phone" && (
+      {loginMethod === "phone" && (
         <PhoneSignIn
           callbackUrl={router.pathname}
           submitText={props.submitText}
         />
       )}
-      {signupMethod == "email" && (
+      {loginMethod === "email" && (
         <EmailSignIn
           callbackUrl={router.pathname}
           submitText={props.submitText}
         />
       )}
-      {signupMethod == "lightning" && (
+      {loginMethod === "lightning" && (
         <>
           <Spacer />
           <LightningLoginButton />
@@ -40,15 +42,15 @@ export function Login(props: LoginProps) {
       <Spacer y={1} />
       <Row justify="center" align="center">
         <Text>Use &nbsp;</Text>
-        {signupMethods
-          .filter((method) => method != signupMethod)
+        {loginMethods
+          .filter((method) => method !== loginMethod)
           .map((method, i) => {
             return (
               <>
-                <Link onClick={() => setSignupMethod(method)}>
+                <Link onClick={() => setLoginMethod(method)}>
                   {t(`common:${method}`)}
                 </Link>
-                {i == 0 && <Text>&nbsp;{t("or")}&nbsp;</Text>}
+                {i === 0 && <Text>&nbsp;{t("or")}&nbsp;</Text>}
               </>
             );
           })}

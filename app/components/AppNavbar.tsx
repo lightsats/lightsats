@@ -191,7 +191,7 @@ export function AppNavbar() {
         <Navbar.Content>
           {!hideNavbar && (
             <Navbar.Item hideIn="xs">
-              <NextLink href={Routes.signup} passHref>
+              <NextLink href={Routes.login} passHref>
                 <a>
                   <Button auto flat>
                     Get started

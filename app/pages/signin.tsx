@@ -1,3 +1,4 @@
+import { Spacer } from "@nextui-org/react";
 import { Login } from "components/Login";
 import { getStaticProps } from "lib/i18n/i18next";
 import type { NextPage } from "next";
@@ -10,7 +11,9 @@ const SignInPage: NextPage = () => {
         <title>Lightsats⚡ - Sign in</title>
       </Head>
       <h2>Sign in</h2>
-      <Login></Login>
+      <p>Choose your preferred way to sign in to Lightsats.</p>
+      <Spacer />
+      <Login />
     </>
   );
 };
