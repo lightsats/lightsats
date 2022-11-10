@@ -49,15 +49,13 @@ export function Tips() {
               {reclaimedTips.map((tip) => tip.amount).reduce((a, b) => a + b)}⚡{" "}
               reclaimed
             </Text>
-            <NextLink href={Routes.tipperWithdraw}>
-              <a>
-                <Link color="success">withdraw sats</Link>
-              </a>
+            <NextLink href={Routes.tipperWithdraw} passHref>
+              <Link color="success">withdraw sats</Link>
             </NextLink>
             <Spacer />
           </>
         )}
-        <Grid.Container gap={2} justify="center">
+        <Grid.Container justify="center" gap={1}>
           {tips.map((tip) => {
             const hasExpired =
               expirableTipStatuses.indexOf(tip.status) >= 0 &&
@@ -66,7 +64,12 @@ export function Tips() {
               <Grid xs={12} key={tip.id} justify="center">
                 <NextLink href={`${Routes.tips}/${tip.id}`}>
                   <a style={cardLinkStyle}>
-                    <Card isPressable isHoverable>
+                    <Card
+                      variant="flat"
+                      isPressable
+                      isHoverable
+                      style={{ backgroundColor: "white" }}
+                    >
                       <Card.Body>
                         <Row justify="space-between" align="center">
                           <Badge>

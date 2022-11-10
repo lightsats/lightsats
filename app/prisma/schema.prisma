@@ -70,6 +70,9 @@ model User {
   inJourney Boolean @default(false)
 
   roles UserRole[]
+  userType UserType @default(tipper)
+  created DateTime @default(now())
+  updated DateTime @default(now()) @updatedAt
 }
 
 model Tip {
@@ -81,6 +84,7 @@ model Tip {
   tippeeId String?
   tippee User? @relation("tipsReceived", fields: [tippeeId], references: [id])
   tippeeName String? // set by tipper when creating tip - tippee does not have an account yet
+  tippeeLocale String @default("en") // set by tipper when creating tip - tippee does not have an account yet
   invoice String?
   invoiceId String?
   lnbitsWallet LnbitsWallet?
@@ -186,4 +190,9 @@ enum WithdrawalMethod {
 
 enum RoleType {
   SUPERADMIN
+}
+
+enum UserType {
+  tipper
+  tippee
 }

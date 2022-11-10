@@ -17,6 +17,7 @@ import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { SatsPrice } from "components/SatsPrice";
+import { notifyError, notifySuccess } from "components/Toasts";
 import { add } from "date-fns";
 import {
   appName,
@@ -24,6 +25,8 @@ import {
   MINIMUM_FEE_SATS,
   MIN_TIP_SATS,
 } from "lib/constants";
+import { getNativeLanguageName } from "lib/i18n/iso6391";
+import { DEFAULT_LOCALE, locales } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { calculateFee, getFiatAmount, getSatsAmount } from "lib/utils";
@@ -46,6 +49,7 @@ type NewTipFormData = {
   expiresIn: number;
   expiryUnit: ExpiryUnit;
   tippeeName: string;
+  tippeeLocale: string;
 };
 
 type InputMethod = "fiat" | "sats";
@@ -75,6 +79,7 @@ const NewTip: NextPage = () => {
         currency: "USD",
         expiresIn: 3,
         expiryUnit: "days",
+        tippeeLocale: DEFAULT_LOCALE,
       },
     });
 
@@ -86,6 +91,7 @@ const NewTip: NextPage = () => {
   const watchedAmount = watch("amount");
   const watchedCurrency = watch("currency");
   const watchedExpiryUnit = watch("expiryUnit");
+  const watchedTippeeLocale = watch("tippeeLocale");
   const watchedExchangeRate = exchangeRates?.[watchedCurrency];
   const watchedAmountFee = watchedExchangeRate
     ? calculateFee(
@@ -144,6 +150,18 @@ const NewTip: NextPage = () => {
     [watchedExpiryUnit]
   );
 
+  const setDropdownTippeeLocale = React.useCallback(
+    (keys: unknown) => {
+      setValue("tippeeLocale", Array.from(keys as Iterable<string>)[0]);
+    },
+    [setValue]
+  );
+
+  const selectedTippeeLocales = React.useMemo(
+    () => new Set([watchedTippeeLocale]),
+    [watchedTippeeLocale]
+  );
+
   const onSubmit = React.useCallback(
     (data: NewTipFormData) => {
       if (!watchedExchangeRate) {
@@ -177,6 +195,7 @@ const NewTip: NextPage = () => {
               [data.expiryUnit]: data.expiresIn,
             }),
             tippeeName: data.tippeeName?.length ? data.tippeeName : undefined,
+            tippeeLocale: data.tippeeLocale,
           };
           const result = await fetch("/api/tipper/tips", {
             method: "POST",
@@ -184,15 +203,16 @@ const NewTip: NextPage = () => {
             headers: { "Content-Type": "application/json" },
           });
           if (result.ok) {
+            notifySuccess("Tip created");
             const tip = (await result.json()) as Tip;
             // TODO: save the tip in SWR's cache so it is immediately available
             router.push(`${Routes.tips}/${tip.id}`);
           } else {
-            alert("Failed to create tip: " + result.statusText);
+            notifyError("Failed to create tip: " + result.statusText);
           }
         } catch (error) {
           console.error(error);
-          alert("Tip creation failed. Please try again.");
+          notifyError("Tip creation failed. Please try again.");
         }
         setSubmitting(false);
       })();
@@ -231,13 +251,22 @@ const NewTip: NextPage = () => {
           <Spacer y={0.25} />
           <Row justify="space-between" align="flex-end">
             <Dropdown>
-              <Dropdown.Button
-                flat
-                onClick={() => alert("Languages coming soon!")}
-              >
-                English
+              <Dropdown.Button flat>
+                {getNativeLanguageName(watchedTippeeLocale)}
               </Dropdown.Button>
-              <Dropdown.Item>English</Dropdown.Item>
+              <Dropdown.Menu
+                aria-label="Select Language"
+                selectionMode="single"
+                selectedKeys={selectedTippeeLocales}
+                onSelectionChange={setDropdownTippeeLocale}
+              >
+                {locales.map((locale) => (
+                  <Dropdown.Item key={locale}>
+                    {locale.toUpperCase()}&nbsp;|&nbsp;
+                    {getNativeLanguageName(locale)}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
             </Dropdown>
             <Spacer x={0.5} />
             <Dropdown>
@@ -287,11 +316,12 @@ const NewTip: NextPage = () => {
                   //   valueAsNumber: true,
                   // }) causes iOS decimal input bug, resetting field value }
                   min={0}
+                  step="0.01"
                   type="number"
                   inputMode="decimal"
                   aria-label="amount"
                   fullWidth
-                  // width="100px"
+                  bordered
                 />
               )}
             />
@@ -346,6 +376,7 @@ const NewTip: NextPage = () => {
               placeholder="Hal Finney"
               maxLength={255}
               fullWidth
+              bordered
             />
           )}
         />
@@ -360,6 +391,7 @@ const NewTip: NextPage = () => {
               placeholder="Thank you for your amazing service!"
               maxLength={255}
               fullWidth
+              bordered
             />
           )}
         />
@@ -386,6 +418,8 @@ const NewTip: NextPage = () => {
                 width="100px"
                 type="number"
                 inputMode="decimal"
+                bordered
+                color="primary"
               />
             )}
           />

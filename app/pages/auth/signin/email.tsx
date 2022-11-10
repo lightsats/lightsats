@@ -1,10 +1,12 @@
-import { Button, Input, Loading, Spacer, Text } from "@nextui-org/react";
-import { BackButton } from "components/BackButton";
+import { Button, Input, Loading, Spacer } from "@nextui-org/react";
+import { notifyError } from "components/Toasts";
+import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
-import { signIn } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { TwoFactorLoginRequest } from "types/TwoFactorLoginRequest";
 
 const formStyle: React.CSSProperties = {
   display: "flex",
@@ -19,20 +21,26 @@ type EmailFormData = {
 };
 
 type EmailSignInProps = {
-  inline?: boolean;
   callbackUrl?: string;
   submitText?: React.ReactNode;
 };
 
+// type TokenFormData = {
+//   token: string;
+// };
+
 export default function EmailSignIn({
-  inline,
   callbackUrl,
   submitText,
 }: EmailSignInProps) {
+  const { t } = useTranslation("common");
   const { control, handleSubmit, setFocus } = useForm<EmailFormData>();
   const [isSubmitting, setSubmitting] = React.useState(false);
   const router = useRouter();
-  callbackUrl = callbackUrl ?? (router.query["callbackUrl"] as string);
+  const callbackUrlWithFallback =
+    callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
+
+  console.log("callbackUrlWithFallback", callbackUrlWithFallback);
 
   React.useEffect(() => {
     setFocus("email");
@@ -44,60 +52,67 @@ export default function EmailSignIn({
         return;
       }
       if (!data.email) {
-        alert("Please enter a valid email address");
+        notifyError("Please enter a valid email address");
         return;
       }
       setSubmitting(true);
       (async () => {
         try {
-          const result = await signIn("email", {
+          const twoFactorLoginRequest: TwoFactorLoginRequest = {
             email: data.email,
-            redirect: false,
-            callbackUrl: callbackUrl ?? Routes.home,
-          });
+            callbackUrl: callbackUrlWithFallback,
+            locale: router.locale ?? DEFAULT_LOCALE,
+          };
 
-          if (result && result.ok && result.url) {
-            router.push(result.url);
-          } else {
-            throw new Error("Unexpected login result: " + result?.error);
+          const result = await fetch(`/api/auth/2fa/send`, {
+            method: "POST",
+            body: JSON.stringify(twoFactorLoginRequest),
+            headers: { "Content-Type": "application/json" },
+          });
+          if (!result.ok) {
+            console.error(
+              "Failed to create email login link: " + result.status
+            );
+            notifyError("Something went wrong. Please try again.");
           }
+          router.push(Routes.checkEmail);
         } catch (error) {
           console.error(error);
-          alert("login failed");
+          notifyError("login failed");
         }
 
         setSubmitting(false);
       })();
     },
-    [callbackUrl, isSubmitting, router]
+    [callbackUrlWithFallback, isSubmitting, router]
   );
 
   return (
     <>
-      {!inline && (
-        <>
-          <Text>Enter your email below to login.</Text>
-          <Spacer />
-        </>
-      )}
       <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
         <Controller
           name="email"
           control={control}
           render={({ field }) => (
             <Input
+              bordered
               {...field}
-              label="Email"
+              label={t("email")}
               type="email"
               placeholder="satoshin@gmx.com"
-              fullWidth
               autoComplete="email"
+              fullWidth
             />
           )}
         />
-
-        <Spacer y={0.5} />
-        <Button css={{ width: "100%" }} type="submit" disabled={isSubmitting}>
+        <Spacer />
+        <Button
+          css={{ width: "100%" }}
+          color="primary"
+          type="submit"
+          auto
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
@@ -105,12 +120,6 @@ export default function EmailSignIn({
           )}
         </Button>
       </form>
-      {!inline && (
-        <>
-          <Spacer y={4} />
-          <BackButton />
-        </>
-      )}
     </>
   );
 }

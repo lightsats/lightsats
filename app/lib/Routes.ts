@@ -6,9 +6,13 @@ export enum Routes {
   withdraw = "/withdraw",
   tipperWithdraw = "/withdraw?flow=tipper",
   profile = "/profile",
+  logout = "/logout",
   scoreboard = "/scoreboard",
   emailSignin = "/auth/signin/email",
+  verifySignin = "/verify",
   lnurlAuthSignin = "/auth/signin/lnurl",
+  checkEmail = "/auth/signin/email-sent",
+  checkPhone = "/auth/signin/sms-sent",
   journeyClaimed = "/journey/claimed",
   journeyBitcoin = "/journey/bitcoin",
   journeySelectWallet = "/journey/wallet",
@@ -24,8 +28,11 @@ export enum Routes {
   guideDonate = "/guide/donate",
   guideLearn = "/guide/learn",
   guideWallets = "/guide/wallets",
-  about = "/about",
   admin = "/admin",
+  about = "/about",
+  login = "/signin",
+  features = "/features",
+  users = "/users",
 }
 
 export const bitcoinJourneyPages = [

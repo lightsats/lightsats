@@ -5,6 +5,8 @@ import {
 } from "components/items/ItemFeatureBadge";
 import { NextLink } from "components/NextLink";
 import ISO6391 from "iso-639-1";
+import { placeholderDataUrl as defaultPlaceholderDataUrl } from "lib/constants";
+import { getItemImageLocation } from "lib/utils";
 import NextImage from "next/image";
 import React from "react";
 import { Item } from "types/Item";
@@ -79,8 +81,10 @@ export function ItemCard({ item }: ItemCardProps) {
             alt=""
             width={64}
             height={64}
-            src={`/items/${item.category}/${item.image}`}
+            src={getItemImageLocation(item)}
             style={{ borderRadius: "8px" }}
+            placeholder="blur"
+            blurDataURL={item.placeholderDataUrl ?? defaultPlaceholderDataUrl}
           />
           <Spacer x={0.5} />
           <Col>

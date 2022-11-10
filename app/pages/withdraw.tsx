@@ -10,8 +10,10 @@ import {
 import { Tip, WithdrawalFlow } from "@prisma/client";
 import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
+import { notifyError, notifySuccess } from "components/Toasts";
 import copy from "copy-to-clipboard";
 import { formatDistance, isBefore } from "date-fns";
+import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -61,14 +63,16 @@ const Withdraw: NextPage = () => {
             headers: { "Content-Type": "application/json" },
           });
           if (result.ok) {
-            alert("Funds withdrawn!");
+            notifySuccess("Funds withdrawn!");
           } else {
             const body = await result.text();
-            alert("Failed to withdraw: " + result.statusText + `\n${body}`);
+            notifyError(
+              "Failed to withdraw: " + result.statusText + `\n${body}`
+            );
           }
         } catch (error) {
           console.error(error);
-          alert(
+          notifyError(
             "Withdrawal failed: " +
               JSON.stringify(error, Object.getOwnPropertyNames(error)) +
               ". Please try again."
@@ -145,7 +149,7 @@ const Withdraw: NextPage = () => {
           setWithdrawalLinkLnurl(await result.json());
         } else {
           const body = await result.text();
-          alert(
+          notifyError(
             "Failed to create withdraw link: " + result.statusText + `\n${body}`
           );
         }
@@ -175,7 +179,7 @@ const Withdraw: NextPage = () => {
   const copyWithdrawLinkUrl = React.useCallback(() => {
     if (withdrawalLinkLnurl) {
       copy(withdrawalLinkLnurl);
-      alert("Copied to clipboard");
+      notifySuccess("Copied to clipboard");
     }
   }, [withdrawalLinkLnurl]);
 
@@ -292,7 +296,7 @@ function ContactTipper({ tipId: tipperId }: { tipId: string }) {
     <Row justify="center" align="center">
       <Text>
         Tipped {publicTip.amount} satoshis⚡ by{" "}
-        {publicTip.tipper.name ?? "anonymous"}
+        {publicTip.tipper.name ?? DEFAULT_NAME}
       </Text>
       {publicTip.tipper.twitterUsername && (
         <>

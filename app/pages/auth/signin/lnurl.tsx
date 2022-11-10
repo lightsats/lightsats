@@ -1,6 +1,6 @@
-import { Loading, Spacer, Text } from "@nextui-org/react";
-import { BackButton } from "components/BackButton";
+import { Button, Loading, Spacer, Text } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
+import { notifyError } from "components/Toasts";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { signIn } from "next-auth/react";
@@ -12,13 +12,9 @@ import useSWRImmutable from "swr/immutable";
 import { LnurlAuthLoginInfo } from "types/LnurlAuthLoginInfo";
 import { LnurlAuthStatus } from "types/LnurlAuthStatus";
 
-type EmailSignInProps = {
-  csrfToken: string;
-};
-
 const useLnurlStatusConfig: SWRConfiguration = { refreshInterval: 1000 };
 
-export default function LnurlAuthSignIn({ csrfToken }: EmailSignInProps) {
+export default function LnurlAuthSignIn() {
   const router = useRouter();
   const { callbackUrl } = router.query;
   // only retrieve the qr code once
@@ -50,33 +46,37 @@ export default function LnurlAuthSignIn({ csrfToken }: EmailSignInProps) {
           }
         } catch (error) {
           console.error(error);
-          alert("login failed");
+          notifyError("login failed");
         }
       })();
     }
-  }, [callbackUrl, csrfToken, qr, router, status]);
+  }, [callbackUrl, qr, router, status]);
 
   return (
     <>
-      <Text>
-        Scan or tap the code below to login with your LNURL-auth enabled wallet.
-      </Text>
       <Spacer />
+      <Text h3>Scan or click to sign in</Text>
       {qr ? (
         <>
-          <Loading type="points" color="currentColor" size="sm" />
-          <Spacer />
           <NextLink href={`lightning:${qr.encoded}`}>
             <a>
               <QRCode value={qr.encoded} />
             </a>
           </NextLink>
+          <Spacer />
+          <NextLink href={`lightning:${qr.encoded}`}>
+            <a>
+              <Button size="lg">Click to connect</Button>
+            </a>
+          </NextLink>
         </>
       ) : (
-        <Loading type="spinner" color="currentColor" size="sm" />
+        <>
+          <Spacer />
+          <Loading type="default" />
+          Generating QR code...
+        </>
       )}
-      <Spacer y={4} />
-      <BackButton />
     </>
   );
 }

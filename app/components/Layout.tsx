@@ -15,8 +15,11 @@ export default function Layout({
   const router = useRouter();
   return (
     <FlexBox style={{ minHeight: "100%" }}>
+      {process.env.NEXT_PUBLIC_SHOW_PRODUCTION_LINK === "true" && (
+        <ProductionLinkBanner />
+      )}
       <AppNavbar />
-      <Spacer />
+      <Spacer y={2} />
       <Container
         justify="flex-start"
         alignItems="center"
@@ -27,13 +30,10 @@ export default function Layout({
           flex: 1,
           ...(router.pathname !== Routes.scoreboard &&
           router.pathname !== Routes.admin
-            ? { maxWidth: "400px" }
+            ? { maxWidth: "600px" }
             : {}),
         }}
       >
-        {process.env.NEXT_PUBLIC_SHOW_PRODUCTION_LINK === "true" && (
-          <ProductionLinkBanner />
-        )}
         {children}
       </Container>
       <Spacer />

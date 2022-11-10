@@ -1,7 +1,10 @@
 import { User } from "@prisma/client";
 import { format } from "date-fns";
 import { FEE_PERCENT, MINIMUM_FEE_SATS, SATS_TO_BTC } from "lib/constants";
+import { DEFAULT_LOCALE } from "lib/i18n/locales";
+import { NextRouter } from "next/router";
 import { MouseEventHandler } from "react";
+import { Item } from "types/Item";
 
 export function getSatsAmount(fiat: number, exchangeRate: number) {
   return Math.ceil((fiat / exchangeRate) * SATS_TO_BTC);
@@ -38,7 +41,9 @@ export function getUserAvatarUrl(user: User | undefined) {
   return getAvatarUrl(user?.avatarURL ?? undefined, getFallbackAvatarId(user));
 }
 export function getAvatarUrl(avatarUrl: string | undefined, fallbackId = "1") {
-  return avatarUrl?.length ? avatarUrl : `https://robohash.org/${fallbackId}`;
+  return avatarUrl?.length
+    ? avatarUrl
+    : `https://avatars.dicebear.com/api/miniavs/${fallbackId}.svg`;
 }
 
 // from https://stackoverflow.com/a/34842797/4562693
@@ -49,7 +54,7 @@ export function getFallbackAvatarId(user: User | undefined) {
   if (!user) {
     return undefined;
   }
-  const secretId = user?.email ?? user?.lnurlPublicKey;
+  const secretId = user?.email ?? user?.phoneNumber ?? user?.lnurlPublicKey;
   if (!secretId) {
     return undefined;
   }
@@ -62,3 +67,21 @@ export function nth(n: number) {
 }
 
 export const getDateLabel = (date: Date) => format(date, "d/M");
+
+export const stringifyError = (error: Error) =>
+  JSON.stringify(error, Object.getOwnPropertyNames(error));
+
+export const getItemImageLocation = (item: Item) =>
+  `/items/${item.category}/${item.image}`;
+
+export const getLocalePath = (locale = DEFAULT_LOCALE) =>
+  locale !== DEFAULT_LOCALE ? `/${locale}` : "";
+
+export const getAppUrl = () =>
+  global.window ? window.location.origin : process.env.APP_URL;
+
+export const getCurrentUrl = (router: NextRouter) => {
+  return global.window
+    ? window.location.href
+    : getAppUrl() + getLocalePath(router.locale) + router.pathname;
+};

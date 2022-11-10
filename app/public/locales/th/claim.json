@@ -1,0 +1,11 @@
+{
+  "hello": "ยินดีด้วย {{tippeeName}}!",
+  "tipperHasGiftedYou": "คุณได้รับของขวัญจาก {{tipperName}}",
+  "youHaveBeenGifted": "คุณได้รับของขวัญ",
+  "expired": "ขออภัยคุณไม่ได้รับของขวัญในเวลาที่กำหนด",
+  "instructions.phone": "ใส่เบอร์โทรศัพท์ของคุณด้านล่างและกดปุ่มเพื่อรับของขวัญของคุณ",
+  "instructions.email": "ใส่อีเมลของคุณด้านล่างและกดปุ่มเพื่อรับของขวัญของคุณ",
+  "instructions.lightning": "Login with Lightning",
+  "expiresIn": "ของขวัญนี้สามารถรับได้อีก {{expiry}} เท่านั้น",
+  "claim": "รับของขวัญ"
+}
