@@ -81,7 +81,7 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
   return (
     <>
       <Row>
-        <UserCard user={user} />
+        <UserCard userId={user.id} />
       </Row>
 
       <Spacer />
