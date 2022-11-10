@@ -1,29 +1,15 @@
-import {
-  Badge,
-  Button,
-  Link,
-  Loading,
-  Row,
-  Spacer,
-  Text,
-} from "@nextui-org/react";
+import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
 import { Tip, TipStatus } from "@prisma/client";
 import { BackButton } from "components/BackButton";
 import { ConfettiContainer } from "components/ConfettiContainer";
-import { FiatPrice } from "components/FiatPrice";
 import { NextLink } from "components/NextLink";
 import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTracker";
 import { PayTipInvoice } from "components/tipper/TipPage/PayTipInvoice";
 import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
-import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { notifyError, notifySuccess } from "components/Toasts";
 import { formatDistance, isAfter } from "date-fns";
-import {
-  DEFAULT_FIAT_CURRENCY,
-  expirableTipStatuses,
-  refundableTipStatuses,
-} from "lib/constants";
+import { expirableTipStatuses, refundableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { nth } from "lib/utils";
@@ -153,9 +139,6 @@ const TipPage: NextPage = () => {
         {tip.status === "WITHDRAWN" && (
           <>
             <ConfettiContainer />
-            <h2>You did it 🎉</h2>
-            <Spacer />
-            <Text>{"You've"} just started someone on their 🍊💊 journey!</Text>
             <Spacer />
             <Text blockquote>
               Rumors say - those who gift bitcoin are a very special kind of
@@ -198,68 +181,30 @@ const TipPage: NextPage = () => {
         )}
 
         <Spacer y={4} />
-        <Row align="center" justify="center">
-          <TipStatusBadge status={tip.status} />
-          <Spacer x={0.5} />
-          <Badge color="default">
-            <Text size="small" color="white">
-              {tip.amount}⚡{" "}
-            </Text>
-            <Text size="x-small" color="white">
-              +{tip.fee}
-            </Text>
-          </Badge>
-          <Spacer x={0.5} />
-          <Badge color="default">
-            <FiatPrice
-              currency={tip.currency ?? DEFAULT_FIAT_CURRENCY}
-              exchangeRate={
-                exchangeRates?.[tip.currency ?? DEFAULT_FIAT_CURRENCY]
-              }
-              sats={tip.amount}
-            />
-          </Badge>
-          {tip.note && (
-            <>
-              <Spacer x={0.5} />
-              <Button color="default" auto onClick={() => alert(tip.note)}>
-                💬
-              </Button>
-            </>
-          )}
-        </Row>
-        <Spacer />
-        <Text small>
-          Created {formatDistance(Date.now(), new Date(tip.created))} ago
-        </Text>
         {!hasExpired && expirableTipStatuses.indexOf(tip.status) > -1 && (
           <>
-            <Spacer y={0.5} />
             <Text small>
               Expires in {formatDistance(new Date(tip.expiry), Date.now())}
             </Text>
+            <Spacer />
           </>
         )}
-        <Spacer />
-
         {tip.status === "UNFUNDED" && (
           <>
-            <Spacer />
             <Button onClick={deleteTip} color="error">
               Delete Tip
             </Button>
+            <Spacer />
           </>
         )}
-
         {refundableTipStatuses.indexOf(tip.status) >= 0 && (
           <>
-            <Spacer />
             <Button onClick={reclaimTip} color="error">
               Reclaim Tip
             </Button>
+            <Spacer />
           </>
         )}
-        <Spacer y={2} />
         <BackButton />
       </>
     );

@@ -23,8 +23,10 @@ export function TipPageStatusHeader({ status }: TipPageStatusHeaderProps) {
 
 function getTitle(status: TipStatus) {
   switch (status) {
+    case "WITHDRAWN":
+      return "You did it 🎉";
     case "UNFUNDED":
-      return "You're almost there 🎉";
+      return "You're almost there 👍";
     case "UNCLAIMED":
       return "Your tip is ready for takeoff ✈️";
     default:
@@ -33,11 +35,13 @@ function getTitle(status: TipStatus) {
 }
 function getSubtitle(status: TipStatus) {
   switch (status) {
+    case "WITHDRAWN":
+      return "Your recipient has withdrawn their sats!";
     case "UNFUNDED":
       return "You'll need to fund your tip before it can be sent";
     case "UNCLAIMED":
       return "Your tip hasn't been claimed yet";
     default:
-      return "Your tippee is on their 🍊💊 journey!";
+      return "Your recipient is on their 🍊💊 journey!";
   }
 }

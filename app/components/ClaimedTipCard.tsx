@@ -40,6 +40,11 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
   const journeyStep = publicTip.tippee ? publicTip.tippee?.journeyStep : 0;
   const viewedUser = publicTip[viewing];
 
+  const progressColor =
+    publicTip.status === "CLAIMED" || publicTip.status === "WITHDRAWN"
+      ? "success"
+      : "warning";
+
   return (
     <Card css={{ background: "$gray900" }}>
       <Card.Body>
@@ -106,8 +111,8 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
             <Spacer />
             <Progress
               value={(journeyStep / bitcoinJourneyPages.length) * 100}
-              status={publicTip.status === "CLAIMED" ? "success" : "warning"}
-              color={publicTip.status === "CLAIMED" ? "success" : "warning"}
+              status={progressColor}
+              color={progressColor}
             />
             <Spacer y={0.5} />
             <Row justify="space-between" align="center">
