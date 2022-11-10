@@ -95,7 +95,7 @@ export const buy: Item[] = [
       {
         category: "buy",
         link: "https://lgt.st/pocket",
-        image: "casa.jpeg",
+        image: "pocket.jpeg",
         languageCodes: [getLanguageCode("English")],
         name: "Pocket",
         slogan:
@@ -105,7 +105,7 @@ export const buy: Item[] = [
       {
         category: "buy",
         link: "https://lgt.st/casa",
-        image: "pocket.jpeg",
+        image: "casa.jpeg",
         languageCodes: [getLanguageCode("English")],
         name: "Casa",
         slogan:
