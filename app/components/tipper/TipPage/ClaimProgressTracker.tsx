@@ -19,7 +19,7 @@ export function ClaimProgressTracker({ tipId }: ClaimProgressTrackerProps) {
 
   return (
     <>
-      <ClaimedTipCard publicTip={publicTip} isTipper />
+      <ClaimedTipCard publicTip={publicTip} viewing="tippee" />
     </>
   );
 }

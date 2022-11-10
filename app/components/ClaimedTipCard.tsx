@@ -1,6 +1,7 @@
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
+  Badge,
   Card,
   Col,
   Loading,
@@ -23,13 +24,10 @@ import { PublicTip } from "types/PublicTip";
 
 type ClaimedTipCardProps = {
   publicTip: PublicTip | undefined;
-  isTipper?: boolean;
+  viewing: "tipper" | "tippee";
 };
 
-export function ClaimedTipCard({
-  publicTip,
-  isTipper = false,
-}: ClaimedTipCardProps) {
+export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
   const { data: exchangeRates } = useSWR<ExchangeRates>(
     `/api/exchange/rates`,
     defaultFetcher
@@ -40,6 +38,7 @@ export function ClaimedTipCard({
   }
 
   const journeyStep = publicTip.tippee ? publicTip.tippee?.journeyStep : 0;
+  const viewedUser = publicTip[viewing];
 
   return (
     <Card css={{ background: "$gray900" }}>
@@ -47,12 +46,8 @@ export function ClaimedTipCard({
         <Row align="center">
           <Avatar
             src={getAvatarUrl(
-              (!isTipper
-                ? publicTip.tipper.avatarURL
-                : publicTip.tippee?.avatarURL) ?? undefined,
-              !isTipper
-                ? publicTip.tipper.fallbackAvatarId
-                : publicTip.tippee?.fallbackAvatarId
+              viewedUser?.avatarURL ?? undefined,
+              viewedUser?.fallbackAvatarId
             )}
             size="md"
             bordered
@@ -61,9 +56,8 @@ export function ClaimedTipCard({
           <Col>
             <Row>
               <Text b color="white">
-                {(!isTipper
-                  ? publicTip.tipper.name
-                  : publicTip.tippee?.name ?? publicTip.tippeeName) ??
+                {viewedUser?.name ??
+                  (viewing === "tippee" ? publicTip.tippeeName : undefined) ??
                   DEFAULT_NAME}
               </Text>
             </Row>
@@ -107,13 +101,13 @@ export function ClaimedTipCard({
             </Card>
           </>
         )}
-        {isTipper && (
+        {viewing === "tippee" && (
           <>
             <Spacer />
             <Progress
               value={(journeyStep / bitcoinJourneyPages.length) * 100}
-              color="success"
-              status="success"
+              status={publicTip.status === "CLAIMED" ? "success" : "warning"}
+              color={publicTip.status === "CLAIMED" ? "success" : "warning"}
             />
             <Spacer y={0.5} />
             <Row justify="space-between" align="center">
@@ -122,18 +116,36 @@ export function ClaimedTipCard({
                   Status
                 </Text>
                 <Row align="center">
-                  <Text color="white" size="small" weight="thin">
-                    STEP {journeyStep} OF {bitcoinJourneyPages.length}{" "}
-                  </Text>
-                  <Spacer x={0.25} />
-                  {journeyStep > 0 && (
-                    <Text size="small" b css={{ color: "$accents8" }}>
-                      {`${bitcoinJourneyPages[journeyStep - 1].toUpperCase()}`}
-                    </Text>
-                  )}
+                  {publicTip.status === "CLAIMED" ? (
+                    <>
+                      <Text color="white" size="small" weight="thin">
+                        STEP {journeyStep} OF {bitcoinJourneyPages.length}{" "}
+                      </Text>
+                      <Spacer x={0.25} />
+                      {journeyStep > 0 && (
+                        <Text size="small" b css={{ color: "$accents8" }}>
+                          {`${bitcoinJourneyPages[
+                            journeyStep - 1
+                          ].toUpperCase()}`}
+                        </Text>
+                      )}
+                    </>
+                  ) : undefined}
                 </Row>
               </Col>
-              <TipStatusBadge status={publicTip.status} />
+              <Row justify="flex-end">
+                {publicTip.status === "UNCLAIMED" && (
+                  <>
+                    <Badge
+                      color={publicTip.claimLinkViewed ? "success" : "warning"}
+                    >
+                      {publicTip.claimLinkViewed ? "SEEN" : "UNSEEN"}
+                    </Badge>
+                    <Spacer x={0.5} />
+                  </>
+                )}
+                <TipStatusBadge status={publicTip.status} />
+              </Row>
             </Row>
           </>
         )}

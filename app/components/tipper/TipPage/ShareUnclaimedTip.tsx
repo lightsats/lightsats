@@ -4,7 +4,7 @@ import { NextLink } from "components/NextLink";
 import { notifySuccess } from "components/Toasts";
 import copy from "copy-to-clipboard";
 import { Routes } from "lib/Routes";
-import { getLocalePath } from "lib/utils";
+import { getAppUrl, getLocalePath } from "lib/utils";
 import React from "react";
 import QRCode from "react-qr-code";
 
@@ -13,9 +13,9 @@ type ShareUnclaimedTipProps = {
 };
 
 export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
-  const claimUrl = `${
-    global.window ? window.location.origin : process.env.APP_URL
-  }${getLocalePath(tip.tippeeLocale)}${Routes.tips}/${tip.id}/claim`;
+  const claimUrl = `${getAppUrl()}${getLocalePath(tip.tippeeLocale)}${
+    Routes.tips
+  }/${tip.id}/claim`;
 
   const copyClaimUrl = React.useCallback(() => {
     if (claimUrl) {
@@ -39,12 +39,6 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
       </NextLink>
       <Spacer />
       <Button onClick={copyClaimUrl}>Copy URL</Button>
-      <Spacer />
-      <Text blockquote color={tip.claimLinkViewed ? "success" : undefined}>
-        {tip.claimLinkViewed
-          ? "This tip has been viewed!"
-          : "This tip hasn't been viewed yet."}
-      </Text>
     </>
   );
 }

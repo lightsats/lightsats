@@ -55,7 +55,7 @@ function ClaimedTipCardGridItem({ tip }: ClaimedTipCardItemProps) {
 
   return (
     <Grid key={tip.id} xs={12}>
-      <ClaimedTipCard publicTip={publicTip} />
+      <ClaimedTipCard publicTip={publicTip} viewing="tipper" />
     </Grid>
   );
 }

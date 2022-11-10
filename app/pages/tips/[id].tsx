@@ -135,14 +135,8 @@ const TipPage: NextPage = () => {
           <>
             <TipPageStatusHeader status={tip.status} />
             <Spacer />
-            {(tip.status === "CLAIMED" ||
-              tip.status === "UNFUNDED" ||
-              tip.status === "UNCLAIMED") && (
-              <>
-                <ClaimProgressTracker tipId={tip.id} />
-                <Spacer />
-              </>
-            )}
+            <ClaimProgressTracker tipId={tip.id} />
+            <Spacer />
 
             {tip.status === "UNFUNDED" && tip.invoice && (
               <PayTipInvoice invoice={tip.invoice} />
@@ -153,6 +147,53 @@ const TipPage: NextPage = () => {
           <>
             <Text h2>Oh no! 😔</Text>
             <Text color="error">This tip has expired.</Text>
+          </>
+        )}
+
+        {tip.status === "WITHDRAWN" && (
+          <>
+            <ConfettiContainer />
+            <h2>You did it 🎉</h2>
+            <Spacer />
+            <Text>{"You've"} just started someone on their 🍊💊 journey!</Text>
+            <Spacer />
+            <Text blockquote>
+              Rumors say - those who gift bitcoin are a very special kind of
+              people.
+            </Text>
+            <Spacer />
+            {placing ? (
+              <>
+                <Text b>
+                  {"You're"} now at&nbsp;
+                  <Text
+                    color="success"
+                    b
+                    size="large"
+                    style={{ display: "inline" }}
+                  >
+                    {placing}
+                    {nth(placing)}
+                  </Text>
+                  &nbsp; place on the{" "}
+                  <NextLink href={Routes.scoreboard} passHref>
+                    <Link style={{ display: "inline" }}>scoreboard</Link>
+                  </NextLink>
+                  !
+                </Text>
+                <Spacer />
+              </>
+            ) : (
+              <Loading type="spinner" color="currentColor" size="sm" />
+            )}
+            <Spacer />
+            <NextLink href={Routes.newTip} passHref>
+              <a>
+                <Button>Create another tip</Button>
+              </a>
+            </NextLink>
+
+            <Spacer />
           </>
         )}
 
@@ -200,52 +241,6 @@ const TipPage: NextPage = () => {
           </>
         )}
         <Spacer />
-        {tip.status === "WITHDRAWN" && (
-          <>
-            <ConfettiContainer />
-            <h2>You did it 🎉</h2>
-            <Spacer />
-            <Text>{"You've"} just started someone on their 🍊💊 journey!</Text>
-            <Spacer />
-            <Text blockquote>
-              Rumors say - those who gift bitcoin are a very special kind of
-              people.
-            </Text>
-            <Spacer />
-            {placing ? (
-              <>
-                <Text b>
-                  {"You're"} now at&nbsp;
-                  <Text
-                    color="success"
-                    b
-                    size="large"
-                    style={{ display: "inline" }}
-                  >
-                    {placing}
-                    {nth(placing)}
-                  </Text>
-                  &nbsp; place on the{" "}
-                  <NextLink href={Routes.scoreboard} passHref>
-                    <Link style={{ display: "inline" }}>scoreboard</Link>
-                  </NextLink>
-                  !
-                </Text>
-                <Spacer />
-              </>
-            ) : (
-              <Loading type="spinner" color="currentColor" size="sm" />
-            )}
-            <Spacer />
-            <NextLink href={Routes.newTip} passHref>
-              <a>
-                <Button>Create another tip</Button>
-              </a>
-            </NextLink>
-
-            <Spacer />
-          </>
-        )}
 
         {tip.status === "UNFUNDED" && (
           <>
