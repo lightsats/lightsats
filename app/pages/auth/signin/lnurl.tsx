@@ -1,5 +1,5 @@
 import { ClipboardIcon } from "@heroicons/react/24/solid";
-import { Button, Card, Loading, Row, Spacer } from "@nextui-org/react";
+import { Button, Card, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { notifyError, notifySuccess } from "components/Toasts";
@@ -71,23 +71,23 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
     <>
       <Card>
         <Card.Body>
-          {qr ? (
-            <>
-              <Row justify="center">
+          <Row justify="center">
+            {qr ? (
+              <>
                 <NextLink href={`lightning:${qr.encoded}`}>
                   <a>
                     <QRCode value={qr.encoded} />
                   </a>
                 </NextLink>
-              </Row>
-            </>
-          ) : (
-            <>
-              <Spacer />
-              <Loading type="default" />
-              Generating QR code...
-            </>
-          )}
+              </>
+            ) : (
+              <>
+                <Spacer />
+                <Loading type="default" />
+                <Text>Generating QR code...</Text>
+              </>
+            )}
+          </Row>
         </Card.Body>
         {qr && (
           <>
