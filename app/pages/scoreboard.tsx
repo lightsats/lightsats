@@ -31,7 +31,7 @@ const Scoreboard: NextPage = () => {
       <Text h2>Scoreboard</Text>
       <Grid.Container gap={1} css={{ mx: 0, width: "100%" }}>
         <Grid xs={4}>
-          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+          <Card>
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
@@ -43,7 +43,7 @@ const Scoreboard: NextPage = () => {
           </Card>
         </Grid>
         <Grid xs={4}>
-          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+          <Card>
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
@@ -55,7 +55,7 @@ const Scoreboard: NextPage = () => {
           </Card>
         </Grid>
         <Grid xs={4}>
-          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+          <Card>
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
