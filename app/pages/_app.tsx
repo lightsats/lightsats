@@ -7,6 +7,7 @@ import Head from "next/head";
 import AppErrorBoundary from "components/AppErrorBoundary";
 import { Toasts } from "components/Toasts";
 import { appWithTranslation } from "next-i18next";
+import { Toaster } from "react-hot-toast";
 import "styles/globals.css";
 import theme from "theme";
 
@@ -22,6 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <AppErrorBoundary>
         <NextUIProvider theme={theme}>
           <Toasts />
+          <Toaster />
           <SessionProvider session={pageProps.session}>
             <Layout>
               <Component {...pageProps} />

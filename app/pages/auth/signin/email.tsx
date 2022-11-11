@@ -1,11 +1,11 @@
 import { Button, Input, Loading, Spacer } from "@nextui-org/react";
-import { notifyError } from "components/Toasts";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { TwoFactorLoginRequest } from "types/TwoFactorLoginRequest";
 
 const formStyle: React.CSSProperties = {
@@ -52,7 +52,7 @@ export default function EmailSignIn({
         return;
       }
       if (!data.email) {
-        notifyError("Please enter a valid email address");
+        toast.error("Please enter a valid email address");
         return;
       }
       setSubmitting(true);
@@ -73,13 +73,13 @@ export default function EmailSignIn({
             console.error(
               "Failed to create email login link: " + result.status
             );
-            notifyError("Something went wrong. Please try again.");
+            toast.error("Something went wrong. Please try again.");
           } else {
             router.push(Routes.checkEmail);
           }
         } catch (error) {
           console.error(error);
-          notifyError("login failed");
+          toast.error("login failed");
         }
 
         setSubmitting(false);

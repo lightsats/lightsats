@@ -10,7 +10,7 @@ import {
 import { Tip, WithdrawalFlow } from "@prisma/client";
 import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
-import { notifyError, notifySuccess } from "components/Toasts";
+import { notifyError } from "components/Toasts";
 import copy from "copy-to-clipboard";
 import { formatDistance, isBefore } from "date-fns";
 import { DEFAULT_NAME } from "lib/constants";
@@ -21,6 +21,7 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 import useSWR, { SWRConfiguration } from "swr";
 import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
@@ -63,16 +64,16 @@ const Withdraw: NextPage = () => {
             headers: { "Content-Type": "application/json" },
           });
           if (result.ok) {
-            notifySuccess("Funds withdrawn!");
+            toast.success("Funds withdrawn!");
           } else {
             const body = await result.text();
-            notifyError(
+            toast.error(
               "Failed to withdraw: " + result.statusText + `\n${body}`
             );
           }
         } catch (error) {
           console.error(error);
-          notifyError(
+          toast.error(
             "Withdrawal failed: " +
               JSON.stringify(error, Object.getOwnPropertyNames(error)) +
               ". Please try again."
@@ -179,7 +180,7 @@ const Withdraw: NextPage = () => {
   const copyWithdrawLinkUrl = React.useCallback(() => {
     if (withdrawalLinkLnurl) {
       copy(withdrawalLinkLnurl);
-      notifySuccess("Copied to clipboard");
+      toast.success("Copied to clipboard");
     }
   }, [withdrawalLinkLnurl]);
 

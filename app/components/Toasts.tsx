@@ -30,7 +30,7 @@ export const useToastsStore = create<ToastsStore>((set, get) => ({
           ...get(),
           toasts: get().toasts.filter((t) => t !== toastWithId),
         });
-      }, 3000);
+      }, 5000);
       return { toasts: [...state.toasts, toastWithId] };
     }),
 }));
