@@ -1,5 +1,4 @@
 import {
-  Badge,
   Card,
   Grid,
   Link,
@@ -65,16 +64,16 @@ export function Tips() {
                 <NextLink href={`${Routes.tips}/${tip.id}`}>
                   <a style={cardLinkStyle}>
                     <Card
-                      variant="flat"
                       isPressable
                       isHoverable
                       style={{ backgroundColor: "white" }}
                     >
                       <Card.Body>
-                        <Row justify="space-between" align="center">
-                          <Badge>
-                            {" "}
-                            {tip.amount}⚡{" "}
+                        <Row justify="space-between">
+                          <Text color="#F8AF43">
+                            <TipStatusBadge status={tip.status} />
+                          </Text>
+                          <Text b>
                             <FiatPrice
                               currency={tip.currency ?? DEFAULT_FIAT_CURRENCY}
                               exchangeRate={
@@ -84,16 +83,24 @@ export function Tips() {
                               }
                               sats={tip.amount}
                             />
-                          </Badge>
+                          </Text>
+                        </Row>
+                        <Row justify="space-between">
+                          <Text>
+                            {formatDistance(Date.now(), new Date(tip.created))}{" "}
+                            ago
+                          </Text>
+                          <Text>{tip.amount} sats</Text>
+                        </Row>
+                        {/* <Row justify="space-between" align="center">
+
                           <Spacer x={0.25} />
-                          <TipStatusBadge status={tip.status} />
+                          
                         </Row>
                         <Spacer y={0.5} />
                         <Row justify="space-between" align="center">
                           <Text small>
-                            Created{" "}
-                            {formatDistance(Date.now(), new Date(tip.created))}{" "}
-                            ago
+                            
                           </Text>
                           {!hasExpired &&
                             expirableTipStatuses.indexOf(tip.status) >= 0 && (
@@ -110,7 +117,7 @@ export function Tips() {
                               Expired
                             </Text>
                           )}
-                        </Row>
+                        </Row> */}
                       </Card.Body>
                     </Card>
                   </a>
