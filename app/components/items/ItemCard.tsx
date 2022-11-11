@@ -1,4 +1,6 @@
-import { Badge, Col, Collapse, Row, Spacer, Text } from "@nextui-org/react";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
+import { Button, Collapse, Row, Text } from "@nextui-org/react";
+import { Icon } from "components/Icon";
 import {
   ItemFeatureBadge,
   ItemFeatureBadgeProps,
@@ -74,38 +76,23 @@ export function ItemCard({ item }: ItemCardProps) {
   // TODO: get features based on item type and move to a separate component
   return (
     <Collapse
-      css={{ width: "100%" }}
-      title={
-        <Row align="center">
-          <NextImage
-            alt=""
-            width={64}
-            height={64}
-            src={getItemImageLocation(item)}
-            style={{ borderRadius: "8px" }}
-            placeholder="blur"
-            blurDataURL={item.placeholderDataUrl ?? defaultPlaceholderDataUrl}
-          />
-          <Spacer x={0.5} />
-          <Col>
-            <Row>
-              <Text b>{item.name}</Text>
-            </Row>
-            <Row>
-              <Text size="x-small" b css={{ color: "$gray500" }}>
-                {item.slogan}
-              </Text>
-            </Row>
-          </Col>
-        </Row>
+      contentLeft={
+        <NextImage
+          alt=""
+          width={64}
+          height={64}
+          src={getItemImageLocation(item)}
+          style={{ borderRadius: "8px" }}
+          placeholder="blur"
+          blurDataURL={item.placeholderDataUrl ?? defaultPlaceholderDataUrl}
+        />
       }
+      title={<Text b>{item.name}</Text>}
+      subtitle={<>{item.slogan}</>}
     >
       <NextLink href={item.link} passHref>
         <a target="_blank">
-          <Row
-            align="center"
-            css={{ backgroundColor: "$gray900", p: 10, br: 10 }}
-          >
+          <Row align="center">
             <Row
               justify="flex-start"
               align="flex-start"
@@ -116,18 +103,13 @@ export function ItemCard({ item }: ItemCardProps) {
               ))}
             </Row>
 
-            <Col span={2.5}>
-              <Badge
-                css={{
-                  background: "$success",
-                  //borderColor: "$black",
-                  color: "$white",
-                  borderColor: "$success",
-                }}
-              >
-                {item.category === "wallets" ? "GET" : "VISIT"}
-              </Badge>
-            </Col>
+            <Button>
+              <Icon>
+                <ArrowTopRightOnSquareIcon />
+              </Icon>
+              &nbsp;
+              {item.category === "wallets" ? "Install" : "Open"}
+            </Button>
           </Row>
         </a>
       </NextLink>
