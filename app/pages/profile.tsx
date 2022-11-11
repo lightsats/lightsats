@@ -2,6 +2,7 @@ import { ClipboardIcon, EyeIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
+  Collapse,
   Input,
   Link,
   Loading,
@@ -11,7 +12,6 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Tip, User } from "@prisma/client";
-import { BackButton } from "components/BackButton";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { notifyError, notifySuccess } from "components/Toasts";
@@ -84,40 +84,41 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
       )}
 
       <Spacer />
-      <Row>
-        <Text b>Connected accounts</Text>
-      </Row>
-      <Row>
-        <Text>
-          {user.email && "Email: " + user.email}
-          {user.phoneNumber && "Phone: " + user.phoneNumber}
-          {user.lnurlPublicKey && "Wallet: " + user.lnurlPublicKey}
-        </Text>
-      </Row>
-      <Spacer />
-      <Row>
-        <Text b>Lightsats User ID</Text>
-      </Row>
-      <Row align="center">
-        <Text>
-          @{user.id.slice(0, 6)}...{user.id.slice(user.id.length - 6)}{" "}
-        </Text>
-        <Spacer x={0.25} />
-        <Button
-          auto
-          light
-          color="primary"
-          size="sm"
-          css={{ p: 0 }}
-          onClick={copyUserId}
-        >
-          <Icon width={16} height={16}>
-            <ClipboardIcon />
-          </Icon>
-        </Button>
-      </Row>
-      <Spacer />
-      <BackButton />
+      <Collapse
+        bordered
+        title={<Text b>🔗 Connected accounts & more</Text>}
+        css={{ width: "100%" }}
+      >
+        <Row>
+          <Text>
+            {user.email && "📧 Email: " + user.email}
+            {user.phoneNumber && "📱 Phone: " + user.phoneNumber}
+            {user.lnurlPublicKey && "⚡ Wallet: " + user.lnurlPublicKey}
+          </Text>
+        </Row>
+        <Spacer />
+        <Row>
+          <Text b>Lightsats User ID</Text>
+        </Row>
+        <Row align="center">
+          <Text>
+            @{user.id.slice(0, 6)}...{user.id.slice(user.id.length - 6)}{" "}
+          </Text>
+          <Spacer x={0.25} />
+          <Button
+            auto
+            light
+            color="primary"
+            size="sm"
+            css={{ p: 0 }}
+            onClick={copyUserId}
+          >
+            <Icon width={16} height={16}>
+              <ClipboardIcon />
+            </Icon>
+          </Button>
+        </Row>
+      </Collapse>
     </>
   );
 }
