@@ -96,7 +96,7 @@ export function UserCard({ userId, forceAnonymous }: Props) {
             <Row>
               <Col>
                 <Text size="small">Sent 👆</Text>
-                <Text b>{publicUser.satsDonated} sats</Text>
+                <Text b>{publicUser.satsTipped} sats</Text>
               </Col>
               <Col>
                 <Text size="small">Received 👇</Text>

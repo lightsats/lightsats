@@ -39,7 +39,7 @@ export default async function handler(
       const sentTips = user.tipsSent.filter(
         (tip) => tip.status === "WITHDRAWN"
       );
-      const satsDonated = sentTips.length
+      const satsTipped = sentTips.length
         ? sentTips.map((tip) => tip.amount).reduce((a, b) => a + b)
         : 0;
 
@@ -62,7 +62,7 @@ export default async function handler(
         fallbackAvatarId: getFallbackAvatarId(user),
         numTipsSent: sentTips.length,
         numTipsReceived: user.tipsReceived.length,
-        satsDonated,
+        satsTipped: satsTipped,
       };
       return res.json(publicUser);
     }
