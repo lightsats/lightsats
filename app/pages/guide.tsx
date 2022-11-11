@@ -103,9 +103,9 @@ function GuideCard({ guide }: GuideCardProps) {
   return (
     <Grid xs={12} justify="center" css={{ px: 0 }}>
       <NextLink href={guide.link}>
-        <a style={{ width: "100%" }}>
-          <Row align="center" style={{ height: "100%" }}>
-            <Col span={1.5}>
+        <a style={{ width: "100%", maxWidth: "360px" }}>
+          <Row align="center" css={{ height: "100%" }}>
+            <Col span={2.5}>
               <Row justify="flex-start">
                 <Button color="primary" auto flat css={{ px: 8 }}>
                   <Icon>{guide.icon}</Icon>
