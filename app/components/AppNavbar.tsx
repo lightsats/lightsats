@@ -73,7 +73,7 @@ export function AppNavbar() {
         icon: <LightBulbIcon />,
       },
     ],
-    [user]
+    []
   );
 
   if (sessionStatus === "loading" || (session && !user)) {
