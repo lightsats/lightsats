@@ -4,6 +4,7 @@ import { Alert } from "components/Alert";
 import { NextLink } from "components/NextLink";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { Tips } from "components/tipper/Tips";
+import { UserCard } from "components/UserCard";
 import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -30,10 +31,16 @@ const Home: NextPage = () => {
 
       {session && user ? (
         <>
-          {user?.userType === "tipper" ? (
+          {user?.userType === "tipper" && (
             <>
               <Alert>⚠️ This project is currently in BETA.</Alert>
               <Spacer />
+            </>
+          )}
+          <UserCard userId={user.id} />
+          <Spacer />
+          {user?.userType === "tipper" ? (
+            <>
               <NewTipButton />
               <Spacer />
               <Tips />
