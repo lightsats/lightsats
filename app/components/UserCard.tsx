@@ -9,9 +9,11 @@ import {
   Link,
   Loading,
   Row,
+  Spacer,
   Text,
 } from "@nextui-org/react";
 import { Icon } from "components/Icon";
+import { format } from "date-fns";
 import { useScoreboardPosition } from "hooks/useScoreboardPosition";
 import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
@@ -50,31 +52,36 @@ export function UserCard({ userId }: Props) {
         {publicUser && placing && (
           <>
             <Row align="center">
-              <Col span={2}>
-                <Avatar
-                  src={getAvatarUrl(publicUser?.avatarURL ?? undefined)}
-                />
-              </Col>
+              <Avatar src={getAvatarUrl(publicUser?.avatarURL ?? undefined)} />
+              <Spacer x={0.5} />
               <Col span={10}>
-                <Text b>{publicUser.name ?? DEFAULT_NAME}</Text>
-                <br />
-                {publicUser.twitterUsername && (
-                  <Text size="smaller">
-                    <Link
-                      href={`https://twitter.com/${publicUser.twitterUsername}`}
-                      target="_blank"
-                    >
-                      <Text>@{publicUser.twitterUsername}</Text>
-                      &nbsp;
-                      <Image
-                        alt="twitter"
-                        src="/icons/twitter.svg"
-                        width={16}
-                        height={16}
-                      />
-                    </Link>
+                <Row>
+                  <Text b>{publicUser.name ?? DEFAULT_NAME}</Text>
+                </Row>
+                <Row>
+                  {publicUser.twitterUsername && (
+                    <Text size="smaller">
+                      <Link
+                        href={`https://twitter.com/${publicUser.twitterUsername}`}
+                        target="_blank"
+                      >
+                        <Text>@{publicUser.twitterUsername}</Text>
+                        &nbsp;
+                        <Image
+                          alt="twitter"
+                          src="/icons/twitter.svg"
+                          width={16}
+                          height={16}
+                        />
+                      </Link>
+                    </Text>
+                  )}
+                </Row>
+                <Row>
+                  <Text small>
+                    Joined {format(new Date(publicUser.created), "MMMM yyyy")}
                   </Text>
-                )}
+                </Row>
               </Col>
               <Button auto flat css={{ px: 8 }} onClick={shareProfile}>
                 <Icon>
