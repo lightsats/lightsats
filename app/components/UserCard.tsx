@@ -55,15 +55,21 @@ export function UserCard({ userId, forceAnonymous }: Props) {
         {publicUser && placing && (
           <>
             <Row align="center">
-              <Avatar src={getAvatarUrl(publicUser?.avatarURL ?? undefined)} />
-              <Spacer x={0.5} />
+              <Avatar
+                size="xl"
+                zoomed
+                bordered
+                color="primary"
+                src={getAvatarUrl(publicUser?.avatarURL ?? undefined)}
+              />
+              <Spacer x={0.75} />
               <Col span={10}>
                 <Row>
                   <Text b>{publicUser.name ?? DEFAULT_NAME}</Text>
                 </Row>
-                <Row>
+                <Row css={{ mt: -5, mb: 5 }}>
                   {publicUser.twitterUsername && (
-                    <Text size="smaller">
+                    <Text>
                       <Link
                         href={`https://twitter.com/${publicUser.twitterUsername}`}
                         target="_blank"

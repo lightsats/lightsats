@@ -305,7 +305,6 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
                   render={({ field }) => (
                     <Switch
                       {...field}
-                      color="success"
                       checked={field.value}
                       onChange={(e) => field.onChange(e.target.checked)}
                     />
@@ -321,7 +320,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
           {isSubmitting ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
-            <>Update Profile</>
+            <>Update profile</>
           )}
         </Button>
       </form>

@@ -140,7 +140,7 @@ export function AppNavbar() {
                   <Avatar
                     bordered
                     as="button"
-                    color="secondary"
+                    color="primary"
                     size="md"
                     src={getUserAvatarUrl(user)}
                   />
