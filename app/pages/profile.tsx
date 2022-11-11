@@ -1,4 +1,4 @@
-import { EyeIcon } from "@heroicons/react/24/solid";
+import { ClipboardIcon, EyeIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
@@ -17,6 +17,7 @@ import { NextLink } from "components/NextLink";
 import { notifyError, notifySuccess } from "components/Toasts";
 import { UserCard } from "components/UserCard";
 import copy from "copy-to-clipboard";
+import { useUser } from "hooks/useUser";
 import { MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -47,10 +48,7 @@ const formStyle: React.CSSProperties = {
 
 const Profile: NextPage = () => {
   const { data: session } = useSession();
-  const { data: user, mutate: mutateUser } = useSWR<User>(
-    session ? `/api/users/${session.user.id}` : null,
-    defaultFetcher
-  );
+  const { data: user, mutate: mutateUser } = useUser();
 
   if (!session || !user) {
     return null;
@@ -72,18 +70,11 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
     notifySuccess("User ID Copied to clipboard");
   }, [user.id]);
 
-  const copyPublicProfile = React.useCallback(() => {
-    const url = `${window.location.origin}${Routes.users}/${user.id}`;
-    copy(url);
-    notifySuccess("Public profile URL copied to clipboard");
-  }, [user.id]);
-
   return (
     <>
       <Row>
         <UserCard userId={user.id} />
       </Row>
-
       <Spacer />
 
       {user.userType === "tipper" ? (
@@ -102,6 +93,28 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
           {user.phoneNumber && "Phone: " + user.phoneNumber}
           {user.lnurlPublicKey && "Wallet: " + user.lnurlPublicKey}
         </Text>
+      </Row>
+      <Spacer />
+      <Row>
+        <Text b>Lightsats User ID</Text>
+      </Row>
+      <Row align="center">
+        <Text>
+          @{user.id.slice(0, 6)}...{user.id.slice(user.id.length - 6)}{" "}
+        </Text>
+        <Spacer x={0.25} />
+        <Button
+          auto
+          light
+          color="primary"
+          size="sm"
+          css={{ p: 0 }}
+          onClick={copyUserId}
+        >
+          <Icon width={16} height={16}>
+            <ClipboardIcon />
+          </Icon>
+        </Button>
       </Row>
       <Spacer />
       <BackButton />

@@ -8,5 +8,5 @@ export type PublicUser = Pick<
   numTipsSent: number;
   numTipsReceived: number;
   satsDonated: number;
-  scoreboardPosition: number;
+  // scoreboardPosition: number; // TODO: calculate
 };

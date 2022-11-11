@@ -12,14 +12,14 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Icon } from "components/Icon";
-import { NextLink } from "components/NextLink";
+import { useScoreboardPosition } from "hooks/useScoreboardPosition";
 import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getAvatarUrl } from "lib/utils";
+import React from "react";
 import useSWR from "swr";
 import { PublicUser } from "types/PublicUser";
-import { Scoreboard } from "types/Scoreboard";
 
 type Props = {
   userId: string;
@@ -31,14 +31,14 @@ export function UserCard({ userId }: Props) {
     defaultFetcher
   );
 
-  const { data: scoreboard } = useSWR<Scoreboard>(
-    `/api/scoreboard`,
-    defaultFetcher
-  );
+  const shareProfile = React.useCallback(() => {
+    navigator.share({
+      url: `${Routes.users}/${userId}`,
+      title: (publicUser?.name ?? DEFAULT_NAME) + " on Lightsats",
+    });
+  }, [userId, publicUser?.name]);
 
-  const placing = scoreboard
-    ? scoreboard.entries.findIndex((entry) => entry.isMe) + 1
-    : undefined;
+  const placing = useScoreboardPosition();
 
   return (
     <Card>
@@ -76,17 +76,11 @@ export function UserCard({ userId }: Props) {
                   </Text>
                 )}
               </Col>
-              <Col span={1}>
-                <NextLink href={`${Routes.users}/${publicUser.id}`} passHref>
-                  <a target="_blank">
-                    <Button auto flat css={{ px: 8 }}>
-                      <Icon>
-                        <ArrowUpTrayIcon />
-                      </Icon>
-                    </Button>
-                  </a>
-                </NextLink>
-              </Col>
+              <Button auto flat css={{ px: 8 }} onClick={shareProfile}>
+                <Icon>
+                  <ArrowUpTrayIcon />
+                </Icon>
+              </Button>
             </Row>
             <Divider y={2} />
             <Row>
