@@ -28,10 +28,10 @@
     "db:connect:staging": "flyctl postgres connect -a lightsats-db",
     "deploy:staging": "fly deploy -c fly-staging.toml",
     "deploy:production": "cli-confirm \"Do you really want to do a production deployment?\" && fly deploy -c fly-production.toml",
-    "prettier": "yarn prettier --write .",
+    "prettier:fix": "yarn prettier --write . --check '!.db'",
     "logs:staging": "fly logs -a lightsats",
     "logs:production": "fly logs -a lightsats-prod",
-    "items:placeholders": "cli-confirm \"Confirm no outstanding changes\" && ts-node generateItemPlaceholders.ts && yarn prettier",
+    "items:placeholders": "cli-confirm \"Confirm no outstanding changes\" && ts-node generateItemPlaceholders.ts && yarn prettier:fix",
     "items:filesizes": "ts-node checkItemImageFilesizes.ts"
   },
   "dependencies": {
@@ -42,6 +42,7 @@
     "bolt11": "^1.4.0",
     "chart.js": "^3.9.1",
     "copy-to-clipboard": "^3.3.2",
+    "currency-symbol-map": "^5.1.0",
     "date-fns": "^2.29.3",
     "dom-confetti": "^0.2.2",
     "http-status-codes": "^2.2.0",

@@ -34,6 +34,7 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
 
   // only return public fields since this is a public endpoint
   const publicTip: PublicTip = {
+    id: tip.id,
     amount: tip.amount,
     tipperId: tip.tipperId,
     hasClaimed: !!tip.tippeeId,
@@ -50,9 +51,14 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
       ? {
           inJourney: tip.tippee.inJourney,
           journeyStep: tip.tippee.journeyStep,
+          name: tip.tippee.name,
+          twitterUsername: tip.tippee.twitterUsername,
+          avatarURL: tip.tippee.avatarURL,
+          fallbackAvatarId: getFallbackAvatarId(tip.tippee),
         }
       : undefined,
     status: tip.status,
+    created: tip.created,
     expiry: tip.expiry,
     tippeeName: tip.tippeeName,
     claimLinkViewed: tip.claimLinkViewed,

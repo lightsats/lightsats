@@ -17,7 +17,7 @@ const theme = createTheme({
       warningBorder: "#ffecb5",
 
       link: "#2E74ED",
-      text: "#333",
+      text: "#000",
 
       // Special colors
       gold: "#C9B037",

@@ -38,6 +38,7 @@ type PhoneFormData = {
 type PhoneSignInProps = {
   callbackUrl?: string;
   submitText?: React.ReactNode;
+  tipId?: string;
 };
 
 type MyIp = { country: Country; ip: string };
@@ -45,6 +46,7 @@ type MyIp = { country: Country; ip: string };
 export default function PhoneSignIn({
   callbackUrl,
   submitText,
+  tipId,
 }: PhoneSignInProps) {
   const { data: myIp } = useSWR<MyIp>("https://api.country.is", defaultFetcher);
   const { t } = useTranslation("common");
@@ -54,7 +56,7 @@ export default function PhoneSignIn({
   const callbackUrlWithFallback =
     callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
 
-  console.log("callbackUrlWithFallback", callbackUrlWithFallback);
+  // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
 
   React.useEffect(() => {
     setFocus("phone");
@@ -76,6 +78,7 @@ export default function PhoneSignIn({
             phoneNumber: data.phone,
             callbackUrl: callbackUrlWithFallback,
             locale: router.locale ?? DEFAULT_LOCALE,
+            tipId,
           };
 
           const result = await fetch(`/api/auth/2fa/send`, {
@@ -88,8 +91,9 @@ export default function PhoneSignIn({
               "Failed to create phone login link: " + result.status
             );
             notifyError("Something went wrong. Please try again.");
+          } else {
+            router.push(Routes.checkPhone);
           }
-          router.push(Routes.checkPhone);
         } catch (error) {
           console.error(error);
           notifyError("login failed");
@@ -98,7 +102,7 @@ export default function PhoneSignIn({
         setSubmitting(false);
       })();
     },
-    [callbackUrlWithFallback, isSubmitting, router]
+    [callbackUrlWithFallback, isSubmitting, router, tipId]
   );
 
   return (

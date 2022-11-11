@@ -40,7 +40,7 @@ export default function EmailSignIn({
   const callbackUrlWithFallback =
     callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
 
-  console.log("callbackUrlWithFallback", callbackUrlWithFallback);
+  // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
 
   React.useEffect(() => {
     setFocus("email");
@@ -74,8 +74,9 @@ export default function EmailSignIn({
               "Failed to create email login link: " + result.status
             );
             notifyError("Something went wrong. Please try again.");
+          } else {
+            router.push(Routes.checkEmail);
           }
-          router.push(Routes.checkEmail);
         } catch (error) {
           console.error(error);
           notifyError("login failed");

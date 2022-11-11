@@ -22,8 +22,8 @@ export const spend: Item[] = [
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAOElEQVR4nAXBoQ0AQAgDQCTiVRMUYdpqNDsxQidB/p0BqKrMBGAkJe0uSevuu5M0M+buEQHgvfcB5u4SplG5KjAAAAAASUVORK5CYII=",
     name: "Moon",
     slogan:
-      "Purchase Moon Visa® Prepaid Cards with crypto. Pay at millions of online merchants with secure virtual cards.",
-    platforms: ["web", "mobile"],
+      "Purchase Moon Visa® Prepaid Cards with bitcoin. Pay at millions of online merchants with secure virtual cards.",
+    platforms: ["web", "desktop"],
   },
   {
     category: "spend",
@@ -39,6 +39,17 @@ export const spend: Item[] = [
   },
   {
     category: "spend",
+    image: "thebitcoincompany.jpg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/thebitcoincompany",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "The Bitcoin Company",
+    slogan: "The easiest way to spend bitcoin and earn rewards.",
+    platforms: ["mobile"],
+  },
+  {
+    category: "spend",
     image: "lightningstore.jpeg",
     languageCodes: [getLanguageCode("English")],
     link: "https://lgt.st/lightningstore",
@@ -46,7 +57,7 @@ export const spend: Item[] = [
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAOklEQVR4nGPg4uQUk5SQVVJkY2FlYGBgOPX/07Lbp0AsNhZWI1dbaQU5Xh4eBk52dlMrB3ffUEYGBgDssgjKc7unUgAAAABJRU5ErkJggg==",
     name: "Lightning Store⚡",
     slogan: "Obscure Bitcoin pop cult/punk mashups 4 sale ⛓⚡️",
-    platforms: ["web", "mobile"],
+    platforms: ["web"],
   },
   {
     category: "spend",

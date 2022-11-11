@@ -1,6 +1,9 @@
-import { Button, Loading, Spacer, Text } from "@nextui-org/react";
+import { ClipboardIcon } from "@heroicons/react/24/solid";
+import { Button, Input, Loading, Spacer, Text } from "@nextui-org/react";
+import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
-import { notifyError } from "components/Toasts";
+import { notifyError, notifySuccess } from "components/Toasts";
+import copy from "copy-to-clipboard";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { signIn } from "next-auth/react";
@@ -14,9 +17,14 @@ import { LnurlAuthStatus } from "types/LnurlAuthStatus";
 
 const useLnurlStatusConfig: SWRConfiguration = { refreshInterval: 1000 };
 
-export default function LnurlAuthSignIn() {
+type LnurlAuthSignInProps = {
+  callbackUrl?: string;
+};
+
+export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const router = useRouter();
-  const { callbackUrl } = router.query;
+  const callbackUrlWithFallback =
+    callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
   // only retrieve the qr code once
   const { data: qr } = useSWRImmutable<LnurlAuthLoginInfo>(
     "/api/auth/lnurl/generate-secret",
@@ -35,7 +43,7 @@ export default function LnurlAuthSignIn() {
         try {
           const result = await signIn("lnurl", {
             k1: qr.k1,
-            callbackUrl: (callbackUrl as string) ?? Routes.home,
+            callbackUrl: callbackUrlWithFallback,
             redirect: false,
           });
 
@@ -50,12 +58,19 @@ export default function LnurlAuthSignIn() {
         }
       })();
     }
-  }, [callbackUrl, qr, router, status]);
+  }, [callbackUrlWithFallback, qr, router, status]);
+
+  const copyQr = React.useCallback(() => {
+    if (qr) {
+      copy(qr.encoded);
+      notifySuccess("Copied to clipboard");
+    }
+  }, [qr]);
 
   return (
     <>
       <Spacer />
-      <Text h3>Scan or click to sign in</Text>
+      <Text h3>Lightning⚡ Login</Text>
       {qr ? (
         <>
           <NextLink href={`lightning:${qr.encoded}`}>
@@ -69,6 +84,26 @@ export default function LnurlAuthSignIn() {
               <Button size="lg">Click to connect</Button>
             </a>
           </NextLink>
+          <Spacer />
+          <Input
+            readOnly
+            value={qr.encoded}
+            contentRight={
+              <Button
+                onClick={copyQr}
+                auto
+                css={{
+                  px: 8,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                }}
+              >
+                <Icon>
+                  <ClipboardIcon />
+                </Icon>
+              </Button>
+            }
+          />
         </>
       ) : (
         <>

@@ -54,7 +54,7 @@ export function Toasts() {
           <Grid key={toast.id} xs={12}>
             <Card
               css={{
-                backgroundColor: "$success",
+                backgroundColor: `$${toast.color || "success"}`,
                 width: "100%",
                 animationName: "toast",
                 animationDuration: "3s",
