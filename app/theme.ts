@@ -12,8 +12,9 @@ const theme = createTheme({
       secondaryText: "#0F172A",
       secondarySolidContrast: "#0F172A",
 
-      error: "$red600",
-      warning: "#ffecb5",
+      success: "#2fb380",
+      error: "#da292e",
+      warning: "#f4bd61",
       warningText: "#664d03",
       warningBorder: "#ffecb5",
 
