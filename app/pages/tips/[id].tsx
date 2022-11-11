@@ -9,6 +9,7 @@ import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
 import { notifyError, notifySuccess } from "components/Toasts";
 import { formatDistance, isAfter } from "date-fns";
+import { useScoreboardPosition } from "hooks/useScoreboardPosition";
 import { expirableTipStatuses, refundableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -17,7 +18,6 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
-import { Scoreboard } from "types/Scoreboard";
 import { requestProvider } from "webln";
 
 // poll tip status once per second to receive updates TODO: consider using websockets
@@ -71,14 +71,7 @@ const TipPage: NextPage = () => {
     }
   }, [tipStatus, tipInvoice, hasExpired]);
 
-  const { data: scoreboard } = useSWR<Scoreboard>(
-    tip && tip.status === "WITHDRAWN" ? `/api/scoreboard` : null,
-    defaultFetcher
-  );
-
-  const placing = scoreboard
-    ? scoreboard.entries.findIndex((entry) => entry.isMe) + 1
-    : undefined;
+  const placing = useScoreboardPosition();
 
   const deleteTip = React.useCallback(() => {
     (async () => {

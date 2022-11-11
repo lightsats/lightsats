@@ -1,4 +1,5 @@
 export type ScoreboardEntry = {
+  userId: string;
   isMe: boolean;
   name: string | undefined;
   avatarURL: string | undefined;
