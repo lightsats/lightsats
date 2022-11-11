@@ -5,6 +5,7 @@ import EmailSignIn from "pages/auth/signin/email";
 import LnurlAuthSignIn from "pages/auth/signin/lnurl";
 import PhoneSignIn from "pages/auth/signin/phone";
 import { useState } from "react";
+import { LoginMethod, loginMethods } from "types/LoginMethod";
 
 type LoginProps = {
   instructionsText?(loginMethod: LoginMethod): string;
@@ -13,9 +14,6 @@ type LoginProps = {
   tipId?: string;
   defaultLoginMethod: LoginMethod;
 };
-
-const loginMethods = ["phone", "email", "lightning"] as const;
-type LoginMethod = typeof loginMethods[number];
 
 export function Login({
   submitText,

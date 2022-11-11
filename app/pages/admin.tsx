@@ -7,8 +7,10 @@ import {
   Text,
   User as NextUser,
 } from "@nextui-org/react";
+import { LoginMethodsChart } from "components/admin/LoginMethodsChart";
 import { ProfitChart } from "components/admin/ProfitChart";
 import { TipsChart } from "components/admin/TipsChart";
+import { UserTypesChart } from "components/admin/UserTypesChart";
 import { differenceInHours } from "date-fns";
 import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
@@ -53,6 +55,12 @@ const AdminPage: NextPage = () => {
         </Grid>
         <Grid xs={12} sm={6}>
           <TipsChart tips={adminDashboard.tips} />
+        </Grid>
+        <Grid xs={12} sm={6}>
+          <LoginMethodsChart users={adminDashboard.users} />
+        </Grid>
+        <Grid xs={12} sm={6}>
+          <UserTypesChart users={adminDashboard.users} />
         </Grid>
       </Grid.Container>
       <h6>Admins</h6>
