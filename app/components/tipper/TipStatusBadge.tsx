@@ -1,12 +1,12 @@
-import { Text } from "@nextui-org/react";
+import { Badge } from "@nextui-org/react";
 import { TipStatus } from "@prisma/client";
 
 export function TipStatusBadge({ status }: { status: TipStatus }) {
   return (
-    <Text
-      b
+    <Badge
       css={{
-        color:
+        letterSpacing: 0,
+        backgroundColor:
           status === "UNFUNDED"
             ? "$error"
             : status === "UNCLAIMED" || status === "RECLAIMED"
@@ -19,6 +19,6 @@ export function TipStatusBadge({ status }: { status: TipStatus }) {
       }}
     >
       {status[0].toUpperCase() + status.slice(1).toLowerCase()}
-    </Text>
+    </Badge>
   );
 }

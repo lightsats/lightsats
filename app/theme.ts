@@ -11,10 +11,11 @@ const theme = createTheme({
       secondary: "#EFEFEF",
       secondaryText: "#333",
 
-      error: "$red600",
-      warning: "#ffecb5",
-      warningText: "#664d03",
-      warningBorder: "#ffecb5",
+      success: "#2fb380",
+      error: "#da292e",
+      warning: "#f4bd61",
+      warningText: "#FFF",
+      warningBorder: "#b78e49",
 
       link: "#2E74ED",
       text: "#000",
