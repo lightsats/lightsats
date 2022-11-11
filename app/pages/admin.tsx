@@ -1,17 +1,21 @@
 import {
+  Button,
   Grid,
   Link,
   Loading,
   Row,
   Spacer,
   Text,
-  User as NextUser,
 } from "@nextui-org/react";
 import { LoginMethodsChart } from "components/admin/LoginMethodsChart";
 import { ProfitChart } from "components/admin/ProfitChart";
 import { TipsChart } from "components/admin/TipsChart";
 import { UserTypesChart } from "components/admin/UserTypesChart";
+import { NextLink } from "components/NextLink";
+import { NextUIUser } from "components/NextUIUser";
 import { differenceInHours } from "date-fns";
+import { DEFAULT_NAME } from "lib/constants";
+import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
@@ -43,6 +47,22 @@ const AdminPage: NextPage = () => {
   const withdrawnTips = adminDashboard.tips.filter(
     (t) => t.status === "WITHDRAWN"
   );
+
+  const outstandingPaidTips = adminDashboard.tips.filter(
+    (t) =>
+      t.status !== "UNFUNDED" &&
+      t.status !== "WITHDRAWN" &&
+      t.status !== "REFUNDED" &&
+      t.status !== "UNAVAILABLE"
+  );
+
+  const outstandingAmount = outstandingPaidTips.length
+    ? outstandingPaidTips.map((t) => t.amount).reduce((a, b) => a + b)
+    : 0;
+  const outstandingFees = outstandingPaidTips.length
+    ? outstandingPaidTips.map((t) => t.fee).reduce((a, b) => a + b)
+    : 0;
+
   return (
     <>
       <Head>
@@ -67,8 +87,8 @@ const AdminPage: NextPage = () => {
       <Grid.Container justify="center">
         {adminDashboard.adminUsers.map((user) => (
           <Grid key={user.id}>
-            <NextUser
-              name={user.name ?? "Anonymous"}
+            <NextUIUser
+              name={user.name ?? DEFAULT_NAME}
               src={getUserAvatarUrl(user)}
             />
           </Grid>
@@ -85,6 +105,7 @@ const AdminPage: NextPage = () => {
           >
             LNBITS Dashboard
           </Link>
+          <Text b>Wallet balance: {adminDashboard.walletBalance} sats</Text>
         </Text>
       </Row>
       <Row justify="center" align="center">
@@ -121,6 +142,12 @@ const AdminPage: NextPage = () => {
       </Row>
       <Row justify="center" align="center">
         <Text>{profit} sats unspent routing fees (profit)</Text>
+      </Row>
+      <Row justify="center" align="center">
+        <Text>{outstandingAmount} sats outstanding (not yet withdrawn)</Text>
+      </Row>
+      <Row justify="center" align="center">
+        <Text>{outstandingFees} fees outstanding (not yet spent)</Text>
       </Row>
       <Row justify="center" align="center">
         <Text>
@@ -177,6 +204,27 @@ const AdminPage: NextPage = () => {
             : 0}{" "}
           hours
         </Text>
+      </Row>
+      <Spacer />
+      <Text>Browse</Text>
+      <Row justify="center" align="center">
+        <NextLink href={Routes.adminUsers}>
+          <a>
+            <Button auto>Users</Button>
+          </a>
+        </NextLink>
+        <Spacer />
+        <NextLink href={Routes.adminTips}>
+          <a>
+            <Button auto>Tips</Button>
+          </a>
+        </NextLink>
+        <Spacer />
+        <NextLink href={Routes.adminWithdrawals}>
+          <a>
+            <Button auto>Withdrawals</Button>
+          </a>
+        </NextLink>
       </Row>
     </>
   );
