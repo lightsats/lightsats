@@ -2,7 +2,6 @@ import { Button, Image, Loading, Spacer, Text } from "@nextui-org/react";
 import { Tip, User } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { NextLink } from "components/NextLink";
-import { NewTipButton } from "components/tipper/NewTipButton";
 import { Tips } from "components/tipper/Tips";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -35,8 +34,6 @@ const Home: NextPage = () => {
           {user?.userType === "tipper" ? (
             <>
               <Alert>⚠️ This project is currently in BETA.</Alert>
-              <Spacer />
-              <NewTipButton />
               <Spacer />
               <Tips />
             </>
