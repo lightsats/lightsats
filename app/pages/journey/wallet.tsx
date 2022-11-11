@@ -19,7 +19,7 @@ const SelectWalletPage: NextPage = () => {
       </MyBitcoinJourneyContent>
       <MyBitcoinJourneyFooter
         href={Routes.withdraw}
-        text={"I've installed a wallet"}
+        text={"Continue"}
         nextUp="Withdraw"
       />
     </>

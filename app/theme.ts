@@ -9,7 +9,8 @@ const theme = createTheme({
 
       primary: "#2E74ED",
       secondary: "#EFEFEF",
-      secondaryText: "#333",
+      secondaryText: "#0F172A",
+      secondarySolidContrast: "#0F172A",
 
       error: "$red600",
       warning: "#ffecb5",

@@ -16,7 +16,11 @@ const WhatIsBitcoinPage: NextPage = () => {
       </Head>
       <MyBitcoinJourneyHeader />
       <MyBitcoinJourneyContent>
-        <Image src="/images/guide/diamond-hands.png" width={250} />
+        <Image
+          alt="Diamond hands"
+          src="/images/guide/diamond-hands.png"
+          width={250}
+        />
         <Text h3 style={{ width: "100%" }}>
           Bitcoin is magic internet money
         </Text>
@@ -28,7 +32,7 @@ const WhatIsBitcoinPage: NextPage = () => {
         <Spacer />
         <Text>
           {
-            "Just like you recieved this tip from someone digitally, it never went through a bank or any entity."
+            "Just like you received this tip from someone digitally, it never went through a bank or any entity."
           }
         </Text>
         <Spacer y={1} />

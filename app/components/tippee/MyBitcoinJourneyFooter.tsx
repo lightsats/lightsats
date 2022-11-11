@@ -1,4 +1,4 @@
-import { Button, Grid, Spacer, Text } from "@nextui-org/react";
+import { Button, Container, Spacer, Text } from "@nextui-org/react";
 import { FlexBox } from "components/FlexBox";
 import { NextLink } from "components/NextLink";
 import React from "react";
@@ -17,45 +17,33 @@ export function MyBitcoinJourneyFooter({
   return (
     <>
       <Spacer y={3} />
-      {/* <FlexBox style={{ flexDirection: "row", alignContent: "normal" }}>
-        <FlexBox>
-          {" "}
-          <FlexBox style={{ flexDirection: "column" }}>
-            <Text b small transform="uppercase">
-              Next up
-            </Text>
-            <Text>{nextUp}</Text>
+      <Container style={{ margin: 0 }}>
+        <FlexBox
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <FlexBox style={{ flex: 1 }}>
+            <FlexBox style={{ flexDirection: "column" }}>
+              <Text b small transform="uppercase">
+                Next up
+              </Text>
+              <Text>{nextUp}</Text>
+            </FlexBox>
+          </FlexBox>
+          <FlexBox style={{ flex: 0 }}>
+            <NextLink href={href} passHref>
+              <a>
+                <Button size="lg" auto>
+                  {text}
+                </Button>
+              </a>
+            </NextLink>
           </FlexBox>
         </FlexBox>
-        <FlexBox>
-          <NextLink href={href} passHref>
-            <a>
-              <Button size="lg" color="gradient">
-                {text}
-              </Button>
-            </a>
-          </NextLink>
-        </FlexBox>
-      </FlexBox> */}
-      <Grid.Container>
-        <Grid xs={6}>
-          <FlexBox style={{ flexDirection: "column" }}>
-            <Text b small transform="uppercase">
-              Next up
-            </Text>
-            <Text>{nextUp}</Text>
-          </FlexBox>
-        </Grid>
-        <Grid xs={6}>
-          <NextLink href={href} passHref>
-            <a>
-              <Button size="lg" color="gradient">
-                {text}
-              </Button>
-            </a>
-          </NextLink>
-        </Grid>
-      </Grid.Container>
+      </Container>
     </>
   );
 }
