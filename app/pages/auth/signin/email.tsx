@@ -1,4 +1,4 @@
-import { Button, Input, Loading, Spacer } from "@nextui-org/react";
+import { Button, Card, Input, Loading, Spacer } from "@nextui-org/react";
 import { notifyError } from "components/Toasts";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
@@ -90,37 +90,41 @@ export default function EmailSignIn({
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => (
-            <Input
-              bordered
-              {...field}
-              label={t("email")}
-              type="email"
-              placeholder="satoshin@gmx.com"
-              autoComplete="email"
-              fullWidth
+      <Card>
+        <Card.Body>
+          <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  bordered
+                  {...field}
+                  label={t("email")}
+                  type="email"
+                  placeholder="satoshin@gmx.com"
+                  autoComplete="email"
+                  fullWidth
+                />
+              )}
             />
-          )}
-        />
-        <Spacer />
-        <Button
-          css={{ width: "100%" }}
-          color="primary"
-          type="submit"
-          auto
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <Loading type="points" color="currentColor" size="sm" />
-          ) : (
-            <>{submitText ?? "Login"}</>
-          )}
-        </Button>
-      </form>
+            <Spacer />
+            <Button
+              css={{ width: "100%" }}
+              color="primary"
+              type="submit"
+              auto
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <Loading type="points" color="currentColor" size="sm" />
+              ) : (
+                <>{submitText ?? "Login"}</>
+              )}
+            </Button>
+          </form>
+        </Card.Body>
+      </Card>
     </>
   );
 }
