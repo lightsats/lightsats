@@ -294,7 +294,9 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
                   <EyeIcon />
                 </Icon>
                 <Spacer x={0.5} />
-                <Text weight="medium">Anonymise my info on scoreboards</Text>
+                <Text weight="medium">
+                  Anonymise my info on scoreboard & public profile
+                </Text>
                 <Spacer />
                 <Controller
                   name="isAnonymous"

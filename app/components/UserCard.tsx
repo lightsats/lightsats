@@ -25,11 +25,14 @@ import { PublicUser } from "types/PublicUser";
 
 type Props = {
   userId: string;
+  forceAnonymous?: boolean;
 };
 
-export function UserCard({ userId }: Props) {
+export function UserCard({ userId, forceAnonymous }: Props) {
   const { data: publicUser } = useSWR<PublicUser>(
-    userId ? `/api/users/${userId}?publicProfile=true` : undefined,
+    userId
+      ? `/api/users/${userId}?publicProfile=true&forceAnonymous=${forceAnonymous}`
+      : undefined,
     defaultFetcher
   );
 

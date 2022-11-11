@@ -18,7 +18,7 @@ export default async function handler(
     return;
   }
 
-  const { id, publicProfile } = req.query;
+  const { id, publicProfile, forceAnonymous } = req.query;
 
   if (session.user.id !== id || publicProfile === "true") {
     if (req.method === "GET") {
@@ -47,7 +47,8 @@ export default async function handler(
         id: user.id,
         created: user.created,
         userType: user.userType,
-        ...(user.isAnonymous
+        ...(user.isAnonymous &&
+        (forceAnonymous === "true" || user.id !== session.user.id)
           ? {
               name: null,
               avatarURL: null,

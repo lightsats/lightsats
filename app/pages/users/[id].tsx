@@ -7,7 +7,7 @@ export default function UserPublicProfile() {
 
   return (
     <>
-      <UserCard userId={id as string} />
+      <UserCard userId={id as string} forceAnonymous />
     </>
   );
 }
