@@ -15,6 +15,7 @@ import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { nth } from "lib/utils";
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
@@ -24,6 +25,7 @@ import { requestProvider } from "webln";
 const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 const TipPage: NextPage = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const { id } = router.query;
   const [prevTipStatus, setPrevTipStatus] = React.useState<
@@ -71,7 +73,7 @@ const TipPage: NextPage = () => {
     }
   }, [tipStatus, tipInvoice, hasExpired]);
 
-  const placing = useScoreboardPosition();
+  const placing = useScoreboardPosition(session?.user.id);
 
   const deleteTip = React.useCallback(() => {
     (async () => {

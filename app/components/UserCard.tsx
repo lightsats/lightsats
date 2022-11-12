@@ -43,7 +43,7 @@ export function UserCard({ userId, forceAnonymous }: Props) {
     });
   }, [userId, publicUser?.name]);
 
-  const placing = useScoreboardPosition();
+  const placing = useScoreboardPosition(userId);
 
   return (
     <Card>
@@ -52,7 +52,7 @@ export function UserCard({ userId, forceAnonymous }: Props) {
           (!placing && (
             <Loading type="spinner" color="currentColor" size="lg" />
           ))}
-        {publicUser && placing && (
+        {publicUser && (
           <>
             <Row align="center">
               <Avatar
@@ -110,7 +110,9 @@ export function UserCard({ userId, forceAnonymous }: Props) {
               </Col>
               <Col>
                 <Text size="small">Leaderboard 🏆</Text>
-                <Text b>#{placing}</Text>
+                <Text b>
+                  #{placing !== undefined && placing > 0 && placing}
+                </Text>
               </Col>
             </Row>
           </>
