@@ -17,7 +17,6 @@ import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { SatsPrice } from "components/SatsPrice";
-import { notifyError, notifySuccess } from "components/Toasts";
 import { add } from "date-fns";
 import {
   appName,
@@ -34,6 +33,7 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import useSWR from "swr";
 import { CreateTipRequest } from "types/CreateTipRequest";
 import { ExchangeRates } from "types/ExchangeRates";
@@ -203,16 +203,16 @@ const NewTip: NextPage = () => {
             headers: { "Content-Type": "application/json" },
           });
           if (result.ok) {
-            notifySuccess("Tip created");
+            toast.success("Tip created");
             const tip = (await result.json()) as Tip;
             // TODO: save the tip in SWR's cache so it is immediately available
             router.push(`${Routes.tips}/${tip.id}`);
           } else {
-            notifyError("Failed to create tip: " + result.statusText);
+            toast.error("Failed to create tip: " + result.statusText);
           }
         } catch (error) {
           console.error(error);
-          notifyError("Tip creation failed. Please try again.");
+          toast.error("Tip creation failed. Please try again.");
         }
         setSubmitting(false);
       })();

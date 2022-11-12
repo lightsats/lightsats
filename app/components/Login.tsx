@@ -1,5 +1,4 @@
 import { Link, Row, Spacer, Text } from "@nextui-org/react";
-import { Divider } from "components/Divider";
 import { useTranslation } from "next-i18next";
 import EmailSignIn from "pages/auth/signin/email";
 import LnurlAuthSignIn from "pages/auth/signin/lnurl";
@@ -46,13 +45,10 @@ export function Login({
       )}
       {loginMethod === "lightning" && (
         <>
-          <Spacer />
           <LnurlAuthSignIn callbackUrl={callbackUrl} />
         </>
       )}
 
-      <Spacer />
-      <Divider />
       <Spacer />
       <Row justify="center" align="center">
         <Text>Use &nbsp;</Text>
@@ -68,6 +64,7 @@ export function Login({
               </>
             );
           })}
+        <Text>&nbsp; instead</Text>
       </Row>
     </>
   );

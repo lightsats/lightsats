@@ -9,13 +9,16 @@ import {
   Text,
   User as NextUIUser,
 } from "@nextui-org/react";
+import { NextLink } from "components/NextLink";
 import { TwitterButton } from "components/TwitterButton";
 import { DEFAULT_NAME } from "lib/constants";
+import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import useSWR from "swr";
 import { Scoreboard as ScoreboardType } from "types/Scoreboard";
+import { ScoreboardEntry } from "types/ScoreboardEntry";
 
 const Scoreboard: NextPage = () => {
   const { data: scoreboard } = useSWR<ScoreboardType>(
@@ -31,7 +34,7 @@ const Scoreboard: NextPage = () => {
       <Text h2>Scoreboard</Text>
       <Grid.Container gap={1} css={{ mx: 0, width: "100%" }}>
         <Grid xs={4}>
-          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+          <Card>
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
@@ -43,7 +46,7 @@ const Scoreboard: NextPage = () => {
           </Card>
         </Grid>
         <Grid xs={4}>
-          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+          <Card>
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
@@ -55,7 +58,7 @@ const Scoreboard: NextPage = () => {
           </Card>
         </Grid>
         <Grid xs={4}>
-          <Card variant="flat" css={{ backgroundColor: "$accents0" }}>
+          <Card>
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
@@ -104,13 +107,7 @@ const Scoreboard: NextPage = () => {
                     <Text size={22} b>
                       #{i + 1}
                     </Text>
-                    <NextUIUser
-                      name={scoreboardEntry.name ?? DEFAULT_NAME}
-                      src={getAvatarUrl(
-                        scoreboardEntry.avatarURL,
-                        scoreboardEntry.fallbackAvatarId
-                      )}
-                    />
+                    <ScoreboardUser scoreboardEntry={scoreboardEntry} />
                     {scoreboardEntry.twitterUsername && (
                       <TwitterButton
                         username={scoreboardEntry.twitterUsername}
@@ -160,7 +157,7 @@ const Scoreboard: NextPage = () => {
               Tipper
             </Row>
             <Row justify="center" align="center">
-              Sats donated
+              Tipped sats
             </Row>
             <Row justify="center" align="center">
               # of tips
@@ -209,13 +206,8 @@ const Scoreboard: NextPage = () => {
                   </Badge>
                 </Row>
                 <Row justify="flex-start" align="center">
-                  <NextUIUser
-                    name={scoreboardEntry.name ?? DEFAULT_NAME}
-                    src={getAvatarUrl(
-                      scoreboardEntry.avatarURL,
-                      scoreboardEntry.fallbackAvatarId
-                    )}
-                  />
+                  <ScoreboardUser scoreboardEntry={scoreboardEntry} />
+
                   {scoreboardEntry.twitterUsername && (
                     <TwitterButton username={scoreboardEntry.twitterUsername} />
                   )}
@@ -239,3 +231,22 @@ const Scoreboard: NextPage = () => {
 };
 
 export default Scoreboard;
+
+type ScoreboardUserProps = {
+  scoreboardEntry: ScoreboardEntry;
+};
+function ScoreboardUser({ scoreboardEntry }: ScoreboardUserProps) {
+  return (
+    <NextLink href={`${Routes.users}/${scoreboardEntry.userId}`} passHref>
+      <a style={{ display: "flex" }}>
+        <NextUIUser
+          name={scoreboardEntry.name ?? DEFAULT_NAME}
+          src={getAvatarUrl(
+            scoreboardEntry.avatarURL,
+            scoreboardEntry.fallbackAvatarId
+          )}
+        />
+      </a>
+    </NextLink>
+  );
+}
