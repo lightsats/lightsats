@@ -2,9 +2,9 @@ import { ClipboardDocumentIcon, WalletIcon } from "@heroicons/react/24/solid";
 import { Button, Card, Col, Loading, Row, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
-import { notifySuccess } from "components/Toasts";
 import copy from "copy-to-clipboard";
 import React from "react";
+import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 
 type PayTipInvoiceProps = {
@@ -14,7 +14,7 @@ type PayTipInvoiceProps = {
 export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
   const copyInvoice = React.useCallback(() => {
     copy(invoice);
-    notifySuccess("Copied to clipboard");
+    toast.success("Copied to clipboard");
   }, [invoice]);
 
   return (

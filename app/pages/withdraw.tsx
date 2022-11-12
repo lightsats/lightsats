@@ -16,10 +16,8 @@ import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
-import { notifyError, notifySuccess } from "components/Toasts";
 import copy from "copy-to-clipboard";
 import { isBefore } from "date-fns";
-import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -27,11 +25,11 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 import useSWR, { SWRConfiguration } from "swr";
 import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
-import { PublicTip } from "types/PublicTip";
 import { requestProvider } from "webln";
 
 const useTipsConfig: SWRConfiguration = { refreshInterval: 1000 };
@@ -69,16 +67,16 @@ const Withdraw: NextPage = () => {
             headers: { "Content-Type": "application/json" },
           });
           if (result.ok) {
-            notifySuccess("Funds withdrawn!");
+            toast.success("Funds withdrawn!");
           } else {
             const body = await result.text();
-            notifyError(
+            toast.error(
               "Failed to withdraw: " + result.statusText + `\n${body}`
             );
           }
         } catch (error) {
           console.error(error);
-          notifyError(
+          toast.error(
             "Withdrawal failed: " +
               JSON.stringify(error, Object.getOwnPropertyNames(error)) +
               ". Please try again."
@@ -109,14 +107,14 @@ const Withdraw: NextPage = () => {
     [flow, tips]
   );
 
-  const nextExpiry =
-    flow === "tippee" &&
-    withdrawableTips?.find(
-      (tip) =>
-        !withdrawableTips.some((other) =>
-          isBefore(new Date(other.expiry), new Date(tip.expiry))
-        )
-    )?.expiry;
+  // const nextExpiry =
+  //   flow === "tippee" &&
+  //   withdrawableTips?.find(
+  //     (tip) =>
+  //       !withdrawableTips.some((other) =>
+  //         isBefore(new Date(other.expiry), new Date(tip.expiry))
+  //       )
+  //   )?.expiry;
 
   const tipIds = React.useMemo(
     () =>
@@ -155,7 +153,7 @@ const Withdraw: NextPage = () => {
           setWithdrawalLinkLnurl(await result.json());
         } else {
           const body = await result.text();
-          notifyError(
+          toast.error(
             "Failed to create withdraw link: " + result.statusText + `\n${body}`
           );
         }
@@ -185,7 +183,7 @@ const Withdraw: NextPage = () => {
   const copyWithdrawLinkUrl = React.useCallback(() => {
     if (withdrawalLinkLnurl) {
       copy(withdrawalLinkLnurl);
-      notifySuccess("Copied to clipboard");
+      toast.success("Copied to clipboard");
     }
   }, [withdrawalLinkLnurl]);
 
@@ -318,7 +316,7 @@ const Withdraw: NextPage = () => {
 
 export default Withdraw;
 
-// this is inefficient as it does 1 call per tipper, but most users will probably only have one tipper
+/*// this is inefficient as it does 1 call per tipper, but most users will probably only have one tipper
 function ContactTipper({ tipId: tipperId }: { tipId: string }) {
   const { data: publicTip } = useSWR<PublicTip>(
     `/api/tippee/tips/${tipperId}`,
@@ -346,4 +344,4 @@ function ContactTipper({ tipId: tipperId }: { tipId: string }) {
       )}
     </Row>
   );
-}
+}*/
