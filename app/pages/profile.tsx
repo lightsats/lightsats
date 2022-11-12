@@ -1,13 +1,8 @@
+import { ClipboardIcon, EyeIcon } from "@heroicons/react/24/solid";
 import {
-  ArrowUpTrayIcon,
-  ClipboardIcon,
-  EyeIcon,
-} from "@heroicons/react/24/solid";
-import {
-  Avatar,
   Button,
   Card,
-  Col,
+  Collapse,
   Input,
   Link,
   Loading,
@@ -17,17 +12,15 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Tip, User } from "@prisma/client";
-import { BackButton } from "components/BackButton";
-import { Divider } from "components/Divider";
-import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { notifyError, notifySuccess } from "components/Toasts";
+import { UserCard } from "components/UserCard";
 import copy from "copy-to-clipboard";
-import { DEFAULT_NAME, MAX_USER_NAME_LENGTH } from "lib/constants";
+import { useUser } from "hooks/useUser";
+import { MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -55,10 +48,7 @@ const formStyle: React.CSSProperties = {
 
 const Profile: NextPage = () => {
   const { data: session } = useSession();
-  const { data: user, mutate: mutateUser } = useSWR<User>(
-    session ? `/api/users/${session.user.id}` : null,
-    defaultFetcher
-  );
+  const { data: user, mutate: mutateUser } = useUser();
 
   if (!session || !user) {
     return null;
@@ -80,51 +70,12 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
     notifySuccess("User ID Copied to clipboard");
   }, [user.id]);
 
-  const copyPublicProfile = React.useCallback(() => {
-    const url = `${window.location.origin}${Routes.users}/${user.id}`;
-    copy(url);
-    notifySuccess("Public profile URL copied to clipboard");
-  }, [user.id]);
-
   return (
     <>
       <Row>
-        <Avatar src={getUserAvatarUrl(user)} />
-        <Spacer x={0.5} />
-        <Col>
-          <Text b>{user.name ?? DEFAULT_NAME}</Text>
-          <Row align="center">
-            <Text>
-              @{user.id.slice(0, 6)}...{user.id.slice(user.id.length - 6)}{" "}
-            </Text>
-            <Spacer x={0.25} />
-            <Button
-              auto
-              light
-              color="primary"
-              size="sm"
-              css={{ p: 0 }}
-              onClick={copyUserId}
-            >
-              <Icon width={16} height={16}>
-                <ClipboardIcon />
-              </Icon>
-            </Button>
-          </Row>
-        </Col>
-        <FlexBox style={{ alignSelf: "center" }}>
-          <NextLink href={`${Routes.users}/${user.id}`} passHref>
-            <a>
-              <Button auto flat css={{ px: 8 }} onClick={copyPublicProfile}>
-                <Icon>
-                  <ArrowUpTrayIcon />
-                </Icon>
-              </Button>
-            </a>
-          </NextLink>
-        </FlexBox>
+        <UserCard userId={user.id} />
       </Row>
-      <Divider />
+      <Spacer />
 
       {user.userType === "tipper" ? (
         <TipperProfile mutateUser={mutateUser} session={session} user={user} />
@@ -133,18 +84,41 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
       )}
 
       <Spacer />
-      <Row>
-        <Text b>Connected accounts</Text>
-      </Row>
-      <Row>
-        <Text>
-          {user.email && "Email: " + user.email}
-          {user.phoneNumber && "Phone: " + user.phoneNumber}
-          {user.lnurlPublicKey && "Wallet: " + user.lnurlPublicKey}
-        </Text>
-      </Row>
-      <Spacer />
-      <BackButton />
+      <Collapse
+        bordered
+        title={<Text b>🔗 Connected accounts & more</Text>}
+        css={{ width: "100%" }}
+      >
+        <Row>
+          <Text>
+            {user.email && "📧 Email: " + user.email}
+            {user.phoneNumber && "📱 Phone: " + user.phoneNumber}
+            {user.lnurlPublicKey && "⚡ Wallet: " + user.lnurlPublicKey}
+          </Text>
+        </Row>
+        <Spacer />
+        <Row>
+          <Text b>Lightsats User ID</Text>
+        </Row>
+        <Row align="center">
+          <Text>
+            @{user.id.slice(0, 6)}...{user.id.slice(user.id.length - 6)}{" "}
+          </Text>
+          <Spacer x={0.25} />
+          <Button
+            auto
+            light
+            color="primary"
+            size="sm"
+            css={{ p: 0 }}
+            onClick={copyUserId}
+          >
+            <Icon width={16} height={16}>
+              <ClipboardIcon />
+            </Icon>
+          </Button>
+        </Row>
+      </Collapse>
     </>
   );
 }
@@ -261,11 +235,6 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
 
   return (
     <>
-      <Text size="small">
-        Fill out the fields below to increase the authenticity of your tips and
-        provide a way for tippees to contact you.
-      </Text>
-      <Spacer />
       <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
         <Controller
           name="name"
@@ -277,6 +246,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
               placeholder="John Galt"
               fullWidth
               maxLength={MAX_USER_NAME_LENGTH}
+              bordered
             />
           )}
         />
@@ -289,8 +259,9 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
               {...field}
               label="Twitter Username"
               placeholder="jack"
-              fullWidth
               contentLeft="@"
+              fullWidth
+              bordered
               css={{
                 fontWeight: "bold",
                 ".nextui-input-content--left": {
@@ -310,6 +281,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
               label="Avatar URL"
               placeholder="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
               fullWidth
+              bordered
               type="url"
             />
           )}
@@ -323,7 +295,9 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
                   <EyeIcon />
                 </Icon>
                 <Spacer x={0.5} />
-                <Text weight="medium">Anonymise my info on scoreboards</Text>
+                <Text weight="medium">
+                  Anonymise my info on scoreboard & public profile
+                </Text>
                 <Spacer />
                 <Controller
                   name="isAnonymous"
@@ -331,7 +305,6 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
                   render={({ field }) => (
                     <Switch
                       {...field}
-                      color="success"
                       checked={field.value}
                       onChange={(e) => field.onChange(e.target.checked)}
                     />
@@ -347,7 +320,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
           {isSubmitting ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
-            <>Update Profile</>
+            <>Update profile</>
           )}
         </Button>
       </form>

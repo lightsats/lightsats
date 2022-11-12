@@ -1,19 +1,14 @@
 import { Progress, Spacer, Text } from "@nextui-org/react";
-import { User } from "@prisma/client";
+import { useUser } from "hooks/useUser";
 import { bitcoinJourneyPages } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import useSWR from "swr";
 import { UpdateUserJourneyRequest } from "types/UpdateUserJourneyRequest";
 
 export function MyBitcoinJourneyHeader() {
   const { data: session } = useSession();
-  const { data: user } = useSWR<User>(
-    session ? `/api/users/${session.user.id}` : null,
-    defaultFetcher
-  );
+  const { data: user } = useUser();
 
   const router = useRouter();
   // console.log("router.pathname", router.pathname);

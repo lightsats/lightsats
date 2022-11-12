@@ -1,9 +1,11 @@
 import { Link, Row, Spacer, Text } from "@nextui-org/react";
+import { Divider } from "components/Divider";
 import { useTranslation } from "next-i18next";
 import EmailSignIn from "pages/auth/signin/email";
 import LnurlAuthSignIn from "pages/auth/signin/lnurl";
 import PhoneSignIn from "pages/auth/signin/phone";
 import { useState } from "react";
+import { LoginMethod, loginMethods } from "types/LoginMethod";
 
 type LoginProps = {
   instructionsText?(loginMethod: LoginMethod): string;
@@ -12,9 +14,6 @@ type LoginProps = {
   tipId?: string;
   defaultLoginMethod: LoginMethod;
 };
-
-const loginMethods = ["phone", "email", "lightning"] as const;
-type LoginMethod = typeof loginMethods[number];
 
 export function Login({
   submitText,
@@ -52,7 +51,9 @@ export function Login({
         </>
       )}
 
-      <Spacer y={1} />
+      <Spacer />
+      <Divider />
+      <Spacer />
       <Row justify="center" align="center">
         <Text>Use &nbsp;</Text>
         {loginMethods

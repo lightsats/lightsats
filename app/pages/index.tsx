@@ -1,9 +1,11 @@
 import { Button, Image, Loading, Spacer, Text } from "@nextui-org/react";
-import { Tip, User } from "@prisma/client";
+import { Tip } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { NextLink } from "components/NextLink";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { Tips } from "components/tipper/Tips";
+import { UserCard } from "components/UserCard";
+import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -15,10 +17,7 @@ import useSWR from "swr";
 
 const Home: NextPage = () => {
   const { data: session, status: sessionStatus } = useSession();
-  const { data: user } = useSWR<User>(
-    session ? `/api/users/${session.user.id}` : null,
-    defaultFetcher
-  );
+  const { data: user } = useUser();
 
   if (sessionStatus === "loading" || (session && !user)) {
     return <Loading type="spinner" color="currentColor" size="sm" />;
@@ -32,10 +31,16 @@ const Home: NextPage = () => {
 
       {session && user ? (
         <>
-          {user?.userType === "tipper" ? (
+          {user?.userType === "tipper" && (
             <>
               <Alert>⚠️ This project is currently in BETA.</Alert>
               <Spacer />
+            </>
+          )}
+          <UserCard userId={user.id} />
+          <Spacer />
+          {user?.userType === "tipper" ? (
+            <>
               <NewTipButton />
               <Spacer />
               <Tips />
