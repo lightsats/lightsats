@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "tsc -noEmit && next lint",
     "db:start": "sudo service postgresql start",
     "docker:start": "docker-compose up",
     "db:generate:local": "dotenv -e .env.local -- yarn prisma generate",
