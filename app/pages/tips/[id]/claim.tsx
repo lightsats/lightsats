@@ -2,7 +2,6 @@ import { Avatar, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { Login } from "components/Login";
-import { notifyError } from "components/Toasts";
 import { formatDistance, isAfter } from "date-fns";
 import { useDateFnsLocale } from "hooks/useDateFnsLocale";
 
@@ -17,6 +16,7 @@ import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+import toast from "react-hot-toast";
 import useSWR from "swr";
 import { ClaimTipRequest } from "types/ClaimTipRequest";
 import { ExchangeRates } from "types/ExchangeRates";
@@ -93,7 +93,7 @@ const ClaimTipPage: NextPage = () => {
           headers: { "Content-Type": "application/json" },
         });
         if (!result.ok) {
-          notifyError(
+          toast.error(
             "Failed to claim tip: " +
               result.statusText +
               ". Please refresh the page to try again."

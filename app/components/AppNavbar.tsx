@@ -14,18 +14,16 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { User } from "@prisma/client";
 import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { LanguagePicker } from "components/LanguagePicker";
 import { NextLink } from "components/NextLink";
+import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import useSWR from "swr";
 
 const navbarCollapseToggleId = "app-navbar-collapse-toggle";
 
@@ -48,10 +46,7 @@ const closeNavbar = () => {
 
 export function AppNavbar() {
   const { data: session, status: sessionStatus } = useSession();
-  const { data: user } = useSWR<User>(
-    session ? `/api/users/${session.user.id}` : null,
-    defaultFetcher
-  );
+  const { data: user } = useUser();
   const router = useRouter();
   const hideNavbar = router.pathname.endsWith("/claim"); // || user?.inJourney;
 
@@ -78,7 +73,7 @@ export function AppNavbar() {
         icon: <LightBulbIcon />,
       },
     ],
-    [user]
+    []
   );
 
   if (sessionStatus === "loading" || (session && !user)) {
@@ -150,7 +145,7 @@ export function AppNavbar() {
                   <Avatar
                     bordered
                     as="button"
-                    color="secondary"
+                    color="primary"
                     size="md"
                     src={getUserAvatarUrl(user)}
                   />
