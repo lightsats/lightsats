@@ -1,8 +1,10 @@
+import { WalletIcon } from "@heroicons/react/24/solid";
 import {
   Badge,
+  Button,
   Card,
+  Col,
   Grid,
-  Link,
   Loading,
   Row,
   Spacer,
@@ -10,7 +12,9 @@ import {
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
+import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
+import { NewTipButton } from "components/tipper/NewTipButton";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistance, isAfter } from "date-fns";
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
@@ -40,21 +44,40 @@ export function Tips() {
 
   const reclaimedTips = tips?.filter((tip) => tip.status === "RECLAIMED");
 
-  if (tips?.length) {
-    return (
-      <>
-        {reclaimedTips && reclaimedTips.length > 0 && (
-          <>
-            <Text>
-              {reclaimedTips.map((tip) => tip.amount).reduce((a, b) => a + b)}⚡{" "}
-              reclaimed
-            </Text>
-            <NextLink href={Routes.tipperWithdraw} passHref>
-              <Link color="success">withdraw sats</Link>
-            </NextLink>
-            <Spacer />
-          </>
-        )}
+  return (
+    <>
+      {reclaimedTips && reclaimedTips.length > 0 && (
+        <>
+          <Card variant="bordered">
+            <Card.Body>
+              <Row justify="space-between" align="center">
+                <Col>
+                  <Text size={24} b>
+                    {reclaimedTips
+                      .map((tip) => tip.amount)
+                      .reduce((a, b) => a + b)}
+                    &nbsp;sats
+                  </Text>
+                  <Text>&nbsp;from reclaimed tips</Text>
+                </Col>
+                <NextLink href={Routes.tipperWithdraw}>
+                  <a>
+                    <Button auto color="primary">
+                      <Icon>
+                        <WalletIcon />
+                      </Icon>
+                      &nbsp;Withdraw
+                    </Button>
+                  </a>
+                </NextLink>
+              </Row>
+            </Card.Body>
+          </Card>
+          <Spacer />
+        </>
+      )}
+      <Text h3>🙌 Your tips</Text>
+      {tips && tips.length > 0 && (
         <Grid.Container justify="center" gap={1}>
           {tips.map((tip) => {
             const hasExpired =
@@ -119,9 +142,16 @@ export function Tips() {
             );
           })}
         </Grid.Container>
-      </>
-    );
-  }
-
-  return <>No tips yet</>;
+      )}
+      {!tips ||
+        (!tips.length && (
+          <>
+            <Text h3></Text>
+            {"No tips available, let's create your first one now!"}
+            <Spacer />
+            <NewTipButton />
+          </>
+        ))}
+    </>
+  );
 }

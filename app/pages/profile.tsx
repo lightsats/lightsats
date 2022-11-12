@@ -14,7 +14,6 @@ import {
 import { Tip, User } from "@prisma/client";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
-import { notifyError, notifySuccess } from "components/Toasts";
 import { UserCard } from "components/UserCard";
 import copy from "copy-to-clipboard";
 import { useUser } from "hooks/useUser";
@@ -27,6 +26,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import useSWR, { KeyedMutator } from "swr";
 import { TransitionUserRequest } from "types/TransitionUserRequest";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
@@ -67,7 +67,7 @@ type ProfileInternalProps = {
 function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
   const copyUserId = React.useCallback(() => {
     copy(user.id);
-    notifySuccess("User ID Copied to clipboard");
+    toast.success("User ID Copied to clipboard");
   }, [user.id]);
 
   return (
@@ -149,7 +149,7 @@ function TippeeProfile({ mutateUser, session, user }: ProfileInternalProps) {
       if (result.ok) {
         await mutateUser();
       } else {
-        notifyError("Failed to update profile: " + result.statusText);
+        toast.error("Failed to update profile: " + result.statusText);
       }
       setSubmitting(false);
     })();
@@ -221,11 +221,11 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
           headers: { "Content-Type": "application/json" },
         });
         if (result.ok) {
-          notifySuccess("Profile updated");
+          toast.success("Profile updated");
           await mutateUser();
           router.push(Routes.home);
         } else {
-          notifyError("Failed to update profile: " + result.statusText);
+          toast.error("Failed to update profile: " + result.statusText);
         }
         setSubmitting(false);
       })();
@@ -305,7 +305,6 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
                   render={({ field }) => (
                     <Switch
                       {...field}
-                      color="success"
                       checked={field.value}
                       onChange={(e) => field.onChange(e.target.checked)}
                     />
@@ -321,7 +320,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
           {isSubmitting ? (
             <Loading type="points" color="currentColor" size="sm" />
           ) : (
-            <>Update Profile</>
+            <>Update profile</>
           )}
         </Button>
       </form>

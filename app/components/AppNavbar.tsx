@@ -73,7 +73,7 @@ export function AppNavbar() {
         icon: <LightBulbIcon />,
       },
     ],
-    [user]
+    []
   );
 
   if (sessionStatus === "loading" || (session && !user)) {
@@ -115,15 +115,20 @@ export function AppNavbar() {
           </>
         )}
         {user?.userType === "tipper" && !hideNavbar && (
-          <Navbar.Item hideIn="xs">
-            <NextLink href={Routes.newTip}>
-              <a>
-                <Button auto size="sm">
-                  Create new tip
-                </Button>
-              </a>
-            </NextLink>
-          </Navbar.Item>
+          <>
+            <Navbar.Link href={Routes.scoreboard} hideIn="xs">
+              Scoreboard
+            </Navbar.Link>
+            <Navbar.Item hideIn="xs">
+              <NextLink href={Routes.newTip}>
+                <a>
+                  <Button auto size="sm">
+                    Create new tip
+                  </Button>
+                </a>
+              </NextLink>
+            </Navbar.Item>
+          </>
         )}
       </Navbar.Content>
 
@@ -140,7 +145,7 @@ export function AppNavbar() {
                   <Avatar
                     bordered
                     as="button"
-                    color="secondary"
+                    color="primary"
                     size="md"
                     src={getUserAvatarUrl(user)}
                   />
@@ -188,9 +193,7 @@ export function AppNavbar() {
             <Navbar.Item hideIn="xs">
               <NextLink href={Routes.login} passHref>
                 <a>
-                  <Button auto flat>
-                    Get started
-                  </Button>
+                  <Button auto>Get started</Button>
                 </a>
               </NextLink>
             </Navbar.Item>

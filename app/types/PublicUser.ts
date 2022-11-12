@@ -7,6 +7,6 @@ export type PublicUser = Pick<
   fallbackAvatarId: string | undefined;
   numTipsSent: number;
   numTipsReceived: number;
-  satsDonated: number;
+  satsTipped: number;
   // scoreboardPosition: number; // TODO: calculate
 };

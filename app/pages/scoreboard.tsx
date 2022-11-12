@@ -157,7 +157,7 @@ const Scoreboard: NextPage = () => {
               Tipper
             </Row>
             <Row justify="center" align="center">
-              Sats donated
+              Tipped sats
             </Row>
             <Row justify="center" align="center">
               # of tips

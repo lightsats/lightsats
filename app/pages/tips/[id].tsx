@@ -7,7 +7,6 @@ import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTra
 import { PayTipInvoice } from "components/tipper/TipPage/PayTipInvoice";
 import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
-import { notifyError, notifySuccess } from "components/Toasts";
 import { formatDistance, isAfter } from "date-fns";
 import { useScoreboardPosition } from "hooks/useScoreboardPosition";
 import { expirableTipStatuses, refundableTipStatuses } from "lib/constants";
@@ -15,8 +14,10 @@ import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { nth } from "lib/utils";
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import toast from "react-hot-toast";
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
 import { requestProvider } from "webln";
 
@@ -24,6 +25,7 @@ import { requestProvider } from "webln";
 const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 const TipPage: NextPage = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const { id } = router.query;
   const [prevTipStatus, setPrevTipStatus] = React.useState<
@@ -47,7 +49,7 @@ const TipPage: NextPage = () => {
 
   React.useEffect(() => {
     if (prevTipStatus === "UNFUNDED" && tipStatus === "UNCLAIMED") {
-      notifySuccess("Tip funded");
+      toast.success("Tip funded");
     }
     setPrevTipStatus(tipStatus);
   }, [prevTipStatus, tipStatus]);
@@ -71,7 +73,7 @@ const TipPage: NextPage = () => {
     }
   }, [tipStatus, tipInvoice, hasExpired]);
 
-  const placing = useScoreboardPosition();
+  const placing = useScoreboardPosition(session?.user.id);
 
   const deleteTip = React.useCallback(() => {
     (async () => {
@@ -80,7 +82,7 @@ const TipPage: NextPage = () => {
         method: "DELETE",
       });
       if (!result.ok) {
-        notifyError("Failed to delete tip: " + result.statusText);
+        toast.error("Failed to delete tip: " + result.statusText);
       } else {
         mutateTips();
       }
@@ -94,7 +96,7 @@ const TipPage: NextPage = () => {
         method: "POST",
       });
       if (!result.ok) {
-        notifyError("Failed to reclaim tip: " + result.statusText);
+        toast.error("Failed to reclaim tip: " + result.statusText);
       } else {
         mutateTips();
       }

@@ -13,14 +13,10 @@ export default async function handler(
   res: NextApiResponse<User | PublicUser | never>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
-  }
 
   const { id, publicProfile, forceAnonymous } = req.query;
 
-  if (session.user.id !== id || publicProfile === "true") {
+  if (session?.user.id !== id || publicProfile === "true") {
     if (req.method === "GET") {
       const user = await prisma.user.findUnique({
         where: {
@@ -39,7 +35,7 @@ export default async function handler(
       const sentTips = user.tipsSent.filter(
         (tip) => tip.status === "WITHDRAWN"
       );
-      const satsDonated = sentTips.length
+      const satsTipped = sentTips.length
         ? sentTips.map((tip) => tip.amount).reduce((a, b) => a + b)
         : 0;
 
@@ -48,7 +44,7 @@ export default async function handler(
         created: user.created,
         userType: user.userType,
         ...(user.isAnonymous &&
-        (forceAnonymous === "true" || user.id !== session.user.id)
+        (forceAnonymous === "true" || user.id !== session?.user.id)
           ? {
               name: null,
               avatarURL: null,
@@ -62,7 +58,7 @@ export default async function handler(
         fallbackAvatarId: getFallbackAvatarId(user),
         numTipsSent: sentTips.length,
         numTipsReceived: user.tipsReceived.length,
-        satsDonated,
+        satsTipped: satsTipped,
       };
       return res.json(publicUser);
     }

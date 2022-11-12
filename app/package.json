@@ -61,6 +61,7 @@
     "react-chartjs-2": "^4.3.1",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.38.0",
+    "react-hot-toast": "^2.4.0",
     "react-i18next": "^12.0.0",
     "react-phone-number-input": "^3.2.12",
     "react-qr-code": "^2.0.8",
