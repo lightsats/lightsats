@@ -43,15 +43,16 @@ export function UserCard({ userId, forceAnonymous }: Props) {
     });
   }, [userId, publicUser?.name]);
 
-  const placing = useScoreboardPosition(userId);
+  const placing = useScoreboardPosition(
+    publicUser?.userType === "tipper" ? userId : undefined
+  );
 
   return (
     <Card>
       <Card.Body>
-        {!publicUser ||
-          (!placing && (
-            <Loading type="spinner" color="currentColor" size="lg" />
-          ))}
+        {!publicUser && (
+          <Loading type="spinner" color="currentColor" size="lg" />
+        )}
         {publicUser && (
           <>
             <Row align="center">
@@ -110,8 +111,11 @@ export function UserCard({ userId, forceAnonymous }: Props) {
               </Col>
               <Col>
                 <Text size="small">Leaderboard 🏆</Text>
-                <Text b>
-                  #{placing !== undefined && placing > 0 && placing}
+                <Text
+                  b={placing !== undefined}
+                  size={placing === undefined ? "small" : undefined}
+                >
+                  {placing !== undefined ? <>#{placing}</> : "No placing yet"}
                 </Text>
               </Col>
             </Row>
