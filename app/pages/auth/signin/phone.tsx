@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   FormElement,
   Input,
   Loading,
@@ -107,41 +108,45 @@ export default function PhoneSignIn({
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-        <Row>
-          <Text>{t("phone")}</Text>
-        </Row>
-        <Controller
-          name="phone"
-          control={control}
-          render={({ field }) => (
-            <PhoneInput
-              {...field}
-              placeholder="Enter phone number"
-              defaultCountry={myIp?.country}
-              inputComponent={ForwardedPhoneInput}
-              style={{
-                width: "100%",
-              }}
+      <Card>
+        <Card.Body>
+          <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
+            <Row>
+              <Text>{t("phone")}</Text>
+            </Row>
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <PhoneInput
+                  {...field}
+                  placeholder="Enter phone number"
+                  defaultCountry={myIp?.country}
+                  inputComponent={ForwardedPhoneInput}
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              )}
             />
-          )}
-        />
 
-        <Spacer />
-        <Button
-          css={{ width: "100%" }}
-          color="primary"
-          type="submit"
-          auto
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <Loading type="points" color="currentColor" size="sm" />
-          ) : (
-            <>{submitText ?? "Login"}</>
-          )}
-        </Button>
-      </form>
+            <Spacer />
+            <Button
+              css={{ width: "100%" }}
+              color="primary"
+              type="submit"
+              auto
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <Loading type="points" color="currentColor" size="sm" />
+              ) : (
+                <>{submitText ?? "Login"}</>
+              )}
+            </Button>
+          </form>
+        </Card.Body>
+      </Card>
     </>
   );
 }
