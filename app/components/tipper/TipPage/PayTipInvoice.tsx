@@ -51,12 +51,16 @@ export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
               </Icon>
               &nbsp;Copy
             </Button>
-            <Button auto href={`lightning:${invoice}`}>
-              <Icon>
-                <WalletIcon />
-              </Icon>
-              &nbsp;Open in wallet
-            </Button>
+            <NextLink href={`lightning:${invoice}`}>
+              <a>
+                <Button auto>
+                  <Icon>
+                    <WalletIcon />
+                  </Icon>
+                  &nbsp;Open in wallet
+                </Button>
+              </a>
+            </NextLink>
           </Row>
         </Card.Footer>
       </Card>

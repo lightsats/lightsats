@@ -1,7 +1,4 @@
-import {
-  ClipboardDocumentIcon,
-  CursorArrowRaysIcon,
-} from "@heroicons/react/24/solid";
+import { ClipboardDocumentIcon, WalletIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
@@ -257,14 +254,14 @@ const Withdraw: NextPage = () => {
                         </Icon>
                         Copy
                       </Button>
-                      &nbsp;
+                      <Spacer x={0.75} />
                       <NextLink href={`lightning:${withdrawalLinkLnurl}`}>
                         <a>
                           <Button auto>
                             <Icon>
-                              <CursorArrowRaysIcon />
+                              <WalletIcon />
                             </Icon>
-                            Click to claim
+                            &nbsp; Open in wallet
                           </Button>
                         </a>
                       </NextLink>
