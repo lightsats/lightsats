@@ -1,4 +1,4 @@
-import { Badge, Col, Collapse, Row, Spacer, Text } from "@nextui-org/react";
+import { Button, Col, Collapse, Row, Spacer, Text } from "@nextui-org/react";
 import {
   ItemFeatureBadge,
   ItemFeatureBadgeProps,
@@ -92,7 +92,7 @@ export function ItemCard({ item }: ItemCardProps) {
               <Text b>{item.name}</Text>
             </Row>
             <Row>
-              <Text size="x-small" b css={{ color: "$gray500" }}>
+              <Text size="small" color="$gray800">
                 {item.slogan}
               </Text>
             </Row>
@@ -101,11 +101,8 @@ export function ItemCard({ item }: ItemCardProps) {
       }
     >
       <NextLink href={item.link} passHref>
-        <a target="_blank">
-          <Row
-            align="center"
-            css={{ backgroundColor: "$gray900", p: 10, br: 10 }}
-          >
+        <a target="_blank" rel="noreferrer noopener">
+          <Row align="center" css={{ p: 10, br: 10 }}>
             <Row
               justify="flex-start"
               align="flex-start"
@@ -115,18 +112,10 @@ export function ItemCard({ item }: ItemCardProps) {
                 <ItemFeatureBadge key={feature.name} {...feature} />
               ))}
             </Row>
-
-            <Col span={2.5}>
-              <Badge
-                css={{
-                  background: "$success",
-                  //borderColor: "$black",
-                  color: "$white",
-                  borderColor: "$success",
-                }}
-              >
-                {item.category === "wallets" ? "GET" : "VISIT"}
-              </Badge>
+            <Col>
+              <Button>
+                {item.category === "wallets" ? "Install" : "Visit"}
+              </Button>
             </Col>
           </Row>
         </a>

@@ -2,13 +2,13 @@ import { ClipboardIcon } from "@heroicons/react/24/solid";
 import { Button, Card, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
-import { notifyError, notifySuccess } from "components/Toasts";
 import copy from "copy-to-clipboard";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 import useSWR, { SWRConfiguration } from "swr";
 import useSWRImmutable from "swr/immutable";
@@ -54,7 +54,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
           }
         } catch (error) {
           console.error(error);
-          notifyError("login failed");
+          toast.error("login failed");
         }
       })();
     }
@@ -63,7 +63,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const copyQr = React.useCallback(() => {
     if (qr) {
       copy(qr.encoded);
-      notifySuccess("Copied to clipboard");
+      toast.success("Copied to clipboard");
     }
   }, [qr]);
 

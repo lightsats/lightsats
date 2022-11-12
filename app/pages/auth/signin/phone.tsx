@@ -8,7 +8,6 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { notifyError } from "components/Toasts";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -16,6 +15,7 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import PhoneInput, {
   Country,
   DefaultInputComponentProps,
@@ -69,7 +69,7 @@ export default function PhoneSignIn({
         return;
       }
       if (!data.phone) {
-        notifyError("Please enter a valid phone address");
+        toast.error("Please enter a valid phone number");
         return;
       }
       setSubmitting(true);
@@ -91,13 +91,13 @@ export default function PhoneSignIn({
             console.error(
               "Failed to create phone login link: " + result.status
             );
-            notifyError("Something went wrong. Please try again.");
+            toast.error("Something went wrong. Please try again.");
           } else {
             router.push(Routes.checkPhone);
           }
         } catch (error) {
           console.error(error);
-          notifyError("login failed");
+          toast.error("Login failed");
         }
 
         setSubmitting(false);
