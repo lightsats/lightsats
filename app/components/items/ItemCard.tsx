@@ -68,6 +68,7 @@ function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
 }
 
 export function ItemCard({ item }: ItemCardProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
   const features: ItemFeatureBadgeProps[] = React.useMemo(
     () => getItemFeatures(item),
     [item]
@@ -75,19 +76,28 @@ export function ItemCard({ item }: ItemCardProps) {
 
   return (
     <Collapse
+      onChange={(_, __, value) => setIsOpen(value || false)}
       contentLeft={
         <NextImage
           alt=""
           width={64}
           height={64}
           src={getItemImageLocation(item)}
-          style={{ borderRadius: "8px" }}
+          style={{
+            borderRadius: "8px",
+            justifySelf: "flex-start",
+            alignSelf: "flex-start",
+          }}
           placeholder="blur"
           blurDataURL={item.placeholderDataUrl ?? defaultPlaceholderDataUrl}
         />
       }
       title={<Text b>{item.name}</Text>}
-      subtitle={<>{item.slogan}</>}
+      subtitle={
+        <Text css={isOpen ? {} : { maxHeight: "90px", overflowY: "hidden" }}>
+          {item.slogan}
+        </Text>
+      }
     >
       <NextLink href={item.link} passHref>
         <a target="_blank" rel="noreferrer noopener">
@@ -102,7 +112,7 @@ export function ItemCard({ item }: ItemCardProps) {
               ))}
             </Row>
 
-            <Button>
+            <Button auto>
               <Icon>
                 <ArrowTopRightOnSquareIcon />
               </Icon>
