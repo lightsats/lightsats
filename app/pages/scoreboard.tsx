@@ -31,7 +31,7 @@ const Scoreboard: NextPage = () => {
 
   return (
     <>
-      <Text h2>Scoreboard</Text>
+      <Text h2>Leaderboard</Text>
       <Grid.Container gap={1} css={{ mx: 0, width: "100%" }}>
         <Grid xs={4}>
           <Card css={{ dropShadow: "$sm" }}>
