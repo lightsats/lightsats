@@ -4,10 +4,10 @@
   "lightning": "⚡ Lightning",
   "loginWithLightning": "Login with Lightning",
   "or": "or",
-  "verifyEmailSubject": "👤 Verify your &raquo;Lightsats&laquo; email address",
+  "verifyEmailSubject": "👤 Verify your Lightsats⚡ email address",
   "verifyEmailMessage": "Please click the following link to login: <a href=\"{{verifyUrl}}\">Verify</a>",
   "verifyPhoneMessage": "Lightsats login",
-  "checkEmailTitle": "Next, confirm your email address" ,
+  "checkEmailTitle": "Next, confirm your email address",
   "checkEmailText": "We've sent a 🪄 magic link to your inbox. Click the link to confirm your email address.",
   "checkSMSTitle": "Next, confirm your phone number",
   "checkSMSText": "We've sent a 🪄 magic link to your phone. Click the link to confirm your phone number."
