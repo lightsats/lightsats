@@ -9,7 +9,7 @@ export default function CodeSent() {
 
   return (
     <>
-      <Card color="default">
+      <Card css={{ dropShadow: "$sm" }}>
         <Card.Body style={{ textAlign: "center" }}>
           <div>
             <div>

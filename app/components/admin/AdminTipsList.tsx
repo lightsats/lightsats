@@ -22,7 +22,7 @@ export function AdminTipsList({ tips }: AdminTipsListProps) {
           <Grid key={tip.id} xs={12}>
             <NextLink href={`${Routes.adminTips}/${tip.id}`} passHref>
               <a style={{ width: "100%" }}>
-                <Card isPressable isHoverable>
+                <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
                   <Card.Body>
                     <Row justify="space-between">
                       <Text b>{tip.id}</Text>
