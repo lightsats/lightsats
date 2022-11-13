@@ -26,7 +26,7 @@ const Scoreboard: NextPage = () => {
     defaultFetcher
   );
   if (!scoreboard) {
-    return <Loading type="spinner" color="currentColor" size="lg" />;
+    return <Loading color="currentColor" size="lg" />;
   }
 
   return (

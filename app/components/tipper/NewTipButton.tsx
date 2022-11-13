@@ -1,4 +1,4 @@
-import { WalletIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { Button } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
@@ -10,7 +10,7 @@ export function NewTipButton() {
       <a>
         <Button>
           <Icon>
-            <WalletIcon></WalletIcon>
+            <PlusCircleIcon />
           </Icon>
           &nbsp;Create a new tip
         </Button>

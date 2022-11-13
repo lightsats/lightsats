@@ -117,7 +117,7 @@ export default function EmailSignIn({
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <Loading type="points" color="currentColor" size="sm" />
+                <Loading color="currentColor" size="sm" />
               ) : (
                 <>{submitText ?? "Login"}</>
               )}

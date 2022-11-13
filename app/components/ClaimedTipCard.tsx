@@ -34,7 +34,7 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
   );
 
   if (!publicTip) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
 
   const journeyStep = publicTip.tippee ? publicTip.tippee?.journeyStep : 0;
@@ -54,7 +54,7 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
               viewedUser?.avatarURL ?? undefined,
               viewedUser?.fallbackAvatarId
             )}
-            size="md"
+            size="lg"
             bordered
           />
           <Spacer x={0.5} />

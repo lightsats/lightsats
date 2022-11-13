@@ -301,7 +301,7 @@ const Withdraw: NextPage = () => {
               disabled={isSubmitting || !invoiceFieldValue}
             >
               {isSubmitting ? (
-                <Loading type="points" color="currentColor" size="sm" />
+                <Loading color="currentColor" size="sm" />
               ) : (
                 <>Withdraw</>
               )}
@@ -323,7 +323,7 @@ function ContactTipper({ tipId: tipperId }: { tipId: string }) {
     defaultFetcher
   );
   if (!publicTip) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
   return (
     <Row justify="center" align="center">

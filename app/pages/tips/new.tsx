@@ -365,7 +365,7 @@ const NewTip: NextPage = () => {
                 </Tooltip>
               </Row>
             ) : (
-              <Loading type="spinner" color="currentColor" size="sm" />
+              <Loading color="currentColor" size="sm" />
             )}
             <Spacer />
             <Controller
@@ -446,7 +446,7 @@ const NewTip: NextPage = () => {
         <Spacer y={2} />
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? (
-            <Loading type="points" color="currentColor" size="sm" />
+            <Loading color="currentColor" size="sm" />
           ) : (
             <>Create Tip</>
           )}

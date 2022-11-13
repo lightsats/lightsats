@@ -139,7 +139,7 @@ export default function PhoneSignIn({
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <Loading type="points" color="currentColor" size="sm" />
+                <Loading color="currentColor" size="sm" />
               ) : (
                 <>{submitText ?? "Login"}</>
               )}

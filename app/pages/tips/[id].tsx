@@ -159,7 +159,7 @@ const TipPage: NextPage = () => {
                 <Spacer />
               </>
             ) : (
-              <Loading type="spinner" color="currentColor" size="sm" />
+              <Loading color="currentColor" size="sm" />
             )}
             <Spacer />
             <NextLink href={Routes.newTip} passHref>
@@ -203,8 +203,10 @@ const TipPage: NextPage = () => {
   } else {
     return (
       <>
-        <Loading type="spinner" color="currentColor" size="lg" />
-        <Text>Loading invoice</Text>
+        <Spacer y={4} />
+        <Loading color="currentColor" size="lg" />
+        <Spacer y={0.5} />
+        <Text h4>Loading</Text>
       </>
     );
   }

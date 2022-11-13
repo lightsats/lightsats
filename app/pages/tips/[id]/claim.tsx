@@ -116,7 +116,7 @@ const ClaimTipPage: NextPage = () => {
       </Head>
       {isLoading ? (
         <>
-          <Loading type="spinner" color="currentColor" size="sm" />
+          <Loading color="currentColor" size="sm" />
         </>
       ) : publicTip.status !== "UNCLAIMED" ? (
         <>

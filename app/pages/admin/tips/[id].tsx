@@ -19,7 +19,7 @@ const AdminTipPage: NextPage = () => {
     defaultFetcher
   );
   if (!tip) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
 
   return (

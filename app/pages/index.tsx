@@ -19,7 +19,7 @@ const Home: NextPage = () => {
   const { data: user } = useUser();
 
   if (sessionStatus === "loading" || (session && !user)) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
 
   return (

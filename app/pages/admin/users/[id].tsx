@@ -19,7 +19,7 @@ const AdminUserPage: NextPage = () => {
     defaultFetcher
   );
   if (!user) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
 
   return (
