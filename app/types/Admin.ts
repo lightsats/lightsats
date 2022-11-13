@@ -9,6 +9,7 @@ export type AdminDashboard = {
     tips: Tip[];
   })[];
   walletBalance: number;
+  smsWalletBalance: number;
 };
 
 export type AdminExtendedUser = User & {

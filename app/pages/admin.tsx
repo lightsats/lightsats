@@ -100,12 +100,20 @@ const AdminPage: NextPage = () => {
           <Text color="error">Warning: do not share this link</Text>
           <Link
             onClick={() =>
-              window.open(adminDashboard.lnbitsDashboardUrl, "_blank")
+              window.confirm(
+                "Please confirm you are NOT sharing your screen and will not screenshot this page"
+              ) && window.open(adminDashboard.lnbitsDashboardUrl, "_blank")
             }
           >
             LNBITS Dashboard
           </Link>
-          <Text b>Wallet balance: {adminDashboard.walletBalance} sats</Text>
+          <Text b>
+            Wallet balance: {Math.floor(adminDashboard.walletBalance)} sats
+          </Text>
+          <br />
+          <Text b>
+            SMS balance: {Math.floor(adminDashboard.smsWalletBalance)} sats
+          </Text>
         </Text>
       </Row>
       <Row justify="center" align="center">

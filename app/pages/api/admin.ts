@@ -41,7 +41,17 @@ async function handleGetAdminDashboard(
     try {
       walletBalance = await getWalletBalance(process.env.LNBITS_API_KEY);
     } catch (error) {
-      console.error("Admin user: Failed to retrieve admin wallet balance");
+      console.error("Admin: Failed to retrieve admin wallet balance");
+    }
+  }
+  let smsWalletBalance = 0;
+  if (process.env.SMS_FOR_SATS_LNBITS_API_KEY) {
+    try {
+      smsWalletBalance = await getWalletBalance(
+        process.env.SMS_FOR_SATS_LNBITS_API_KEY
+      );
+    } catch (error) {
+      console.error("Admin: Failed to retrieve sms wallet balance");
     }
   }
 
@@ -71,5 +81,6 @@ async function handleGetAdminDashboard(
     lnbitsDashboardUrl: `${process.env.LNBITS_URL}/wallet?usr=${process.env.LNBITS_USER_ID}`,
     users: await prisma.user.findMany(),
     walletBalance,
+    smsWalletBalance,
   });
 }
