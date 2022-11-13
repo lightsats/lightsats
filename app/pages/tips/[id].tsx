@@ -1,13 +1,12 @@
 import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
 import { Tip, TipStatus } from "@prisma/client";
-import { BackButton } from "components/BackButton";
 import { ConfettiContainer } from "components/ConfettiContainer";
 import { NextLink } from "components/NextLink";
 import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTracker";
 import { PayTipInvoice } from "components/tipper/TipPage/PayTipInvoice";
 import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
-import { formatDistance, isAfter } from "date-fns";
+import { isAfter } from "date-fns";
 import { useScoreboardPosition } from "hooks/useScoreboardPosition";
 import { expirableTipStatuses, refundableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
@@ -112,8 +111,7 @@ const TipPage: NextPage = () => {
           </>
         ) : (
           <>
-            <Text h2>Oh no! 😔</Text>
-            <Text color="error">This tip has expired.</Text>
+            <Text h2>Oh no, this tip has expired 😔</Text>
           </>
         )}
         <Spacer />
@@ -127,7 +125,6 @@ const TipPage: NextPage = () => {
             {tip.status === "UNCLAIMED" && <ShareUnclaimedTip tip={tip} />}
           </>
         )}
-
         {tip.status === "WITHDRAWN" && (
           <>
             <ConfettiContainer />
@@ -167,46 +164,34 @@ const TipPage: NextPage = () => {
                 <Button>Create another tip</Button>
               </a>
             </NextLink>
-
-            <Spacer />
-          </>
-        )}
-
-        <Spacer y={4} />
-        {!hasExpired && expirableTipStatuses.indexOf(tip.status) > -1 && (
-          <>
-            <Text small>
-              Expires in {formatDistance(new Date(tip.expiry), Date.now())}
-            </Text>
             <Spacer />
           </>
         )}
         {tip.status === "UNFUNDED" && (
           <>
+            <Spacer />
             <Button onClick={deleteTip} color="error">
               Delete Tip
             </Button>
-            <Spacer />
           </>
         )}
         {refundableTipStatuses.indexOf(tip.status) >= 0 && (
           <>
+            <Spacer />
             <Button onClick={reclaimTip} color="error">
               Reclaim Tip
             </Button>
-            <Spacer />
           </>
         )}
-        <BackButton />
       </>
     );
   } else {
     return (
       <>
         <Spacer y={4} />
-        <Loading color="currentColor" size="lg" />
-        <Spacer y={0.5} />
-        <Text h4>Loading</Text>
+        <Loading color="currentColor" size="lg">
+          Loading...
+        </Loading>
       </>
     );
   }

@@ -270,7 +270,7 @@ const Withdraw: NextPage = () => {
             </>
           ) : (
             <>
-              <Loading type="default" color="currentColor" size="sm" />
+              <Loading />
             </>
           )}
           <Spacer y={1} />

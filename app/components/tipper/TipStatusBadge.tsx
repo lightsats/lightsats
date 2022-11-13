@@ -4,6 +4,7 @@ import { TipStatus } from "@prisma/client";
 export function TipStatusBadge({ status }: { status: TipStatus }) {
   return (
     <Badge
+      variant="flat"
       css={{
         backgroundColor:
           status === "UNFUNDED"

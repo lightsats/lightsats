@@ -10,11 +10,16 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
+import { ExpiryBadge } from "components/ExpiryBadge";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
-import { formatDistanceStrict } from "date-fns";
-import { DEFAULT_FIAT_CURRENCY, DEFAULT_NAME } from "lib/constants";
+import { formatDistanceStrict, isAfter } from "date-fns";
+import {
+  DEFAULT_FIAT_CURRENCY,
+  DEFAULT_NAME,
+  expirableTipStatuses,
+} from "lib/constants";
 import { bitcoinJourneyPages } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getAvatarUrl } from "lib/utils";
@@ -45,6 +50,11 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
       ? "success"
       : "warning";
 
+  const hasExpired =
+    publicTip &&
+    expirableTipStatuses.indexOf(publicTip.status) >= 0 &&
+    isAfter(new Date(), new Date(publicTip.expiry));
+
   return (
     <Card css={{ background: "$gray900", dropShadow: "$sm" }}>
       <Card.Body>
@@ -54,7 +64,7 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
               viewedUser?.avatarURL ?? undefined,
               viewedUser?.fallbackAvatarId
             )}
-            size="lg"
+            size="xl"
             bordered
           />
           <Spacer x={0.5} />
@@ -65,10 +75,15 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
                   (viewing === "tippee" ? publicTip.tippeeName : undefined) ??
                   DEFAULT_NAME}
               </Text>
+              <ExpiryBadge tip={publicTip} />
             </Row>
-            <Row>
-              <Text color="white">
-                {formatDistanceStrict(Date.now(), new Date(publicTip.created))}{" "}
+            <Row css={{ mt: 6 }}>
+              <Text color="white" small>
+                created &nbsp;
+                {formatDistanceStrict(
+                  Date.now(),
+                  new Date(publicTip.created)
+                )}{" "}
                 ago
               </Text>
             </Row>
@@ -123,8 +138,13 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
                 <Row align="center">
                   {publicTip.status === "CLAIMED" ? (
                     <>
-                      <Text color="white" size="small" weight="thin">
-                        STEP {journeyStep} OF {bitcoinJourneyPages.length}{" "}
+                      <Text
+                        color="white"
+                        size="small"
+                        weight="thin"
+                        transform="uppercase"
+                      >
+                        Step {journeyStep} of {bitcoinJourneyPages.length}{" "}
                       </Text>
                       <Spacer x={0.25} />
                       {journeyStep > 0 && (
@@ -142,9 +162,10 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
                 {publicTip.status === "UNCLAIMED" && (
                   <>
                     <Badge
+                      variant="flat"
                       color={publicTip.claimLinkViewed ? "success" : "warning"}
                     >
-                      {publicTip.claimLinkViewed ? "SEEN" : "UNSEEN"}
+                      {publicTip.claimLinkViewed ? "👀 SEEN" : "🙈 UNSEEN"}
                     </Badge>
                     <Spacer x={0.5} />
                   </>
