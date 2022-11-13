@@ -64,7 +64,7 @@ const breez: Wallet = {
   placeholderDataUrl:
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAABnWAAAZ1gEY0crtAAAAP0lEQVR4nAE0AMv/AP////v7/ODn7P///wDz9vcAOFsAHEH19vgA+/v8AERmABY85uvvAP////n6+9vi6P///7k8JI6gkKogAAAAAElFTkSuQmCC",
   name: "Breez Wallet",
-  slogan: "LIGHTNING FAST BITCOIN PAYMENTS",
+  slogan: "Lightning fast bitcoin payments.",
   languageCodes: [
     getLanguageCode("English"),
     getLanguageCode("Finnish"),

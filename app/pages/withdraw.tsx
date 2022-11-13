@@ -224,8 +224,6 @@ const Withdraw: NextPage = () => {
                   color="primary"
                   css={{
                     dropShadow: "$sm",
-                    maxWidth: 400,
-                    margin: "0px auto ",
                   }}
                 >
                   <Card.Header>
