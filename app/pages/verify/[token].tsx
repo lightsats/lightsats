@@ -36,7 +36,7 @@ export default function Verify2FA() {
 
   return (
     <>
-      <Loading type="points" color="currentColor" size="sm" />
+      <Loading color="currentColor" size="sm" />
     </>
   );
 }

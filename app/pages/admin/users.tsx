@@ -14,7 +14,7 @@ const AdminUsersPage: NextPage = () => {
   );
 
   if (!adminDashboard) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
   return <AdminPageInternal adminDashboard={adminDashboard} />;
 };

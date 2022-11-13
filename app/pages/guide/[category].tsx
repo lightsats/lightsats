@@ -12,7 +12,7 @@ const GuideCategoryPage: NextPage = () => {
   const category = categoryString as ItemCategory;
 
   if (!category) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
 
   const categoryItems = catalog[category];

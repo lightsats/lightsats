@@ -7,8 +7,8 @@
   "verifyEmailSubject": "👤 Verify your Lightsats⚡ email address",
   "verifyEmailMessage": "Please click the following link to login: <a href=\"{{verifyUrl}}\">Verify</a>",
   "verifyPhoneMessage": "Lightsats login",
-  "checkEmailTitle": "Next, confirm your email address",
+  "checkEmailTitle": "Check your inbox",
   "checkEmailText": "We've sent a 🪄 magic link to your inbox. Click the link to confirm your email address.",
-  "checkSMSTitle": "Next, confirm your phone number",
+  "checkSMSTitle": "Check your phone",
   "checkSMSText": "We've sent a 🪄 magic link to your phone. Click the link to confirm your phone number."
 }

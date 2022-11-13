@@ -19,7 +19,7 @@ export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
 
   return (
     <>
-      <Card>
+      <Card css={{ dropShadow: "$xs" }}>
         <Card.Header>
           <Row>
             <Col>
@@ -28,7 +28,7 @@ export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
               </Text>
             </Col>
             <Col style={{ textAlign: "right", alignSelf: "center" }}>
-              <Loading type="default" color="currentColor" size="sm" />
+              <Loading color="currentColor" size="sm" />
             </Col>
           </Row>
         </Card.Header>

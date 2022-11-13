@@ -229,7 +229,7 @@ const NewTip: NextPage = () => {
       </Text>
       <Spacer />
       <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-        <Card>
+        <Card css={{ dropShadow: "$sm" }}>
           <Card.Body>
             <Tooltip
               content={
@@ -324,6 +324,7 @@ const NewTip: NextPage = () => {
                     aria-label="amount"
                     fullWidth
                     bordered
+                    autoFocus
                   />
                 )}
               />
@@ -364,7 +365,7 @@ const NewTip: NextPage = () => {
                 </Tooltip>
               </Row>
             ) : (
-              <Loading type="spinner" color="currentColor" size="sm" />
+              <Loading color="currentColor" size="sm" />
             )}
             <Spacer />
             <Controller
@@ -445,7 +446,7 @@ const NewTip: NextPage = () => {
         <Spacer y={2} />
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? (
-            <Loading type="points" color="currentColor" size="sm" />
+            <Loading color="currentColor" size="sm" />
           ) : (
             <>Create Tip</>
           )}

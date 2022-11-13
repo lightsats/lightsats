@@ -16,7 +16,7 @@ export function FiatPrice({
   showApprox,
 }: FiatPriceProps) {
   if (!exchangeRate) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
 
   const symbol = getSymbolFromCurrency(currency);

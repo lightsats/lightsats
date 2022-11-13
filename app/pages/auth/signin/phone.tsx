@@ -108,7 +108,7 @@ export default function PhoneSignIn({
 
   return (
     <>
-      <Card>
+      <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
           <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
             <Row>
@@ -139,7 +139,7 @@ export default function PhoneSignIn({
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <Loading type="points" color="currentColor" size="sm" />
+                <Loading color="currentColor" size="sm" />
               ) : (
                 <>{submitText ?? "Login"}</>
               )}

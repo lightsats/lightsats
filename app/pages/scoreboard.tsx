@@ -26,7 +26,7 @@ const Scoreboard: NextPage = () => {
     defaultFetcher
   );
   if (!scoreboard) {
-    return <Loading type="spinner" color="currentColor" size="lg" />;
+    return <Loading color="currentColor" size="lg" />;
   }
 
   return (
@@ -34,7 +34,7 @@ const Scoreboard: NextPage = () => {
       <Text h2>Scoreboard</Text>
       <Grid.Container gap={1} css={{ mx: 0, width: "100%" }}>
         <Grid xs={4}>
-          <Card>
+          <Card css={{ dropShadow: "$sm" }}>
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
@@ -46,7 +46,7 @@ const Scoreboard: NextPage = () => {
           </Card>
         </Grid>
         <Grid xs={4}>
-          <Card>
+          <Card css={{ dropShadow: "$sm" }}>
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
@@ -58,7 +58,7 @@ const Scoreboard: NextPage = () => {
           </Card>
         </Grid>
         <Grid xs={4}>
-          <Card>
+          <Card css={{ dropShadow: "$sm" }}>
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">

@@ -87,12 +87,7 @@ export function Tips() {
               <Grid xs={12} key={tip.id} justify="center">
                 <NextLink href={`${Routes.tips}/${tip.id}`}>
                   <a style={cardLinkStyle}>
-                    <Card
-                      variant="flat"
-                      isPressable
-                      isHoverable
-                      style={{ backgroundColor: "white" }}
-                    >
+                    <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
                       <Card.Body>
                         <Row justify="space-between" align="center">
                           <Badge>

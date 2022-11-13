@@ -43,5 +43,5 @@ export function ClaimProgressTracker({ tipId }: ClaimProgressTrackerProps) {
         <Spacer />
       </>
       ) : (
-      <Loading type="spinner" color="currentColor" size="sm" />
+      <Loading color="currentColor" size="sm" />
       ))*/

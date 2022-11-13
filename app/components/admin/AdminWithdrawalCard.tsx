@@ -11,7 +11,7 @@ export function AdminWithdrawalCard({ withdrawal }: AdminWithdrawalCardProps) {
   return (
     <NextLink href={`${Routes.adminWithdrawals}/${withdrawal.id}`} passHref>
       <a style={{ width: "100%" }}>
-        <Card isPressable isHoverable>
+        <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
           <Card.Body>{withdrawal.id}</Card.Body>
         </Card>
       </a>

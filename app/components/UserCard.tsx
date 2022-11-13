@@ -48,11 +48,9 @@ export function UserCard({ userId, forceAnonymous }: Props) {
   );
 
   return (
-    <Card>
+    <Card css={{ dropShadow: "$sm" }}>
       <Card.Body>
-        {!publicUser && (
-          <Loading type="spinner" color="currentColor" size="lg" />
-        )}
+        {!publicUser && <Loading color="currentColor" size="lg" />}
         {publicUser && (
           <>
             <Row align="center">

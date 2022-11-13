@@ -175,7 +175,7 @@ function TippeeProfile({ mutateUser, session, user }: ProfileInternalProps) {
         disabled={isSubmitting}
       >
         {isSubmitting ? (
-          <Loading type="points" color="currentColor" size="sm" />
+          <Loading color="currentColor" size="sm" />
         ) : (
           <>Become a Tipper</>
         )}
@@ -318,7 +318,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
         <Spacer />
         <Button type="submit" disabled={isSubmitting} css={{ width: "100%" }}>
           {isSubmitting ? (
-            <Loading type="points" color="currentColor" size="sm" />
+            <Loading color="currentColor" size="sm" />
           ) : (
             <>Update profile</>
           )}

@@ -29,7 +29,7 @@ const AdminPage: NextPage = () => {
     defaultFetcher
   );
   if (!adminDashboard) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
   const totalRoutingFees = adminDashboard.withdrawals.length
     ? adminDashboard.withdrawals
