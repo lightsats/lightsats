@@ -66,6 +66,7 @@ model User {
   sessions Session[]
   isAnonymous Boolean @default(false)
   withdrawalLinks WithdrawalLink[]
+  withdrawals Withdrawal[]
   journeyStep Int @default(1)
   inJourney Boolean @default(false)
 
@@ -142,6 +143,7 @@ model WithdrawalLinkTip {
 
 model Withdrawal {
   id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id])
   userId String
   tips Tip[]
   routingFee Int

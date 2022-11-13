@@ -20,11 +20,11 @@ type ItemCardProps = {
 };
 
 function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
-  const hasLanguage = item.languageCodes.indexOf("en") > -1;
+  //const hasLanguage = item.languageCodes.indexOf("en") > -1;
   const itemFeatures: ItemFeatureBadgeProps[] = [
     {
       name: ISO6391.getNativeName("en"), // TODO: current language
-      variant: hasLanguage ? "success" : "warning",
+      // variant: hasLanguage ? "success" : "warning",
     },
   ];
   if (((item as Wallet).minBalance || 0) > 0) {
@@ -39,29 +39,29 @@ function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
   //     variant: "success",
   //   });
   // }
-  const hasSafePlatform =
-    item.platforms.indexOf("mobile") > -1 || item.platforms.indexOf("web") > -1;
+  // const hasSafePlatform =
+  //   item.platforms.indexOf("mobile") > -1 || item.platforms.indexOf("web") > -1;
   for (const platform of item.platforms) {
     itemFeatures.push({
       name: platform,
-      variant: hasSafePlatform ? "success" : "warning",
+      // variant: hasSafePlatform ? "success" : "warning",
     });
   }
   if ((item as Wallet).features?.indexOf("lnurl-auth") > -1) {
     itemFeatures.push({
       name: `Scan to login`,
-      variant: "success",
+      // variant: "success",
     });
   }
   if ((item as LearnItem).difficulty) {
     itemFeatures.push({
       name: (item as LearnItem).difficulty,
-      variant:
-        (item as LearnItem).difficulty === "easy"
-          ? "success"
-          : (item as LearnItem).difficulty === "medium"
-          ? "warning"
-          : "error",
+      // variant:
+      //   (item as LearnItem).difficulty === "easy"
+      //     ? "success"
+      //     : (item as LearnItem).difficulty === "medium"
+      //     ? "warning"
+      //     : "error",
     });
   }
   return itemFeatures;
@@ -73,7 +73,6 @@ export function ItemCard({ item }: ItemCardProps) {
     [item]
   );
 
-  // TODO: get features based on item type and move to a separate component
   return (
     <Collapse
       contentLeft={
@@ -91,8 +90,8 @@ export function ItemCard({ item }: ItemCardProps) {
       subtitle={<>{item.slogan}</>}
     >
       <NextLink href={item.link} passHref>
-        <a target="_blank">
-          <Row align="center">
+        <a target="_blank" rel="noreferrer noopener">
+          <Row align="center" css={{ p: 10, br: 10 }}>
             <Row
               justify="flex-start"
               align="flex-start"

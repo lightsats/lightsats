@@ -9,6 +9,7 @@ export const DEFAULT_NAME = "anon";
 export const FEE_PERCENT = 1;
 export const MINIMUM_FEE_SATS = 10;
 export const TIP_NUM_SMS_TOKENS = 3;
+export const LOGIN_LINK_EXPIRATION_DAYS = 30;
 
 export const refundableTipStatuses: TipStatus[] = [
   "UNCLAIMED",

@@ -1,9 +1,9 @@
 import { Loading } from "@nextui-org/react";
-import { notifyError } from "components/Toasts";
 import jwt_decode from "jwt-decode";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import toast from "react-hot-toast";
 import { TwoFactorAuthToken } from "types/TwoFactorAuthToken";
 
 export default function Verify2FA() {
@@ -28,7 +28,7 @@ export default function Verify2FA() {
           }
         } catch (error) {
           console.error(error);
-          notifyError("login failed");
+          toast.error("login failed");
         }
       })();
     }

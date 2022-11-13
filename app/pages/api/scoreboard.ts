@@ -28,6 +28,7 @@ export default async function handler(
         (tip) => tip.status === "WITHDRAWN"
       );
       return {
+        userId: user.id,
         isMe: !!session && user.id === session.user.id,
         numTipsWithdrawn: withdrawnTips.length,
         satsSent: withdrawnTips.length

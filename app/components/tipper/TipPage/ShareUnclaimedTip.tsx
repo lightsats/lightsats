@@ -1,11 +1,11 @@
 import { Button, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { NextLink } from "components/NextLink";
-import { notifySuccess } from "components/Toasts";
 import copy from "copy-to-clipboard";
 import { Routes } from "lib/Routes";
 import { getAppUrl, getLocalePath } from "lib/utils";
 import React from "react";
+import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 
 type ShareUnclaimedTipProps = {
@@ -20,7 +20,7 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
   const copyClaimUrl = React.useCallback(() => {
     if (claimUrl) {
       copy(claimUrl);
-      notifySuccess("Copied to clipboard");
+      toast.success("Copied to clipboard");
     }
   }, [claimUrl]);
 

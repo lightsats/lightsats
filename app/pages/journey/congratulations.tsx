@@ -17,19 +17,19 @@ const CongratulationsPage: NextPage = () => {
       <MyBitcoinJourneyHeader />
       <ConfettiContainer />
       <MyBitcoinJourneyContent>
-        <h2>You did it 🎉</h2>
+        <h2>You did it! 🎉</h2>
         <Spacer />
         <Text>You are a proud new owner of a fraction of a bitcoin.</Text>
-        <Spacer />
         <Text blockquote>
-          Rumors say - those who are gifted some bitcoin are a very special kind
-          of people.
+          Rumors say - those who are gifted bitcoin are a very special kind of
+          people.
         </Text>
-        <Spacer />
       </MyBitcoinJourneyContent>
-
-      <Spacer />
-      <MyBitcoinJourneyFooter href={Routes.guide} text={"What's Next?"} />
+      <MyBitcoinJourneyFooter
+        href={Routes.guide}
+        text={"Continue"}
+        nextUp="Use bitcoin"
+      />
     </>
   );
 };

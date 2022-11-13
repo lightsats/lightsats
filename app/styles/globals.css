@@ -14,15 +14,3 @@ div[data-overlay-container="true"] {
 input {
   font-weight: 500;
 }
-
-@keyframes toast {
-  0% {
-    opacity: 0;
-  }
-  25% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}

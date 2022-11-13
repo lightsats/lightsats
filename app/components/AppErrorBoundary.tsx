@@ -1,7 +1,7 @@
 import { Button, Text } from "@nextui-org/react";
 import { FlexBox } from "components/FlexBox";
-import { notifyError } from "components/Toasts";
 import React, { ErrorInfo } from "react";
+import toast from "react-hot-toast";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type AppErrorBoundaryProps = {};
@@ -13,7 +13,7 @@ export class AppErrorBoundary extends React.Component<
 > {
   private promiseRejectionHandler = (event: PromiseRejectionEvent) => {
     if ((event.reason.message as string).indexOf("Prompt was closed") > -1) {
-      notifyError("Wallet Prompt was closed");
+      toast.error("Wallet Prompt was closed");
     } else {
       console.error("AppErrorBoundary.promiseRejectionHandler", event.reason);
       event.preventDefault();
