@@ -32,10 +32,10 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
 
   return (
     <>
-      <Card css={{ dropShadow: "$xs" }}>
+      <Card css={{ dropShadow: "$sm" }}>
         <Card.Header>
           <Text size={20} b>
-            👀 Have your tippee scan this QR code
+            👇 Have your tippee scan this QR code
           </Text>
           <Tooltip
             content="Ask the tippee to scan the below code using their camera app or a QR
