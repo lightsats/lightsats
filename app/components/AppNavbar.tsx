@@ -56,28 +56,31 @@ export function AppNavbar() {
   const router = useRouter();
   const hideNavbar = router.pathname.endsWith("/claim"); // || user?.inJourney;
 
-  const collapseItems: CollapseItem[] = React.useMemo(() => [
-    {
-      name: "Home",
-      href: Routes.home,
-      icon: <HomeIcon />,
-    },
-    {
-      name: "Scoreboard",
-      href: Routes.scoreboard,
-      icon: <ChartBarIcon />,
-    },
-    {
-      name: "About",
-      href: Routes.about,
-      icon: <InformationCircleIcon />,
-    },
-    {
-      name: "Bitcoin Guide",
-      href: Routes.guide,
-      icon: <LightBulbIcon />,
-    },
-  ]);
+  const collapseItems: CollapseItem[] = React.useMemo(
+    () => [
+      {
+        name: "Home",
+        href: Routes.home,
+        icon: <HomeIcon />,
+      },
+      {
+        name: "Scoreboard",
+        href: Routes.scoreboard,
+        icon: <ChartBarIcon />,
+      },
+      {
+        name: "About",
+        href: Routes.about,
+        icon: <InformationCircleIcon />,
+      },
+      {
+        name: "Bitcoin Guide",
+        href: Routes.guide,
+        icon: <LightBulbIcon />,
+      },
+    ],
+    []
+  );
 
   if (sessionStatus === "loading" || (session && !user)) {
     return null;
