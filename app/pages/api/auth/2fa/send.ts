@@ -5,10 +5,10 @@ import { generateShortLink } from "lib/generateShortLink";
 import { getApiI18n } from "lib/i18n/api";
 import prisma from "lib/prismadb";
 import { Routes } from "lib/Routes";
+import { smsProviders } from "lib/sms/smsProviders";
 import { getLocalePath } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as nodemailer from "nodemailer";
-import twilio from "twilio";
 import { TwoFactorAuthToken } from "types/TwoFactorAuthToken";
 import { TwoFactorLoginRequest } from "types/TwoFactorLoginRequest";
 
@@ -20,22 +20,6 @@ if (
   !process.env.EMAIL_FROM
 ) {
   throw new Error("Email config not setup. Please see .env.example");
-}
-
-let twilioClient: twilio.Twilio | undefined;
-
-if (
-  !process.env.TWILIO_ACCOUNT_SID ||
-  !process.env.TWILIO_AUTH_TOKEN ||
-  !process.env.TWILIO_PHONE_NUMBER ||
-  !process.env.TWILIO_MESSAGING_SERVICE_SID
-) {
-  console.warn("SMS config not setup. Please see .env.example");
-} else {
-  twilioClient = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
 }
 
 const transport = nodemailer.createTransport({
@@ -91,10 +75,6 @@ export default async function handler(
     }
   } else if (twoFactorLoginRequest.phoneNumber) {
     try {
-      if (!twilioClient) {
-        throw new Error("SMS config not setup. Please see .env.example");
-      }
-
       if (twoFactorLoginRequest.tipId) {
         const tip = await prisma.tip.findFirst({
           where: {
@@ -130,15 +110,43 @@ export default async function handler(
         }
       }
 
-      await twilioClient.messages.create({
-        to: twoFactorLoginRequest.phoneNumber,
-        from: process.env.TWILIO_PHONE_NUMBER, // TODO: consider Alphanumeric Sender ID ("Lightsats")
-        body:
-          i18n("common:verifyPhoneMessage") +
-          " " +
-          ((await generateShortLink(verifyUrl)) ?? verifyUrl),
-        messagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID,
-      });
+      let success = false;
+      const smsBody =
+        i18n("common:verifyPhoneMessage") +
+        " " +
+        ((await generateShortLink(verifyUrl)) ?? verifyUrl);
+      for (const smsProvider of smsProviders) {
+        success = await smsProvider.sendMessage(
+          twoFactorLoginRequest.phoneNumber,
+          smsBody
+        );
+        if (success) {
+          console.log(
+            "Sent SMS to " +
+              twoFactorLoginRequest.phoneNumber +
+              " via " +
+              smsProvider.name
+          );
+          break;
+        } else {
+          console.error(
+            "Failed to send SMS to " +
+              twoFactorLoginRequest.phoneNumber +
+              " provider: " +
+              smsProvider.name
+          );
+        }
+      }
+      if (!success) {
+        throw new Error(
+          "Failed to send SMS to " +
+            twoFactorLoginRequest.phoneNumber +
+            ". Tried " +
+            smsProviders.length +
+            " providers: " +
+            smsProviders.map((p) => p.name).join(", ")
+        );
+      }
 
       res.status(StatusCodes.NO_CONTENT).end();
     } catch (error) {
