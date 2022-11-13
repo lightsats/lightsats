@@ -21,6 +21,8 @@ const theme = createTheme({
       link: "#2E74ED",
       text: "#000",
 
+      gray: "#64748B",
+
       // Special colors
       gold: "#C9B037",
       silver: "#D7D7D7",

@@ -1,4 +1,4 @@
-import { Collapse, CSS, Spacer } from "@nextui-org/react";
+import { Collapse, CSS, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { ItemCard } from "components/items/ItemCard";
 import {
@@ -52,16 +52,19 @@ export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
 
   return (
     <>
-      {otherItems.length > 0 && <h4>Recommended wallets</h4>}
-      <Collapse.Group css={collapseGroupCss}>
+      {otherItems.length > 0 && <h4>Recommended Wallets</h4>}
+
+      <Collapse.Group shadow>
         {recommendedItems.map((item) => (
           <ItemCard key={item.name} item={item} />
         ))}
       </Collapse.Group>
+
       {otherItems.length > 0 && (
         <>
           <Spacer />
-          <h4>More wallets</h4>
+          <Text h3>More Wallets</Text>
+
           <Collapse.Group css={collapseGroupCss}>
             {otherItems.map((item) => (
               <ItemCard key={item.name} item={item} />
