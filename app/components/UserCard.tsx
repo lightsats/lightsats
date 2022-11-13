@@ -43,27 +43,34 @@ export function UserCard({ userId, forceAnonymous }: Props) {
     });
   }, [userId, publicUser?.name]);
 
-  const placing = useScoreboardPosition();
+  const placing = useScoreboardPosition(
+    publicUser?.userType === "tipper" ? userId : undefined
+  );
 
   return (
-    <Card>
+    <Card css={{ dropShadow: "$sm" }}>
       <Card.Body>
-        {!publicUser ||
-          (!placing && (
-            <Loading type="spinner" color="currentColor" size="lg" />
-          ))}
-        {publicUser && placing && (
+        {!publicUser && (
+          <Loading type="spinner" color="currentColor" size="lg" />
+        )}
+        {publicUser && (
           <>
             <Row align="center">
-              <Avatar src={getAvatarUrl(publicUser?.avatarURL ?? undefined)} />
-              <Spacer x={0.5} />
+              <Avatar
+                size="xl"
+                zoomed
+                bordered
+                color="primary"
+                src={getAvatarUrl(publicUser?.avatarURL ?? undefined)}
+              />
+              <Spacer x={0.75} />
               <Col span={10}>
                 <Row>
                   <Text b>{publicUser.name ?? DEFAULT_NAME}</Text>
                 </Row>
-                <Row>
+                <Row css={{ mt: -5, mb: 5 }}>
                   {publicUser.twitterUsername && (
-                    <Text size="smaller">
+                    <Text>
                       <Link
                         href={`https://twitter.com/${publicUser.twitterUsername}`}
                         target="_blank"
@@ -104,7 +111,12 @@ export function UserCard({ userId, forceAnonymous }: Props) {
               </Col>
               <Col>
                 <Text size="small">Leaderboard 🏆</Text>
-                <Text b>#{placing}</Text>
+                <Text
+                  b={placing !== undefined}
+                  size={placing === undefined ? "small" : undefined}
+                >
+                  {placing !== undefined ? <>#{placing}</> : "No placing yet"}
+                </Text>
               </Col>
             </Row>
           </>

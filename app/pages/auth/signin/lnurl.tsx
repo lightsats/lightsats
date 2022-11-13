@@ -1,14 +1,14 @@
 import { ClipboardIcon } from "@heroicons/react/24/solid";
-import { Button, Input, Loading, Spacer, Text } from "@nextui-org/react";
+import { Button, Card, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
-import { notifyError, notifySuccess } from "components/Toasts";
 import copy from "copy-to-clipboard";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 import useSWR, { SWRConfiguration } from "swr";
 import useSWRImmutable from "swr/immutable";
@@ -54,7 +54,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
           }
         } catch (error) {
           console.error(error);
-          notifyError("login failed");
+          toast.error("login failed");
         }
       })();
     }
@@ -63,55 +63,58 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const copyQr = React.useCallback(() => {
     if (qr) {
       copy(qr.encoded);
-      notifySuccess("Copied to clipboard");
+      toast.success("Copied to clipboard");
     }
   }, [qr]);
 
   return (
     <>
-      <Spacer />
-      <Text h3>Lightning⚡ Login</Text>
-      {qr ? (
-        <>
-          <NextLink href={`lightning:${qr.encoded}`}>
-            <a>
-              <QRCode value={qr.encoded} />
-            </a>
-          </NextLink>
-          <Spacer />
-          <NextLink href={`lightning:${qr.encoded}`}>
-            <a>
-              <Button size="lg">Click to connect</Button>
-            </a>
-          </NextLink>
-          <Spacer />
-          <Input
-            readOnly
-            value={qr.encoded}
-            contentRight={
-              <Button
-                onClick={copyQr}
-                auto
-                css={{
-                  px: 8,
-                  borderTopLeftRadius: 0,
-                  borderBottomLeftRadius: 0,
-                }}
-              >
-                <Icon>
-                  <ClipboardIcon />
-                </Icon>
-              </Button>
-            }
-          />
-        </>
-      ) : (
-        <>
-          <Spacer />
-          <Loading type="default" />
-          Generating QR code...
-        </>
-      )}
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Body>
+          <Row justify="center">
+            {qr ? (
+              <>
+                <NextLink href={`lightning:${qr.encoded}`}>
+                  <a>
+                    <QRCode value={qr.encoded} />
+                  </a>
+                </NextLink>
+              </>
+            ) : (
+              <>
+                <Spacer />
+                <Loading type="default" />
+                <Text>Generating QR code...</Text>
+              </>
+            )}
+          </Row>
+        </Card.Body>
+        {qr && (
+          <>
+            <Card.Divider />
+            <Card.Footer>
+              <Row justify="space-between">
+                <Button
+                  onClick={copyQr}
+                  auto
+                  color="secondary"
+                  css={{ color: "$gray900" }}
+                >
+                  <Icon>
+                    <ClipboardIcon />
+                  </Icon>
+                  Copy
+                </Button>
+                <NextLink href={`lightning:${qr.encoded}`}>
+                  <a>
+                    <Button>Click to connect</Button>
+                  </a>
+                </NextLink>
+              </Row>
+            </Card.Footer>
+          </>
+        )}
+      </Card>
     </>
   );
 }

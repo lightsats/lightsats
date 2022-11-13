@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 export default function UserPublicProfile() {
   const router = useRouter();
   const { id } = router.query;
-  const user = useUser();
+  const { data: user } = useUser();
 
   return (
     <>

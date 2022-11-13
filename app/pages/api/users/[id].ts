@@ -13,14 +13,10 @@ export default async function handler(
   res: NextApiResponse<User | PublicUser | never>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
-  }
 
   const { id, publicProfile, forceAnonymous } = req.query;
 
-  if (session.user.id !== id || publicProfile === "true") {
+  if (session?.user.id !== id || publicProfile === "true") {
     if (req.method === "GET") {
       const user = await prisma.user.findUnique({
         where: {
@@ -48,7 +44,7 @@ export default async function handler(
         created: user.created,
         userType: user.userType,
         ...(user.isAnonymous &&
-        (forceAnonymous === "true" || user.id !== session.user.id)
+        (forceAnonymous === "true" || user.id !== session?.user.id)
           ? {
               name: null,
               avatarURL: null,

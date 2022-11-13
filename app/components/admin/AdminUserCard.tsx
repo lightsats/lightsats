@@ -14,7 +14,7 @@ export function AdminUserCard({ user }: AdminUserCardProps) {
   return (
     <NextLink href={`${Routes.adminUsers}/${user.id}`} passHref>
       <a style={{ width: "100%" }}>
-        <Card isPressable isHoverable>
+        <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
           <Card.Body>
             <NextUIUser
               name={user.name ?? DEFAULT_NAME}

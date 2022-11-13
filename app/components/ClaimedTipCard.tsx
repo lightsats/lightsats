@@ -46,7 +46,7 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
       : "warning";
 
   return (
-    <Card css={{ background: "$gray900" }}>
+    <Card css={{ background: "$gray900", dropShadow: "$sm" }}>
       <Card.Body>
         <Row align="center">
           <Avatar

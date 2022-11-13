@@ -37,7 +37,8 @@ const ClaimedPage: NextPage = () => {
       </Grid.Container>
       <MyBitcoinJourneyFooter
         href={Routes.journeyBitcoin}
-        text={<>What is Bitcoin?</>}
+        text={<>Start your journey</>}
+        nextUp="What is bitcoin?"
       />
     </>
   );

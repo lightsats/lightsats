@@ -14,7 +14,6 @@ import Head from "next/head";
 import ClaimedPage from "pages/journey/claimed";
 import React from "react";
 import useSWR from "swr";
-
 const Home: NextPage = () => {
   const { data: session, status: sessionStatus } = useSession();
   const { data: user } = useUser();

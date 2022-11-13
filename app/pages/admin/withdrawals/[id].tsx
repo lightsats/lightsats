@@ -1,5 +1,4 @@
 import { Loading, Row, Spacer, Text } from "@nextui-org/react";
-import { User } from "@prisma/client";
 import { AdminTipsList } from "components/admin/AdminTipsList";
 import { AdminUserCard } from "components/admin/AdminUserCard";
 import { defaultFetcher } from "lib/swr";
@@ -61,19 +60,5 @@ const AdminWithdrawalPage: NextPage = () => {
     </>
   );
 };
-
-type AdminWithdrawalUserProps = {
-  title: string;
-  user: User | null;
-};
-
-function AdminWithdrawalUser({ title, user }: AdminWithdrawalUserProps) {
-  return (
-    <>
-      <Text h2>{title}</Text>
-      {user ? <AdminUserCard user={user} /> : <Text>No withdrawalpee yet</Text>}
-    </>
-  );
-}
 
 export default AdminWithdrawalPage;

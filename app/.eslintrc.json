@@ -15,6 +15,7 @@
         "patterns": [".*"]
       }
     ],
-    "eqeqeq": "error"
+    "eqeqeq": "error",
+    "react-hooks/exhaustive-deps": "error"
   }
 }
