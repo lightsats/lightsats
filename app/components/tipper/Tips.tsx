@@ -1,13 +1,15 @@
-import { WalletIcon } from "@heroicons/react/24/solid";
+import { InformationCircleIcon, WalletIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
   Col,
   Grid,
+  Link,
   Loading,
   Row,
   Spacer,
   Text,
+  Tooltip,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
@@ -38,7 +40,7 @@ export function Tips() {
   );
 
   if (session && !tips) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
 
   const reclaimedTips = tips?.filter((tip) => tip.status === "RECLAIMED");
@@ -47,21 +49,36 @@ export function Tips() {
     <>
       {reclaimedTips && reclaimedTips.length > 0 && (
         <>
-          <Card variant="bordered">
+          <Spacer y={2} />
+
+          <Row justify="center">
+            <Text h3>Returned tips</Text>
+            <Tooltip
+              content="Expired or reclaimed tips return back to you. ✌️"
+              color="primary"
+            >
+              &nbsp;
+              <Text color="primary">
+                <Icon style={{ color: "$primary" }}>
+                  <InformationCircleIcon />
+                </Icon>
+              </Text>
+            </Tooltip>
+          </Row>
+          <Card css={{ dropShadow: "$sm" }}>
             <Card.Body>
               <Row justify="space-between" align="center">
                 <Col>
-                  <Text size={24} b>
+                  <Text size="$lg" b>
                     {reclaimedTips
                       .map((tip) => tip.amount)
                       .reduce((a, b) => a + b)}
                     &nbsp;sats
                   </Text>
-                  <Text>&nbsp;from reclaimed tips</Text>
                 </Col>
                 <NextLink href={Routes.tipperWithdraw}>
                   <a>
-                    <Button auto color="primary">
+                    <Button auto color="secondary">
                       <Icon>
                         <WalletIcon />
                       </Icon>
@@ -72,10 +89,63 @@ export function Tips() {
               </Row>
             </Card.Body>
           </Card>
-          <Spacer />
+          <Spacer y={2} />
         </>
       )}
-      <Text h3>🙌 Your tips</Text>
+      <Spacer></Spacer>
+      <Row justify="space-between">
+        <Text h4>Suggestions</Text>
+        <Text>
+          <Link href={Routes.guide}>See all</Link>
+        </Text>
+      </Row>
+      <Row>
+        <Grid.Container gap={2} css={{ width: "100%" }}>
+          <Grid>
+            <Card css={{ dropShadow: "$sm" }}>
+              <Card.Body>
+                <Row>
+                  <Button color="primary" auto flat css={{ p: 8 }}>
+                    <Icon>
+                      <WalletIcon />
+                    </Icon>
+                  </Button>
+                  <Spacer x={0.5} />
+                  <Col>
+                    <Text b>Buy a giftcard</Text>
+                    <Text color="$gray" css={{ lh: "$sm" }}>
+                      Select from a range of gift cards.
+                    </Text>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Grid>
+          <Grid>
+            <Card css={{ dropShadow: "$sm" }}>
+              <Card.Body>
+                <Row>
+                  <Button color="primary" auto flat css={{ p: 8 }}>
+                    <Icon>
+                      <WalletIcon />
+                    </Icon>
+                  </Button>
+                  <Spacer x={0.5} />
+                  <Col>
+                    <Text b>Buy a giftcard</Text>
+                    <Text color="$gray" css={{ lh: "$sm" }}>
+                      Select from a range of gift cards.
+                    </Text>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Grid>
+        </Grid.Container>
+      </Row>
+      <Spacer y={3}></Spacer>
+
+      <Text h3>Recent tips</Text>
       {tips && tips.length > 0 && (
         <Grid.Container justify="center" gap={1}>
           {tips.map((tip) => {
