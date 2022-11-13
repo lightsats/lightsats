@@ -59,7 +59,7 @@ export function AppNavbar() {
         icon: <HomeIcon />,
       },
       {
-        name: "Scoreboard",
+        name: "Leaderboard",
         href: Routes.scoreboard,
         icon: <ChartBarIcon />,
       },
@@ -135,7 +135,7 @@ export function AppNavbar() {
               <Icon>
                 <ChartBarIcon></ChartBarIcon>
               </Icon>
-              &nbsp;Scoreboard
+              &nbsp;Leaderboard
             </Navbar.Link>
             <Navbar.Item hideIn="xs">
               <NextLink href={Routes.newTip}>
