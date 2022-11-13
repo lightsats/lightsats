@@ -112,7 +112,7 @@ const ClaimTipPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Lightsats⚡ - Claim gift</title>
+        <title>Lightsats⚡ - Claim tip</title>
       </Head>
       {isLoading ? (
         <>
@@ -126,9 +126,7 @@ const ClaimTipPage: NextPage = () => {
         </>
       ) : isTipper ? (
         <>
-          <Text>You created this tip so cannot claim it. 😥</Text>
-          <Spacer />
-          <BackButton />
+          <ClaimTipView publicTip={publicTip} />
         </>
       ) : hasExpired ? (
         <>

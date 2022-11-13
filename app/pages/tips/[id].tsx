@@ -179,7 +179,7 @@ const TipPage: NextPage = () => {
           <>
             <Spacer />
             <Button onClick={reclaimTip} color="error">
-              Reclaim Tip
+              Reclaim tip
             </Button>
           </>
         )}

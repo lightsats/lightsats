@@ -79,7 +79,7 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
             </Row>
             <Row css={{ mt: 6 }}>
               <Text color="white" small>
-                created &nbsp;
+                created&nbsp;
                 {formatDistanceStrict(
                   Date.now(),
                   new Date(publicTip.created)
