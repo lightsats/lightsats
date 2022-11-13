@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <AppErrorBoundary>
         <NextUIProvider theme={theme}>
-          <Toaster />
+          <Toaster position="bottom-center" />
           <SessionProvider session={pageProps.session}>
             <Layout>
               <Component {...pageProps} />
