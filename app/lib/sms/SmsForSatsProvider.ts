@@ -10,12 +10,13 @@ if (!walletApiKey) {
 }
 
 export const smsForSatsProvider: SMSProvider = {
-  name: "smsforsats.com",
+  name: "sms4sats.com",
   isAvailable: !!walletApiKey,
   sendMessage: async (to, body) => {
     if (!walletApiKey) {
       throw new Error("walletApiKey is undefined");
     }
+    const createOrderStartTime = Date.now();
     let order: CreateOrderResponse;
     try {
       order = await createOrder(to, body);
@@ -23,8 +24,15 @@ export const smsForSatsProvider: SMSProvider = {
       console.error("SmsForSats: failed to create order", error);
       return false;
     }
+    console.log(
+      smsForSatsProvider.name +
+        ": created order in " +
+        (Date.now() - createOrderStartTime) +
+        "ms"
+    );
 
     try {
+      const payInvoiceStartTime = Date.now();
       const { payInvoiceResponse } = await payInvoice(
         order.payreq,
         walletApiKey
@@ -37,19 +45,31 @@ export const smsForSatsProvider: SMSProvider = {
             order.orderId
         );
       }
+      console.log(
+        smsForSatsProvider.name +
+          ": paid invoice in " +
+          (Date.now() - payInvoiceStartTime) +
+          "ms"
+      );
     } catch (error) {
       console.error(smsForSatsProvider.name + ": failed to fund order", error);
       return false;
     }
-
+    const pollOrderStartTime = Date.now();
     for (let i = 0; i < MAX_POLL_ATTEMPTS; i++) {
       try {
         const updatedOrder = await getOrder(order.orderId);
         console.log(
-          "Polling " + smsForSatsProvider.name + " order " + order.orderId,
+          smsForSatsProvider.name + ": Polling " + " order " + order.orderId,
           updatedOrder
         );
         if (updatedOrder.smsStatus === "delivered") {
+          console.log(
+            smsForSatsProvider.name +
+              ": order updated to delivered status in " +
+              (Date.now() - pollOrderStartTime) +
+              "ms"
+          );
           return true;
         } else if (updatedOrder.smsStatus === "failed") {
           throw new Error("order " + order.orderId + " failed to be sent");
@@ -57,8 +77,8 @@ export const smsForSatsProvider: SMSProvider = {
         await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (error) {
         console.error(
-          "Failed to poll " +
-            smsForSatsProvider.name +
+          smsForSatsProvider.name +
+            ": Failed to poll " +
             " order " +
             order.orderId,
           error
