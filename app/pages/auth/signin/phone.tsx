@@ -8,6 +8,7 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
+import { StatusCodes } from "http-status-codes";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -91,7 +92,13 @@ export default function PhoneSignIn({
             console.error(
               "Failed to create phone login link: " + result.status
             );
-            toast.error("Something went wrong. Please try again.");
+            if (result.status === StatusCodes.NOT_FOUND) {
+              toast.error(
+                "It looks like an account doesn't exist for this phone number. Please try email or lightning login instead."
+              );
+            } else {
+              toast.error("Something went wrong. Please try again.");
+            }
           } else {
             router.push(Routes.checkPhone);
           }
