@@ -193,6 +193,7 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
             : t("youHaveBeenGifted")}
         </Text>
       </Row>
+      <Spacer y={0.5} />
       <Text h1>
         <FiatPrice
           currency={tipCurrency}
@@ -201,11 +202,13 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
           showApprox={false}
         />
       </Text>
-      <Spacer y={-0.5} />
-      <Text>{publicTip.amount} sats</Text>
+      <Spacer y={-0.75} />
+      <Text size={18} b color="$gray">
+        {publicTip.amount} sats
+      </Text>
       <Spacer />
       <Note note={publicTip.note} />
-
+      <Spacer y={2} />
       {
         <>
           <Login
@@ -240,7 +243,7 @@ function Note({ note }: { note: string | null }) {
       <Row justify="center" align="center">
         💬
         <Spacer x={0.25} />
-        <Text size="small">{note}</Text>
+        <Text i>{note}</Text>
       </Row>
     </>
   ) : null;
