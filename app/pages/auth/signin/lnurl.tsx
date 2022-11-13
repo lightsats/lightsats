@@ -69,7 +69,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
 
   return (
     <>
-      <Card>
+      <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
           <Row justify="center">
             {qr ? (

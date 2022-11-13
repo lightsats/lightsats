@@ -19,7 +19,7 @@ export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
 
   return (
     <>
-      <Card>
+      <Card css={{ dropShadow: "$xs" }}>
         <Card.Header>
           <Row>
             <Col>

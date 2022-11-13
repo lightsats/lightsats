@@ -229,7 +229,7 @@ const NewTip: NextPage = () => {
       </Text>
       <Spacer />
       <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-        <Card>
+        <Card css={{ dropShadow: "$sm" }}>
           <Card.Body>
             <Tooltip
               content={
@@ -324,6 +324,7 @@ const NewTip: NextPage = () => {
                     aria-label="amount"
                     fullWidth
                     bordered
+                    autoFocus
                   />
                 )}
               />

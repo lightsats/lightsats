@@ -104,7 +104,7 @@ function GuideCard({ guide }: GuideCardProps) {
     <NextLink href={guide.link}>
       <a style={{ width: "100%" }}>
         <Grid css={{ size: "100%" }}>
-          <Card isHoverable isPressable>
+          <Card isHoverable isPressable css={{ dropShadow: "$sm" }}>
             <Card.Body>
               <Row>
                 <Button color="primary" auto flat css={{ px: 8 }}>

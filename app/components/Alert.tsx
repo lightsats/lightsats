@@ -9,8 +9,8 @@ export function Alert(props: Props) {
   return (
     <Card
       color="$warning"
-      variant="flat"
       css={{
+        dropShadow: "$sm",
         backgroundColor: "$warningLight",
         borderColor: "$warningBorder",
       }}

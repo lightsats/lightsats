@@ -220,7 +220,7 @@ const Withdraw: NextPage = () => {
               </Text>
               <Spacer />
               <FlexBox>
-                <Card>
+                <Card css={{ dropShadow: "$sm" }}>
                   <Card.Header>
                     <Row justify="center">
                       <Text>

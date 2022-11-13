@@ -90,7 +90,7 @@ export default function EmailSignIn({
 
   return (
     <>
-      <Card>
+      <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
           <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
             <Controller
