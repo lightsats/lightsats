@@ -1,5 +1,6 @@
-import { WalletIcon } from "@heroicons/react/24/solid";
+import { InformationCircleIcon, WalletIcon } from "@heroicons/react/24/solid";
 import {
+  Badge,
   Button,
   Card,
   Col,
@@ -8,6 +9,7 @@ import {
   Row,
   Spacer,
   Text,
+  Tooltip,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
@@ -38,7 +40,7 @@ export function Tips() {
   );
 
   if (session && !tips) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
 
   const reclaimedTips = tips?.filter((tip) => tip.status === "RECLAIMED");
@@ -47,21 +49,36 @@ export function Tips() {
     <>
       {reclaimedTips && reclaimedTips.length > 0 && (
         <>
-          <Card variant="bordered">
+          <Spacer y={2} />
+
+          <Row justify="center">
+            <Text h3>Returned tips</Text>
+            <Tooltip
+              content="Expired or reclaimed tips return back to you. ✌️"
+              color="primary"
+            >
+              &nbsp;
+              <Text color="primary">
+                <Icon style={{ color: "$primary" }}>
+                  <InformationCircleIcon />
+                </Icon>
+              </Text>
+            </Tooltip>
+          </Row>
+          <Card css={{ dropShadow: "$sm" }}>
             <Card.Body>
               <Row justify="space-between" align="center">
                 <Col>
-                  <Text size={24} b>
+                  <Text size="$lg" b>
                     {reclaimedTips
                       .map((tip) => tip.amount)
                       .reduce((a, b) => a + b)}
                     &nbsp;sats
                   </Text>
-                  <Text>&nbsp;from reclaimed tips</Text>
                 </Col>
                 <NextLink href={Routes.tipperWithdraw}>
                   <a>
-                    <Button auto color="primary">
+                    <Button auto color="secondary">
                       <Icon>
                         <WalletIcon />
                       </Icon>
@@ -72,10 +89,10 @@ export function Tips() {
               </Row>
             </Card.Body>
           </Card>
-          <Spacer />
+          <Spacer y={2} />
         </>
       )}
-      <Text h3>🙌 Your tips</Text>
+      <Text h3>Recent tips</Text>
       {tips && tips.length > 0 && (
         <Grid.Container justify="center" gap={1}>
           {tips.map((tip) => {
@@ -91,6 +108,29 @@ export function Tips() {
                         <Row justify="space-between">
                           <Text color="#F8AF43">
                             <TipStatusBadge status={tip.status} />
+                            {!hasExpired &&
+                              expirableTipStatuses.indexOf(tip.status) >= 0 && (
+                                <Badge
+                                  color="primary"
+                                  variant="flat"
+                                  size="xs"
+                                  css={{
+                                    letterSpacing: 0,
+                                    fontWeight: 400,
+                                  }}
+                                >
+                                  ⌛{" "}
+                                  {formatDistance(
+                                    new Date(tip.expiry),
+                                    Date.now()
+                                  )}
+                                </Badge>
+                              )}
+                            {hasExpired && (
+                              <Badge variant="flat" color="warning" size="xs">
+                                ⌛ Expired
+                              </Badge>
+                            )}
                           </Text>
                           <Text b>
                             <FiatPrice
@@ -106,37 +146,15 @@ export function Tips() {
                         </Row>
                         <Row justify="space-between">
                           <Text>
-                            {formatDistance(Date.now(), new Date(tip.created))}{" "}
+                            &nbsp;
+                            {formatDistance(
+                              Date.now(),
+                              new Date(tip.created)
+                            )}{" "}
                             ago
                           </Text>
                           <Text>{tip.amount} sats</Text>
                         </Row>
-                        {/* <Row justify="space-between" align="center">
-
-                          <Spacer x={0.25} />
-                          
-                        </Row>
-                        <Spacer y={0.5} />
-                        <Row justify="space-between" align="center">
-                          <Text small>
-                            
-                          </Text>
-                          {!hasExpired &&
-                            expirableTipStatuses.indexOf(tip.status) >= 0 && (
-                              <Text small>
-                                Expires in{" "}
-                                {formatDistance(
-                                  new Date(tip.expiry),
-                                  Date.now()
-                                )}
-                              </Text>
-                            )}
-                          {hasExpired && (
-                            <Text color="error" small>
-                              Expired
-                            </Text>
-                          )}
-                        </Row> */}
                       </Card.Body>
                     </Card>
                   </a>
