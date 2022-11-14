@@ -42,7 +42,8 @@ const ClaimTipPage: NextPage = () => {
     if (
       publicTip &&
       !publicTip.claimLinkViewed &&
-      (!session || session.user.id !== publicTip.tipperId)
+      ((!session && sessionStatus !== "loading") ||
+        (session && session.user.id !== publicTip.tipperId))
     ) {
       (async () => {
         const result = await fetch(`/api/tippee/tips/${id}/view`, {
@@ -54,7 +55,7 @@ const ClaimTipPage: NextPage = () => {
         }
       })();
     }
-  }, [id, publicTip, session]);
+  }, [id, publicTip, session, sessionStatus]);
 
   const hasExpired = publicTip && hasTipExpired(publicTip);
 
