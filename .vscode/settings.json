@@ -3,7 +3,7 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports": true
   },
-  "dotenv.enableAutocloaking": true,
+  "dotenv.enableAutocloaking": false,
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
