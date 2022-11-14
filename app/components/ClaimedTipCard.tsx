@@ -14,12 +14,8 @@ import { ExpiryBadge } from "components/ExpiryBadge";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
-import { formatDistanceStrict, isAfter } from "date-fns";
-import {
-  DEFAULT_FIAT_CURRENCY,
-  DEFAULT_NAME,
-  expirableTipStatuses,
-} from "lib/constants";
+import { formatDistanceStrict } from "date-fns";
+import { DEFAULT_FIAT_CURRENCY, DEFAULT_NAME } from "lib/constants";
 import { bitcoinJourneyPages } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { getAvatarUrl } from "lib/utils";
@@ -50,11 +46,6 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
       ? "success"
       : "warning";
 
-  const hasExpired =
-    publicTip &&
-    expirableTipStatuses.indexOf(publicTip.status) >= 0 &&
-    isAfter(new Date(), new Date(publicTip.expiry));
-
   return (
     <Card css={{ background: "$gray900", dropShadow: "$sm" }}>
       <Card.Body>
@@ -75,7 +66,7 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
                   (viewing === "tippee" ? publicTip.tippeeName : undefined) ??
                   DEFAULT_NAME}
               </Text>
-              <ExpiryBadge tip={publicTip} />
+              <ExpiryBadge tip={publicTip} viewing={viewing} />
             </Row>
             <Row css={{ mt: 6 }}>
               <Text color="white" small>
