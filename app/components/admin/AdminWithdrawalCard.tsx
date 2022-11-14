@@ -1,10 +1,13 @@
-import { Card } from "@nextui-org/react";
-import { Withdrawal } from "@prisma/client";
+import { Card, Col, Row, Text } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
+import { NextUIUser } from "components/NextUIUser";
+import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
+import { getUserAvatarUrl } from "lib/utils";
+import { AdminExtendedWithdrawal } from "types/Admin";
 
 type AdminWithdrawalCardProps = {
-  withdrawal: Withdrawal;
+  withdrawal: AdminExtendedWithdrawal;
 };
 
 export function AdminWithdrawalCard({ withdrawal }: AdminWithdrawalCardProps) {
@@ -12,7 +15,25 @@ export function AdminWithdrawalCard({ withdrawal }: AdminWithdrawalCardProps) {
     <NextLink href={`${Routes.adminWithdrawals}/${withdrawal.id}`} passHref>
       <a style={{ width: "100%" }}>
         <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
-          <Card.Body>{withdrawal.id}</Card.Body>
+          <Card.Body>
+            <Row justify="space-between">
+              <Col>
+                <Text>{withdrawal.id}</Text>
+                <Text>
+                  {withdrawal.tips.length
+                    ? withdrawal.tips
+                        .map((tip) => tip.amount)
+                        .reduce((a, b) => a + b)
+                    : 0}{" "}
+                  sats
+                </Text>
+              </Col>
+              <NextUIUser
+                name={withdrawal.user.name ?? DEFAULT_NAME}
+                src={getUserAvatarUrl(withdrawal.user)}
+              />
+            </Row>
+          </Card.Body>
         </Card>
       </a>
     </NextLink>

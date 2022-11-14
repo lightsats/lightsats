@@ -1,10 +1,10 @@
 import { Grid, Spacer } from "@nextui-org/react";
-import { Withdrawal } from "@prisma/client";
 import { AdminWithdrawalCard } from "components/admin/AdminWithdrawalCard";
 import { usePagination } from "hooks/usePagination";
+import { AdminExtendedWithdrawal } from "types/Admin";
 
 type AdminWithdrawalsListProps = {
-  withdrawals: Withdrawal[];
+  withdrawals: AdminExtendedWithdrawal[];
 };
 
 export function AdminWithdrawalsList({

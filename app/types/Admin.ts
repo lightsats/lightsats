@@ -5,9 +5,7 @@ export type AdminDashboard = {
   users: User[];
   lnbitsDashboardUrl: string;
   tips: Tip[];
-  withdrawals: (Withdrawal & {
-    tips: Tip[];
-  })[];
+  withdrawals: AdminExtendedWithdrawal[];
   walletBalance: number;
   smsWalletBalance: number;
 };
@@ -23,7 +21,7 @@ export type AdminExtendedUser = User & {
 export type AdminExtendedTip = Tip & {
   tipper: User;
   tippee: User | null;
-  withdrawal: (Withdrawal & { user: User }) | null;
+  withdrawal: AdminExtendedWithdrawal | null;
   lnbitsWallet: LnbitsWallet | null;
   lnbitsWalletUrl: string | undefined;
   walletBalance: number;

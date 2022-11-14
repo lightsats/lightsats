@@ -46,6 +46,7 @@ async function handleGetTip(
       withdrawal: {
         include: {
           user: true,
+          tips: true,
         },
       },
       lnbitsWallet: true,
