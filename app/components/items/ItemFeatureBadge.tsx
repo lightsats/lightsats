@@ -12,7 +12,7 @@ export function ItemFeatureBadge({
   variant = "success",
 }: ItemFeatureBadgeProps) {
   return (
-    <Badge>
+    <Badge variant="flat">
       <Icon width={12} height={12}>
         {variant === "success" ? <CheckIcon /> : <XMarkIcon />}
       </Icon>

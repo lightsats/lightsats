@@ -42,7 +42,8 @@ const ClaimTipPage: NextPage = () => {
     if (
       publicTip &&
       !publicTip.claimLinkViewed &&
-      (!session || session.user.id !== publicTip.tipperId)
+      ((!session && sessionStatus !== "loading") ||
+        (session && session.user.id !== publicTip.tipperId))
     ) {
       (async () => {
         const result = await fetch(`/api/tippee/tips/${id}/view`, {
@@ -54,7 +55,7 @@ const ClaimTipPage: NextPage = () => {
         }
       })();
     }
-  }, [id, publicTip, session]);
+  }, [id, publicTip, session, sessionStatus]);
 
   const hasExpired = publicTip && hasTipExpired(publicTip);
 
@@ -109,7 +110,7 @@ const ClaimTipPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Lightsats⚡ - Claim gift</title>
+        <title>Lightsats⚡ - Claim tip</title>
       </Head>
       {isLoading ? (
         <>
@@ -123,9 +124,7 @@ const ClaimTipPage: NextPage = () => {
         </>
       ) : isTipper ? (
         <>
-          <Text>You created this tip so cannot claim it. 😥</Text>
-          <Spacer />
-          <BackButton />
+          <ClaimTipView publicTip={publicTip} />
         </>
       ) : hasExpired ? (
         <>
@@ -190,6 +189,7 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
             : t("youHaveBeenGifted")}
         </Text>
       </Row>
+      <Spacer y={0.5} />
       <Text h1>
         <FiatPrice
           currency={tipCurrency}
@@ -198,11 +198,13 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
           showApprox={false}
         />
       </Text>
-      <Spacer y={-0.5} />
-      <Text>{publicTip.amount} sats</Text>
+      <Spacer y={-0.75} />
+      <Text size={18} b color="$gray">
+        {publicTip.amount} sats
+      </Text>
       <Spacer />
       <Note note={publicTip.note} />
-
+      <Spacer y={2} />
       {
         <>
           <Login
@@ -237,7 +239,7 @@ function Note({ note }: { note: string | null }) {
       <Row justify="center" align="center">
         💬
         <Spacer x={0.25} />
-        <Text size="small">{note}</Text>
+        <Text i>{note}</Text>
       </Row>
     </>
   ) : null;

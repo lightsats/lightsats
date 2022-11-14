@@ -220,7 +220,12 @@ const Withdraw: NextPage = () => {
               </Text>
               <Spacer />
               <FlexBox>
-                <Card css={{ dropShadow: "$sm" }}>
+                <Card
+                  color="primary"
+                  css={{
+                    dropShadow: "$sm",
+                  }}
+                >
                   <Card.Header>
                     <Row justify="center">
                       <Text>
@@ -241,7 +246,7 @@ const Withdraw: NextPage = () => {
                   </Card.Body>
                   <Card.Divider />
                   <Card.Footer>
-                    <Row justify="center">
+                    <Row justify="space-between">
                       <Button
                         auto
                         color="secondary"
@@ -252,7 +257,6 @@ const Withdraw: NextPage = () => {
                         </Icon>
                         Copy
                       </Button>
-                      <Spacer x={0.75} />
                       <NextLink href={`lightning:${withdrawalLinkLnurl}`}>
                         <a>
                           <Button auto>
@@ -270,7 +274,7 @@ const Withdraw: NextPage = () => {
             </>
           ) : (
             <>
-              <Loading type="default" color="currentColor" size="sm" />
+              <Loading />
             </>
           )}
           <Spacer y={1} />

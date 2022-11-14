@@ -16,7 +16,7 @@ type ItemsListProps = {
   checkTippeeBalance: boolean;
 };
 
-const collapseGroupCss: CSS = { px: 0, width: "100%" };
+const collapseGroupCss: CSS = { width: "100%" };
 
 export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
   const session = useSession();
@@ -52,9 +52,9 @@ export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
 
   return (
     <>
-      {otherItems.length > 0 && <h4>Recommended Wallets</h4>}
+      {otherItems.length > 0 && <h4>Recommended wallets</h4>}
 
-      <Collapse.Group shadow>
+      <Collapse.Group shadow css={collapseGroupCss}>
         {recommendedItems.map((item) => (
           <ItemCard key={item.name} item={item} />
         ))}
@@ -63,9 +63,8 @@ export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
       {otherItems.length > 0 && (
         <>
           <Spacer />
-          <Text h3>More Wallets</Text>
-
-          <Collapse.Group css={collapseGroupCss}>
+          <Text h4>More wallets</Text>
+          <Collapse.Group shadow css={collapseGroupCss}>
             {otherItems.map((item) => (
               <ItemCard key={item.name} item={item} />
             ))}

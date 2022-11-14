@@ -1,5 +1,5 @@
 import { ClipboardIcon } from "@heroicons/react/24/solid";
-import { Button, Card, Loading, Row, Spacer, Text } from "@nextui-org/react";
+import { Button, Card, Loading, Row, Spacer } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
@@ -83,8 +83,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
             ) : (
               <>
                 <Spacer />
-                <Loading type="default" />
-                <Text>Generating QR code...</Text>
+                <Loading>Generating QR code...</Loading>
               </>
             )}
           </Row>

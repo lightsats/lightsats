@@ -34,13 +34,13 @@ const Home: NextPage = () => {
           {user?.userType === "tipper" && (
             <>
               <Alert>⚠️ This project is currently in BETA.</Alert>
-              <Spacer />
             </>
           )}
-          <UserCard userId={user.id} />
           <Spacer />
           {user?.userType === "tipper" ? (
             <>
+              <UserCard userId={user.id} />
+              <Spacer />
               <NewTipButton />
               <Spacer />
               <Tips />

@@ -162,16 +162,29 @@ export function Tips() {
                             />
                           </Text>
                         </Row>
-                        <Row justify="space-between">
-                          <Text>
-                            &nbsp;
-                            {formatDistance(
-                              Date.now(),
-                              new Date(tip.created)
-                            )}{" "}
-                            ago
-                          </Text>
-                          <Text>{tip.amount} sats</Text>
+                        <Spacer y={0.5} />
+                        <Row justify="space-between" align="flex-end">
+                          <Row align="center">
+                            {tip.tippeeName && (
+                              <>
+                                <Text size="small">To {tip.tippeeName}</Text>
+                                <Spacer x={0.25} />
+                                •
+                                <Spacer x={0.25} />
+                              </>
+                            )}
+                            <Text size="small">
+                              Created&nbsp;
+                              {formatDistance(
+                                Date.now(),
+                                new Date(tip.created)
+                              )}{" "}
+                              ago
+                            </Text>
+                          </Row>
+                          <Row css={{ flexShrink: 0 }} fluid={false}>
+                            <Text size="small">{tip.amount} sats</Text>
+                          </Row>
                         </Row>
                       </Card.Body>
                     </Card>
