@@ -1,4 +1,5 @@
 import { Pagination } from "@nextui-org/react";
+import { DEFAULT_PAGE_SIZE } from "lib/constants";
 import React from "react";
 
 type UsePaginationResult<T> = {
@@ -6,7 +7,7 @@ type UsePaginationResult<T> = {
   paginationComponent: React.ReactNode | undefined;
 };
 
-export function usePagination<T>(items: T[], pageSize = 10) {
+export function usePagination<T>(items: T[], pageSize = DEFAULT_PAGE_SIZE) {
   const [page, setPage] = React.useState(1);
   const pageItems = React.useMemo(
     () => items.slice((page - 1) * pageSize, page * pageSize),

@@ -4,6 +4,7 @@ import { NextLink } from "components/NextLink";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistance } from "date-fns";
 import { usePagination } from "hooks/usePagination";
+import { DEFAULT_PAGE_SIZE } from "lib/constants";
 import { Routes } from "lib/Routes";
 import React from "react";
 import create from "zustand";
@@ -25,15 +26,17 @@ type AdminTipsStore = {
   filters: TipFilter[];
   setSortType(sortType: TipsSortType): void;
   setSortDirection(sortDirection: SortDirectionType): void;
+  setFilters(filters: TipFilter[]): void;
 };
 
 const useAdminTipsStore = create<AdminTipsStore>((set) => ({
   sortType: "date",
   sortDirection: "desc",
-  filters: [],
+  filters: Object.values(TipStatus),
   setSortType: (sortType: TipsSortType) => set(() => ({ sortType })),
   setSortDirection: (sortDirection: SortDirectionType) =>
     set(() => ({ sortDirection })),
+  setFilters: (filters: TipFilter[]) => set(() => ({ filters })),
 }));
 
 export function AdminTipsList({ tips }: AdminTipsListProps) {
@@ -60,12 +63,20 @@ export function AdminTipsList({ tips }: AdminTipsListProps) {
   );
 
   const { pageItems, paginationComponent } = usePagination(
-    sortedAndFilteredTips
+    sortedAndFilteredTips,
+    DEFAULT_PAGE_SIZE
   );
 
   return (
     <>
       <SortFilterTips />
+      <Text>
+        Filtered {sortedAndFilteredTips.length} / {tips.length} tips (
+        {sortedAndFilteredTips.length
+          ? sortedAndFilteredTips.map((t) => t.amount).reduce((a, b) => a + b)
+          : 0}{" "}
+        sats)
+      </Text>
       <Spacer />
       {paginationComponent}
       {paginationComponent ? <Spacer /> : undefined}
@@ -96,6 +107,10 @@ export function AdminTipsList({ tips }: AdminTipsListProps) {
           </Grid>
         ))}
       </Grid.Container>
+      {paginationComponent && pageItems.length === DEFAULT_PAGE_SIZE ? (
+        <Spacer />
+      ) : undefined}
+      {pageItems.length === DEFAULT_PAGE_SIZE ? paginationComponent : undefined}
     </>
   );
 }
@@ -135,9 +150,36 @@ function SortFilterTips() {
           </Button>
         ))}
       </Row>
-      {/* <Row>
-        <Text h4>Filter: {tipsStore.filters.join(",")} </Text>
-      </Row> */}
+      <Spacer />
+      <Row>
+        <Text h6>Filter</Text>
+        <Grid.Container gap={1}>
+          {Object.values(TipStatus).map((tipStatus) => (
+            <Grid key={tipStatus}>
+              <Button
+                auto
+                bordered={tipsStore.filters.indexOf(tipStatus) < 0}
+                onClick={() => {
+                  const isAlreadySelected =
+                    tipsStore.filters.indexOf(tipStatus) > -1;
+                  const otherFilters = tipsStore.filters.filter(
+                    (f) => f !== tipStatus
+                  );
+                  useAdminTipsStore
+                    .getState()
+                    .setFilters([
+                      ...otherFilters,
+                      ...(isAlreadySelected ? [] : [tipStatus]),
+                    ]);
+                }}
+                size="sm"
+              >
+                {tipStatus}
+              </Button>
+            </Grid>
+          ))}
+        </Grid.Container>
+      </Row>
     </Col>
   );
 }
