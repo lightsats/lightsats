@@ -5,6 +5,8 @@ export function TipStatusBadge({ status }: { status: TipStatus }) {
   return (
     <Badge
       css={{
+        letterSpacing: 0,
+        textTransform: "capitalize",
         backgroundColor:
           status === "UNFUNDED"
             ? "$error"
@@ -17,7 +19,7 @@ export function TipStatusBadge({ status }: { status: TipStatus }) {
             : "$default",
       }}
     >
-      {status}
+      {status.toLowerCase()}
     </Badge>
   );
 }

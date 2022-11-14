@@ -1,8 +1,8 @@
 import { Tip } from "@prisma/client";
-import { isAfter } from "date-fns";
 import { StatusCodes } from "http-status-codes";
 import prisma from "lib/prismadb";
 import { stageTip } from "lib/stageTip";
+import { hasTipExpired } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -45,7 +45,7 @@ async function handleClaimTip(
     return;
   }
 
-  const hasExpired = isAfter(new Date(), new Date(tip.expiry));
+  const hasExpired = hasTipExpired(tip);
 
   if (
     tip.tippeeId ||
