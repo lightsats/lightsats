@@ -2,14 +2,14 @@ import { Avatar, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
 import { Login } from "components/Login";
-import { formatDistance, isAfter } from "date-fns";
+import { formatDistance } from "date-fns";
 import { useDateFnsLocale } from "hooks/useDateFnsLocale";
 
-import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
+import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { getAvatarUrl, getCurrentUrl } from "lib/utils";
+import { getAvatarUrl, getCurrentUrl, hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
@@ -56,10 +56,7 @@ const ClaimTipPage: NextPage = () => {
     }
   }, [id, publicTip, session]);
 
-  const hasExpired =
-    publicTip &&
-    expirableTipStatuses.indexOf(publicTip.status) >= 0 &&
-    isAfter(new Date(), new Date(publicTip.expiry));
+  const hasExpired = publicTip && hasTipExpired(publicTip);
 
   const canClaim =
     publicTip &&

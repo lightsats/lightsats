@@ -6,12 +6,11 @@ import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTra
 import { PayTipInvoice } from "components/tipper/TipPage/PayTipInvoice";
 import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
-import { isAfter } from "date-fns";
 import { useScoreboardPosition } from "hooks/useScoreboardPosition";
-import { expirableTipStatuses, refundableTipStatuses } from "lib/constants";
+import { refundableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { nth } from "lib/utils";
+import { hasTipExpired, nth } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -53,10 +52,7 @@ const TipPage: NextPage = () => {
     setPrevTipStatus(tipStatus);
   }, [prevTipStatus, tipStatus]);
 
-  const hasExpired =
-    tip &&
-    expirableTipStatuses.indexOf(tip.status) >= 0 &&
-    isAfter(new Date(), new Date(tip.expiry));
+  const hasExpired = tip && hasTipExpired(tip);
 
   React.useEffect(() => {
     if (tipStatus === "UNFUNDED" && !hasExpired && tipInvoice) {

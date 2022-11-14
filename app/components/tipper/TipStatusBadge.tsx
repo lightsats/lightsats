@@ -14,8 +14,15 @@ export function TipStatusBadge({ status }: { status: TipStatus }) {
       : "default";
 
   return (
-    <Badge variant="flat" color={color}>
-      {status}
+    <Badge
+      variant="flat"
+      color={color}
+      css={{
+        letterSpacing: 0,
+        textTransform: "capitalize",
+      }}
+    >
+      {status.toLowerCase()}
     </Badge>
   );
 }
