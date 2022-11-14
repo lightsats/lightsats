@@ -110,26 +110,44 @@ export function Tips() {
                             <TipStatusBadge status={tip.status} />
                             {!hasExpired &&
                               expirableTipStatuses.indexOf(tip.status) >= 0 && (
-                                <Badge
+                                <Tooltip
+                                  content={`Expires in ${formatDistance(
+                                    new Date(),
+                                    new Date(tip.expiry)
+                                  )}`}
                                   color="primary"
-                                  variant="flat"
-                                  size="xs"
-                                  css={{
-                                    letterSpacing: 0,
-                                    fontWeight: 400,
-                                  }}
+                                  triggerCss={{ display: "inline" }}
                                 >
-                                  ⌛{" "}
-                                  {formatDistance(
-                                    new Date(tip.expiry),
-                                    Date.now()
-                                  )}
-                                </Badge>
+                                  <Badge
+                                    color="primary"
+                                    variant="flat"
+                                    size="xs"
+                                    css={{
+                                      letterSpacing: 0,
+                                      fontWeight: 400,
+                                    }}
+                                  >
+                                    ⌛{" "}
+                                    {formatDistance(
+                                      new Date(tip.expiry),
+                                      Date.now()
+                                    )}
+                                  </Badge>
+                                </Tooltip>
                               )}
                             {hasExpired && (
-                              <Badge variant="flat" color="warning" size="xs">
-                                ⌛ Expired
-                              </Badge>
+                              <Tooltip
+                                content={`Expired ${formatDistance(
+                                  new Date(),
+                                  new Date(tip.expiry)
+                                )} ago`}
+                                color="primary"
+                                triggerCss={{ display: "inline" }}
+                              >
+                                <Badge variant="flat" color="warning" size="xs">
+                                  ⌛ Expired
+                                </Badge>
+                              </Tooltip>
                             )}
                           </Text>
                           <Text b>
