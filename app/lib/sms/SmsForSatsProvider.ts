@@ -11,7 +11,8 @@ if (!walletApiKey) {
 
 export const smsForSatsProvider: SMSProvider = {
   name: "sms4sats.com",
-  isAvailable: !!walletApiKey,
+  isAvailable:
+    !!walletApiKey && process.env.EXPERIMENTAL_SMS_FOR_SATS === "true",
   sendMessage: async (to, body) => {
     if (!walletApiKey) {
       throw new Error("walletApiKey is undefined");
