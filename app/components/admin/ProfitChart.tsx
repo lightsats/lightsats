@@ -30,7 +30,12 @@ type ProfitChartProps = {
 
 export function ProfitChart({ withdrawals }: ProfitChartProps) {
   const withdrawalDates = Array.from(
-    new Set(withdrawals.map((w) => getDateLabel(new Date(w.created))))
+    new Set(
+      withdrawals
+        .map((withdrawal) => new Date(withdrawal.created))
+        .sort((a, b) => a.getTime() - b.getTime())
+        .map((date) => getDateLabel(new Date(date)))
+    )
   );
 
   const withdrawalRoutingFees = withdrawalDates.map((date) => {
