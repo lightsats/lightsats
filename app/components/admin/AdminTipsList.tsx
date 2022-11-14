@@ -1,10 +1,9 @@
 import { Button, Card, Col, Grid, Row, Spacer, Text } from "@nextui-org/react";
 import { Tip, TipStatus } from "@prisma/client";
 import { NextLink } from "components/NextLink";
+import { Paginated, PaginatedPageProps } from "components/Paginated";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistance } from "date-fns";
-import { usePagination } from "hooks/usePagination";
-import { DEFAULT_PAGE_SIZE } from "lib/constants";
 import { Routes } from "lib/Routes";
 import React from "react";
 import create from "zustand";
@@ -62,11 +61,6 @@ export function AdminTipsList({ tips }: AdminTipsListProps) {
     [tips, tipsStore]
   );
 
-  const { pageItems, paginationComponent } = usePagination(
-    sortedAndFilteredTips,
-    DEFAULT_PAGE_SIZE
-  );
-
   return (
     <>
       <SortFilterTips />
@@ -78,40 +72,40 @@ export function AdminTipsList({ tips }: AdminTipsListProps) {
         sats)
       </Text>
       <Spacer />
-      {paginationComponent}
-      {paginationComponent ? <Spacer /> : undefined}
-      <Grid.Container justify="center" gap={1}>
-        {pageItems.map((tip) => (
-          <Grid key={tip.id} xs={12}>
-            <NextLink href={`${Routes.adminTips}/${tip.id}`} passHref>
-              <a style={{ width: "100%" }}>
-                <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
-                  <Card.Body>
-                    <Row justify="space-between">
-                      <Text b>{tip.id}</Text>
-
-                      <TipStatusBadge status={tip.status} />
-                    </Row>
-                    <Row justify="space-between">
-                      <Text>
-                        {formatDistance(new Date(), new Date(tip.created))} ago
-                      </Text>
-                      <Text>
-                        {tip.amount}⚡ ({tip.fee} sats fee)
-                      </Text>
-                    </Row>
-                  </Card.Body>
-                </Card>
-              </a>
-            </NextLink>
-          </Grid>
-        ))}
-      </Grid.Container>
-      {paginationComponent && pageItems.length === DEFAULT_PAGE_SIZE ? (
-        <Spacer />
-      ) : undefined}
-      {pageItems.length === DEFAULT_PAGE_SIZE ? paginationComponent : undefined}
+      <Paginated items={sortedAndFilteredTips} Render={AdminTipsListPage} />
     </>
+  );
+}
+
+function AdminTipsListPage({ pageItems }: PaginatedPageProps<Tip>) {
+  return (
+    <Grid.Container justify="center" gap={1}>
+      {pageItems.map((tip) => (
+        <Grid key={tip.id} xs={12}>
+          <NextLink href={`${Routes.adminTips}/${tip.id}`} passHref>
+            <a style={{ width: "100%" }}>
+              <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
+                <Card.Body>
+                  <Row justify="space-between">
+                    <Text b>{tip.id}</Text>
+
+                    <TipStatusBadge status={tip.status} />
+                  </Row>
+                  <Row justify="space-between">
+                    <Text>
+                      {formatDistance(new Date(), new Date(tip.created))} ago
+                    </Text>
+                    <Text>
+                      {tip.amount}⚡ ({tip.fee} sats fee)
+                    </Text>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </a>
+          </NextLink>
+        </Grid>
+      ))}
+    </Grid.Container>
   );
 }
 

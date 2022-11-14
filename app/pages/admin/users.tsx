@@ -1,6 +1,6 @@
-import { Grid, Loading, Spacer } from "@nextui-org/react";
+import { Grid, Loading } from "@nextui-org/react";
 import { AdminUserCard } from "components/admin/AdminUserCard";
-import { usePagination } from "hooks/usePagination";
+import { Paginated } from "components/Paginated";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -24,25 +24,24 @@ type AdminPageInternalProps = {
 };
 
 function AdminPageInternal({ adminDashboard }: AdminPageInternalProps) {
-  const { pageItems, paginationComponent } = usePagination(
-    adminDashboard.users
-  );
-
   return (
     <>
       <Head>
         <title>Lightsats⚡ - Admin - Users</title>
       </Head>
       <h1>Admin/Users</h1>
-      {paginationComponent}
-      {paginationComponent ? <Spacer /> : undefined}
-      <Grid.Container justify="center" gap={1}>
-        {pageItems.map((user) => (
-          <Grid key={user.id} xs={12}>
-            <AdminUserCard user={user} />
-          </Grid>
-        ))}
-      </Grid.Container>
+      <Paginated
+        items={adminDashboard.users}
+        Render={({ pageItems }) => (
+          <Grid.Container justify="center" gap={1}>
+            {pageItems.map((user) => (
+              <Grid key={user.id} xs={12}>
+                <AdminUserCard user={user} />
+              </Grid>
+            ))}
+          </Grid.Container>
+        )}
+      />
     </>
   );
 }
