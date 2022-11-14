@@ -8,6 +8,7 @@ import { UserCard } from "components/UserCard";
 import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
+import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
@@ -85,7 +86,8 @@ function TippeeHomepage() {
     defaultFetcher
   );
   const claimedTips = React.useMemo(
-    () => tips?.filter((tip) => tip.status === "CLAIMED"),
+    () =>
+      tips?.filter((tip) => tip.status === "CLAIMED" && !hasTipExpired(tip)),
     [tips]
   );
 

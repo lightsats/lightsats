@@ -17,10 +17,11 @@ import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
-import { formatDistance, isAfter } from "date-fns";
+import { formatDistance } from "date-fns";
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
+import { hasTipExpired } from "lib/utils";
 import { useSession } from "next-auth/react";
 import { CSSProperties } from "react";
 import useSWR from "swr";
@@ -96,9 +97,8 @@ export function Tips() {
       {tips && tips.length > 0 && (
         <Grid.Container justify="center" gap={1}>
           {tips.map((tip) => {
-            const hasExpired =
-              expirableTipStatuses.indexOf(tip.status) >= 0 &&
-              isAfter(new Date(), new Date(tip.expiry));
+            const hasExpired = hasTipExpired(tip);
+
             return (
               <Grid xs={12} key={tip.id} justify="center">
                 <NextLink href={`${Routes.tips}/${tip.id}`}>

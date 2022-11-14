@@ -1,10 +1,16 @@
-import { User } from "@prisma/client";
-import { format } from "date-fns";
-import { FEE_PERCENT, MINIMUM_FEE_SATS, SATS_TO_BTC } from "lib/constants";
+import { Tip, User } from "@prisma/client";
+import { format, isAfter } from "date-fns";
+import {
+  expirableTipStatuses,
+  FEE_PERCENT,
+  MINIMUM_FEE_SATS,
+  SATS_TO_BTC,
+} from "lib/constants";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { NextRouter } from "next/router";
 import { MouseEventHandler } from "react";
 import { Item } from "types/Item";
+import { PublicTip } from "types/PublicTip";
 
 export function getSatsAmount(fiat: number, exchangeRate: number) {
   return Math.ceil((fiat / exchangeRate) * SATS_TO_BTC);
@@ -85,3 +91,7 @@ export const getCurrentUrl = (router: NextRouter) => {
     ? window.location.href
     : getAppUrl() + getLocalePath(router.locale) + router.pathname;
 };
+
+export const hasTipExpired = (tip: Tip | PublicTip) =>
+  expirableTipStatuses.indexOf(tip.status) >= 0 &&
+  isAfter(new Date(), new Date(tip.expiry));
