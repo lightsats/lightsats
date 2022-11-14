@@ -1,20 +1,72 @@
-import { Card, Grid, Row, Spacer, Text } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
+import { Button, Card, Col, Grid, Row, Spacer, Text } from "@nextui-org/react";
+import { Tip, TipStatus } from "@prisma/client";
 import { NextLink } from "components/NextLink";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistance } from "date-fns";
 import { usePagination } from "hooks/usePagination";
 import { Routes } from "lib/Routes";
+import React from "react";
+import create from "zustand";
 
 type AdminTipsListProps = {
   tips: Tip[];
 };
 
+const TipSortTypes = ["date", "price"] as const;
+type TipsSortType = typeof TipSortTypes[number];
+type TipFilter = TipStatus;
+
+const SortDirectionTypes = ["asc", "desc"] as const;
+type SortDirectionType = typeof SortDirectionTypes[number];
+
+type AdminTipsStore = {
+  sortType: TipsSortType;
+  sortDirection: SortDirectionType;
+  filters: TipFilter[];
+  setSortType(sortType: TipsSortType): void;
+  setSortDirection(sortDirection: SortDirectionType): void;
+};
+
+const useAdminTipsStore = create<AdminTipsStore>((set) => ({
+  sortType: "date",
+  sortDirection: "desc",
+  filters: [],
+  setSortType: (sortType: TipsSortType) => set(() => ({ sortType })),
+  setSortDirection: (sortDirection: SortDirectionType) =>
+    set(() => ({ sortDirection })),
+}));
+
 export function AdminTipsList({ tips }: AdminTipsListProps) {
-  const { pageItems, paginationComponent } = usePagination(tips);
+  const tipsStore = useAdminTipsStore();
+  const sortedAndFilteredTips = React.useMemo(
+    () =>
+      tips
+        .filter(
+          (tip) =>
+            !tipsStore.filters.length ||
+            tipsStore.filters.indexOf(tip.status) > -1
+        )
+        .sort((a, b) => {
+          let diff = 0;
+          if (tipsStore.sortType === "date") {
+            diff =
+              new Date(a.created).getDate() - new Date(b.created).getDate();
+          } else {
+            diff = a.amount - b.amount;
+          }
+          return tipsStore.sortDirection === "desc" ? -diff : diff;
+        }),
+    [tips, tipsStore]
+  );
+
+  const { pageItems, paginationComponent } = usePagination(
+    sortedAndFilteredTips
+  );
 
   return (
     <>
+      <SortFilterTips />
+      <Spacer />
       {paginationComponent}
       {paginationComponent ? <Spacer /> : undefined}
       <Grid.Container justify="center" gap={1}>
@@ -45,5 +97,47 @@ export function AdminTipsList({ tips }: AdminTipsListProps) {
         ))}
       </Grid.Container>
     </>
+  );
+}
+
+function SortFilterTips() {
+  const tipsStore = useAdminTipsStore();
+  return (
+    <Col>
+      <Row align="center" css={{ gap: 10 }}>
+        <Text h6>Sort</Text>
+        {TipSortTypes.map((sortType) => (
+          <Button
+            auto
+            size="sm"
+            bordered={tipsStore.sortType !== sortType}
+            onClick={() => useAdminTipsStore.getState().setSortType(sortType)}
+            key={sortType}
+          >
+            {sortType}
+          </Button>
+        ))}
+      </Row>
+      <Spacer />
+      <Row align="center" css={{ gap: 10 }}>
+        <Text h6>Sort Direction</Text>
+        {SortDirectionTypes.map((sortDirection) => (
+          <Button
+            auto
+            bordered={tipsStore.sortDirection !== sortDirection}
+            onClick={() =>
+              useAdminTipsStore.getState().setSortDirection(sortDirection)
+            }
+            size="sm"
+            key={sortDirection}
+          >
+            {sortDirection}
+          </Button>
+        ))}
+      </Row>
+      {/* <Row>
+        <Text h4>Filter: {tipsStore.filters.join(",")} </Text>
+      </Row> */}
+    </Col>
   );
 }
