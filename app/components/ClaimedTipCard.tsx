@@ -61,7 +61,7 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
           <Spacer x={0.5} />
           <Col>
             <Row>
-              <Text b color="white">
+              <Text b color="white" css={{ mr: 10 }}>
                 {viewedUser?.name ??
                   (viewing === "tippee" ? publicTip.tippeeName : undefined) ??
                   DEFAULT_NAME}
