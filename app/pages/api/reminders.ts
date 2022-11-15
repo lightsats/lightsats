@@ -109,7 +109,7 @@ async function handleGetReminders(
         if (reminderType === "ONE_DAY_AFTER_CLAIM") {
           return differenceInHours(new Date(), tip.claimed) >= 24;
         } else if (reminderType === "ONE_DAY_BEFORE_EXPIRY") {
-          return differenceInHours(new Date(), tip.expiry) <= 24;
+          return differenceInHours(tip.expiry, new Date()) <= 24;
         } else {
           throw new Error("Unknown reminder type: " + reminderType);
         }
