@@ -20,6 +20,7 @@ import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import Head from "next/head";
+import toast from "react-hot-toast";
 import useSWR from "swr";
 import { AdminDashboard } from "types/Admin";
 
@@ -110,10 +111,22 @@ const AdminPage: NextPage = () => {
           <Text b>
             Wallet balance: {Math.floor(adminDashboard.walletBalance)} sats
           </Text>
-          <br />
+        </Text>
+      </Row>
+      <Row justify="center">
+        <Text
+          blockquote
+          css={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
           <Text b>
-            SMS balance: {Math.floor(adminDashboard.smsWalletBalance)} sats
+            sms4sats account balance:{" "}
+            {Math.floor(adminDashboard.smsForSatsAccountBalance)} sats
           </Text>
+          <Button onClick={() => toast.error("TODO")}>Fund account</Button>
         </Text>
       </Row>
       <Row justify="center" align="center">

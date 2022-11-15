@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { isAdmin } from "lib/admin/isAdmin";
 import { getWalletBalance } from "lib/lnbits/getWalletBalance";
 import prisma from "lib/prismadb";
+import { getSmsForSatsAccountBalance } from "lib/sms/SmsForSatsAccountProvider";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -44,14 +45,12 @@ async function handleGetAdminDashboard(
       console.error("Admin: Failed to retrieve admin wallet balance");
     }
   }
-  let smsWalletBalance = 0;
-  if (process.env.SMS_FOR_SATS_LNBITS_API_KEY) {
+  let smsForSatsAccountBalance = 0;
+  if (process.env.SMS_FOR_SATS_API_KEY) {
     try {
-      smsWalletBalance = await getWalletBalance(
-        process.env.SMS_FOR_SATS_LNBITS_API_KEY
-      );
+      smsForSatsAccountBalance = await getSmsForSatsAccountBalance();
     } catch (error) {
-      console.error("Admin: Failed to retrieve sms wallet balance");
+      console.error("Admin: Failed to retrieve sms4sats account balance");
     }
   }
 
@@ -82,6 +81,6 @@ async function handleGetAdminDashboard(
     lnbitsDashboardUrl: `${process.env.LNBITS_URL}/wallet?usr=${process.env.LNBITS_USER_ID}`,
     users: await prisma.user.findMany(),
     walletBalance,
-    smsWalletBalance,
+    smsForSatsAccountBalance,
   });
 }

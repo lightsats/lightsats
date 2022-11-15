@@ -45,10 +45,10 @@ export const smsForSatsAccountProvider: SMSProvider = {
           updatedOrder,
           `(attempt ${i})`
         );
-        if (updatedOrder.smsStatus === "delivered") {
+        if (updatedOrder.smsStatus === "sent") {
           console.log(
             smsForSatsAccountProvider.name +
-              ": order updated to delivered status in " +
+              ": order updated to sent status in " +
               (Date.now() - pollOrderStartTime) +
               "ms"
           );
@@ -99,7 +99,9 @@ async function getOrder(orderId: string): Promise<GetOrderResponse> {
     return responseData;
   } else {
     throw new Error(
-      "Get order status returned unexpected HTTP status: " + response.status
+      smsForSatsAccountProvider.name +
+        ": Get order status returned unexpected HTTP status: " +
+        response.status
     );
   }
 }
@@ -142,7 +144,42 @@ async function createOrder(
     return responseData;
   } else {
     throw new Error(
-      "Create send order returned unexpected HTTP status: " + response.status
+      smsForSatsAccountProvider.name +
+        ": Create send order returned unexpected HTTP status: " +
+        response.status
+    );
+  }
+}
+
+type GetAccountBalanceResponse = {
+  status: "OK";
+  balance: number;
+};
+
+export async function getSmsForSatsAccountBalance(): Promise<number> {
+  if (!apiKey) {
+    throw new Error("apiKey is undefined");
+  }
+
+  const requestHeaders = new Headers();
+  requestHeaders.append("Accept", "application/json");
+  requestHeaders.append("X-API-Key", apiKey);
+
+  const response = await fetch(`https://api2.sms4sats.com/balance`, {
+    method: "GET",
+    headers: requestHeaders,
+  });
+  if (response.ok) {
+    const responseData = (await response.json()) as GetAccountBalanceResponse;
+    if (responseData.status !== "OK") {
+      throw new Error("Failed to get account balance: " + responseData.status);
+    }
+    return responseData.balance;
+  } else {
+    throw new Error(
+      smsForSatsAccountProvider.name +
+        ": Get account balance returned unexpected HTTP status: " +
+        response.status
     );
   }
 }

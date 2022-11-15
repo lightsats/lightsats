@@ -7,7 +7,7 @@ export type AdminDashboard = {
   tips: Tip[];
   withdrawals: AdminExtendedWithdrawal[];
   walletBalance: number;
-  smsWalletBalance: number;
+  smsForSatsAccountBalance: number;
 };
 
 export type AdminExtendedUser = User & {
