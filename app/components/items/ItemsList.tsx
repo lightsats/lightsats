@@ -52,18 +52,21 @@ export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
 
   return (
     <>
-      {otherItems.length > 0 && <h4>Recommended wallets</h4>}
+      {otherItems.length > 0 && <h4>Recommended wallet</h4>}
 
       <Collapse.Group shadow css={collapseGroupCss}>
         {recommendedItems.map((item) => (
-          <ItemCard key={item.name} item={item} />
+          <ItemCard key={item.name} item={item} expanded />
         ))}
       </Collapse.Group>
 
       {otherItems.length > 0 && (
         <>
           <Spacer />
-          <Text h4>More wallets</Text>
+
+          <Text small b h4 transform="uppercase">
+            Other wallets
+          </Text>
           <Collapse.Group shadow css={collapseGroupCss}>
             {otherItems.map((item) => (
               <ItemCard key={item.name} item={item} />
