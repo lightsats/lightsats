@@ -1,6 +1,6 @@
 import { Avatar, Loading, Row, Spacer, Text } from "@nextui-org/react";
-import { BackButton } from "components/BackButton";
 import { FiatPrice } from "components/FiatPrice";
+import { HomeButton } from "components/HomeButton";
 import { Login } from "components/Login";
 import { formatDistance } from "date-fns";
 import { useDateFnsLocale } from "hooks/useDateFnsLocale";
@@ -120,7 +120,7 @@ const ClaimTipPage: NextPage = () => {
         <>
           <Text>This tip is no longer available.</Text>
           <Spacer />
-          <BackButton />
+          <HomeButton />
         </>
       ) : isTipper ? (
         <>
@@ -130,6 +130,8 @@ const ClaimTipPage: NextPage = () => {
         <>
           <Spacer y={2} />
           <Text color="error">{t("expired")}</Text>
+          <Spacer />
+          <HomeButton />
         </>
       ) : (
         <ClaimTipView publicTip={publicTip} />
