@@ -14,6 +14,7 @@
     "db:migrate:init:local": "dotenv -e .env.local -- prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/init/migration.sql",
     "db:migrate:resolve:local": "dotenv -e .env.local -- prisma migrate resolve --applied init",
     "db:migrate:local": "dotenv -e .env.local -- prisma migrate dev",
+    "db:migrate:local:createonly": "dotenv -e .env.local -- prisma migrate dev --create-only",
     "db:migrate:reset:local": "dotenv -e .env.local -- prisma migrate reset",
     "db:generate:staging": "dotenv -e .env.staging -- yarn prisma generate",
     "db:push:staging": "dotenv -e .env.staging -- yarn prisma db push",

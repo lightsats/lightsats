@@ -64,6 +64,7 @@ async function handleClaimTip(
     },
     data: {
       status: "CLAIMED",
+      claimed: new Date(),
       tippeeId: session.user.id,
     },
   });
