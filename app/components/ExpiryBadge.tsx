@@ -17,6 +17,7 @@ export function ExpiryBadge({ tip, viewing }: Props) {
   return (
     <Tooltip
       color="primary"
+      placement="right"
       content={
         viewing === "tippee"
           ? hasExpired
