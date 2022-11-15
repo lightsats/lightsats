@@ -94,6 +94,7 @@ model Tip {
   status TipStatus
   created DateTime @default(now())
   updated DateTime @updatedAt
+  claimed DateTime?
   expiry DateTime
   currency String?
   note String? @db.VarChar(255)
