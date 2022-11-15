@@ -8,7 +8,7 @@ if (!apiKey) {
   console.warn("SMS_FOR_SATS_LNBITS_API_KEY not set. Please see .env.example");
 }
 
-export const smsForSatsImmediateProvider: SMSProvider = {
+export const smsForSatsAccountProvider: SMSProvider = {
   name: "sms4sats.com (account based)",
   isAvailable: !!apiKey,
   sendMessage: async (to, body) => {
@@ -21,13 +21,13 @@ export const smsForSatsImmediateProvider: SMSProvider = {
       order = await createOrder(to, body);
     } catch (error) {
       console.error(
-        smsForSatsImmediateProvider.name + ": failed to create order",
+        smsForSatsAccountProvider.name + ": failed to create order",
         error
       );
       return false;
     }
     console.log(
-      smsForSatsImmediateProvider.name +
+      smsForSatsAccountProvider.name +
         ": created order in " +
         (Date.now() - createOrderStartTime) +
         "ms"
@@ -38,7 +38,7 @@ export const smsForSatsImmediateProvider: SMSProvider = {
       try {
         const updatedOrder = await getOrder(order.orderId);
         console.log(
-          smsForSatsImmediateProvider.name +
+          smsForSatsAccountProvider.name +
             ": Polling " +
             " order " +
             order.orderId,
@@ -47,7 +47,7 @@ export const smsForSatsImmediateProvider: SMSProvider = {
         );
         if (updatedOrder.smsStatus === "delivered") {
           console.log(
-            smsForSatsImmediateProvider.name +
+            smsForSatsAccountProvider.name +
               ": order updated to delivered status in " +
               (Date.now() - pollOrderStartTime) +
               "ms"
@@ -59,7 +59,7 @@ export const smsForSatsImmediateProvider: SMSProvider = {
         await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (error) {
         console.error(
-          smsForSatsImmediateProvider.name +
+          smsForSatsAccountProvider.name +
             ": Failed to poll " +
             " order " +
             order.orderId,
