@@ -26,7 +26,8 @@ export function getRecommendedItems(
   category: ItemCategory,
   languageCode: string,
   tippeeBalance: number,
-  checkTippeeBalance: boolean
+  checkTippeeBalance: boolean,
+  limit = 1
 ): Item[] {
   if (!ISO6391.validate(languageCode)) {
     throw new Error("Unsupported language code: " + languageCode);
@@ -44,7 +45,7 @@ export function getRecommendedItems(
     recommendedItems;
 
   sortItems(recommendedItems, categoryScoringFuncs[category]);
-  return recommendedItems;
+  return recommendedItems.slice(0, limit);
 }
 
 export function getOtherItems(
