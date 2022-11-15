@@ -16,7 +16,7 @@ const WhatIsBitcoinPage: NextPage = () => {
       </Head>
       <MyBitcoinJourneyHeader />
       <MyBitcoinJourneyContent>
-        <Image alt="Bitcoin" src="/images/guide/bitcoin2.png" width={250} />
+        <Image alt="Bitcoin" src="/images/guide/bitcoin.png" width={250} />
         <Spacer />
         <Text h3 style={{ width: "100%" }}>
           Bitcoin is money
