@@ -1,6 +1,9 @@
+import { Tweet } from "react-twitter-widgets";
+
 import {
   AcademicCapIcon,
   ArrowTrendingUpIcon,
+  HeartIcon,
 } from "@heroicons/react/24/solid";
 import {
   Avatar,
@@ -12,7 +15,6 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
@@ -21,14 +23,11 @@ import { Tips } from "components/tipper/Tips";
 import { UserCard } from "components/UserCard";
 import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import ClaimedPage from "pages/journey/claimed";
-import React from "react";
 import CountUp from "react-countup";
-import useSWR from "swr";
 const Home: NextPage = () => {
   const { data: session, status: sessionStatus } = useSession();
   const { data: user } = useUser();
@@ -65,74 +64,117 @@ const Home: NextPage = () => {
         </>
       ) : (
         <>
-          {/* <div style={{ border: "2px solid red", width: "100%" }}>test</div> */}
           <Spacer />
-          {/* <Grid.Container gap={0}>
-            <Grid xs={6}>
-              <div>
-                <Text
-                  size={60}
-                  h1
-                  css={{
-                    textGradient: "45deg, #ff9400 -20%, #ffcf00 50%",
-                  }}
-                >
-                  Orange pill
-                </Text>
-                <Text h1 size={30} css={{ marginTop: "-0.5em" }}>
-                  the world around you.
-                </Text>
-              </div>
-            </Grid>
-            <Grid xs={6}>
-              <Image alt="" src="images/screenshot.png" width={200} />
-            </Grid>
-          </Grid.Container> */}
-          <Image alt="" src="images/orange-pill.png" width={200} />
+          <Image alt="" src="images/orange-pill.png" width={250} />
+          <Spacer />
           <Text
-            size={60}
             h1
             css={{
               textGradient: "45deg, #ff9400 -20%, #ffcf00 50%",
+              lineHeight: 1.2,
+              textAlign: "center",
             }}
           >
-            Orange pill
+            Orange pill the world around you.
           </Text>
-          <Text h1 size={30} css={{ marginTop: "-0.5em" }}>
-            the world around you.
+          <Text h1 size="$4xl">
+            One tip at a time.
           </Text>
           <Spacer />
           <NextLink href={Routes.login} passHref>
             <a>
-              <Button color="gradient" size="lg">
+              <Button color="primary" size="lg">
                 Create your first tip &raquo;
               </Button>
             </a>
           </NextLink>
+
           <Spacer y={3} />
 
-          <Grid.Container gap={3} sm={8}>
-            <Grid sm={12} md={4}>
+          <Text b small transform="uppercase">
+            Why lightsats?
+          </Text>
+          <Spacer />
+          <Grid.Container sm={10} justify="center">
+            <Card>
+              <Card.Body>
+                <Grid.Container gap={2}>
+                  <Grid
+                    sm={12}
+                    md={4}
+                    css={{
+                      fg: 1,
+                      jc: "flex-start",
+                      ai: "center",
+                      flexDirection: "column",
+                      ta: "center",
+                    }}
+                  >
+                    <Icon width={64} height={64}>
+                      <HeartIcon />
+                    </Icon>
+                    <Text h3>Gift sats...</Text>
+                    <Text>
+                      ...without losing them. If your tippee doesn't claim their
+                      tip, those precious sats return to you.
+                    </Text>
+                  </Grid>
+                  <Grid
+                    sm={12}
+                    md={4}
+                    css={{
+                      jc: "flex-start",
+                      ai: "center",
+                      flexDirection: "column",
+                      ta: "center",
+                      fg: 1,
+                    }}
+                  >
+                    <Icon width={64} height={64}>
+                      <AcademicCapIcon />
+                    </Icon>
+                    <Text h3>Progress tracker</Text>
+                    <Text>
+                      Follow your tippees along their journey into the rabbit
+                      hole. Be there for them when they have questions.
+                    </Text>
+                  </Grid>
+                  <Grid
+                    sm={12}
+                    md={4}
+                    css={{
+                      jc: "flex-start",
+                      ai: "center",
+                      flexDirection: "column",
+                      ta: "center",
+                      fg: 1,
+                    }}
+                  >
+                    <Icon width={64} height={64}>
+                      <ArrowTrendingUpIcon />
+                    </Icon>
+                    <Text h3>Onboarding is on us</Text>
+                    <Text>
+                      Educational content, email series and guides on how to use
+                      bitcoin. So you can focus on stacking.
+                    </Text>
+                  </Grid>
+                </Grid.Container>
+              </Card.Body>
+            </Card>
+          </Grid.Container>
+
+          <Spacer></Spacer>
+
+          {/* <Grid sm={12} md={4}>
               <div style={{ textAlign: "center" }}>
                 <Icon width={64} height={64}>
                   <ArrowTrendingUpIcon />
                 </Icon>
-                <Text h3>🚫💩🪙Bitcoin only</Text>
+                <Text h3>Bitcoin only</Text>
                 <Text>
-                  No shitcoins included. No shitcoins included. No shitcoins
-                  included. No shitcoins included.
-                </Text>
-              </div>
-            </Grid>
-            <Grid sm={12} md={4}>
-              <div style={{ textAlign: "center" }}>
-                <Icon width={64} height={64}>
-                  <AcademicCapIcon />
-                </Icon>
-                <Text h3>🍊💊 family and friends</Text>
-                <Text>
-                  Educational content, watch their progress, etc. help them get
-                  started on their bitcoin journey.
+                  Content that is curated by real bitcoiners. No shitcoins
+                  included, ever.
                 </Text>
               </div>
             </Grid>
@@ -147,130 +189,179 @@ const Home: NextPage = () => {
                   their own wallet to withdraw their tips.
                 </Text>
               </div>
-            </Grid>
-          </Grid.Container>
+              </Grid> 
+          </Grid.Container> */}
 
           <Spacer y={5} />
+
           <div style={{ textAlign: "center" }}>
-            <Text>Proof of work</Text>
+            <Text small b transform="uppercase">
+              WITH LIGHTSATS
+            </Text>
+            <Spacer />
             <Text
-              h1
-              size={120}
+              size="$8xl"
+              b
               css={{
                 textGradient: "45deg, #ff9400 -20%, #ffcf00 50%",
+                lineHeight: "$xs",
               }}
             >
-              <CountUp end={123456789} suffix=" SATS" duration={2}></CountUp>
+              <CountUp
+                start={0}
+                useEasing={true}
+                enableScrollSpy
+                scrollSpyDelay={1000}
+                scrollSpyOnce
+                separator=","
+                end={123456}
+                suffix=" sats"
+                duration={2}
+              ></CountUp>
             </Text>
-            <Text h3>have been tipped to date.</Text>
+            <Spacer />
+            <Text small b transform="uppercase">
+              have been tipped to date.
+            </Text>
+            <Text h3></Text>
           </div>
 
           <Spacer y={5} />
 
-          <div style={{ textAlign: "center" }}>
-            <Text h2>Make tipping fun again 👇</Text>
-            <Spacer />
-            <Text h4 css={{ textAlign: "center" }}>
-              💰 Create a new tip and fund it
-            </Text>
-            <Card
-              variant="flat"
-              css={{
-                background: "$gradient",
-                color: "$white",
-                width: "400px",
-                height: "250px",
-                maxWidth: "100%",
-              }}
-            >
-              <Card.Body>
-                <Grid.Container alignItems="center" justify="center">
-                  <Grid xs={2}>
-                    <Avatar />
-                  </Grid>
-                  <Grid xs={10}>
-                    <Text b color="$white">
-                      Satoshi Nakamoto
-                    </Text>
-                  </Grid>
-                </Grid.Container>
-                <Text
-                  h1
-                  size={64}
-                  color="$white"
-                  style={{
-                    display: "flex",
-                    alignSelf: "center",
+          {/* <div style={{ textAlign: "center" }}>
+            <Row justify="center">
+              <Text h2>Make tipping fun again 👇</Text>
+            </Row>
+            <Grid.Container gap={2}>
+              <Grid xs={12} sm={6}>
+                <Card
+                  variant="flat"
+                  css={{
+                    background: "$gradient",
+                    color: "$white",
+                    width: "400px",
+                    height: "250px",
+                    maxWidth: "100%",
                   }}
                 >
-                  $20.00
-                </Text>
-                <Button
-                  flat
-                  color="primary"
-                  disabled
-                  style={{ background: "$white", margin: "15px" }}
-                >
-                  Claim your tip
-                </Button>
-              </Card.Body>
-            </Card>
-          </div>
-
-          <Spacer y={3} />
-
-          <div style={{ textAlign: "center" }}>
-            <Text h4 css={{ textAlign: "center" }}>
-              🙌 Pass it on
-            </Text>
-            <Card
-              variant="flat"
-              css={{
-                background: "$gradient",
-                color: "$white",
-                width: "460px",
-                height: "250px",
-              }}
-            >
-              <Card.Body>
-                <Grid.Container alignItems="center" justify="center">
-                  <Grid xs={2}>
-                    <Avatar />
-                  </Grid>
-                  <Grid xs={10}>
-                    <Text b color="$white">
-                      Satoshi Nakamoto
+                  <Card.Body>
+                    <Row align="center">
+                      <Avatar />
+                      &nbsp;&nbsp;
+                      <Text b color="$white">
+                        Satoshi Nakamoto
+                      </Text>
+                    </Row>
+                    <Text
+                      h1
+                      size={64}
+                      color="$white"
+                      style={{
+                        display: "flex",
+                        alignSelf: "center",
+                      }}
+                    >
+                      $20.00
                     </Text>
-                  </Grid>
-                </Grid.Container>
-                <Text
-                  h1
-                  size={64}
-                  color="$white"
-                  style={{
-                    display: "flex",
-                    alignSelf: "center",
-                  }}
-                >
-                  $20.00
-                </Text>
-                <Button
-                  flat
-                  color="primary"
-                  disabled
-                  style={{ background: "$white", margin: "15px" }}
-                >
-                  Claim your tip
-                </Button>
-              </Card.Body>
-            </Card>
-          </div>
-          <Spacer y={3} />
-          <div style={{ textAlign: "center" }}>
-            <Text h4 css={{ textAlign: "center" }}>
-              ✌️ Sats return to you
-            </Text>
-          </div>
+                  </Card.Body>
+                </Card>
+              </Grid>
+              <Grid xs={12} sm={6}>
+                <Col>
+                  <Text h4>💰 Create a new tip and fund it</Text>
+                  <Text>test</Text>
+                </Col>
+              </Grid>
+            </Grid.Container>
+          </div> */}
+          <Spacer y={5} />
+          <Text h3>🧡 What others have to say say about Lightsats</Text>
+          <Grid.Container gap={2} sm={8}>
+            <Grid xs={12} sm={4}>
+              <Tweet
+                tweetId="1591901975649869824"
+                options={{ width: "100%" }}
+              />
+            </Grid>
+            <Grid xs={12} sm={4}>
+              <Tweet
+                tweetId="1591901975649869824"
+                options={{ width: "100%" }}
+              />
+            </Grid>
+            <Grid xs={12} sm={4}>
+              <Tweet
+                tweetId="1591901975649869824"
+                options={{ width: "100%" }}
+              />
+            </Grid>
+          </Grid.Container>
+          <Spacer y={5} />
+          <Text
+            h1
+            size="$8xl"
+            css={{
+              textGradient: "45deg, #ff9400 -20%, #ffcf00 50%",
+              lineHeight: 1.2,
+              textAlign: "center",
+            }}
+          >
+            Join the tipping battle
+          </Text>
+          <Spacer />
+          <Avatar.Group count={123}>
+            <Avatar
+              size="xl"
+              text="name"
+              stacked
+              src="https://pbs.twimg.com/profile_images/558632546398134274/LpoJ5y4L_400x400.jpeg"
+            />
+            <Avatar
+              size="xl"
+              text="name"
+              stacked
+              src="https://secure.gravatar.com/avatar/07e22939e7672b38c56615068c4c715f?size=200&default=mm&rating=g"
+            />
+            <Avatar
+              size="xl"
+              text="name"
+              stacked
+              src="https://pbs.twimg.com/profile_images/1476767205689724932/NZUSZUTd_400x400.jpg"
+            />
+          </Avatar.Group>
+          <Spacer y={0.25} />
+          <Text>
+            Join{" "}
+            <a
+              href="https://twitter.com/juangb87"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Juan
+            </a>
+            ,{" "}
+            <a
+              href="https://twitter.com/_reneaaron"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Rene
+            </a>
+            ,{" "}
+            <a
+              href="https://twitter.com/rolznz"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Roland
+            </a>{" "}
+            and <a>123 others</a> and 🍊💊 the world around you.
+          </Text>
+          <Spacer y={2} />
+          <Button color="primary" size="lg">
+            Create your first tip &raquo;
+          </Button>
+          <Spacer y={5} />
         </>
       )}
     </>
