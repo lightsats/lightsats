@@ -8,3 +8,9 @@ export const smsProviders: SMSProvider[] = [
   smsForSatsProvider,
   twilioProvider,
 ].filter((provider) => provider.isAvailable);
+
+console.log(
+  `Found ${smsProviders.length} sms providers: ${smsProviders
+    .map((provider) => provider.name)
+    .join(", ")}`
+);

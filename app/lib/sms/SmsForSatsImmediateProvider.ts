@@ -10,7 +10,7 @@ if (!apiKey) {
 
 export const smsForSatsImmediateProvider: SMSProvider = {
   name: "sms4sats.com (account based)",
-  isAvailable: !!apiKey && process.env.EXPERIMENTAL_SMS_FOR_SATS === "true",
+  isAvailable: !!apiKey,
   sendMessage: async (to, body) => {
     if (!apiKey) {
       throw new Error("apiKey is undefined");
@@ -114,9 +114,14 @@ async function createOrder(
   to: string,
   body: string
 ): Promise<CreateOrderResponse> {
+  if (!apiKey) {
+    throw new Error("apiKey is undefined");
+  }
+
   const requestHeaders = new Headers();
   requestHeaders.append("Accept", "application/json");
   requestHeaders.append("Content-Type", "application/json");
+  requestHeaders.append("X-API-Key", apiKey);
 
   const requestBody = {
     phone: to,

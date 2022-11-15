@@ -19,7 +19,7 @@ if (
 
 export const twilioProvider: SMSProvider = {
   name: "twilio",
-  isAvailable: !!twilioClient,
+  isAvailable: !!twilioClient && process.env.DISABLE_TWILIO !== "true",
   sendMessage: async (to, body) => {
     if (!twilioClient) {
       throw new Error("Twilio client is undefined");
