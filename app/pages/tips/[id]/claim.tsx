@@ -11,8 +11,6 @@ import { ExpiryBadge } from "components/ExpiryBadge";
 import { FiatPrice } from "components/FiatPrice";
 import { HomeButton } from "components/HomeButton";
 import { Login } from "components/Login";
-import { useDateFnsLocale } from "hooks/useDateFnsLocale";
-
 import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
