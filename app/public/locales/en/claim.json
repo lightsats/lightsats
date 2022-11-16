@@ -3,8 +3,8 @@
   "tipperHasGiftedYou": "{{tipperName}} has gifted you",
   "youHaveBeenGifted": "You've been gifted",
   "expired": "This tip has expired.",
-  "instructions.phone": "Enter your phone number below and press the button to claim your gift.",
-  "instructions.email": "Enter your email below and press the button to claim your gift.",
+  "instructions.phone": "Enter your phone number below and press the button to claim your funds.",
+  "instructions.email": "Enter your email below and press the button to claim your funds.",
   "instructions.lightning": "Login with Lightning",
   "expiresIn": "Expires in {{expiry}}",
   "claim": "Claim my funds"

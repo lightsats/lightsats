@@ -137,15 +137,6 @@ export function AppNavbar() {
               </Icon>
               &nbsp;Leaderboard
             </Navbar.Link>
-            <Navbar.Item hideIn="xs">
-              <NextLink href={Routes.newTip}>
-                <a>
-                  <Button auto size="sm">
-                    Create new tip
-                  </Button>
-                </a>
-              </NextLink>
-            </Navbar.Item>
           </>
         )}
       </Navbar.Content>
@@ -196,7 +187,7 @@ export function AppNavbar() {
                 <Dropdown.Item key="logout" withDivider>
                   <NextLink href={Routes.logout} passHref>
                     <a>
-                      <Text color="error">Log Out</Text>
+                      <Text color="error">Log out</Text>
                     </a>
                   </NextLink>
                 </Dropdown.Item>
