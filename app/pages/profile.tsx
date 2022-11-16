@@ -4,14 +4,15 @@ import {
   Card,
   Collapse,
   Input,
-  Link,
   Loading,
   Row,
   Spacer,
   Switch,
   Text,
 } from "@nextui-org/react";
+
 import { Tip, User } from "@prisma/client";
+import { Alert } from "components/Alert";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { UserCard } from "components/UserCard";
@@ -159,27 +160,44 @@ function TippeeProfile({ mutateUser, session, user }: ProfileInternalProps) {
     <>
       {!hasWithdrawnTip && (
         <>
-          <Text>
-            {"It looks like you haven't completed your withdrawal yet."}
-          </Text>
-          <NextLink href={Routes.journeyClaimed} passHref>
-            <Link css={{ display: "inline" }}>Complete withdrawal</Link>
-          </NextLink>
+          <Alert>
+            {
+              "You've got some tips. Make sure to withdraw them before they expire."
+            }
+            &nbsp;&nbsp;
+            <NextLink href={Routes.journeyClaimed} passHref>
+              <a>
+                <Button auto color="success">
+                  Withdraw
+                </Button>
+              </a>
+            </NextLink>
+          </Alert>
+          <Spacer />
         </>
       )}
-      <Text>Orange pill your friends!</Text>
-      <Button
-        color="primary"
-        size="lg"
-        onClick={becomeTipper}
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? (
-          <Loading color="currentColor" size="sm" />
-        ) : (
-          <>Become a Tipper</>
-        )}
-      </Button>
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Body>
+          <Text h3>Ready to start tipping in bitcoin?</Text>
+          <Text>
+            Lightsats makes it easy for you to send tips and onboard people to
+            bitcoin.
+          </Text>
+          <Spacer />
+          <Button
+            auto
+            color="primary"
+            onClick={becomeTipper}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <Loading color="currentColor" size="sm" />
+            ) : (
+              <>{"🚀 Let's go!"}</>
+            )}
+          </Button>
+        </Card.Body>
+      </Card>
     </>
   );
 }
