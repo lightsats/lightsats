@@ -11,7 +11,8 @@
     "machines:init": "fly apps create --machines",
     "machines:create": "dotenv -- bash -c 'fly m run $APP_IMAGE_ID --name lightsats-scheduler-machine-1 -a $MACHINES_APP_ID'",
     "machines:list": "dotenv -- bash -c 'fly machines list -a $MACHINES_APP_ID'",
-    "machines:start": "dotenv -- bash -c 'fly machines start $MACHINE_ID -a $MACHINES_APP_ID'"
+    "machines:start": "dotenv -- bash -c 'fly machines start $MACHINE_ID -a $MACHINES_APP_ID'",
+    "machines:update:imageid": "dotenv -- bash -c 'fly machines update $MACHINE_ID -i $APP_IMAGE_ID -a $MACHINES_APP_ID'"
   },
   "dependencies": {
     "@types/node": "^18.11.9",

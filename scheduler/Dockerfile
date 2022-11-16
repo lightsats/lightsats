@@ -17,6 +17,7 @@ WORKDIR /app
 ENV NODE_ENV production
 
 COPY . .
+COPY .env.staging .env
 
 RUN yarn install && yarn run build
 FROM debian:bullseye
