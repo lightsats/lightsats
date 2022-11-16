@@ -1,6 +1,7 @@
 import { Tweet } from "react-twitter-widgets";
 
 import { hasTipExpired } from "lib/utils";
+import { Scoreboard as ScoreboardType } from "types/Scoreboard";
 
 import {
   AcademicCapIcon,
@@ -14,6 +15,7 @@ import {
   Grid,
   Image,
   Loading,
+  Row,
   Spacer,
   Text,
 } from "@nextui-org/react";
@@ -50,23 +52,26 @@ const Home: NextPage = () => {
 
       {session && user ? (
         <>
-          {user?.userType === "tipper" && (
-            <>
-              <Alert>⚠️ This project is currently in BETA.</Alert>
-            </>
-          )}
-          <Spacer />
-          {user?.userType === "tipper" ? (
-            <>
-              <UserCard userId={user.id} />
-              <Spacer />
-              <NewTipButton />
-              <Spacer />
-              <Tips />
-            </>
-          ) : (
-            <TippeeHomepage />
-          )}
+          <Row align="center" css={{ fd: "column", maxWidth: "600px" }}>
+            {user?.userType === "tipper" && (
+              <>
+                <Alert>⚠️ This project is currently in BETA.</Alert>
+              </>
+            )}
+
+            <Spacer />
+            {user?.userType === "tipper" ? (
+              <>
+                <UserCard userId={user.id} />
+                <Spacer />
+                <NewTipButton />
+                <Spacer />
+                <Tips />
+              </>
+            ) : (
+              <TippeeHomepage />
+            )}
+          </Row>
         </>
       ) : (
         <>
@@ -101,6 +106,14 @@ function TippeeHomepage() {
 }
 
 function Homepage() {
+  const { data: scoreboard } = useSWR<ScoreboardType>(
+    `/api/scoreboard`,
+    defaultFetcher
+  );
+  if (!scoreboard) {
+    return <Loading color="currentColor" size="lg" />;
+  }
+
   return (
     <>
       <Spacer />
@@ -204,7 +217,7 @@ function Homepage() {
         </Card>
       </Grid.Container>
 
-      <Spacer></Spacer>
+      <Spacer />
 
       {/* <Grid sm={12} md={4}>
               <div style={{ textAlign: "center" }}>
@@ -255,7 +268,7 @@ function Homepage() {
             scrollSpyDelay={1000}
             scrollSpyOnce
             separator=","
-            end={123}
+            end={+(scoreboard.totalSatsSent / 1000).toFixed(0)}
             suffix="k sats"
             duration={2}
           ></CountUp>

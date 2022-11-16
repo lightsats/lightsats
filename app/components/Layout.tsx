@@ -25,14 +25,13 @@ export default function Layout({
         alignItems="center"
         display="flex"
         direction="column"
-        fluid
         css={{
           flex: 1,
           ...(router.pathname !== Routes.scoreboard &&
           router.pathname !== Routes.admin &&
           router.pathname !== Routes.home
             ? { maxWidth: "600px" }
-            : {}),
+            : { maxWidth: "1400px" }),
         }}
       >
         {children}
