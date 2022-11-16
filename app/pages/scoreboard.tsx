@@ -2,7 +2,6 @@ import {
   Badge,
   Card,
   Col,
-  Container,
   Grid,
   Loading,
   Row,
@@ -63,16 +62,15 @@ const Scoreboard: NextPage = () => {
           <Card css={{ dropShadow: "$xs" }}>
             <Card.Header>
               <Col>
-                <Text size={12} weight="bold" transform="uppercase">
-                  Total tip value (sats)
+                <Text size={12} weight="bold">
+                  TOTAL TIP VALUE (sats)
                 </Text>
-                <Text h3>{(scoreboard.totalSatsSent / 1000).toFixed()}k</Text>
+                <Text h3>{formatAmount(scoreboard.totalSatsSent)}</Text>
               </Col>
             </Card.Header>
           </Card>
         </Grid>
       </Grid.Container>
-
       <Spacer />
       <Grid.Container
         gap={1}
@@ -124,79 +122,83 @@ const Scoreboard: NextPage = () => {
         })}
       </Grid.Container>
       <Spacer />
-      <Container xs={false} lg css={{ padding: 0 }}>
-        <Table
-          fixed
-          css={{
-            zIndex: 10,
-            height: "auto",
-            minWidth: "100%",
-          }}
-          containerCss={{
-            background: "$white",
-            dropShadow: "none",
-          }}
-        >
-          <Table.Header>
-            <Table.Column width={1} align="center">
-              #
-            </Table.Column>
-            <Table.Column css={{ pl: 20 }}>Tipper</Table.Column>
-            <Table.Column css={{ textAlign: "center" }}>Tips sent</Table.Column>
-            <Table.Column css={{ textAlign: "center" }}>
-              Success rate
-            </Table.Column>
-            <Table.Column css={{ textAlign: "center" }}>
-              Tipped sats
-            </Table.Column>
-          </Table.Header>
-          <Table.Body>
-            {scoreboard.entries.map((scoreboardEntry, i) => {
-              return (
-                <Table.Row key={i}>
-                  <Table.Cell>
-                    <Badge
-                      css={{
-                        background:
-                          i === 0
-                            ? "$gold"
-                            : i === 1
-                            ? "$silver"
-                            : i === 2
-                            ? "$bronze"
-                            : "$gray600",
-                      }}
-                    >
-                      {i + 1}
-                    </Badge>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Row align="center">
-                      <ScoreboardUser scoreboardEntry={scoreboardEntry} />
-                      {scoreboardEntry.twitterUsername && (
-                        <TwitterButton
-                          username={scoreboardEntry.twitterUsername}
-                        />
-                      )}
-                    </Row>
-                  </Table.Cell>
-                  <Table.Cell css={{ textAlign: "center" }}>
-                    {scoreboardEntry.numTipsSent}
-                  </Table.Cell>
-                  <Table.Cell css={{ textAlign: "center" }}>
-                    {scoreboardEntry.successRate} %
-                  </Table.Cell>
-                  <Table.Cell css={{ textAlign: "center" }}>
-                    <Badge variant="flat" color="primary">
-                      {formatAmount(scoreboardEntry.satsSent)}
-                    </Badge>
-                  </Table.Cell>
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table>
-      </Container>
+      <Grid.Container xs={0} sm={12} css={{ padding: 0, width: "100%", fg: 1 }}>
+        <Grid css={{ width: "100%" }}>
+          <Table
+            fixed
+            css={{
+              zIndex: 10,
+              height: "auto",
+              minWidth: "100%",
+            }}
+            containerCss={{
+              background: "$white",
+              dropShadow: "none",
+            }}
+          >
+            <Table.Header>
+              <Table.Column width={1} align="center">
+                #
+              </Table.Column>
+              <Table.Column css={{ pl: 20 }}>Tipper</Table.Column>
+              <Table.Column css={{ textAlign: "center" }}>
+                Tips sent
+              </Table.Column>
+              <Table.Column css={{ textAlign: "center" }}>
+                Success rate
+              </Table.Column>
+              <Table.Column css={{ textAlign: "center" }}>
+                Tipped sats
+              </Table.Column>
+            </Table.Header>
+            <Table.Body>
+              {scoreboard.entries.map((scoreboardEntry, i) => {
+                return (
+                  <Table.Row key={i}>
+                    <Table.Cell>
+                      <Badge
+                        css={{
+                          background:
+                            i === 0
+                              ? "$gold"
+                              : i === 1
+                              ? "$silver"
+                              : i === 2
+                              ? "$bronze"
+                              : "$gray600",
+                        }}
+                      >
+                        {i + 1}
+                      </Badge>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Row align="center">
+                        <ScoreboardUser scoreboardEntry={scoreboardEntry} />
+                        {scoreboardEntry.twitterUsername && (
+                          <TwitterButton
+                            username={scoreboardEntry.twitterUsername}
+                          />
+                        )}
+                      </Row>
+                    </Table.Cell>
+                    <Table.Cell css={{ textAlign: "center" }}>
+                      {scoreboardEntry.numTipsSent}
+                    </Table.Cell>
+                    <Table.Cell css={{ textAlign: "center" }}>
+                      {(scoreboardEntry.successRate * 100).toFixed(0)}%
+                    </Table.Cell>
+                    <Table.Cell css={{ textAlign: "center" }}>
+                      <Badge variant="flat" color="primary">
+                        {formatAmount(scoreboardEntry.satsSent)}
+                      </Badge>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table>
+        </Grid>
+      </Grid.Container>
     </>
   );
 };
