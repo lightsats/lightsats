@@ -33,6 +33,7 @@ export const smsForSatsAccountProvider: SMSProvider = {
         "ms"
     );
 
+    // TODO: use webhook
     const pollOrderStartTime = Date.now();
     for (let i = 1; i <= MAX_POLL_ATTEMPTS; i++) {
       try {
