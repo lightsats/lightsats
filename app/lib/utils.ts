@@ -12,6 +12,7 @@ import { NextRouter } from "next/router";
 import { MouseEventHandler } from "react";
 import { Item } from "types/Item";
 import { PublicTip } from "types/PublicTip";
+import { PublicUser } from "types/PublicUser";
 
 export function getSatsAmount(fiat: number, exchangeRate: number) {
   return Math.ceil((fiat / exchangeRate) * SATS_TO_BTC);
@@ -44,7 +45,7 @@ export function generateAlphanumeric(length: number): string {
     .toUpperCase();
 }
 
-export function getUserAvatarUrl(user: User | undefined) {
+export function getUserAvatarUrl(user: User | PublicUser | undefined) {
   return getAvatarUrl(user?.avatarURL ?? undefined, getFallbackAvatarId(user));
 }
 export function getAvatarUrl(avatarUrl: string | undefined, fallbackId = "1") {
@@ -57,16 +58,12 @@ export function getAvatarUrl(avatarUrl: string | undefined, fallbackId = "1") {
 export const getHashCode = (s: string) =>
   s.split("").reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
 
-export function getFallbackAvatarId(user: User | undefined) {
+export function getFallbackAvatarId(user: User | PublicUser | undefined) {
   if (!user) {
     return undefined;
   }
-  const secretId = user?.email ?? user?.phoneNumber ?? user?.lnurlPublicKey;
-  if (!secretId) {
-    return undefined;
-  }
 
-  return (getHashCode(secretId) % 10000).toString();
+  return (getHashCode(user.id) % 10000).toString();
 }
 
 export function nth(n: number) {
