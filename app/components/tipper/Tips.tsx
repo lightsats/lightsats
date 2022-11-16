@@ -15,7 +15,6 @@ import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
-import { NewTipButton } from "components/tipper/NewTipButton";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistance } from "date-fns";
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
@@ -90,9 +89,9 @@ export function Tips() {
               </Row>
             </Card.Body>
           </Card>
-          <Spacer y={2} />
         </>
       )}
+      <Spacer y={2} />
       <Text h3>Recent tips</Text>
       {tips && tips.length > 0 && (
         <Grid.Container justify="center" gap={1}>
@@ -198,10 +197,8 @@ export function Tips() {
       {!tips ||
         (!tips.length && (
           <>
-            <Text h3></Text>
-            {"No tips available, let's create your first one now!"}
+            {"No tips available yet, let's create your first one now!"}
             <Spacer />
-            <NewTipButton />
           </>
         ))}
     </>
