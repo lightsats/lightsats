@@ -26,7 +26,9 @@ export default function Layout({
         display="flex"
         direction="column"
         fluid
+        lg
         css={{
+          margin: "0px auto",
           flex: 1,
           ...(router.pathname !== Routes.scoreboard &&
           router.pathname !== Routes.admin

@@ -94,6 +94,14 @@ export const hasTipExpired = (tip: Tip | PublicTip) =>
   expirableTipStatuses.indexOf(tip.status) >= 0 &&
   isAfter(new Date(), new Date(tip.expiry));
 
+export const formatAmount = (amount: number) => {
+  let i = 0;
+  for (i; amount >= 1000; i++) {
+    amount /= 1000;
+  }
+  return amount.toFixed(i > 0 ? 2 : 0) + ["", " k", " M", "G"][i];
+};
+
 export const getClaimUrl = (tip: Tip) =>
   `${getAppUrl()}${getLocalePath(tip.tippeeLocale)}${Routes.tips}/${
     tip.id

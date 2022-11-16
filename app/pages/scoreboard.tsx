@@ -6,6 +6,7 @@ import {
   Loading,
   Row,
   Spacer,
+  Table,
   Text,
   User as NextUIUser,
 } from "@nextui-org/react";
@@ -14,7 +15,7 @@ import { TwitterButton } from "components/TwitterButton";
 import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { getAvatarUrl } from "lib/utils";
+import { formatAmount, getAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import useSWR from "swr";
 import { Scoreboard as ScoreboardType } from "types/Scoreboard";
@@ -32,21 +33,21 @@ const Scoreboard: NextPage = () => {
   return (
     <>
       <Text h2>Leaderboard</Text>
-      <Grid.Container gap={1} css={{ mx: 0, width: "100%" }}>
+      <Grid.Container gap={1} css={{ width: "100%", margin: 0, padding: 0 }}>
         <Grid xs={4}>
-          <Card css={{ dropShadow: "$sm" }}>
+          <Card css={{ dropShadow: "$xs" }}>
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
                   # Total tips sent
                 </Text>
-                <Text h3>{scoreboard.numTipsSent}</Text>
+                <Text h4>{scoreboard.numTipsSent}</Text>
               </Col>
             </Card.Header>
           </Card>
         </Grid>
         <Grid xs={4}>
-          <Card css={{ dropShadow: "$sm" }}>
+          <Card css={{ dropShadow: "$xs" }}>
             <Card.Header>
               <Col>
                 <Text size={12} weight="bold" transform="uppercase">
@@ -58,81 +59,61 @@ const Scoreboard: NextPage = () => {
           </Card>
         </Grid>
         <Grid xs={4}>
-          <Card css={{ dropShadow: "$sm" }}>
+          <Card css={{ dropShadow: "$xs" }}>
             <Card.Header>
               <Col>
-                <Text size={12} weight="bold" transform="uppercase">
-                  Total tip value
+                <Text size={12} weight="bold">
+                  TOTAL TIP VALUE (sats)
                 </Text>
-                <Text h3>{scoreboard.totalSatsSent.toFixed()} sats</Text>
+                <Text h3>{formatAmount(scoreboard.totalSatsSent)}</Text>
               </Col>
             </Card.Header>
           </Card>
         </Grid>
       </Grid.Container>
       <Spacer />
-      {/* mobile view */}
       <Grid.Container
-        gap={2}
+        gap={1}
         justify="center"
         xs={12}
         sm={0}
-        style={{ padding: 0 }}
+        css={{ padding: 0 }}
       >
         {scoreboard.entries.map((scoreboardEntry, i) => {
           return (
-            <Grid
-              key={i}
-              justify="center"
-              css={{
-                width: "100%",
-                px: 0,
-              }}
-            >
-              <Card
-                variant="flat"
-                css={{
-                  backgroundColor:
-                    i === 0
-                      ? "$gold"
-                      : i === 1
-                      ? "$silver"
-                      : i === 2
-                      ? "$bronze"
-                      : "$accents0",
-                }}
-              >
+            <Grid key={i} xs={12}>
+              <Card css={{ dropShadow: "$sm" }}>
                 <Card.Body>
                   <Row align="center" justify="space-between">
-                    <Text size={22} b>
-                      #{i + 1}
-                    </Text>
-                    <ScoreboardUser scoreboardEntry={scoreboardEntry} />
-                    {scoreboardEntry.twitterUsername && (
-                      <TwitterButton
-                        username={scoreboardEntry.twitterUsername}
-                      />
-                    )}
-                    <Text b size="$xl">
-                      {scoreboardEntry.satsSent} sats
-                    </Text>
-                  </Row>
-                  <Spacer />
-                  <Row justify="center">
-                    <Badge>{scoreboardEntry.numTipsSent} tips🧡</Badge>
-                    <Spacer x={0.5} />
                     <Badge
-                      style={{
-                        background: `rgba(${Math.floor(
-                          (1 - scoreboardEntry.successRate) * 220
-                        )},${Math.floor(
-                          scoreboardEntry.successRate * 220
-                        )},0, 1)`,
+                      css={{
+                        background:
+                          i === 0
+                            ? "$gold"
+                            : i === 1
+                            ? "$silver"
+                            : i === 2
+                            ? "$bronze"
+                            : "$gray600",
                       }}
                     >
-                      {Math.round(scoreboardEntry.successRate * 100)}% success
-                      rate
+                      {i + 1}
                     </Badge>
+                    <Col>
+                      <ScoreboardUser scoreboardEntry={scoreboardEntry} />
+                    </Col>
+                    <Col>
+                      {scoreboardEntry.twitterUsername && (
+                        <TwitterButton
+                          username={scoreboardEntry.twitterUsername}
+                        />
+                      )}
+                    </Col>
+                    <Col css={{ textAlign: "right" }}>
+                      <Badge variant="flat" color="primary">
+                        {formatAmount(scoreboardEntry.satsSent)}
+                      </Badge>
+                    </Col>
                   </Row>
                 </Card.Body>
               </Card>
@@ -140,91 +121,83 @@ const Scoreboard: NextPage = () => {
           );
         })}
       </Grid.Container>
-
       <Spacer />
-      {/* desktop view */}
-      <Grid.Container justify="center" xs={0} sm={12}>
-        <Grid xs={12} justify="center">
-          <Row
-            justify="space-between"
-            align="center"
-            css={{ paddingBottom: "0.5em", fontWeight: "$bold" }}
+      <Grid.Container xs={0} sm={12} css={{ padding: 0, width: "100%", fg: 1 }}>
+        <Grid css={{ width: "100%" }}>
+          <Table
+            fixed
+            css={{
+              zIndex: 10,
+              height: "auto",
+              minWidth: "100%",
+            }}
+            containerCss={{
+              background: "$white",
+              dropShadow: "none",
+            }}
           >
-            <Row justify="center" align="center">
-              #
-            </Row>
-            <Row justify="flex-start" align="center">
-              Tipper
-            </Row>
-            <Row justify="center" align="center">
-              Tipped sats
-            </Row>
-            <Row justify="center" align="center">
-              # of tips
-            </Row>
-            <Row justify="center" align="center">
-              Success rate
-            </Row>
-          </Row>
+            <Table.Header>
+              <Table.Column width={1} align="center">
+                #
+              </Table.Column>
+              <Table.Column css={{ pl: 20 }}>Tipper</Table.Column>
+              <Table.Column css={{ textAlign: "center" }}>
+                Tips sent
+              </Table.Column>
+              <Table.Column css={{ textAlign: "center" }}>
+                Success rate
+              </Table.Column>
+              <Table.Column css={{ textAlign: "center" }}>
+                Tipped sats
+              </Table.Column>
+            </Table.Header>
+            <Table.Body>
+              {scoreboard.entries.map((scoreboardEntry, i) => {
+                return (
+                  <Table.Row key={i}>
+                    <Table.Cell>
+                      <Badge
+                        css={{
+                          background:
+                            i === 0
+                              ? "$gold"
+                              : i === 1
+                              ? "$silver"
+                              : i === 2
+                              ? "$bronze"
+                              : "$gray600",
+                        }}
+                      >
+                        {i + 1}
+                      </Badge>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Row align="center">
+                        <ScoreboardUser scoreboardEntry={scoreboardEntry} />
+                        {scoreboardEntry.twitterUsername && (
+                          <TwitterButton
+                            username={scoreboardEntry.twitterUsername}
+                          />
+                        )}
+                      </Row>
+                    </Table.Cell>
+                    <Table.Cell css={{ textAlign: "center" }}>
+                      {scoreboardEntry.numTipsSent}
+                    </Table.Cell>
+                    <Table.Cell css={{ textAlign: "center" }}>
+                      {(scoreboardEntry.successRate * 100).toFixed(0)}%
+                    </Table.Cell>
+                    <Table.Cell css={{ textAlign: "center" }}>
+                      <Badge variant="flat" color="primary">
+                        {formatAmount(scoreboardEntry.satsSent)}
+                      </Badge>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table>
         </Grid>
-        {scoreboard.entries.map((scoreboardEntry, i) => {
-          return (
-            <Grid xs={12} key={i} justify="center" style={{ padding: 0 }}>
-              <Row
-                justify="space-between"
-                align="center"
-                css={{
-                  backgroundColor:
-                    i === 0
-                      ? "$gold"
-                      : i === 1
-                      ? "$silver"
-                      : i === 2
-                      ? "$bronze"
-                      : i % 2 === 0
-                      ? "$accents0"
-                      : "$accents1",
-                  paddingTop: "10px",
-                  paddingBottom: "10px",
-                  marginBottom: i === 2 ? 20 : 0,
-                }}
-              >
-                <Row justify="center" align="center">
-                  <Badge
-                    css={{
-                      background:
-                        i === 0
-                          ? "$gold"
-                          : i === 1
-                          ? "$silver"
-                          : i === 2
-                          ? "$bronze"
-                          : "$gray800",
-                    }}
-                  >
-                    #{i + 1}
-                  </Badge>
-                </Row>
-                <Row justify="flex-start" align="center">
-                  <ScoreboardUser scoreboardEntry={scoreboardEntry} />
-
-                  {scoreboardEntry.twitterUsername && (
-                    <TwitterButton username={scoreboardEntry.twitterUsername} />
-                  )}
-                </Row>
-                <Row justify="center" align="center">
-                  {scoreboardEntry.satsSent}
-                </Row>
-                <Row justify="center" align="center">
-                  {scoreboardEntry.numTipsSent}
-                </Row>
-                <Row justify="center" align="center">
-                  {(scoreboardEntry.successRate * 100).toFixed(2)}%
-                </Row>
-              </Row>
-            </Grid>
-          );
-        })}
       </Grid.Container>
     </>
   );
