@@ -31,9 +31,6 @@ const Scoreboard: NextPage = () => {
     return <Loading color="currentColor" size="lg" />;
   }
 
-  scoreboard.entries.push(scoreboard.entries[0]);
-  scoreboard.entries[0].name = "Satoshi nakamoto";
-
   return (
     <>
       <Text h2>Leaderboard</Text>
@@ -116,7 +113,8 @@ const Scoreboard: NextPage = () => {
                     </Col>
                     <Col css={{ textAlign: "right" }}>
                       <Badge variant="flat" color="primary">
-                        {(scoreboardEntry.satsSent / 1000).toFixed(0)}k
+                        {(scoreboardEntry.satsSent / 1000).toFixed(0)}
+                        {scoreboardEntry.satsSent / 1000 > 0 && "k"}
                       </Badge>
                     </Col>
                   </Row>
@@ -191,7 +189,8 @@ const Scoreboard: NextPage = () => {
                   </Table.Cell>
                   <Table.Cell css={{ textAlign: "center" }}>
                     <Badge variant="flat" color="primary">
-                      {(scoreboardEntry.satsSent / 1000).toFixed(0)}k
+                      {(scoreboardEntry.satsSent / 1000).toFixed(0)}
+                      {scoreboardEntry.satsSent / 1000 > 0 && "k"}
                     </Badge>
                   </Table.Cell>
                 </Table.Row>
