@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "start": "cd build && node index.js",
+    "start": "node build/index.js",
     "deploy": "fly deploy --build-only --push",
     "machines:init": "fly apps create --machines",
     "machines:create": "dotenv -- bash -c 'fly m run $APP_IMAGE_ID --name lightsats-scheduler-machine-1 -a $MACHINES_APP_ID'",
@@ -15,6 +15,9 @@
   },
   "dependencies": {
     "@types/node": "^18.11.9",
+    "@types/node-fetch": "^2.6.2",
+    "dotenv": "^16.0.3",
+    "node-fetch": "2",
     "typescript": "^4.8.4"
   },
   "devDependencies": {
