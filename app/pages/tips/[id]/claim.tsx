@@ -155,7 +155,6 @@ type ClaimTipViewProps = {
 function ClaimTipView({ publicTip }: ClaimTipViewProps) {
   const { t } = useTranslation("claim");
   const router = useRouter();
-  const dateFnsLocale = useDateFnsLocale(router.locale);
 
   const { data: exchangeRates } = useSWR<ExchangeRates>(
     `/api/exchange/rates`,
