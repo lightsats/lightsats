@@ -2,6 +2,7 @@ import {
   Avatar,
   Card,
   Col,
+  Collapse,
   Loading,
   Row,
   Spacer,
@@ -122,9 +123,35 @@ const ClaimTipPage: NextPage = () => {
         <>
           <Loading color="currentColor" size="sm" />
         </>
-      ) : publicTip.status !== "UNCLAIMED" ? (
+      ) : publicTip.status !== "UNCLAIMED" &&
+        (publicTip.status !== "CLAIMED" ||
+          (session && session.user.id !== publicTip.tippeeId)) ? (
         <>
           <Text>This tip is no longer available.</Text>
+          <Spacer />
+          <HomeButton />
+        </>
+      ) : publicTip.status === "CLAIMED" && !session ? (
+        <>
+          <Text>This tip has been claimed but not withdrawn yet.</Text>
+          <Spacer />
+          <Collapse
+            bordered
+            title={<Text b>This is my Tip🙋</Text>}
+            css={{ width: "100%" }}
+          >
+            <>
+              <Login
+                instructionsText={() => "Confirm your account to continue"}
+                submitText={"Login"}
+                callbackUrl={getCurrentUrl(router)}
+                tipId={publicTip.id}
+                defaultLoginMethod="phone"
+              />
+            </>
+          </Collapse>
+          <Spacer />
+          <Text>Not yours?</Text>
           <Spacer />
           <HomeButton />
         </>
