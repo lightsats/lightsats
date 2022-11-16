@@ -184,3 +184,43 @@ export async function getSmsForSatsAccountBalance(): Promise<number> {
     );
   }
 }
+
+type FundAccountResponse = {
+  status: "OK";
+  orderId: string;
+  payreq: string;
+};
+
+export async function fundSmsForSatsAccountBalance(
+  amount: number
+): Promise<string> {
+  if (!apiKey) {
+    throw new Error("apiKey is undefined");
+  }
+
+  const requestHeaders = new Headers();
+  requestHeaders.append("Accept", "application/json");
+  requestHeaders.append("Content-Type", "application/json");
+  requestHeaders.append("X-API-Key", apiKey);
+
+  const response = await fetch(`https://api2.sms4sats.com/fund`, {
+    method: "POST",
+    headers: requestHeaders,
+    body: JSON.stringify({
+      amount,
+    }),
+  });
+  if (response.ok) {
+    const responseData = (await response.json()) as FundAccountResponse;
+    if (responseData.status !== "OK") {
+      throw new Error("Failed to get account balance: " + responseData.status);
+    }
+    return responseData.payreq;
+  } else {
+    throw new Error(
+      smsForSatsAccountProvider.name +
+        ": Fund account balance returned unexpected HTTP status: " +
+        response.status
+    );
+  }
+}

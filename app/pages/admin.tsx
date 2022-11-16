@@ -126,7 +126,7 @@ const AdminPage: NextPage = () => {
             sms4sats account balance:{" "}
             {Math.floor(adminDashboard.smsForSatsAccountBalance)} sats
           </Text>
-          <Button onClick={() => toast.error("TODO")}>Fund account</Button>
+          <Button onClick={fundSmsForSatsAccount}>Fund account</Button>
         </Text>
       </Row>
       <Row justify="center" align="center">
@@ -252,3 +252,31 @@ const AdminPage: NextPage = () => {
 };
 
 export default AdminPage;
+
+async function fundSmsForSatsAccount() {
+  const promptedAmount = window.prompt("Enter amount in sats", "5000");
+  if (!promptedAmount) {
+    return;
+  }
+  const amount = parseInt(promptedAmount);
+
+  const requestHeaders = new Headers();
+  requestHeaders.append("Accept", "application/json");
+  requestHeaders.append("Content-Type", "application/json");
+
+  const response = await fetch(`/api/admin/sms4sats/fund`, {
+    method: "POST",
+    headers: requestHeaders,
+    body: JSON.stringify({
+      amount,
+    }),
+  });
+  if (response.ok) {
+    const invoice = (await response.json()) as string;
+    if (window.prompt("Pay the invoice, then click OK to refresh", invoice)) {
+      window.location.reload();
+    }
+  } else {
+    toast.error("Failed to fund invoice: " + response.status);
+  }
+}
