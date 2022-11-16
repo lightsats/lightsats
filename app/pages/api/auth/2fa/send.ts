@@ -1,12 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import { LOGIN_LINK_EXPIRATION_DAYS } from "lib/constants";
-import { sendMail } from "lib/email/emailProvider";
+import { sendEmail } from "lib/email/sendEmail";
 import { generateShortLink } from "lib/generateShortLink";
 import { getApiI18n } from "lib/i18n/api";
 import prisma from "lib/prismadb";
 import { Routes } from "lib/Routes";
-import { smsProviders } from "lib/sms/smsProviders";
+import { sendSms } from "lib/sms/sendSms";
 import { getLocalePath } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -38,7 +38,7 @@ export default async function handler(
 
   if (twoFactorLoginRequest.email) {
     try {
-      await sendMail({
+      await sendEmail({
         to: twoFactorLoginRequest.email,
         subject: i18n("common:verifyEmailSubject"),
         html: i18n("common:verifyEmailMessage", {
@@ -92,43 +92,12 @@ export default async function handler(
         }
       }
 
-      let success = false;
       const smsBody =
         i18n("common:verifyPhoneMessage") +
         " " +
         ((await generateShortLink(verifyUrl)) ?? verifyUrl);
-      for (const smsProvider of smsProviders) {
-        success = await smsProvider.sendMessage(
-          twoFactorLoginRequest.phoneNumber,
-          smsBody
-        );
-        if (success) {
-          console.log(
-            "Sent SMS to " +
-              twoFactorLoginRequest.phoneNumber +
-              " via " +
-              smsProvider.name
-          );
-          break;
-        } else {
-          console.error(
-            "Failed to send SMS to " +
-              twoFactorLoginRequest.phoneNumber +
-              " provider: " +
-              smsProvider.name
-          );
-        }
-      }
-      if (!success) {
-        throw new Error(
-          "Failed to send SMS to " +
-            twoFactorLoginRequest.phoneNumber +
-            ". Tried " +
-            smsProviders.length +
-            " providers: " +
-            smsProviders.map((p) => p.name).join(", ")
-        );
-      }
+
+      await sendSms(twoFactorLoginRequest.phoneNumber, smsBody);
 
       res.status(StatusCodes.NO_CONTENT).end();
     } catch (error) {

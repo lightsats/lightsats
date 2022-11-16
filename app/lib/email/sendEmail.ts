@@ -19,5 +19,5 @@ const transport = nodemailer.createTransport({
   },
 });
 
-export const sendMail = (...args: Parameters<typeof transport.sendMail>) =>
+export const sendEmail = (...args: Parameters<typeof transport.sendMail>) =>
   transport.sendMail(...args);

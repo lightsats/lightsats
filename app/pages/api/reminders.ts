@@ -1,8 +1,10 @@
 import { ReminderType, User } from "@prisma/client";
 import { addDays, differenceInHours } from "date-fns";
 import { StatusCodes } from "http-status-codes";
-import { sendMail } from "lib/email/emailProvider";
+import { sendEmail } from "lib/email/sendEmail";
+import { generateShortLink } from "lib/generateShortLink";
 import prisma from "lib/prismadb";
+import { sendSms } from "lib/sms/sendSms";
 import { getClaimUrl } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -163,20 +165,28 @@ async function sendReminder(reminder: Reminder) {
   if (!tip) {
     throw new Error("Tip does not exist: " + reminder.tipId);
   }
+  const claimUrl = getClaimUrl(tip);
   if (reminder.email) {
-    await sendMail({
+    await sendEmail({
       to: reminder.email,
       subject:
         reminder.reminderType === "ONE_DAY_AFTER_CLAIM"
           ? "Reminder: You haven't withdrawn your Lightsats Tip yet!"
           : "Reminder: Your Lightsats Tip is expiring tomorrow!",
-      html: `Withdraw your tip before it expires. To continue your journey <a href="${getClaimUrl(
-        tip
-      )}">click here</a>`,
+      html: `Withdraw your tip before it expires. To continue your journey <a href="${claimUrl}">click here</a>`,
       from: `Lightsats <${process.env.EMAIL_FROM}>`,
     });
   } else if (reminder.phoneNumber) {
-    throw new Error("TODO SMS");
+    const shortUrl = (await generateShortLink(claimUrl)) ?? claimUrl;
+
+    await sendSms(
+      reminder.phoneNumber,
+      (reminder.reminderType === "ONE_DAY_AFTER_CLAIM"
+        ? "Lightsats Reminder: You haven't withdrawn your tip yet!"
+        : "Lightsats Reminder: Your tip is expiring tomorrow!") +
+        " " +
+        shortUrl
+    );
   } else {
     throw new Error(
       "Reminder does not have a valid contact method: " +
