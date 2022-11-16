@@ -1,40 +1,29 @@
 import { StatusCodes } from "http-status-codes";
-import jwt from "jsonwebtoken";
-import { LOGIN_LINK_EXPIRATION_DAYS } from "lib/constants";
+
 import { sendEmail } from "lib/email/sendEmail";
+import { generateAuthLink } from "lib/generateAuthLink";
 import { generateShortLink } from "lib/generateShortLink";
 import { getApiI18n } from "lib/i18n/api";
 import prisma from "lib/prismadb";
-import { Routes } from "lib/Routes";
-import { sendSms } from "lib/sms/sendSms";
-import { getLocalePath } from "lib/utils";
-import type { NextApiRequest, NextApiResponse } from "next";
 
-import { TwoFactorAuthToken } from "types/TwoFactorAuthToken";
+import { sendSms } from "lib/sms/sendSms";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { TwoFactorLoginRequest } from "types/TwoFactorLoginRequest";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (!process.env.NEXTAUTH_SECRET) {
-    throw new Error("No NEXTAUTH_SECRET set");
-  }
   const twoFactorLoginRequest = req.body as TwoFactorLoginRequest;
 
   const i18n = await getApiI18n(twoFactorLoginRequest.locale);
-  const twoFactorAuthToken: TwoFactorAuthToken = {
-    email: twoFactorLoginRequest.email,
-    phoneNumber: twoFactorLoginRequest.phoneNumber,
-    callbackUrl: twoFactorLoginRequest.callbackUrl,
-  };
-  const token = jwt.sign(twoFactorAuthToken, process.env.NEXTAUTH_SECRET, {
-    expiresIn: LOGIN_LINK_EXPIRATION_DAYS + " days",
-  });
 
-  const verifyUrl = `${process.env.APP_URL}${getLocalePath(
-    twoFactorLoginRequest.locale
-  )}${Routes.verifySignin}/${token}`;
+  const verifyUrl = generateAuthLink(
+    twoFactorLoginRequest.email,
+    twoFactorLoginRequest.phoneNumber,
+    twoFactorLoginRequest.locale,
+    twoFactorLoginRequest.callbackUrl
+  );
 
   if (twoFactorLoginRequest.email) {
     try {

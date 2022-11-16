@@ -2,6 +2,7 @@ import { ReminderType, User } from "@prisma/client";
 import { addDays, differenceInHours } from "date-fns";
 import { StatusCodes } from "http-status-codes";
 import { sendEmail } from "lib/email/sendEmail";
+import { generateAuthLink } from "lib/generateAuthLink";
 import { generateShortLink } from "lib/generateShortLink";
 import prisma from "lib/prismadb";
 import { sendSms } from "lib/sms/sendSms";
@@ -174,15 +175,22 @@ async function sendReminder(reminder: Reminder) {
     throw new Error("User does not exist: " + reminder.userId);
   }
 
-  await prisma.sentReminder.create({
-    data: {
-      reminderType: reminder.reminderType,
-      tipId: reminder.tipId,
-      userId: reminder.userId,
-    },
-  });
+  if (process.env.DISABLE_SENT_REMINDERS !== "true") {
+    await prisma.sentReminder.create({
+      data: {
+        reminderType: reminder.reminderType,
+        tipId: reminder.tipId,
+        userId: reminder.userId,
+      },
+    });
+  }
 
-  const claimUrl = getClaimUrl(tip);
+  const verifyUrl = generateAuthLink(
+    reminder.email ?? undefined,
+    reminder.phoneNumber ?? undefined,
+    tip.tippeeLocale,
+    getClaimUrl(tip)
+  );
   if (reminder.email) {
     await sendEmail({
       to: reminder.email,
@@ -190,11 +198,11 @@ async function sendReminder(reminder: Reminder) {
         reminder.reminderType === "ONE_DAY_AFTER_CLAIM"
           ? "Reminder: You haven't withdrawn your Lightsats Tip yet!"
           : "Reminder: Your Lightsats Tip is expiring tomorrow!",
-      html: `Withdraw your tip before it expires. To continue your journey <a href="${claimUrl}">click here</a>`,
+      html: `Withdraw your tip before it expires. To continue your journey <a href="${verifyUrl}">click here</a>`,
       from: `Lightsats <${process.env.EMAIL_FROM}>`,
     });
   } else if (reminder.phoneNumber) {
-    const shortUrl = (await generateShortLink(claimUrl)) ?? claimUrl;
+    const shortUrl = (await generateShortLink(verifyUrl)) ?? verifyUrl;
 
     await sendSms(
       reminder.phoneNumber,
@@ -210,16 +218,18 @@ async function sendReminder(reminder: Reminder) {
         JSON.stringify(reminder)
     );
   }
-  await prisma.sentReminder.update({
-    where: {
-      userId_tipId_reminderType: {
-        reminderType: reminder.reminderType,
-        tipId: reminder.tipId,
-        userId: reminder.userId,
+  if (process.env.DISABLE_SENT_REMINDERS !== "true") {
+    await prisma.sentReminder.update({
+      where: {
+        userId_tipId_reminderType: {
+          reminderType: reminder.reminderType,
+          tipId: reminder.tipId,
+          userId: reminder.userId,
+        },
       },
-    },
-    data: {
-      delivered: true,
-    },
-  });
+      data: {
+        delivered: true,
+      },
+    });
+  }
 }
