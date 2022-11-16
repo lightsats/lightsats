@@ -32,4 +32,5 @@ This app will be run as a fly machine on a schedule to manage things such as sen
 
 ## Scheduling
 
-- _TODO: update machine to be scheduled daily_
+- `yarn machines:update:schedule`
+- `yarn machines:start`
