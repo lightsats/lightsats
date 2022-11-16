@@ -2,6 +2,7 @@ import {
   Badge,
   Card,
   Col,
+  Container,
   Grid,
   Loading,
   Row,
@@ -30,13 +31,12 @@ const Scoreboard: NextPage = () => {
     return <Loading color="currentColor" size="lg" />;
   }
 
-  scoreboard.entries[0].name = "Satoshi nakamoto";
   scoreboard.entries.push(scoreboard.entries[0]);
+  scoreboard.entries[0].name = "Satoshi nakamoto";
 
   return (
     <>
       <Text h2>Leaderboard</Text>
-
       <Grid.Container gap={1} css={{ width: "100%", margin: 0, padding: 0 }}>
         <Grid xs={4}>
           <Card css={{ dropShadow: "$xs" }}>
@@ -75,11 +75,59 @@ const Scoreboard: NextPage = () => {
           </Card>
         </Grid>
       </Grid.Container>
-      <Spacer />
 
       <Spacer />
-      {/* desktop view */}
-      <div style={{ width: "100%" }}>
+      <Grid.Container
+        gap={1}
+        justify="center"
+        xs={12}
+        sm={0}
+        css={{ padding: 0 }}
+      >
+        {scoreboard.entries.map((scoreboardEntry, i) => {
+          return (
+            <Grid key={i} xs={12}>
+              <Card css={{ dropShadow: "$sm" }}>
+                <Card.Body>
+                  <Row align="center" justify="space-between">
+                    <Badge
+                      css={{
+                        background:
+                          i === 0
+                            ? "$gold"
+                            : i === 1
+                            ? "$silver"
+                            : i === 2
+                            ? "$bronze"
+                            : "$gray600",
+                      }}
+                    >
+                      {i + 1}
+                    </Badge>
+                    <Col>
+                      <ScoreboardUser scoreboardEntry={scoreboardEntry} />
+                    </Col>
+                    <Col>
+                      {scoreboardEntry.twitterUsername && (
+                        <TwitterButton
+                          username={scoreboardEntry.twitterUsername}
+                        />
+                      )}
+                    </Col>
+                    <Col css={{ textAlign: "right" }}>
+                      <Badge variant="flat" color="primary">
+                        {(scoreboardEntry.satsSent / 1000).toFixed(0)}k
+                      </Badge>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </Grid>
+          );
+        })}
+      </Grid.Container>
+      <Spacer />
+      <Container xs={false} lg css={{ padding: 0 }}>
         <Table
           fixed
           css={{
@@ -97,13 +145,13 @@ const Scoreboard: NextPage = () => {
               #
             </Table.Column>
             <Table.Column css={{ pl: 20 }}>Tipper</Table.Column>
-            <Table.Column css={{ textAlign: "center", px: 10 }}>
+            <Table.Column css={{ textAlign: "center" }}>Tips sent</Table.Column>
+            <Table.Column css={{ textAlign: "center" }}>
+              Success rate
+            </Table.Column>
+            <Table.Column css={{ textAlign: "center" }}>
               Tipped sats
             </Table.Column>
-            <Table.Column css={{ textAlign: "center", px: 10 }}>
-              Tips sent
-            </Table.Column>
-            {/* <Table.Column>Success rate</Table.Column> */}
           </Table.Header>
           <Table.Body>
             {scoreboard.entries.map((scoreboardEntry, i) => {
@@ -122,7 +170,7 @@ const Scoreboard: NextPage = () => {
                             : "$gray600",
                       }}
                     >
-                      #{i + 1}
+                      {i + 1}
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>
@@ -136,17 +184,22 @@ const Scoreboard: NextPage = () => {
                     </Row>
                   </Table.Cell>
                   <Table.Cell css={{ textAlign: "center" }}>
-                    {(scoreboardEntry.satsSent / 1000).toFixed(0)}k
+                    {scoreboardEntry.numTipsSent}
                   </Table.Cell>
                   <Table.Cell css={{ textAlign: "center" }}>
-                    {scoreboardEntry.numTipsSent}
+                    {scoreboardEntry.successRate} %
+                  </Table.Cell>
+                  <Table.Cell css={{ textAlign: "center" }}>
+                    <Badge variant="flat" color="primary">
+                      {(scoreboardEntry.satsSent / 1000).toFixed(0)}k
+                    </Badge>
                   </Table.Cell>
                 </Table.Row>
               );
             })}
           </Table.Body>
         </Table>
-      </div>
+      </Container>
     </>
   );
 };
