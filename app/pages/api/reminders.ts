@@ -165,6 +165,23 @@ async function sendReminder(reminder: Reminder) {
   if (!tip) {
     throw new Error("Tip does not exist: " + reminder.tipId);
   }
+  const user = await prisma.user.findUnique({
+    where: {
+      id: reminder.userId,
+    },
+  });
+  if (!user) {
+    throw new Error("User does not exist: " + reminder.userId);
+  }
+
+  await prisma.sentReminder.create({
+    data: {
+      reminderType: reminder.reminderType,
+      tipId: reminder.tipId,
+      userId: reminder.userId,
+    },
+  });
+
   const claimUrl = getClaimUrl(tip);
   if (reminder.email) {
     await sendEmail({
@@ -193,4 +210,16 @@ async function sendReminder(reminder: Reminder) {
         JSON.stringify(reminder)
     );
   }
+  await prisma.sentReminder.update({
+    where: {
+      userId_tipId_reminderType: {
+        reminderType: reminder.reminderType,
+        tipId: reminder.tipId,
+        userId: reminder.userId,
+      },
+    },
+    data: {
+      delivered: true,
+    },
+  });
 }
