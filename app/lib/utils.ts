@@ -7,6 +7,7 @@ import {
   SATS_TO_BTC,
 } from "lib/constants";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
+import { Routes } from "lib/Routes";
 import { NextRouter } from "next/router";
 import { MouseEventHandler } from "react";
 import { Item } from "types/Item";
@@ -95,3 +96,8 @@ export const getCurrentUrl = (router: NextRouter) => {
 export const hasTipExpired = (tip: Tip | PublicTip) =>
   expirableTipStatuses.indexOf(tip.status) >= 0 &&
   isAfter(new Date(), new Date(tip.expiry));
+
+export const getClaimUrl = (tip: Tip) =>
+  `${getAppUrl()}${getLocalePath(tip.tippeeLocale)}${Routes.tips}/${
+    tip.id
+  }/claim`;

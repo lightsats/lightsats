@@ -26,10 +26,37 @@ async function getReminders(): Promise<Reminder[]> {
     );
   }
 }
+async function sendReminder(reminder: Reminder) {
+  const requestHeaders = new Headers();
+  requestHeaders.append("Accept", "application/json");
+
+  const response = await fetch(`${appUrl}/api/reminders?apiKey=${appApiKey}`, {
+    method: "POST",
+    headers: requestHeaders,
+    body: JSON.stringify(reminder),
+  });
+  if (!response.ok) {
+    throw new Error(
+      "Post reminders returned unexpected HTTP status: " + response.status
+    );
+  }
+}
 
 console.log("Lightsats scheduler - connecting to " + appUrl);
 
 (async () => {
   const reminders = await getReminders();
+  let sentReminders = 0;
   console.log("Found " + reminders.length + " reminders");
+  for (const reminder of reminders) {
+    try {
+      await sendReminder(reminder);
+      process.stdout.write(".");
+      sentReminders++;
+    } catch (error) {
+      console.error("Failed to send reminder", reminder, error);
+    }
+  }
+  console.log("Done");
+  console.log("Lightsats scheduler - sent " + sentReminders + " reminders");
 })();

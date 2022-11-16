@@ -1,19 +1,20 @@
 import { ReminderType, User } from "@prisma/client";
 import { addDays, differenceInHours } from "date-fns";
 import { StatusCodes } from "http-status-codes";
+import { sendMail } from "lib/email/emailProvider";
 import prisma from "lib/prismadb";
+import { getClaimUrl } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-type Reminder =
-  | ({ userId: string; tipId: string; reminderType: ReminderType } & Pick<
-      User,
-      "email"
-    >)
-  | Pick<User, "phoneNumber">;
+type Reminder = {
+  userId: string;
+  tipId: string;
+  reminderType: ReminderType;
+} & Pick<User, "email" | "phoneNumber">;
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Reminder[]>
+  res: NextApiResponse<Reminder[] | never>
 ) {
   const { apiKey } = req.query;
   if (!process.env.API_KEY || apiKey !== process.env.API_KEY) {
@@ -23,9 +24,26 @@ export default async function handler(
   switch (req.method) {
     case "GET":
       return handleGetReminders(req, res);
+    case "POST":
+      return handlePostReminder(req, res);
     default:
       res.status(StatusCodes.NOT_FOUND).end();
       return;
+  }
+}
+
+async function handlePostReminder(
+  req: NextApiRequest,
+  res: NextApiResponse<never>
+) {
+  const reminder = JSON.parse(req.body) as Reminder;
+
+  try {
+    await sendReminder(reminder);
+    res.status(StatusCodes.NO_CONTENT).end();
+  } catch (error) {
+    console.error("Failed to send reminder", reminder, error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
   }
 }
 
@@ -131,4 +149,38 @@ async function handleGetReminders(
   }
 
   res.json(reminders);
+}
+
+async function sendReminder(reminder: Reminder) {
+  if (!reminder.tipId) {
+    throw new Error("Reminder tipId is undefined: " + JSON.stringify(reminder));
+  }
+  const tip = await prisma.tip.findUnique({
+    where: {
+      id: reminder.tipId,
+    },
+  });
+  if (!tip) {
+    throw new Error("Tip does not exist: " + reminder.tipId);
+  }
+  if (reminder.email) {
+    await sendMail({
+      to: reminder.email,
+      subject:
+        reminder.reminderType === "ONE_DAY_AFTER_CLAIM"
+          ? "Reminder: You haven't withdrawn your Lightsats Tip yet!"
+          : "Reminder: Your Lightsats Tip is expiring tomorrow!",
+      html: `Withdraw your tip before it expires. To continue your journey <a href="${getClaimUrl(
+        tip
+      )}">click here</a>`,
+      from: `Lightsats <${process.env.EMAIL_FROM}>`,
+    });
+  } else if (reminder.phoneNumber) {
+    throw new Error("TODO SMS");
+  } else {
+    throw new Error(
+      "Reminder does not have a valid contact method: " +
+        JSON.stringify(reminder)
+    );
+  }
 }
