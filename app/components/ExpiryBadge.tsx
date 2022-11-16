@@ -17,6 +17,7 @@ export function ExpiryBadge({ tip, viewing }: Props) {
   return (
     <Tooltip
       color="primary"
+      placement="right"
       content={
         viewing === "tippee"
           ? hasExpired
@@ -30,12 +31,7 @@ export function ExpiryBadge({ tip, viewing }: Props) {
           : "Your recipient will receive occasional reminders to claim and withdraw their tip before it expires ✌️"
       }
     >
-      <Badge
-        variant="flat"
-        color={hasExpired ? "error" : "warning"}
-        size="xs"
-        css={{ ml: 10 }}
-      >
+      <Badge variant="flat" color={hasExpired ? "error" : "warning"} size="xs">
         {!hasExpired && (
           <>⌛ {formatDistance(Date.now(), new Date(tip.expiry))}</>
         )}
