@@ -16,7 +16,7 @@ import { TwitterButton } from "components/TwitterButton";
 import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { getAvatarUrl } from "lib/utils";
+import { formatAmount, getAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import useSWR from "swr";
 import { Scoreboard as ScoreboardType } from "types/Scoreboard";
@@ -113,8 +113,7 @@ const Scoreboard: NextPage = () => {
                     </Col>
                     <Col css={{ textAlign: "right" }}>
                       <Badge variant="flat" color="primary">
-                        {(scoreboardEntry.satsSent / 1000).toFixed(0)}
-                        {scoreboardEntry.satsSent / 1000 > 0 && "k"}
+                        {formatAmount(scoreboardEntry.satsSent)}
                       </Badge>
                     </Col>
                   </Row>
@@ -189,8 +188,7 @@ const Scoreboard: NextPage = () => {
                   </Table.Cell>
                   <Table.Cell css={{ textAlign: "center" }}>
                     <Badge variant="flat" color="primary">
-                      {(scoreboardEntry.satsSent / 1000).toFixed(0)}
-                      {scoreboardEntry.satsSent / 1000 > 0 && "k"}
+                      {formatAmount(scoreboardEntry.satsSent)}
                     </Badge>
                   </Table.Cell>
                 </Table.Row>

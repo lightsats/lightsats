@@ -95,3 +95,11 @@ export const getCurrentUrl = (router: NextRouter) => {
 export const hasTipExpired = (tip: Tip | PublicTip) =>
   expirableTipStatuses.indexOf(tip.status) >= 0 &&
   isAfter(new Date(), new Date(tip.expiry));
+
+export const formatAmount = (amount: number) => {
+  let i = 0;
+  for (i; amount >= 1000; i++) {
+    amount /= 1000;
+  }
+  return amount.toFixed(i > 0 ? 2 : 0) + ["", " k", " M", "G"][i];
+};
