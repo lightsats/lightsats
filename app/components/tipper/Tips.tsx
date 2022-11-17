@@ -163,16 +163,18 @@ export function Tips() {
                         </Row>
                         <Spacer y={0.5} />
                         <Row justify="space-between" align="flex-end">
-                          <Row align="center">
+                          <Row align="center" css={{ color: "$gray800" }}>
                             {tip.tippeeName && (
                               <>
-                                <Text size="small">To {tip.tippeeName}</Text>
+                                <Text color="$gray800" size="small">
+                                  To {tip.tippeeName}
+                                </Text>
                                 <Spacer x={0.25} />
                                 •
                                 <Spacer x={0.25} />
                               </>
                             )}
-                            <Text size="small">
+                            <Text size="small" color="$gray800">
                               Created&nbsp;
                               {formatDistance(
                                 Date.now(),
