@@ -36,7 +36,10 @@ class MyDocument extends Document {
             content="default"
           />
           <meta name="apple-mobile-web-app-title" content="Lightsats⚡" />
-          <meta name="description" content="Best PWA App in the world" />
+          <meta
+            name="description"
+            content="Orange pill the world around you. One tip at a time."
+          />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="theme-color" content="#FFFFFF" />
 
@@ -62,12 +65,15 @@ class MyDocument extends Document {
           />
           <link rel="shortcut icon" href="/favicon.ico" />
 
+          <meta
+            name="twitter:title"
+            content="Lightsats - Gift sats without losing them ✌️"
+          />
           <meta name="twitter:card" content="summary" />
           <meta name="twitter:url" content="https://lightsats.com" />
-          <meta name="twitter:title" content="Lightsats⚡" />
           <meta
             name="twitter:description"
-            content="Gift sats without losing them ✌🏼"
+            content="Orange pill the world around you. One tip at a time."
           />
           <meta
             name="twitter:image"
@@ -75,10 +81,13 @@ class MyDocument extends Document {
           />
           <meta name="twitter:creator" content="@lightsats21" />
           <meta property="og:type" content="website" />
-          <meta property="og:title" content="Lightsats⚡" />
+          <meta
+            property="og:title"
+            content="Lightsats - Gift sats without losing them ✌️"
+          />
           <meta
             property="og:description"
-            content="Gift sats without losing them ✌🏼"
+            content="Orange pill the world around you. One tip at a time."
           />
           <meta property="og:site_name" content="Lightsats⚡" />
           <meta property="og:url" content="https://lightsats.com" />
