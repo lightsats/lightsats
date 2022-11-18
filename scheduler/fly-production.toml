@@ -1,9 +1,12 @@
-# fly.toml file generated for lightsats-scheduler on 2022-11-15T22:26:37+07:00
+# fly.toml file generated for lightsats-prod-scheduler on 2022-11-18T21:05:43+07:00
 
-app = "lightsats-scheduler"
+app = "lightsats-prod-scheduler"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
+
+[build]
+  dockerfile = "Dockerfile.production"
 
 [env]
   PORT = "8080"

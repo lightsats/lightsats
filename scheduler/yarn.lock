@@ -20,6 +20,11 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
 
+cli-confirm@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/cli-confirm/-/cli-confirm-1.0.1.tgz#a3cfb7a9de71d6b5cc34df9e7b8a73d73d77970a"
+  integrity sha512-AF9fOBZPflNFm2wtq5BNqLr2ZmOB0nwgYQn0tgfbk5OYDMmLFbP+FrelmGK5apvp67ybbpUVTBZZffgR2yv+CQ==
+
 combined-stream@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
