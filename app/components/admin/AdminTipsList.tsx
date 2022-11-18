@@ -1,10 +1,10 @@
 import { Button, Card, Col, Grid, Row, Spacer, Text } from "@nextui-org/react";
 import { Tip, TipStatus } from "@prisma/client";
+import { AdminTipCardContents } from "components/admin/AdminTipCardContents";
 import { NextLink } from "components/NextLink";
 import { Paginated, PaginatedPageProps } from "components/Paginated";
-import { TipStatusBadge } from "components/tipper/TipStatusBadge";
-import { formatDistance } from "date-fns";
 import { Routes } from "lib/Routes";
+import { hasTipExpired } from "lib/utils";
 import React from "react";
 import create from "zustand";
 
@@ -12,9 +12,17 @@ type AdminTipsListProps = {
   tips: Tip[];
 };
 
+enum ExpiredType {
+  Expired = "Expired",
+  NotExpired = "NotExpired",
+}
+
 const TipSortTypes = ["date", "price"] as const;
 type TipsSortType = typeof TipSortTypes[number];
-type TipFilter = TipStatus;
+type TipFilter = TipStatus | ExpiredType;
+const TipFilters: TipFilter[] = (
+  Object.values(ExpiredType) as TipFilter[]
+).concat(Object.values(TipStatus) as TipFilter[]);
 
 const SortDirectionTypes = ["asc", "desc"] as const;
 type SortDirectionType = typeof SortDirectionTypes[number];
@@ -31,7 +39,7 @@ type AdminTipsStore = {
 const useAdminTipsStore = create<AdminTipsStore>((set) => ({
   sortType: "date",
   sortDirection: "desc",
-  filters: Object.values(TipStatus),
+  filters: [],
   setSortType: (sortType: TipsSortType) => set(() => ({ sortType })),
   setSortDirection: (sortDirection: SortDirectionType) =>
     set(() => ({ sortDirection })),
@@ -40,26 +48,37 @@ const useAdminTipsStore = create<AdminTipsStore>((set) => ({
 
 export function AdminTipsList({ tips }: AdminTipsListProps) {
   const tipsStore = useAdminTipsStore();
-  const sortedAndFilteredTips = React.useMemo(
-    () =>
-      tips
-        .filter(
-          (tip) =>
-            !tipsStore.filters.length ||
-            tipsStore.filters.indexOf(tip.status) > -1
-        )
-        .sort((a, b) => {
-          let diff = 0;
-          if (tipsStore.sortType === "date") {
-            diff =
-              new Date(a.created).getDate() - new Date(b.created).getDate();
-          } else {
-            diff = a.amount - b.amount;
-          }
-          return tipsStore.sortDirection === "desc" ? -diff : diff;
-        }),
-    [tips, tipsStore]
-  );
+
+  const sortedAndFilteredTips = React.useMemo(() => {
+    const tipStatusFilters = tipsStore.filters.filter(
+      (filter) => Object.values(TipStatus).indexOf(filter as TipStatus) > -1
+    );
+    const tipExpiryFilters = tipsStore.filters.filter(
+      (filter) => Object.values(ExpiredType).indexOf(filter as ExpiredType) > -1
+    );
+    return tips
+      .filter(
+        (tip) =>
+          !tipsStore.filters.length ||
+          ((!tipStatusFilters.length ||
+            tipStatusFilters.indexOf(tip.status) > -1) &&
+            (!tipExpiryFilters.length ||
+              (tipExpiryFilters.indexOf(ExpiredType.Expired) > -1 &&
+                hasTipExpired(tip)) ||
+              (tipExpiryFilters.indexOf(ExpiredType.NotExpired) > -1 &&
+                !hasTipExpired(tip))))
+      )
+
+      .sort((a, b) => {
+        let diff = 0;
+        if (tipsStore.sortType === "date") {
+          diff = new Date(a.created).getDate() - new Date(b.created).getDate();
+        } else {
+          diff = a.amount - b.amount;
+        }
+        return tipsStore.sortDirection === "desc" ? -diff : diff;
+      });
+  }, [tips, tipsStore]);
 
   return (
     <>
@@ -86,19 +105,7 @@ function AdminTipsListPage({ pageItems }: PaginatedPageProps<Tip>) {
             <a style={{ width: "100%" }}>
               <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
                 <Card.Body>
-                  <Row justify="space-between">
-                    <Text b>{tip.id}</Text>
-
-                    <TipStatusBadge status={tip.status} />
-                  </Row>
-                  <Row justify="space-between">
-                    <Text>
-                      {formatDistance(new Date(), new Date(tip.created))} ago
-                    </Text>
-                    <Text>
-                      {tip.amount}⚡ ({tip.fee} sats fee)
-                    </Text>
-                  </Row>
+                  <AdminTipCardContents tip={tip} />
                 </Card.Body>
               </Card>
             </a>
@@ -148,27 +155,27 @@ function SortFilterTips() {
       <Row>
         <Text h6>Filter</Text>
         <Grid.Container gap={1}>
-          {Object.values(TipStatus).map((tipStatus) => (
-            <Grid key={tipStatus}>
+          {TipFilters.map((tipFilter) => (
+            <Grid key={tipFilter}>
               <Button
                 auto
-                bordered={tipsStore.filters.indexOf(tipStatus) < 0}
+                bordered={tipsStore.filters.indexOf(tipFilter) < 0}
                 onClick={() => {
                   const isAlreadySelected =
-                    tipsStore.filters.indexOf(tipStatus) > -1;
+                    tipsStore.filters.indexOf(tipFilter) > -1;
                   const otherFilters = tipsStore.filters.filter(
-                    (f) => f !== tipStatus
+                    (f) => f !== tipFilter
                   );
                   useAdminTipsStore
                     .getState()
                     .setFilters([
                       ...otherFilters,
-                      ...(isAlreadySelected ? [] : [tipStatus]),
+                      ...(isAlreadySelected ? [] : [tipFilter]),
                     ]);
                 }}
                 size="sm"
               >
-                {tipStatus}
+                {tipFilter}
               </Button>
             </Grid>
           ))}

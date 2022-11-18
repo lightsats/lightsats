@@ -11,6 +11,7 @@ import { LoginMethodsChart } from "components/admin/LoginMethodsChart";
 import { ProfitChart } from "components/admin/ProfitChart";
 import { TipsChart } from "components/admin/TipsChart";
 import { UserTypesChart } from "components/admin/UserTypesChart";
+import { Divider } from "components/Divider";
 import { NextLink } from "components/NextLink";
 import { NextUIUser } from "components/NextUIUser";
 import { differenceInHours } from "date-fns";
@@ -229,23 +230,25 @@ const AdminPage: NextPage = () => {
         </Text>
       </Row>
       <Spacer />
-      <Text>Browse</Text>
+      <Text h4>Browse</Text>
+      <Divider />
+      <Spacer />
       <Row justify="center" align="center">
         <NextLink href={Routes.adminUsers}>
           <a>
-            <Button auto>Users</Button>
+            <Button css={{ bg: "$cyan700" }}>Users</Button>
           </a>
         </NextLink>
         <Spacer />
         <NextLink href={Routes.adminTips}>
           <a>
-            <Button auto>Tips</Button>
+            <Button css={{ bg: "$purple700" }}>Tips</Button>
           </a>
         </NextLink>
         <Spacer />
         <NextLink href={Routes.adminWithdrawals}>
           <a>
-            <Button auto>Withdrawals</Button>
+            <Button css={{ bg: "$green700" }}>Withdrawals</Button>
           </a>
         </NextLink>
       </Row>

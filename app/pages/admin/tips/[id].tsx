@@ -1,8 +1,16 @@
-import { Link, Loading, Row, Spacer, Text } from "@nextui-org/react";
+import {
+  Badge,
+  Card,
+  Link,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { User } from "@prisma/client";
+import { AdminTipCardContents } from "components/admin/AdminTipCardContents";
 import { AdminUserCard } from "components/admin/AdminUserCard";
 import { AdminWithdrawalCard } from "components/admin/AdminWithdrawalCard";
-import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistance } from "date-fns";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -28,7 +36,11 @@ const AdminTipPage: NextPage = () => {
         <title>Lightsats⚡ - Admin - Tip {id}</title>
       </Head>
       <h1>Admin/Tips</h1>
-      <h6>/{id}</h6>
+      <Card>
+        <Card.Body>
+          <AdminTipCardContents tip={tip} />
+        </Card.Body>
+      </Card>
 
       <Row justify="center" align="center">
         <Text blockquote>
@@ -46,18 +58,6 @@ const AdminTipPage: NextPage = () => {
         </Text>
       </Row>
       <Spacer />
-      <Row justify="space-between">
-        <Text b>{tip.id}</Text>
-
-        <TipStatusBadge status={tip.status} />
-      </Row>
-      <Row justify="space-between">
-        <Text>{formatDistance(new Date(), new Date(tip.created))} ago</Text>
-        <Text>
-          {tip.amount}⚡ ({tip.fee} sats fee)
-        </Text>
-      </Row>
-      <Spacer />
       <Row>
         <Text>Funding invoice</Text>
         <Spacer />
@@ -71,6 +71,29 @@ const AdminTipPage: NextPage = () => {
           <Text h2>Withdrawal</Text>
           <AdminWithdrawalCard withdrawal={tip.withdrawal} />
         </>
+      )}
+      <Spacer />
+      <Text h2>Sent Reminders</Text>
+      {tip.sentReminders.length ? (
+        tip.sentReminders.map((reminder) => (
+          <Row
+            key={reminder.reminderType}
+            align="center"
+            justify="space-between"
+          >
+            <Text b>{reminder.reminderType}</Text>
+            <Spacer />
+            <Text>
+              {formatDistance(new Date(), new Date(reminder.created))} ago
+            </Text>
+            <Spacer />
+            <Badge color={reminder.delivered ? "success" : "error"}>
+              {reminder.delivered ? "DELIVERED" : "UNDELIVERED"}
+            </Badge>
+          </Row>
+        ))
+      ) : (
+        <Text>(No reminders sent yet)</Text>
       )}
 
       <Spacer />
