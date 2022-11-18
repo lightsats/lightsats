@@ -1,11 +1,20 @@
 import { ClipboardIcon } from "@heroicons/react/24/solid";
-import { Button, Card, Loading, Row, Spacer } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Divider,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { signIn } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
@@ -23,6 +32,7 @@ type LnurlAuthSignInProps = {
 
 export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const router = useRouter();
+  const { t } = useTranslation("common");
   const callbackUrlWithFallback =
     callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
   // only retrieve the qr code once
@@ -70,6 +80,12 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   return (
     <>
       <Card css={{ dropShadow: "$sm" }}>
+        <Card.Header>
+          <Row justify="center">
+            <Text css={{ fontWeight: "bold" }}>{t("lightning")}</Text>
+          </Row>
+        </Card.Header>
+        <Divider />
         <Card.Body>
           <Row justify="center">
             {qr ? (
@@ -86,6 +102,13 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
                 <Loading>Generating QR code...</Loading>
               </>
             )}
+          </Row>
+          <Row justify="center">
+            <Text css={{ maxWidth: "250px", ta: "center" }}>
+              {
+                "Scan this code or copy + paste it to your lightning wallet. Or click to login with your browser's wallet."
+              }
+            </Text>
           </Row>
         </Card.Body>
         {qr && (
