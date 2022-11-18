@@ -1,4 +1,4 @@
-import { Grid } from "@nextui-org/react";
+import { Grid, Text } from "@nextui-org/react";
 import { AdminWithdrawalCard } from "components/admin/AdminWithdrawalCard";
 import { Paginated } from "components/Paginated";
 import { AdminExtendedWithdrawal } from "types/Admin";
@@ -10,6 +10,9 @@ type AdminWithdrawalsListProps = {
 export function AdminWithdrawalsList({
   withdrawals,
 }: AdminWithdrawalsListProps) {
+  if (!withdrawals.length) {
+    return <Text>(No withdrawals yet)</Text>;
+  }
   return (
     <>
       <Paginated

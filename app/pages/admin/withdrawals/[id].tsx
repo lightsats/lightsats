@@ -1,4 +1,5 @@
 import { Loading, Row, Spacer, Text } from "@nextui-org/react";
+import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
 import { AdminTipsList } from "components/admin/AdminTipsList";
 import { AdminUserCard } from "components/admin/AdminUserCard";
 import { defaultFetcher } from "lib/swr";
@@ -57,6 +58,8 @@ const AdminWithdrawalPage: NextPage = () => {
       <Spacer />
       <Text h2>Tips</Text>
       <AdminTipsList tips={withdrawal.tips} />
+      <Spacer />
+      <AdminJSONDumpCard entity={withdrawal} />
     </>
   );
 };

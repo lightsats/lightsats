@@ -8,6 +8,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import { User } from "@prisma/client";
+import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
 import { AdminTipCardContents } from "components/admin/AdminTipCardContents";
 import { AdminUserCard } from "components/admin/AdminUserCard";
 import { AdminWithdrawalCard } from "components/admin/AdminWithdrawalCard";
@@ -100,6 +101,8 @@ const AdminTipPage: NextPage = () => {
       <AdminTipUser title="tipper" user={tip.tipper} />
       <Spacer />
       <AdminTipUser title="tippee" user={tip.tippee} />
+      <Spacer />
+      <AdminJSONDumpCard entity={tip} />
     </>
   );
 };

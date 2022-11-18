@@ -22,6 +22,7 @@ export type AdminExtendedUser = User & {
   tipsReceived: Tip[];
   lnbitsWalletUrl: string | undefined;
   walletBalance: number;
+  withdrawals: AdminExtendedWithdrawal[];
 };
 
 export type AdminExtendedTip = Tip & {
