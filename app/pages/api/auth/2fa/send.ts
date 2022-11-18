@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { generateEmailTemplate } from "lib/email/generateEmailTemplate";
 
 import { sendEmail } from "lib/email/sendEmail";
 import { generateAuthLink } from "lib/generateAuthLink";
@@ -30,9 +31,14 @@ export default async function handler(
       await sendEmail({
         to: twoFactorLoginRequest.email,
         subject: i18n("common:verifyEmailSubject"),
-        html: i18n("common:verifyEmailMessage", {
+        html: generateEmailTemplate({
+          template: "login",
+          message: i18n("common:verifyEmailMessage"),
+          preview: i18n("common:verifyEmailMessage"),
+          title: i18n("common:verifyEmailSubject"),
+          verifyButtonText: i18n("common:verifyEmailButtonText"),
           verifyUrl,
-        }) as string,
+        }),
         from: `Lightsats <${process.env.EMAIL_FROM}>`,
       });
       res.status(StatusCodes.NO_CONTENT).end();
