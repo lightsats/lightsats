@@ -35,6 +35,16 @@ export function AdminTipCardContents({ tip }: AdminTipCardContentsProps) {
           {tip.amount}⚡ ({tip.fee} sats fee)
         </Text>
       </Row>
+      {tip.note && (
+        <Text size="small" i>
+          Note: {tip.note}
+        </Text>
+      )}
+      {tip.tippeeName && (
+        <Text size="small" i>
+          Tippee Name: {tip.tippeeName}
+        </Text>
+      )}
     </>
   );
 }
