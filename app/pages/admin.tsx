@@ -174,6 +174,8 @@ const AdminPage: NextPage = () => {
         <Text>
           {adminDashboard.users.length} users (
           {adminDashboard.users.filter((user) => !!user.email).length} email,{" "}
+          {adminDashboard.users.filter((user) => !!user.phoneNumber).length}{" "}
+          phone,{" "}
           {adminDashboard.users.filter((user) => !!user.lnurlPublicKey).length}{" "}
           lnurl-auth)
         </Text>
