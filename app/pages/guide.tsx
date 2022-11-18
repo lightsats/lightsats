@@ -106,14 +106,15 @@ function GuideCard({ guide }: GuideCardProps) {
         <Grid css={{ size: "100%" }}>
           <Card isHoverable isPressable css={{ dropShadow: "$sm" }}>
             <Card.Body>
-              <Row>
-                <Button color="primary" auto flat css={{ px: 8 }}>
+              <Row align="center">
+                <Spacer x={0.33} />
+                <Button color="primary" auto flat css={{ px: 18 }} size="xl">
                   <Icon>{guide.icon}</Icon>
                 </Button>
-                <Spacer x={0.5} />
+                <Spacer x={1} />
                 <Col>
                   <Text b>{guide.name}</Text>
-                  <Text color="$gray" css={{ lh: "$sm" }}>
+                  <Text color="$gray700" css={{ lh: "$sm", mt: 0 }}>
                     {guide.description}
                   </Text>
                 </Col>
