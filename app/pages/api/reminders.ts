@@ -118,8 +118,8 @@ async function handleGetReminders(
 
         return (
           tip.claimed &&
-          new Date(tip.expiry).getDate() >
-            addDays(new Date(tip.claimed), daysDiff).getDate()
+          new Date(tip.expiry).getTime() >
+            addDays(new Date(tip.claimed), daysDiff).getTime()
         );
       })
       .filter((tip) => {
@@ -128,9 +128,9 @@ async function handleGetReminders(
           return false;
         }
         if (reminderType === "ONE_DAY_AFTER_CLAIM") {
-          return differenceInHours(new Date(), tip.claimed) >= 24;
+          return differenceInHours(new Date(), new Date(tip.claimed)) >= 24;
         } else if (reminderType === "ONE_DAY_BEFORE_EXPIRY") {
-          return differenceInHours(tip.expiry, new Date()) <= 24;
+          return differenceInHours(new Date(tip.expiry), new Date()) <= 24;
         } else {
           throw new Error("Unknown reminder type: " + reminderType);
         }

@@ -72,7 +72,7 @@ export function AdminTipsList({ tips }: AdminTipsListProps) {
       .sort((a, b) => {
         let diff = 0;
         if (tipsStore.sortType === "date") {
-          diff = new Date(a.created).getDate() - new Date(b.created).getDate();
+          diff = new Date(a.created).getTime() - new Date(b.created).getTime();
         } else {
           diff = a.amount - b.amount;
         }
