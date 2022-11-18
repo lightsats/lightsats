@@ -5,26 +5,22 @@ import {
   MjmlSection,
   MjmlText,
 } from "@faire/mjml-react";
-import { EmailTemplate } from "../../../components/email/EmailTemplate";
 
 export type LoginEmailTemplateOptions = {
   template: "login";
-  title: string;
-  preview: string;
-  message: string;
-  verifyButtonText: string;
+  // title: string;
+  // preview: string;
+  // message: string;
+  // verifyButtonText: string;
   verifyUrl: string;
 };
 
-export function generateLoginEmailTemplate({
-  title,
-  preview,
-  message,
-  verifyButtonText,
-  verifyUrl,
-}: LoginEmailTemplateOptions) {
+export function generateLoginEmailTemplate(
+  { verifyUrl }: LoginEmailTemplateOptions,
+  i18n: any
+) {
   return (
-    <EmailTemplate title={title} preview={preview}>
+    <>
       <MjmlSection
         backgroundColor="#FFF"
         paddingBottom={0}
@@ -51,10 +47,10 @@ export function generateLoginEmailTemplate({
             fontWeight="bold"
             fontFamily="Inter, Arial"
           >
-            Welcome!
+            {i18n("email:login.title")}
           </MjmlText>
           <MjmlText fontSize={14} align="center" fontFamily="Inter, Arial">
-            {message}
+            {i18n("email:login.text")}
           </MjmlText>
           <MjmlButton
             fontFamily="Inter, Arial"
@@ -64,7 +60,7 @@ export function generateLoginEmailTemplate({
             padding={10}
             paddingBottom={20}
           >
-            {verifyButtonText}
+            {i18n("email:login.buttonText")}
           </MjmlButton>
           <MjmlText
             fontFamily="Inter, Arial"
@@ -81,6 +77,6 @@ export function generateLoginEmailTemplate({
           </MjmlText>
         </MjmlColumn>
       </MjmlSection>
-    </EmailTemplate>
+    </>
   );
 }
