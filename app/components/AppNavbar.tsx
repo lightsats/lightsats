@@ -7,11 +7,13 @@ import {
 } from "@heroicons/react/24/solid";
 import {
   Avatar,
+  Badge,
   Button,
   Dropdown,
   Image,
   Link,
   Navbar,
+  Row,
   Spacer,
   Text,
 } from "@nextui-org/react";
@@ -151,13 +153,17 @@ export function AppNavbar() {
             <Dropdown placement="bottom-right">
               <Navbar.Item>
                 <Dropdown.Trigger>
-                  <Avatar
-                    bordered
-                    as="button"
-                    color="primary"
-                    size="md"
-                    src={getUserAvatarUrl(user)}
-                  />
+                  <div>
+                    <Badge color="primary" content={" "}>
+                      <Avatar
+                        bordered
+                        as="button"
+                        color="primary"
+                        size="md"
+                        src={getUserAvatarUrl(user)}
+                      />
+                    </Badge>
+                  </div>
                 </Dropdown.Trigger>
               </Navbar.Item>
               <Dropdown.Menu
@@ -178,11 +184,14 @@ export function AppNavbar() {
                   </FlexBox>
                 </Dropdown.Item>
                 <Dropdown.Item key="profile">
-                  <NextLink href={Routes.profile} passHref>
-                    <a>
-                      <Text color="primary">Profile</Text>
-                    </a>
-                  </NextLink>
+                  <Row>
+                    <NextLink href={Routes.profile} passHref>
+                      <a>
+                        <Text color="primary">Profile</Text>
+                      </a>
+                    </NextLink>
+                    <Badge variant="dot" color="primary"></Badge>
+                  </Row>
                 </Dropdown.Item>
                 <Dropdown.Item key="logout" withDivider>
                   <NextLink href={Routes.logout} passHref>
