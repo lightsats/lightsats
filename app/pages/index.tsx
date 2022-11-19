@@ -6,7 +6,7 @@ import { Scoreboard as ScoreboardType } from "types/Scoreboard";
 import {
   AcademicCapIcon,
   ArrowTrendingUpIcon,
-  HeartIcon,
+  GiftIcon,
 } from "@heroicons/react/24/solid";
 import {
   Avatar,
@@ -140,13 +140,7 @@ function Homepage() {
           </Button>
         </a>
       </NextLink>
-
-      <Spacer y={3} />
-
-      <Text b small transform="uppercase">
-        Why lightsats?
-      </Text>
-      <Spacer />
+      <Spacer y={5} />
       <Grid.Container sm={10} justify="center">
         <Card>
           <Card.Body>
@@ -163,12 +157,12 @@ function Homepage() {
                 }}
               >
                 <Icon width={64} height={64}>
-                  <HeartIcon />
+                  <GiftIcon />
                 </Icon>
-                <Text h3>Gift sats...</Text>
-                <Text>
+                <Text h3>Gift sats without losing them</Text>
+                <Text color="$gray700">
                   {
-                    "...without losing them. If your tippee doesn't claim their tip, those precious sats return to you."
+                    "If your tippee doesn't claim their tip, those precious sats return to you."
                   }
                 </Text>
               </Grid>
@@ -187,7 +181,7 @@ function Homepage() {
                   <AcademicCapIcon />
                 </Icon>
                 <Text h3>Progress tracker</Text>
-                <Text>
+                <Text color="$gray700">
                   Follow your tippees along their journey into the rabbit hole.
                   Be there for them when they have questions.
                 </Text>
@@ -207,46 +201,16 @@ function Homepage() {
                   <ArrowTrendingUpIcon />
                 </Icon>
                 <Text h3>Onboarding is on us</Text>
-                <Text>
-                  Educational content, email series and guides on how to use
-                  bitcoin. So you can focus on stacking.
+                <Text color="$gray700">
+                  Have your tippees go through proper onboarding and install
+                  their own wallet to withdraw their tips.
                 </Text>
               </Grid>
             </Grid.Container>
           </Card.Body>
         </Card>
       </Grid.Container>
-
-      <Spacer />
-
-      {/* <Grid sm={12} md={4}>
-              <div style={{ textAlign: "center" }}>
-                <Icon width={64} height={64}>
-                  <ArrowTrendingUpIcon />
-                </Icon>
-                <Text h3>Bitcoin only</Text>
-                <Text>
-                  Content that is curated by real bitcoiners. No shitcoins
-                  included, ever.
-                </Text>
-              </div>
-            </Grid>
-            <Grid sm={12} md={4}>
-              <div style={{ textAlign: "center" }}>
-                <Icon width={64} height={64}>
-                  <ArrowTrendingUpIcon />
-                </Icon>
-                <Text h3>🔨 PoW included</Text>
-                <Text>
-                  Your tipees have to go through proper onboarding and install
-                  their own wallet to withdraw their tips.
-                </Text>
-              </div>
-              </Grid> 
-          </Grid.Container> */}
-
       <Spacer y={5} />
-
       <div style={{ textAlign: "center" }}>
         <Text small b transform="uppercase">
           With lightsats
@@ -274,61 +238,9 @@ function Homepage() {
           ></CountUp>
         </Text>
         <Spacer />
-        <Text small b transform="uppercase">
-          have been tipped to date
-        </Text>
+        <Text h3>have been tipped to date.</Text>
         <Text h3></Text>
       </div>
-
-      <Spacer y={5} />
-
-      {/* <div style={{ textAlign: "center" }}>
-            <Row justify="center">
-              <Text h2>Make tipping fun again 👇</Text>
-            </Row>
-            <Grid.Container gap={2}>
-              <Grid xs={12} sm={6}>
-                <Card
-                  variant="flat"
-                  css={{
-                    background: "$gradient",
-                    color: "$white",
-                    width: "400px",
-                    height: "250px",
-                    maxWidth: "100%",
-                  }}
-                >
-                  <Card.Body>
-                    <Row align="center">
-                      <Avatar />
-                      &nbsp;&nbsp;
-                      <Text b color="$white">
-                        Satoshi Nakamoto
-                      </Text>
-                    </Row>
-                    <Text
-                      h1
-                      size={64}
-                      color="$white"
-                      style={{
-                        display: "flex",
-                        alignSelf: "center",
-                      }}
-                    >
-                      $20.00
-                    </Text>
-                  </Card.Body>
-                </Card>
-              </Grid>
-              <Grid xs={12} sm={6}>
-                <Col>
-                  <Text h4>💰 Create a new tip and fund it</Text>
-                  <Text>test</Text>
-                </Col>
-              </Grid>
-            </Grid.Container>
-          </div> */}
-
       <Spacer y={5} />
       <Text h3 style={{ textAlign: "center" }}>
         🧡 What others have to say say about us
@@ -419,7 +331,7 @@ function Homepage() {
       <Button color="primary" size="lg">
         Create your first tip &raquo;
       </Button>
-      <Spacer y={5} />
+      <Spacer y={4} />
     </>
   );
 }
