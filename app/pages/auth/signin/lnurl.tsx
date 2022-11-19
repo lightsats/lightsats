@@ -1,4 +1,4 @@
-import { ClipboardIcon } from "@heroicons/react/24/solid";
+import { DocumentDuplicateIcon } from "@heroicons/react/24/solid";
 import { Button, Card, Loading, Row, Spacer } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
@@ -71,6 +71,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
     <>
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
+          <Spacer y={0.5} />
           <Row justify="center">
             {qr ? (
               <>
@@ -87,20 +88,16 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
               </>
             )}
           </Row>
+          <Spacer y={0.5} />
         </Card.Body>
         {qr && (
           <>
             <Card.Divider />
             <Card.Footer>
               <Row justify="space-between">
-                <Button
-                  onClick={copyQr}
-                  auto
-                  color="secondary"
-                  css={{ color: "$gray900" }}
-                >
+                <Button onClick={copyQr} auto color="secondary">
                   <Icon>
-                    <ClipboardIcon />
+                    <DocumentDuplicateIcon />
                   </Icon>
                   Copy
                 </Button>
