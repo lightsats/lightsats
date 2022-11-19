@@ -87,6 +87,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
         </Card.Header>
         <Divider />
         <Card.Body>
+          <Spacer y={0.5} />
           <Row justify="center">
             {qr ? (
               <>
@@ -116,16 +117,11 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
             <Card.Divider />
             <Card.Footer>
               <Row justify="space-between">
-                <Button
-                  onClick={copyQr}
-                  auto
-                  color="secondary"
-                  css={{ color: "$gray900" }}
-                >
+                <Button onClick={copyQr} auto color="secondary">
                   <Icon>
                     <ClipboardIcon />
                   </Icon>
-                  Copy
+                  &nbsp; Copy
                 </Button>
                 <NextLink href={`lightning:${qr.encoded}`}>
                   <a>

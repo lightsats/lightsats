@@ -94,7 +94,7 @@ const Scoreboard: NextPage = () => {
                             ? "$silver"
                             : i === 2
                             ? "$bronze"
-                            : "$gray600",
+                            : "$gray700",
                       }}
                     >
                       {i + 1}
@@ -165,7 +165,7 @@ const Scoreboard: NextPage = () => {
                               ? "$silver"
                               : i === 2
                               ? "$bronze"
-                              : "$gray600",
+                              : "$gray700",
                         }}
                       >
                         {i + 1}

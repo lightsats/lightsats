@@ -44,7 +44,8 @@ export function getRecommendedItems(
     recommendedItems;
 
   sortItems(recommendedItems, categoryScoringFuncs[category]);
-  return recommendedItems;
+  const limit = category === "wallets" ? 1 : undefined;
+  return recommendedItems.slice(0, limit);
 }
 
 export function getOtherItems(
