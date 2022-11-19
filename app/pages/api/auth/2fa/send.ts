@@ -31,13 +31,11 @@ export default async function handler(
       await sendEmail({
         to: twoFactorLoginRequest.email,
         subject: i18n("login.subject", { ns: "email" }),
-        html: generateEmailTemplate(
-          {
-            template: "login",
-            verifyUrl,
-          },
-          i18n
-        ),
+        html: generateEmailTemplate({
+          template: "login",
+          verifyUrl,
+          i18n,
+        }),
         from: `Lightsats <${process.env.EMAIL_FROM}>`,
       });
       res.status(StatusCodes.NO_CONTENT).end();

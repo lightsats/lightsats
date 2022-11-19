@@ -5,21 +5,17 @@ import {
   MjmlSection,
   MjmlText,
 } from "@faire/mjml-react";
-import { ApiI18n } from "lib/i18n/api";
+import { CommonEmailTemplateProps } from "types/CommonEmailTemplateProps";
 
-export type LoginEmailTemplateOptions = {
+export type LoginEmailTemplateProps = CommonEmailTemplateProps & {
   template: "login";
-  // title: string;
-  // preview: string;
-  // message: string;
-  // verifyButtonText: string;
   verifyUrl: string;
 };
 
-export function generateLoginEmailTemplate(
-  { verifyUrl }: LoginEmailTemplateOptions,
-  i18n: ApiI18n
-) {
+export function LoginEmailTemplate({
+  verifyUrl,
+  i18n,
+}: LoginEmailTemplateProps) {
   return (
     <>
       <MjmlSection

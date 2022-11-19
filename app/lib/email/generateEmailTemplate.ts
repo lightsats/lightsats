@@ -1,31 +1,34 @@
 import {
-  generateLoginEmailTemplate,
-  LoginEmailTemplateOptions,
-} from "lib/email/templates/generateLoginEmailTemplate";
+  LoginEmailTemplate,
+  LoginEmailTemplateProps,
+} from "lib/email/templates/LoginEmailTemplate";
 
 import { render } from "@faire/mjml-react/dist/src/utils/render";
-import { EmailTemplate } from "components/email/EmailTemplate";
-import { ApiI18n } from "lib/i18n/api";
+import { EmailTemplate } from "lib/email/templates/EmailTemplate";
+import { CommonEmailTemplateProps } from "types/CommonEmailTemplateProps";
 
-type GenerateEmailTemplateOptions =
-  | LoginEmailTemplateOptions
-  | { template: "2ndTemplate"; exampleProp1: string; exampleProp2: string };
+type GenerateEmailTemplateProps =
+  | LoginEmailTemplateProps
+  | (CommonEmailTemplateProps & {
+      template: "2ndTemplate";
+      exampleProp1: string;
+      exampleProp2: string;
+    });
 
 export function generateEmailTemplate(
-  options: GenerateEmailTemplateOptions,
-  i18n: ApiI18n
+  props: GenerateEmailTemplateProps
 ): string {
   let element: JSX.Element;
 
-  switch (options.template) {
+  switch (props.template) {
     case "login":
-      element = generateLoginEmailTemplate(options, i18n);
+      element = LoginEmailTemplate(props);
       break;
     case "2ndTemplate":
       throw new Error("TODO");
   }
 
-  const subject = i18n(`${options.template}.subject`, { ns: "email" });
+  const subject = props.i18n(`${props.template}.subject`, { ns: "email" });
 
   const template = EmailTemplate({
     title: subject,
@@ -38,7 +41,7 @@ export function generateEmailTemplate(
   if (result.errors?.length) {
     throw new Error(
       "Failed to generate email template " +
-        options.template +
+        props.template +
         ": " +
         JSON.stringify(result.errors)
     );
