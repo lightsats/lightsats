@@ -72,9 +72,8 @@ export function EmailTemplate({
             <MjmlSocial padding={0}>
               <MjmlSocialElement
                 backgroundColor="#2E74ED"
-                name="twitter-noshare"
                 href="https://twitter.com/lightsats21"
-                srcset="http://saas-templates-creator.mailjet.com/saas-templates-creator/static/img/twitter_white.png"
+                src={`${process.env.APP_URL}/images/twitter_white.png`}
               ></MjmlSocialElement>
             </MjmlSocial>
           </MjmlColumn>
