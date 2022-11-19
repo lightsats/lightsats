@@ -1,5 +1,5 @@
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
-import { Button, Collapse, Row, Text } from "@nextui-org/react";
+import { Button, Collapse, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import {
   ItemFeatureBadge,
@@ -92,13 +92,10 @@ export function ItemCard({ item }: ItemCardProps) {
           blurDataURL={item.placeholderDataUrl ?? defaultPlaceholderDataUrl}
         />
       }
-      title={<Text b>{item.name}</Text>}
-      subtitle={
-        <Text css={isOpen ? {} : { maxHeight: "90px", overflowY: "hidden" }}>
-          {item.slogan}
-        </Text>
-      }
+      title={item.name}
     >
+      <Text color="$gray">{item.slogan}</Text>
+      <Spacer y={1} />
       <NextLink href={item.link} passHref>
         <a target="_blank" rel="noreferrer noopener">
           <Row align="center" css={{ p: 10, br: 10 }}>

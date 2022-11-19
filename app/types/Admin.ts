@@ -1,4 +1,10 @@
-import { LnbitsWallet, Tip, User, Withdrawal } from "@prisma/client";
+import {
+  LnbitsWallet,
+  SentReminder,
+  Tip,
+  User,
+  Withdrawal,
+} from "@prisma/client";
 
 export type AdminDashboard = {
   adminUsers: User[];
@@ -16,11 +22,13 @@ export type AdminExtendedUser = User & {
   tipsReceived: Tip[];
   lnbitsWalletUrl: string | undefined;
   walletBalance: number;
+  withdrawals: AdminExtendedWithdrawal[];
 };
 
 export type AdminExtendedTip = Tip & {
   tipper: User;
   tippee: User | null;
+  sentReminders: SentReminder[];
   withdrawal: AdminExtendedWithdrawal | null;
   lnbitsWallet: LnbitsWallet | null;
   lnbitsWalletUrl: string | undefined;

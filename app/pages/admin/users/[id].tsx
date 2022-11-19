@@ -1,6 +1,8 @@
 import { Link, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
+import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
 import { AdminTipsList } from "components/admin/AdminTipsList";
+import { AdminWithdrawalsList } from "components/admin/AdminWithdrawalsList";
 import { NextUIUser } from "components/NextUIUser";
 import { DEFAULT_NAME } from "lib/constants";
 import { defaultFetcher } from "lib/swr";
@@ -54,6 +56,9 @@ const AdminUserPage: NextPage = () => {
       <AdminUserTips title="Tips Received" tips={user.tipsReceived} />
       <Spacer />
       <h2>Withdrawals</h2>
+      <AdminWithdrawalsList withdrawals={user.withdrawals} />
+      <Spacer />
+      <AdminJSONDumpCard entity={user} />
     </>
   );
 };
