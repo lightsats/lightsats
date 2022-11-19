@@ -143,7 +143,6 @@ const ClaimTipPage: NextPage = () => {
             <>
               <Login
                 instructionsText={() => "Confirm your account to continue"}
-                submitText={"Login"}
                 callbackUrl={getCurrentUrl(router)}
                 tipId={publicTip.id}
                 defaultLoginMethod="phone"
