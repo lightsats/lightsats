@@ -111,7 +111,7 @@ const TipPage: NextPage = () => {
           </>
         )}
         <Spacer />
-        <ClaimProgressTracker tipId={tip.id} />
+        <ClaimProgressTracker tipId={tip.id} viewing="tipper" />
         <Spacer />
         {!hasExpired && (
           <>

@@ -112,7 +112,7 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
             </Card>
           </>
         )}
-        {viewing === "tippee" && (
+        {viewing === "tipper" && (
           <>
             <Spacer />
             <Progress

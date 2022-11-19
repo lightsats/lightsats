@@ -5,12 +5,16 @@ import { PublicTip } from "types/PublicTip";
 
 type ClaimProgressTrackerProps = {
   tipId: string;
+  viewing: "tipper" | "tippee";
 };
 
 // poll tip status once per second to receive updates TODO: consider using websockets
 const usePublicTipConfig: SWRConfiguration = { refreshInterval: 1000 };
 
-export function ClaimProgressTracker({ tipId }: ClaimProgressTrackerProps) {
+export function ClaimProgressTracker({
+  tipId,
+  viewing,
+}: ClaimProgressTrackerProps) {
   const { data: publicTip } = useSWR<PublicTip>(
     `/api/tippee/tips/${tipId}`,
     defaultFetcher,
@@ -19,29 +23,7 @@ export function ClaimProgressTracker({ tipId }: ClaimProgressTrackerProps) {
 
   return (
     <>
-      <ClaimedTipCard publicTip={publicTip} viewing="tippee" />
+      <ClaimedTipCard publicTip={publicTip} viewing={viewing} />
     </>
   );
 }
-
-/*
-(publicTip && publicTip.tippee ? (
-      <>
-        
-        <Spacer />
-        <Progress
-          value={
-            (publicTip.tippee.journeyStep / bitcoinJourneyPages.length) * 100
-          }
-          color="success"
-          status="success"
-        />
-        <Text blockquote>
-          On page {bitcoinJourneyPages[publicTip.tippee.journeyStep - 1]}
-        </Text>
-
-        <Spacer />
-      </>
-      ) : (
-      <Loading color="currentColor" size="sm" />
-      ))*/
