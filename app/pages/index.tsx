@@ -4,11 +4,6 @@ import { hasTipExpired } from "lib/utils";
 import { Scoreboard as ScoreboardType } from "types/Scoreboard";
 
 import {
-  AcademicCapIcon,
-  ArrowTrendingUpIcon,
-  GiftIcon,
-} from "@heroicons/react/24/solid";
-import {
   Avatar,
   Button,
   Card,
@@ -21,7 +16,6 @@ import {
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { Alert } from "components/Alert";
-import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { Tips } from "components/tipper/Tips";
@@ -156,9 +150,7 @@ function Homepage() {
                   ta: "center",
                 }}
               >
-                <Icon width={64} height={64}>
-                  <GiftIcon />
-                </Icon>
+                <Image alt="" src="images/gift.png" width={128} />
                 <Text h3>Gift sats without losing them</Text>
                 <Text color="$gray700">
                   {
@@ -177,9 +169,7 @@ function Homepage() {
                   fg: 1,
                 }}
               >
-                <Icon width={64} height={64}>
-                  <AcademicCapIcon />
-                </Icon>
+                <Image alt="" src="images/flag.png" width={128} />
                 <Text h3>Progress tracker</Text>
                 <Text color="$gray700">
                   Follow your tippees along their journey into the rabbit hole.
@@ -197,9 +187,7 @@ function Homepage() {
                   fg: 1,
                 }}
               >
-                <Icon width={64} height={64}>
-                  <ArrowTrendingUpIcon />
-                </Icon>
+                <Image alt="" src="images/onboarding.png" width={128} />
                 <Text h3>Onboarding is on us</Text>
                 <Text color="$gray700">
                   Have your tippees go through proper onboarding and install
