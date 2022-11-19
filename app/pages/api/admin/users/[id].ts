@@ -52,6 +52,15 @@ async function handleGetUser(
         },
       },
       lnbitsWallet: true,
+      withdrawals: {
+        include: {
+          tips: true,
+          user: true,
+        },
+        orderBy: {
+          created: "desc",
+        },
+      },
     },
   });
 

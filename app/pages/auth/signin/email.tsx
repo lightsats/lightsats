@@ -1,4 +1,13 @@
-import { Button, Card, Input, Loading, Spacer } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Divider,
+  Input,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { useTranslation } from "next-i18next";
@@ -91,6 +100,12 @@ export default function EmailSignIn({
   return (
     <>
       <Card css={{ dropShadow: "$sm" }}>
+        <Card.Header>
+          <Row justify="center">
+            <Text css={{ fontWeight: "bold" }}>{t("email")}</Text>
+          </Row>
+        </Card.Header>
+        <Divider />
         <Card.Body>
           <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
             <Controller
@@ -100,7 +115,6 @@ export default function EmailSignIn({
                 <Input
                   bordered
                   {...field}
-                  label={t("email")}
                   type="email"
                   placeholder="satoshin@gmx.com"
                   autoComplete="email"
@@ -119,7 +133,7 @@ export default function EmailSignIn({
               {isSubmitting ? (
                 <Loading color="currentColor" size="sm" />
               ) : (
-                <>{submitText ?? "Login"}</>
+                <>{submitText ?? "Sign in"}</>
               )}
             </Button>
           </form>

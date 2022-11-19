@@ -18,7 +18,7 @@ import { useScoreboardPosition } from "hooks/useScoreboardPosition";
 import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { getAvatarUrl } from "lib/utils";
+import { getUserAvatarUrl } from "lib/utils";
 import React from "react";
 import useSWR from "swr";
 import { PublicUser } from "types/PublicUser";
@@ -59,7 +59,7 @@ export function UserCard({ userId, forceAnonymous }: Props) {
                 zoomed
                 bordered
                 color="primary"
-                src={getAvatarUrl(publicUser?.avatarURL ?? undefined)}
+                src={getUserAvatarUrl(publicUser)}
               />
               <Spacer x={0.75} />
               <Col span={10}>

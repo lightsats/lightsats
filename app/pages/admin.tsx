@@ -11,6 +11,7 @@ import { LoginMethodsChart } from "components/admin/LoginMethodsChart";
 import { ProfitChart } from "components/admin/ProfitChart";
 import { TipsChart } from "components/admin/TipsChart";
 import { UserTypesChart } from "components/admin/UserTypesChart";
+import { Divider } from "components/Divider";
 import { NextLink } from "components/NextLink";
 import { NextUIUser } from "components/NextUIUser";
 import { differenceInHours } from "date-fns";
@@ -126,7 +127,7 @@ const AdminPage: NextPage = () => {
             sms4sats account balance:{" "}
             {Math.floor(adminDashboard.smsForSatsAccountBalance)} sats
           </Text>
-          <Button onClick={() => toast.error("TODO")}>Fund account</Button>
+          <Button onClick={fundSmsForSatsAccount}>Fund account</Button>
         </Text>
       </Row>
       <Row justify="center" align="center">
@@ -174,6 +175,8 @@ const AdminPage: NextPage = () => {
         <Text>
           {adminDashboard.users.length} users (
           {adminDashboard.users.filter((user) => !!user.email).length} email,{" "}
+          {adminDashboard.users.filter((user) => !!user.phoneNumber).length}{" "}
+          phone,{" "}
           {adminDashboard.users.filter((user) => !!user.lnurlPublicKey).length}{" "}
           lnurl-auth)
         </Text>
@@ -227,23 +230,25 @@ const AdminPage: NextPage = () => {
         </Text>
       </Row>
       <Spacer />
-      <Text>Browse</Text>
+      <Text h4>Browse</Text>
+      <Divider />
+      <Spacer />
       <Row justify="center" align="center">
         <NextLink href={Routes.adminUsers}>
           <a>
-            <Button auto>Users</Button>
+            <Button css={{ bg: "$cyan700" }}>Users</Button>
           </a>
         </NextLink>
         <Spacer />
         <NextLink href={Routes.adminTips}>
           <a>
-            <Button auto>Tips</Button>
+            <Button css={{ bg: "$purple700" }}>Tips</Button>
           </a>
         </NextLink>
         <Spacer />
         <NextLink href={Routes.adminWithdrawals}>
           <a>
-            <Button auto>Withdrawals</Button>
+            <Button css={{ bg: "$green700" }}>Withdrawals</Button>
           </a>
         </NextLink>
       </Row>
@@ -252,3 +257,31 @@ const AdminPage: NextPage = () => {
 };
 
 export default AdminPage;
+
+async function fundSmsForSatsAccount() {
+  const promptedAmount = window.prompt("Enter amount in sats", "5000");
+  if (!promptedAmount) {
+    return;
+  }
+  const amount = parseInt(promptedAmount);
+
+  const requestHeaders = new Headers();
+  requestHeaders.append("Accept", "application/json");
+  requestHeaders.append("Content-Type", "application/json");
+
+  const response = await fetch(`/api/admin/sms4sats/fund`, {
+    method: "POST",
+    headers: requestHeaders,
+    body: JSON.stringify({
+      amount,
+    }),
+  });
+  if (response.ok) {
+    const invoice = (await response.json()) as string;
+    if (window.prompt("Pay the invoice, then click OK to refresh", invoice)) {
+      window.location.reload();
+    }
+  } else {
+    toast.error("Failed to fund invoice: " + response.status);
+  }
+}

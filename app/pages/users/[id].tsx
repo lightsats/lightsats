@@ -17,7 +17,7 @@ export default function UserPublicProfile() {
       {!user && (
         <>
           <Row justify="center">
-            <Text h3>Want join the tipping battle?</Text>
+            <Text h3>Want to join the tipping battle?</Text>
           </Row>
           <Row justify="center">
             <NextLink href={Routes.login}>

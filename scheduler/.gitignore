@@ -1,0 +1,4 @@
+build
+.env
+.env.staging
+.env.production
