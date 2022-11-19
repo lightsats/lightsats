@@ -30,7 +30,7 @@ export default async function handler(
     try {
       await sendEmail({
         to: twoFactorLoginRequest.email,
-        subject: i18n("common:verifyEmailSubject"),
+        subject: i18n("login.subject", { ns: "email" }),
         html: generateEmailTemplate(
           {
             template: "login",
@@ -87,7 +87,7 @@ export default async function handler(
       }
 
       const smsBody =
-        i18n("common:verifyPhoneMessage") +
+        i18n("verifyPhoneMessage", { ns: "common" }) +
         " " +
         ((await generateShortLink(verifyUrl)) ?? verifyUrl);
 

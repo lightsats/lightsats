@@ -5,6 +5,7 @@ import {
 
 import { render } from "@faire/mjml-react/dist/src/utils/render";
 import { EmailTemplate } from "components/email/EmailTemplate";
+import { ApiI18n } from "lib/i18n/api";
 
 type GenerateEmailTemplateOptions =
   | LoginEmailTemplateOptions
@@ -12,7 +13,7 @@ type GenerateEmailTemplateOptions =
 
 export function generateEmailTemplate(
   options: GenerateEmailTemplateOptions,
-  i18n: any
+  i18n: ApiI18n
 ): string {
   let element: JSX.Element;
 
@@ -24,7 +25,7 @@ export function generateEmailTemplate(
       throw new Error("TODO");
   }
 
-  const subject = i18n("email:" + options.template + ".subject");
+  const subject = i18n(`${options.template}.subject`, { ns: "email" });
 
   const template = EmailTemplate({
     title: subject,

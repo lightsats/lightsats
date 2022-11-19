@@ -5,6 +5,7 @@ import {
   MjmlSection,
   MjmlText,
 } from "@faire/mjml-react";
+import { ApiI18n } from "lib/i18n/api";
 
 export type LoginEmailTemplateOptions = {
   template: "login";
@@ -17,7 +18,7 @@ export type LoginEmailTemplateOptions = {
 
 export function generateLoginEmailTemplate(
   { verifyUrl }: LoginEmailTemplateOptions,
-  i18n: any
+  i18n: ApiI18n
 ) {
   return (
     <>
@@ -47,10 +48,10 @@ export function generateLoginEmailTemplate(
             fontWeight="bold"
             fontFamily="Inter, Arial"
           >
-            {i18n("email:login.title")}
+            {i18n("login.title", { ns: "email" })}
           </MjmlText>
           <MjmlText fontSize={14} align="center" fontFamily="Inter, Arial">
-            {i18n("email:login.text")}
+            {i18n("login.text", { ns: "email" })}
           </MjmlText>
           <MjmlButton
             fontFamily="Inter, Arial"
@@ -60,7 +61,7 @@ export function generateLoginEmailTemplate(
             padding={10}
             paddingBottom={20}
           >
-            {i18n("email:login.buttonText")}
+            {i18n("login.buttonText", { ns: "email" })}
           </MjmlButton>
           <MjmlText
             fontFamily="Inter, Arial"
