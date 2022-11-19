@@ -243,7 +243,7 @@ function Homepage() {
       </div>
       <Spacer y={5} />
       <Text h3 style={{ textAlign: "center" }}>
-        🧡 What others have to say say about us
+        🧡 What others have to say about us
       </Text>
       <Grid.Container gap={2} sm={12} justify="center" alignContent="center">
         <Grid xs={12} sm={4}>
