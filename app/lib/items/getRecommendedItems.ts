@@ -26,8 +26,7 @@ export function getRecommendedItems(
   category: ItemCategory,
   languageCode: string,
   tippeeBalance: number,
-  checkTippeeBalance: boolean,
-  limit = 1
+  checkTippeeBalance: boolean
 ): Item[] {
   if (!ISO6391.validate(languageCode)) {
     throw new Error("Unsupported language code: " + languageCode);
@@ -45,6 +44,7 @@ export function getRecommendedItems(
     recommendedItems;
 
   sortItems(recommendedItems, categoryScoringFuncs[category]);
+  const limit = category === "wallets" ? 1 : undefined;
   return recommendedItems.slice(0, limit);
 }
 

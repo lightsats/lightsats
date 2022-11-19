@@ -69,7 +69,6 @@ function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
 }
 
 export function ItemCard({ item, expanded }: ItemCardProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
   const features: ItemFeatureBadgeProps[] = React.useMemo(
     () => getItemFeatures(item),
     [item]
@@ -78,7 +77,6 @@ export function ItemCard({ item, expanded }: ItemCardProps) {
   return (
     <Collapse
       expanded={expanded}
-      onChange={(_, __, value) => setIsOpen(value || false)}
       contentLeft={
         <NextImage
           alt=""
