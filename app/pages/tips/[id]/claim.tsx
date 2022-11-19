@@ -1,10 +1,17 @@
-import { Avatar, Loading, Row, Spacer, Text } from "@nextui-org/react";
+import {
+  Avatar,
+  Card,
+  Col,
+  Collapse,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
+import { ExpiryBadge } from "components/ExpiryBadge";
 import { FiatPrice } from "components/FiatPrice";
 import { HomeButton } from "components/HomeButton";
 import { Login } from "components/Login";
-import { formatDistance } from "date-fns";
-import { useDateFnsLocale } from "hooks/useDateFnsLocale";
-
 import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
@@ -116,9 +123,35 @@ const ClaimTipPage: NextPage = () => {
         <>
           <Loading color="currentColor" size="sm" />
         </>
-      ) : publicTip.status !== "UNCLAIMED" ? (
+      ) : publicTip.status !== "UNCLAIMED" &&
+        (publicTip.status !== "CLAIMED" ||
+          (session && session.user.id !== publicTip.tippeeId)) ? (
         <>
           <Text>This tip is no longer available.</Text>
+          <Spacer />
+          <HomeButton />
+        </>
+      ) : publicTip.status === "CLAIMED" && !session ? (
+        <>
+          <Text>This tip has been claimed but not withdrawn yet.</Text>
+          <Spacer />
+          <Collapse
+            bordered
+            title={<Text b>This is my Tip🙋</Text>}
+            css={{ width: "100%" }}
+          >
+            <>
+              <Login
+                instructionsText={() => "Confirm your account to continue"}
+                submitText={"Login"}
+                callbackUrl={getCurrentUrl(router)}
+                tipId={publicTip.id}
+                defaultLoginMethod="phone"
+              />
+            </>
+          </Collapse>
+          <Spacer />
+          <Text>Not yours?</Text>
           <Spacer />
           <HomeButton />
         </>
@@ -149,7 +182,6 @@ type ClaimTipViewProps = {
 function ClaimTipView({ publicTip }: ClaimTipViewProps) {
   const { t } = useTranslation("claim");
   const router = useRouter();
-  const dateFnsLocale = useDateFnsLocale(router.locale);
 
   const { data: exchangeRates } = useSWR<ExchangeRates>(
     `/api/exchange/rates`,
@@ -161,52 +193,56 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
     <>
       {publicTip.tippeeName && (
         <>
-          <Text h5>
+          <Text h3>
             {t("hello", {
               tippeeName: publicTip.tippeeName,
             })}
           </Text>
-          <Spacer />
         </>
       )}
-      <Row justify="center" align="center">
-        {publicTip.tipper.name && (
-          <>
-            <Avatar
-              src={getAvatarUrl(
-                publicTip.tipper.avatarURL ?? undefined,
-                publicTip.tipper.fallbackAvatarId
-              )}
-              size="md"
-              bordered
-            />
-          </>
-        )}
-        <Text b size={16}>
-          &nbsp;
-          {publicTip.tipper.name
-            ? t("tipperHasGiftedYou", {
-                tipperName: publicTip.tipper.name,
-              })
-            : t("youHaveBeenGifted")}
-        </Text>
-      </Row>
-      <Spacer y={0.5} />
-      <Text h1>
-        <FiatPrice
-          currency={tipCurrency}
-          exchangeRate={exchangeRates?.[tipCurrency]}
-          sats={publicTip.amount}
-          showApprox={false}
-        />
-      </Text>
-      <Spacer y={-0.75} />
-      <Text size={18} b color="$gray">
-        {publicTip.amount} sats
-      </Text>
-      <Spacer />
-      <Note note={publicTip.note} />
-      <Spacer y={2} />
+      <Card
+        css={{
+          dropShadow: "$sm",
+          color: "$white",
+          $$cardColor: "$colors$primary",
+        }}
+      >
+        <Card.Body>
+          <Row align="center" justify="space-between">
+            <Col css={{ dflex: "flex-start", ai: "center" }}>
+              <Avatar
+                src={getAvatarUrl(
+                  publicTip.tipper.avatarURL ?? undefined,
+                  publicTip.tipper.fallbackAvatarId
+                )}
+                size="lg"
+                bordered
+              />
+              &nbsp;
+              {publicTip.tipper.name}
+            </Col>
+            <Col css={{ ta: "right" }}>
+              <Text color="$white" b size="$3xl" css={{}}>
+                <FiatPrice
+                  currency={tipCurrency}
+                  exchangeRate={exchangeRates?.[tipCurrency]}
+                  sats={publicTip.amount}
+                  showApprox={false}
+                />
+              </Text>
+            </Col>
+          </Row>
+          <Spacer y={0.5} />
+          <Row justify="space-between" align="center">
+            <ExpiryBadge tip={publicTip} viewing={"tippee"} />
+            <Text color="$white" css={{ mt: -15 }}>
+              {publicTip.amount} sats
+            </Text>
+          </Row>
+          <Note note={publicTip.note} />
+        </Card.Body>
+      </Card>
+      <Spacer y={3} />
       {
         <>
           <Login
@@ -218,16 +254,6 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
             tipId={publicTip.id}
             defaultLoginMethod="phone"
           />
-          <Spacer />
-          <Row justify="center" align="center">
-            <Text small color="error">
-              {t("expiresIn", {
-                expiry: formatDistance(new Date(publicTip.expiry), Date.now(), {
-                  locale: dateFnsLocale,
-                }),
-              })}
-            </Text>
-          </Row>
         </>
       }
       <Spacer />
@@ -238,11 +264,21 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
 function Note({ note }: { note: string | null }) {
   return note ? (
     <>
-      <Row justify="center" align="center">
-        💬
-        <Spacer x={0.25} />
-        <Text i>{note}</Text>
-      </Row>
+      <Spacer y={0.5} />
+      <Card
+        color="$white"
+        css={{
+          $$cardColor: "#ffffff66",
+          padding: 10,
+          mt: 10,
+        }}
+      >
+        <Row justify="center" align="center" css={{}}>
+          💬
+          <Spacer x={0.25} />
+          <Text i>{note}</Text>
+        </Row>
+      </Card>
     </>
   ) : null;
 }

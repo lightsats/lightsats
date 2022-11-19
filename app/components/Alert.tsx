@@ -16,7 +16,9 @@ export function Alert(props: Props) {
       }}
     >
       <Card.Body>
-        <Row justify="center">{props.children}</Row>
+        <Row justify="center" align="center">
+          {props.children}
+        </Row>
       </Card.Body>
     </Card>
   );
