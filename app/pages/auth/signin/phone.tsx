@@ -1,6 +1,7 @@
 import {
   Button,
   Card,
+  Divider,
   FormElement,
   Input,
   Loading,
@@ -116,11 +117,14 @@ export default function PhoneSignIn({
   return (
     <>
       <Card css={{ dropShadow: "$sm" }}>
+        <Card.Header>
+          <Row justify="center">
+            <Text css={{ fontWeight: "bold" }}>{t("phone")}</Text>
+          </Row>
+        </Card.Header>
+        <Divider />
         <Card.Body>
           <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-            <Row>
-              <Text>{t("phone")}</Text>
-            </Row>
             <Controller
               name="phone"
               control={control}

@@ -17,6 +17,7 @@ import { Wallet } from "types/Wallet";
 
 type ItemCardProps = {
   item: Item;
+  expanded?: boolean;
 };
 
 function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
@@ -67,8 +68,7 @@ function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
   return itemFeatures;
 }
 
-export function ItemCard({ item }: ItemCardProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
+export function ItemCard({ item, expanded }: ItemCardProps) {
   const features: ItemFeatureBadgeProps[] = React.useMemo(
     () => getItemFeatures(item),
     [item]
@@ -76,7 +76,7 @@ export function ItemCard({ item }: ItemCardProps) {
 
   return (
     <Collapse
-      onChange={(_, __, value) => setIsOpen(value || false)}
+      expanded={expanded}
       contentLeft={
         <NextImage
           alt=""
