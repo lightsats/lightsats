@@ -325,7 +325,7 @@ function Homepage() {
         <NextLink href={Routes.scoreboard}>
           <a>123 others</a>
         </NextLink>{" "}
-        and 🍊💊 the world around you.
+        to 🍊💊 the world around you.
       </Text>
       <Spacer y={2} />
       <Button color="primary" size="lg">
