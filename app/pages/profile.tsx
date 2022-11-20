@@ -36,6 +36,7 @@ type ProfileFormData = {
   name: string;
   twitterUsername: string;
   avatarURL: string;
+  lightningAddress: string;
   isAnonymous: boolean;
 };
 
@@ -165,6 +166,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
       name: user.name ?? undefined,
       twitterUsername: user.twitterUsername ?? undefined,
       avatarURL: user.avatarURL ?? undefined,
+      lightningAddress: user.lightningAddress ?? undefined,
       isAnonymous: user.isAnonymous,
     },
   });
@@ -185,6 +187,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
           name: data.name,
           twitterUsername: data.twitterUsername,
           avatarURL: data.avatarURL,
+          lightningAddress: data.lightningAddress,
           isAnonymous: data.isAnonymous,
         };
         const result = await fetch(`/api/users/${user.id}`, {
@@ -255,6 +258,21 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
               fullWidth
               bordered
               type="url"
+            />
+          )}
+        />
+        <Spacer />
+        <Controller
+          name="lightningAddress"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              label="Lightning Address"
+              placeholder="reneaaron@getalby.com"
+              fullWidth
+              bordered
+              type="email"
             />
           )}
         />
