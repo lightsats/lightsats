@@ -13,7 +13,9 @@ export function TippeeSuggestions() {
   return (
     <>
       <Row justify="space-between" align="center">
-        <Text h6>Suggestions</Text>
+        <Text css={{ m: 0 }} h6>
+          Suggestions
+        </Text>
         <NextLink href={Routes.guide} passHref>
           <Link>See all</Link>
         </NextLink>
@@ -21,7 +23,7 @@ export function TippeeSuggestions() {
       <Spacer y={0.5} />
       <Row css={{ overflowX: "auto", gap: 10 }}>
         <Swiper
-          slidesPerView={(global?.window.innerWidth || 0) > 500 ? 1.5 : 1.2}
+          slidesPerView={(global?.window.innerWidth || 0) > 500 ? 1.4 : 1.2}
           spaceBetween={20}
           navigation
           pagination

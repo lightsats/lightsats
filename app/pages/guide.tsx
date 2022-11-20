@@ -66,7 +66,7 @@ export const guides: Guide[] = [
     name: "Learn 📙",
     description:
       'Learn more about Bitcoin and why "Bitcoin Fixes This" - Philosophy, Engineering, Economics, Politics, History...',
-    shortDescription: "Learn more about Bitcoin",
+    shortDescription: "Learn more about Bitcoin and Lightning",
     icon: <BookOpenIcon />,
     link: Routes.guideLearn,
   },
