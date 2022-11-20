@@ -74,17 +74,26 @@ const ClaimTipPage: NextPage = () => {
     !hasExpired;
 
   // tip was already claimed by the current user (open old link)
+  console.log(
+    !!session,
+    !!publicTip,
+    publicTip?.status,
+    publicTip?.tippeeId === session?.user.id,
+    !isClaiming,
+    !hasExpired
+  );
   React.useEffect(() => {
     if (
       session &&
       publicTip &&
       publicTip.status === "CLAIMED" &&
       publicTip.tippeeId === session.user.id &&
-      !isClaiming
+      !isClaiming &&
+      !hasExpired
     ) {
       router.push(destinationRoute);
     }
-  }, [destinationRoute, isClaiming, publicTip, router, session]);
+  }, [destinationRoute, isClaiming, publicTip, router, session, hasExpired]);
 
   // autoclaim after login
   React.useEffect(() => {

@@ -19,7 +19,7 @@ type ItemsListProps = {
 const collapseGroupCss: CSS = { width: "100%" };
 
 export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
-  const session = useSession();
+  const { data: session } = useSession();
   const { data: tips } = useSWR<Tip[]>(
     checkTippeeBalance && session ? `/api/tippee/tips` : null,
     defaultFetcher

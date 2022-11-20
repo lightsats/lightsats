@@ -15,6 +15,7 @@ import { Tip, User } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
+import { BecomeATipper } from "components/tippee/BecomeATipper";
 import { UserCard } from "components/UserCard";
 import copy from "copy-to-clipboard";
 import { useUser } from "hooks/useUser";
@@ -29,7 +30,6 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import useSWR, { KeyedMutator } from "swr";
-import { TransitionUserRequest } from "types/TransitionUserRequest";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
 
 type ProfileFormData = {
@@ -124,37 +124,12 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
   );
 }
 
-function TippeeProfile({ mutateUser, session, user }: ProfileInternalProps) {
+function TippeeProfile({ session }: ProfileInternalProps) {
   const { data: tips } = useSWR<Tip[]>(
     session ? `/api/tippee/tips` : null,
     defaultFetcher
   );
   const hasWithdrawnTip = tips?.some((tip) => tip.status === "WITHDRAWN");
-  const [isSubmitting, setSubmitting] = React.useState(false);
-
-  const becomeTipper = React.useCallback(() => {
-    if (isSubmitting) {
-      throw new Error("Already submitting");
-    }
-    setSubmitting(true);
-
-    (async () => {
-      const transitionRequest: TransitionUserRequest = {
-        to: "tipper",
-      };
-      const result = await fetch(`/api/users/${user.id}/transition`, {
-        method: "POST",
-        body: JSON.stringify(transitionRequest),
-        headers: { "Content-Type": "application/json" },
-      });
-      if (result.ok) {
-        await mutateUser();
-      } else {
-        toast.error("Failed to update profile: " + result.statusText);
-      }
-      setSubmitting(false);
-    })();
-  }, [isSubmitting, mutateUser, user.id]);
 
   return (
     <>
@@ -176,28 +151,7 @@ function TippeeProfile({ mutateUser, session, user }: ProfileInternalProps) {
           <Spacer />
         </>
       )}
-      <Card css={{ dropShadow: "$sm" }}>
-        <Card.Body>
-          <Text h3>Ready to start tipping in bitcoin?</Text>
-          <Text>
-            Lightsats makes it easy for you to send tips and onboard people to
-            bitcoin.
-          </Text>
-          <Spacer />
-          <Button
-            auto
-            color="primary"
-            onClick={becomeTipper}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <Loading color="currentColor" size="sm" />
-            ) : (
-              <>{"🚀 Let's go!"}</>
-            )}
-          </Button>
-        </Card.Body>
-      </Card>
+      <BecomeATipper />
     </>
   );
 }

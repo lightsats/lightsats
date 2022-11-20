@@ -44,7 +44,6 @@ async function getTips(
         equals: session.user.id,
       },
     },
-    // TODO:
     orderBy: {
       created: "desc",
     },

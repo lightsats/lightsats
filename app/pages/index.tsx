@@ -1,20 +1,14 @@
 import { Button, Image, Loading, Spacer, Text } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { NextLink } from "components/NextLink";
+import { TipHistory } from "components/TipHistory";
 import { NewTipButton } from "components/tipper/NewTipButton";
-import { Tips } from "components/tipper/Tips";
 import { UserCard } from "components/UserCard";
 import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
-import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import ClaimedPage from "pages/journey/claimed";
-import React from "react";
-import useSWR from "swr";
 const Home: NextPage = () => {
   const { data: session, status: sessionStatus } = useSession();
   const { data: user } = useUser();
@@ -29,7 +23,7 @@ const Home: NextPage = () => {
         <title>Lightsats⚡</title>
       </Head>
 
-      {session && user ? (
+      {user ? (
         <>
           {user?.userType === "tipper" && (
             <>
@@ -37,17 +31,15 @@ const Home: NextPage = () => {
             </>
           )}
           <Spacer />
-          {user?.userType === "tipper" ? (
+          <UserCard userId={user.id} />
+          <Spacer />
+          {user?.userType === "tipper" && (
             <>
-              <UserCard userId={user.id} />
-              <Spacer />
               <NewTipButton />
-              <Spacer />
-              <Tips />
             </>
-          ) : (
-            <TippeeHomepage />
           )}
+          <Spacer y={2} />
+          <TipHistory />
         </>
       ) : (
         <>
@@ -78,24 +70,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-function TippeeHomepage() {
-  const session = useSession();
-  const { data: tips } = useSWR<Tip[]>(
-    session ? `/api/tippee/tips` : null,
-    defaultFetcher
-  );
-  const claimedTips = React.useMemo(
-    () =>
-      tips?.filter((tip) => tip.status === "CLAIMED" && !hasTipExpired(tip)),
-    [tips]
-  );
-
-  return claimedTips?.length ? (
-    <ClaimedPage />
-  ) : (
-    <>
-      <Text>{"It looks like you don't have any tips right now."}</Text>
-    </>
-  );
-}

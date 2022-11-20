@@ -2,6 +2,7 @@ import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
   Badge,
+  Button,
   Card,
   Col,
   Loading,
@@ -18,7 +19,7 @@ import { formatDistanceStrict } from "date-fns";
 import { DEFAULT_FIAT_CURRENCY, DEFAULT_NAME } from "lib/constants";
 import { bitcoinJourneyPages } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { getAvatarUrl } from "lib/utils";
+import { getAvatarUrl, hasTipExpired } from "lib/utils";
 import useSWR from "swr";
 import { ExchangeRates } from "types/ExchangeRates";
 import { PublicTip } from "types/PublicTip";
@@ -26,9 +27,14 @@ import { PublicTip } from "types/PublicTip";
 type ClaimedTipCardProps = {
   publicTip: PublicTip | undefined;
   viewing: "tipper" | "tippee";
+  showContinueButton?: boolean;
 };
 
-export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
+export function ClaimedTipCard({
+  publicTip,
+  viewing,
+  showContinueButton,
+}: ClaimedTipCardProps) {
   const { data: exchangeRates } = useSWR<ExchangeRates>(
     `/api/exchange/rates`,
     defaultFetcher
@@ -47,7 +53,15 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
       : "warning";
 
   return (
-    <Card css={{ background: "$gray900", dropShadow: "$sm" }}>
+    <Card
+      css={{
+        dropShadow: "$sm",
+        background:
+          publicTip.status === "WITHDRAWN"
+            ? `url('/images/confetti.svg'), $gray900`
+            : "$gray900",
+      }}
+    >
       <Card.Body>
         <Row align="center">
           <Avatar
@@ -66,7 +80,11 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
                   (viewing === "tippee" ? publicTip.tippeeName : undefined) ??
                   DEFAULT_NAME}
               </Text>
-              <ExpiryBadge tip={publicTip} viewing={viewing} />
+              {publicTip.status === "CLAIMED" ? (
+                <ExpiryBadge tip={publicTip} viewing={viewing} />
+              ) : (
+                <TipStatusBadge status={publicTip.status} />
+              )}
             </Row>
             <Row css={{ mt: 6 }}>
               <Text color="white" small>
@@ -166,6 +184,18 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
             </Row>
           </>
         )}
+        {showContinueButton &&
+          publicTip.status === "CLAIMED" &&
+          !hasTipExpired(publicTip) && (
+            <>
+              <Spacer />
+              <Row justify="flex-end">
+                <Button size="sm" auto>
+                  Withdraw&nbsp;🚀
+                </Button>
+              </Row>
+            </>
+          )}
       </Card.Body>
     </Card>
   );
