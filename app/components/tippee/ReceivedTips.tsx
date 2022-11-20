@@ -31,7 +31,7 @@ export function ReceivedTips() {
       <>
         <Text>{"It looks like you haven't received any tips yet."}</Text>
         <Spacer />
-        {user?.userType !== "tippee" ? (
+        {user?.userType === "tippee" ? (
           <>
             <BecomeATipper />
           </>
