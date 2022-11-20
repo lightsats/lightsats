@@ -84,8 +84,6 @@ export function SentTips() {
           </Card>
         </>
       )}
-      <Spacer y={2} />
-      <Text h3>Recent tips</Text>
       {tips && tips.length > 0 && (
         <Grid.Container justify="center" gap={1}>
           {tips.map((tip) => {
