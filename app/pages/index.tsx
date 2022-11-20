@@ -8,7 +8,6 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { NextLink } from "components/NextLink";
 import { TipHistory } from "components/TipHistory";
@@ -18,12 +17,9 @@ import { UserCard } from "components/UserCard";
 import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import ClaimedPage from "pages/journey/claimed";
-import React from "react";
 import CountUp from "react-countup";
 import { Tweet } from "react-twitter-widgets";
 import useSWR from "swr";
@@ -75,27 +71,6 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-function TippeeHomepage() {
-  const session = useSession();
-  const { data: tips } = useSWR<Tip[]>(
-    session ? `/api/tippee/tips` : null,
-    defaultFetcher
-  );
-  const claimedTips = React.useMemo(
-    () =>
-      tips?.filter((tip) => tip.status === "CLAIMED" && !hasTipExpired(tip)),
-    [tips]
-  );
-
-  return claimedTips?.length ? (
-    <ClaimedPage />
-  ) : (
-    <>
-      <Text>{"It looks like you don't have any tips right now."}</Text>
-    </>
-  );
-}
 
 function Homepage() {
   const { data: scoreboard } = useSWR<ScoreboardType>(
@@ -234,17 +209,17 @@ function Homepage() {
       <Grid.Container gap={2} sm={12} justify="center" alignContent="center">
         <Grid xs={12} sm={4}>
           <div style={{ width: "100%" }}>
+            <Tweet tweetId="1594009088421085185" />
+          </div>
+        </Grid>
+        <Grid xs={12} sm={4}>
+          <div style={{ width: "100%" }}>
             <Tweet tweetId="1591901975649869824" />
           </div>
         </Grid>
         <Grid xs={12} sm={4}>
           <div style={{ width: "100%" }}>
             <Tweet tweetId="1590860149471973376" />
-          </div>
-        </Grid>
-        <Grid xs={12} sm={4}>
-          <div style={{ width: "100%" }}>
-            <Tweet tweetId="1591901975649869824" />
           </div>
         </Grid>
       </Grid.Container>
