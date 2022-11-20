@@ -2,7 +2,6 @@ import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
-  Dropdown,
   Input,
   Link,
   Loading,
@@ -13,6 +12,7 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
+import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { SatsPrice } from "components/SatsPrice";
@@ -37,6 +37,16 @@ import { CreateTipRequest } from "types/CreateTipRequest";
 
 export const ExpiryUnitValues = ["minutes", "hours", "days"] as const;
 export type ExpiryUnit = typeof ExpiryUnitValues[number];
+const expiryUnitSelectOptions: SelectOption[] = ExpiryUnitValues.map(
+  (expiryUnit) => ({
+    value: expiryUnit,
+    label: expiryUnit,
+  })
+);
+const tippeeLocaleSelectOptions: SelectOption[] = locales.map((locale) => ({
+  value: locale,
+  label: getNativeLanguageName(locale),
+}));
 
 type NewTipFormData = {
   amount: number;
@@ -117,43 +127,32 @@ const NewTip: NextPage = () => {
     }
   }, [watchedAmount, watchedExchangeRate, inputMethod, setValue]);
 
-  const exchangeRateKeys = React.useMemo(
-    () => (exchangeRates ? Object.keys(exchangeRates) : undefined),
+  const exchangeRateSelectOptions: SelectOption[] | undefined = React.useMemo(
+    () =>
+      exchangeRates
+        ? Object.keys(exchangeRates).map((key) => ({
+            value: key,
+            label: key,
+          }))
+        : undefined,
     [exchangeRates]
   );
 
   const setDropdownSelectedCurrency = React.useCallback(
-    (keys: unknown) =>
-      setValue("currency", Array.from(keys as Iterable<string>)[0]),
+    (currency: string) => setValue("currency", currency),
     [setValue]
-  );
-
-  const selectedCurrencies = React.useMemo(
-    () => new Set([watchedCurrency]),
-    [watchedCurrency]
   );
 
   const setDropdownSelectedExpiryUnit = React.useCallback(
-    (keys: unknown) =>
-      setValue("expiryUnit", Array.from(keys as Iterable<ExpiryUnit>)[0]),
+    (expiryUnit: ExpiryUnit) => setValue("expiryUnit", expiryUnit),
     [setValue]
   );
 
-  const selectedExpiryUnits = React.useMemo(
-    () => new Set([watchedExpiryUnit]),
-    [watchedExpiryUnit]
-  );
-
-  const setDropdownTippeeLocale = React.useCallback(
-    (keys: unknown) => {
-      setValue("tippeeLocale", Array.from(keys as Iterable<string>)[0]);
+  const setDropdownSelectedTippeeLocale = React.useCallback(
+    (locale: string) => {
+      setValue("tippeeLocale", locale);
     },
     [setValue]
-  );
-
-  const selectedTippeeLocales = React.useMemo(
-    () => new Set([watchedTippeeLocale]),
-    [watchedTippeeLocale]
   );
 
   const onSubmit = React.useCallback(
@@ -245,41 +244,22 @@ const NewTip: NextPage = () => {
             </Tooltip>
             <Spacer y={0.25} />
             <Row justify="space-between" align="flex-end">
-              <Dropdown>
-                <Dropdown.Button flat>
-                  {getNativeLanguageName(watchedTippeeLocale)}
-                </Dropdown.Button>
-                <Dropdown.Menu
-                  aria-label="Select Language"
-                  selectionMode="single"
-                  selectedKeys={selectedTippeeLocales}
-                  onSelectionChange={setDropdownTippeeLocale}
-                >
-                  {locales.map((locale) => (
-                    <Dropdown.Item key={locale}>
-                      {locale.toUpperCase()}&nbsp;|&nbsp;
-                      {getNativeLanguageName(locale)}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-              <Spacer x={0.5} />
-              <Dropdown>
-                <Dropdown.Button flat>{watchedCurrency}</Dropdown.Button>
+              <CustomSelect
+                options={tippeeLocaleSelectOptions}
+                defaultValue={watchedTippeeLocale}
+                onChange={setDropdownSelectedTippeeLocale}
+                width="100px"
+              />
 
-                <Dropdown.Menu
-                  aria-label="Select Currency"
-                  selectionMode="single"
-                  selectedKeys={selectedCurrencies}
-                  onSelectionChange={setDropdownSelectedCurrency}
-                >
-                  {exchangeRateKeys
-                    ? exchangeRateKeys.map((key) => (
-                        <Dropdown.Item key={key}>{key}</Dropdown.Item>
-                      ))
-                    : []}
-                </Dropdown.Menu>
-              </Dropdown>
+              <Spacer x={0.5} />
+              {exchangeRateSelectOptions && (
+                <CustomSelect
+                  options={exchangeRateSelectOptions}
+                  defaultValue={watchedCurrency}
+                  onChange={setDropdownSelectedCurrency}
+                  width="100px"
+                />
+              )}
             </Row>
             <Spacer />
             <Row justify="flex-start" align="center">
@@ -422,19 +402,12 @@ const NewTip: NextPage = () => {
               />
 
               <Spacer />
-              <Dropdown>
-                <Dropdown.Button flat>{watchedExpiryUnit}</Dropdown.Button>
-                <Dropdown.Menu
-                  aria-label="Select Expiry Unit"
-                  selectionMode="single"
-                  selectedKeys={selectedExpiryUnits}
-                  onSelectionChange={setDropdownSelectedExpiryUnit}
-                >
-                  {ExpiryUnitValues.map((value) => (
-                    <Dropdown.Item key={value}>{value}</Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
+              <CustomSelect
+                options={expiryUnitSelectOptions}
+                defaultValue={watchedExpiryUnit}
+                onChange={setDropdownSelectedExpiryUnit}
+                width="100px"
+              />
             </Row>
           </Card.Body>
         </Card>

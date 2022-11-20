@@ -17,7 +17,11 @@ import { Icon } from "components/Icon";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistanceStrict } from "date-fns";
 import { useExchangeRates } from "hooks/useExchangeRates";
-import { DEFAULT_FIAT_CURRENCY, DEFAULT_NAME } from "lib/constants";
+import {
+  DEFAULT_FIAT_CURRENCY,
+  DEFAULT_NAME,
+  expirableTipStatuses,
+} from "lib/constants";
 import { bitcoinJourneyPages } from "lib/Routes";
 import { getAvatarUrl, hasTipExpired } from "lib/utils";
 import { PublicTip } from "types/PublicTip";
@@ -75,7 +79,7 @@ export function ClaimedTipCard({
                   (viewing === "tippee" ? publicTip.tippeeName : undefined) ??
                   DEFAULT_NAME}
               </Text>
-              {publicTip.status === "CLAIMED" ? (
+              {expirableTipStatuses.indexOf(publicTip.status) > -1 ? (
                 <ExpiryBadge tip={publicTip} viewing={viewing} />
               ) : (
                 <TipStatusBadge status={publicTip.status} />
