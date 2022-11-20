@@ -33,7 +33,7 @@ const Home: NextPage = () => {
           )}
           <Spacer />
           <UserCard userId={user.id} />
-          <Spacer />
+          <Spacer y={2} />
           {user?.userType === "tipper" ? (
             <>
               <NewTipButton />
@@ -43,7 +43,6 @@ const Home: NextPage = () => {
               <TippeeSuggestions />
             </>
           )}
-          <Spacer />
           <TipHistory />
         </>
       ) : (

@@ -1,4 +1,4 @@
-import { Button, Card, Loading, Spacer, Text } from "@nextui-org/react";
+import { Button, Card, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { useUser } from "hooks/useUser";
 import React from "react";
 import toast from "react-hot-toast";
@@ -37,25 +37,27 @@ export function BecomeATipper() {
 
   return (
     <Card css={{ dropShadow: "$sm" }}>
-      <Card.Body>
+      <Card.Body css={{ textAlign: "center" }}>
         <Text h3>Ready to start tipping in bitcoin?</Text>
         <Text>
           Lightsats makes it easy for you to send tips and onboard people to
           bitcoin.
         </Text>
         <Spacer />
-        <Button
-          auto
-          color="primary"
-          onClick={becomeTipper}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <Loading color="currentColor" size="sm" />
-          ) : (
-            <>{"🚀 Let's go!"}</>
-          )}
-        </Button>
+        <Row justify="center">
+          <Button
+            auto
+            color="primary"
+            onClick={becomeTipper}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <Loading color="currentColor" size="sm" />
+            ) : (
+              <>{"🚀 Let's go!"}</>
+            )}
+          </Button>
+        </Row>
       </Card.Body>
     </Card>
   );

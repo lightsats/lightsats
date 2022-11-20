@@ -13,7 +13,7 @@ export function TippeeSuggestions() {
   return (
     <>
       <Row justify="space-between" align="center">
-        <Text css={{ m: 0 }} h6>
+        <Text css={{ m: 0 }} h5>
           Suggestions
         </Text>
         <NextLink href={Routes.guide} passHref>
@@ -29,10 +29,10 @@ export function TippeeSuggestions() {
           pagination
         >
           {suggestions.map((suggestion) => (
-            <SwiperSlide key={suggestion.link}>
+            <SwiperSlide key={suggestion.link} style={{ paddingBottom: 20 }}>
               <NextLink href={suggestion.link}>
                 <a>
-                  <Card variant="flat" css={{ width: "100%" }}>
+                  <Card css={{ width: "100%", dropShadow: "$sm" }}>
                     <Card.Body>
                       <Row align="center">
                         <Button
@@ -50,7 +50,7 @@ export function TippeeSuggestions() {
                             <Text b>{suggestion.name}</Text>
                           </Row>
                           <Row>
-                            <Text>
+                            <Text color="$gray700">
                               {suggestion.shortDescription ||
                                 suggestion.description}
                             </Text>
