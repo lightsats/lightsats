@@ -1,14 +1,11 @@
 import { Collapse, CSS, Spacer, Text } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
 import { ItemCard } from "components/items/ItemCard";
+import { useReceivedTips } from "hooks/useTips";
 import {
   getOtherItems,
   getRecommendedItems,
 } from "lib/items/getRecommendedItems";
-import { defaultFetcher } from "lib/swr";
-import { useSession } from "next-auth/react";
 import React from "react";
-import useSWR from "swr";
 import { ItemCategory } from "types/Item";
 
 type ItemsListProps = {
@@ -19,11 +16,7 @@ type ItemsListProps = {
 const collapseGroupCss: CSS = { width: "100%" };
 
 export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
-  const { data: session } = useSession();
-  const { data: tips } = useSWR<Tip[]>(
-    checkTippeeBalance && session ? `/api/tippee/tips` : null,
-    defaultFetcher
-  );
+  const { data: tips } = useReceivedTips();
 
   const receivedTips = React.useMemo(
     () =>

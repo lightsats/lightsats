@@ -10,7 +10,7 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { Tip, WithdrawalFlow } from "@prisma/client";
+import { WithdrawalFlow } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
@@ -18,8 +18,8 @@ import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import copy from "copy-to-clipboard";
 import { isBefore } from "date-fns";
+import { useTips } from "hooks/useTips";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
@@ -27,12 +27,9 @@ import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
-import useSWR, { SWRConfiguration } from "swr";
 import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
 import { requestProvider } from "webln";
-
-const useTipsConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 const Withdraw: NextPage = () => {
   const { data: session } = useSession();
@@ -40,11 +37,7 @@ const Withdraw: NextPage = () => {
   const flow = (router.query["flow"] as WithdrawalFlow) ?? "tippee";
 
   // poll to get updated statuses after withdrawing
-  const { data: tips } = useSWR<Tip[]>(
-    session ? `/api/${flow}/tips` : null,
-    defaultFetcher,
-    useTipsConfig
-  );
+  const { data: tips } = useTips(flow, true);
 
   const [invoiceFieldValue, setInvoiceFieldValue] = React.useState("");
   const [withdrawalLinkLnurl, setWithdrawalLinkLnurl] = React.useState("");

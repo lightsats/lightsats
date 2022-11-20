@@ -16,12 +16,10 @@ import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistanceStrict } from "date-fns";
+import { useExchangeRates } from "hooks/useExchangeRates";
 import { DEFAULT_FIAT_CURRENCY, DEFAULT_NAME } from "lib/constants";
 import { bitcoinJourneyPages } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import { getAvatarUrl, hasTipExpired } from "lib/utils";
-import useSWR from "swr";
-import { ExchangeRates } from "types/ExchangeRates";
 import { PublicTip } from "types/PublicTip";
 
 type ClaimedTipCardProps = {
@@ -35,10 +33,7 @@ export function ClaimedTipCard({
   viewing,
   showContinueButton,
 }: ClaimedTipCardProps) {
-  const { data: exchangeRates } = useSWR<ExchangeRates>(
-    `/api/exchange/rates`,
-    defaultFetcher
-  );
+  const { data: exchangeRates } = useExchangeRates();
 
   if (!publicTip) {
     return <Loading color="currentColor" size="sm" />;

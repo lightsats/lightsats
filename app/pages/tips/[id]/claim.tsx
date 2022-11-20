@@ -12,6 +12,7 @@ import { ExpiryBadge } from "components/ExpiryBadge";
 import { FiatPrice } from "components/FiatPrice";
 import { HomeButton } from "components/HomeButton";
 import { Login } from "components/Login";
+import { useExchangeRates } from "hooks/useExchangeRates";
 import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
@@ -26,7 +27,6 @@ import React from "react";
 import toast from "react-hot-toast";
 import useSWR from "swr";
 import { ClaimTipRequest } from "types/ClaimTipRequest";
-import { ExchangeRates } from "types/ExchangeRates";
 import { PublicTip } from "types/PublicTip";
 
 const ClaimTipPage: NextPage = () => {
@@ -191,10 +191,7 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
   const { t } = useTranslation("claim");
   const router = useRouter();
 
-  const { data: exchangeRates } = useSWR<ExchangeRates>(
-    `/api/exchange/rates`,
-    defaultFetcher
-  );
+  const { data: exchangeRates } = useExchangeRates();
   const tipCurrency = publicTip?.currency ?? DEFAULT_FIAT_CURRENCY;
 
   return (

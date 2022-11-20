@@ -11,17 +11,17 @@ import {
   Text,
 } from "@nextui-org/react";
 
-import { Tip, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { BecomeATipper } from "components/tippee/BecomeATipper";
 import { UserCard } from "components/UserCard";
 import copy from "copy-to-clipboard";
+import { useReceivedTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
 import { MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -29,7 +29,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import useSWR, { KeyedMutator } from "swr";
+import { KeyedMutator } from "swr";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
 
 type ProfileFormData = {
@@ -82,7 +82,7 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
       {user.userType === "tipper" ? (
         <TipperProfile mutateUser={mutateUser} session={session} user={user} />
       ) : (
-        <TippeeProfile mutateUser={mutateUser} session={session} user={user} />
+        <TippeeProfile />
       )}
 
       <Spacer />
@@ -125,11 +125,8 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
   );
 }
 
-function TippeeProfile({ session }: ProfileInternalProps) {
-  const { data: tips } = useSWR<Tip[]>(
-    session ? `/api/tippee/tips` : null,
-    defaultFetcher
-  );
+function TippeeProfile() {
+  const { data: tips } = useReceivedTips();
   const hasWithdrawnTip = tips?.some((tip) => tip.status === "WITHDRAWN");
 
   return (

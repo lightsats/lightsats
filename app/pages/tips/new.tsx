@@ -17,6 +17,7 @@ import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { SatsPrice } from "components/SatsPrice";
 import { add } from "date-fns";
+import { useExchangeRates } from "hooks/useExchangeRates";
 import {
   appName,
   FEE_PERCENT,
@@ -26,16 +27,13 @@ import {
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { DEFAULT_LOCALE, locales } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import { calculateFee, getFiatAmount, getSatsAmount } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import useSWR from "swr";
 import { CreateTipRequest } from "types/CreateTipRequest";
-import { ExchangeRates } from "types/ExchangeRates";
 
 export const ExpiryUnitValues = ["minutes", "hours", "days"] as const;
 export type ExpiryUnit = typeof ExpiryUnitValues[number];
@@ -66,10 +64,7 @@ const NewTip: NextPage = () => {
   const [inputMethod, setInputMethod] = React.useState<InputMethod>("fiat");
   const altInputMethod: InputMethod = inputMethod === "fiat" ? "sats" : "fiat";
 
-  const { data: exchangeRates } = useSWR<ExchangeRates>(
-    `/api/exchange/rates`,
-    defaultFetcher
-  );
+  const { data: exchangeRates } = useExchangeRates();
 
   const { control, handleSubmit, watch, setValue, setFocus, register } =
     useForm<NewTipFormData>({

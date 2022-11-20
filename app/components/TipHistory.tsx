@@ -1,33 +1,21 @@
 import { Button, Card, Row, Spacer, Text } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
 import { BecomeATipper } from "components/tippee/BecomeATipper";
 import { ReceivedTips } from "components/tippee/ReceivedTips";
 import { SentTips } from "components/tipper/SentTips";
+import { useReceivedTips, useSentTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
-import { defaultFetcher } from "lib/swr";
-import { useSession } from "next-auth/react";
 import React from "react";
-import useSWR from "swr";
-import { PublicTip } from "types/PublicTip";
 
 const historyTabs = ["sent", "received"] as const;
 type HistoryTab = typeof historyTabs[number];
 
 export function TipHistory() {
-  const { data: session } = useSession();
   const { data: user } = useUser();
   const [selectedTab, setSelectedTab] = React.useState<HistoryTab>(
     user?.userType === "tipper" ? "sent" : "received"
   );
-  const { data: sentTips } = useSWR<Tip[]>(
-    session ? "/api/tipper/tips" : null,
-    defaultFetcher
-  );
-
-  const { data: receivedTips } = useSWR<PublicTip[]>(
-    session ? "/api/tippee/tips" : null,
-    defaultFetcher
-  );
+  const { data: sentTips } = useSentTips();
+  const { data: receivedTips } = useReceivedTips();
 
   const tipCounts = [sentTips?.length, receivedTips?.length];
 
