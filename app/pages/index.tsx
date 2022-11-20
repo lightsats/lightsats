@@ -2,6 +2,7 @@ import {
   Avatar,
   Button,
   Card,
+  Container,
   Grid,
   Image,
   Loading,
@@ -40,7 +41,17 @@ const Home: NextPage = () => {
       </Head>
 
       {user ? (
-        <>
+        <Container
+          xs
+          justify="flex-start"
+          alignItems="center"
+          display="flex"
+          direction="column"
+          fluid
+          css={{
+            padding: 0,
+          }}
+        >
           {user?.userType === "tipper" && (
             <>
               <Alert>⚠️ This project is currently in BETA.</Alert>
@@ -50,17 +61,13 @@ const Home: NextPage = () => {
           <UserCard userId={user.id} />
           <Spacer />
           {user?.userType === "tipper" ? (
-            <>
-              <NewTipButton />
-            </>
+            <NewTipButton />
           ) : (
-            <>
-              <TippeeSuggestions />
-            </>
+            <TippeeSuggestions />
           )}
           <Spacer />
           <TipHistory />
-        </>
+        </Container>
       ) : (
         <>
           <Homepage />
