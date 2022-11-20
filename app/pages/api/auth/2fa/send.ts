@@ -9,6 +9,8 @@ import prisma from "lib/prismadb";
 
 import { sendSms } from "lib/sms/sendSms";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "pages/api/auth/[...nextauth]";
 import { TwoFactorLoginRequest } from "types/TwoFactorLoginRequest";
 
 export default async function handler(
@@ -16,6 +18,31 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const twoFactorLoginRequest = req.body as TwoFactorLoginRequest;
+  let linkUserId: string | undefined;
+
+  if (twoFactorLoginRequest.linkExistingAccount) {
+    if (twoFactorLoginRequest.email) {
+      if (
+        await prisma.user.findUnique({
+          where: {
+            email: twoFactorLoginRequest.email,
+          },
+        })
+      ) {
+        // account already exists
+        res.status(StatusCodes.CONFLICT).end();
+        return;
+      }
+    } else {
+      throw new Error("Unsupported link account type");
+    }
+    const session = await unstable_getServerSession(req, res, authOptions);
+    if (!session) {
+      res.status(StatusCodes.UNAUTHORIZED).end();
+      return;
+    }
+    linkUserId = session.user.id;
+  }
 
   const i18n = await getApiI18n(twoFactorLoginRequest.locale);
 
@@ -23,7 +50,8 @@ export default async function handler(
     twoFactorLoginRequest.email,
     twoFactorLoginRequest.phoneNumber,
     twoFactorLoginRequest.locale,
-    twoFactorLoginRequest.callbackUrl
+    twoFactorLoginRequest.callbackUrl,
+    linkUserId
   );
 
   if (twoFactorLoginRequest.email) {
