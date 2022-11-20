@@ -37,9 +37,11 @@ const Home: NextPage = () => {
           {user?.userType === "tipper" ? (
             <>
               <NewTipButton />
+              <Spacer />
             </>
           ) : (
             <>
+              <Spacer />
               <TippeeSuggestions />
             </>
           )}

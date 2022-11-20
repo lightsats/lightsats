@@ -116,8 +116,8 @@ export function ClaimedTipCard({
         {publicTip.note && (
           <>
             <Spacer />
-            <Card css={{ background: "$black" }}>
-              <Card.Body>
+            <Card css={{ background: "#000000AA" }}>
+              <Card.Body css={{ padding: "$sm" }}>
                 <Row>
                   <Icon color="white">
                     <ChatBubbleOvalLeftIcon />
