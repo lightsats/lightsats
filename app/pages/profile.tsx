@@ -1,4 +1,4 @@
-import { ClipboardIcon, EyeIcon } from "@heroicons/react/24/solid";
+import { ClipboardIcon, EyeIcon, LinkIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
@@ -11,16 +11,17 @@ import {
   Text,
 } from "@nextui-org/react";
 
-import { Tip, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
+import { BecomeATipper } from "components/tippee/BecomeATipper";
 import { UserCard } from "components/UserCard";
 import copy from "copy-to-clipboard";
+import { useReceivedTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
 import { MAX_USER_NAME_LENGTH } from "lib/constants";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -28,14 +29,14 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import useSWR, { KeyedMutator } from "swr";
-import { TransitionUserRequest } from "types/TransitionUserRequest";
+import { KeyedMutator } from "swr";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
 
 type ProfileFormData = {
   name: string;
   twitterUsername: string;
   avatarURL: string;
+  lightningAddress: string;
   isAnonymous: boolean;
 };
 
@@ -81,7 +82,7 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
       {user.userType === "tipper" ? (
         <TipperProfile mutateUser={mutateUser} session={session} user={user} />
       ) : (
-        <TippeeProfile mutateUser={mutateUser} session={session} user={user} />
+        <TippeeProfile />
       )}
 
       <Spacer />
@@ -90,13 +91,35 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
         title={<Text b>🔗 Connected accounts & more</Text>}
         css={{ width: "100%" }}
       >
-        <Row>
-          <Text>
-            {user.email && "📧 Email: " + user.email}
-            {user.phoneNumber && "📱 Phone: " + user.phoneNumber}
-            {user.lnurlPublicKey && "⚡ Wallet: " + user.lnurlPublicKey}
-          </Text>
+        <Row justify="space-between" align="center">
+          <Text>{"📧 Email: "}</Text>
+          {user.email ? (
+            <Text b>{user.email}</Text>
+          ) : (
+            <NextLink href={`${Routes.emailSignin}?link=true`}>
+              <a>
+                <Button size="sm" auto>
+                  Link&nbsp;
+                  <Icon width={16} height={16}>
+                    <LinkIcon />
+                  </Icon>
+                </Button>
+              </a>
+            </NextLink>
+          )}
         </Row>
+        {user.phoneNumber && (
+          <Row justify="space-between" align="center">
+            <Text>{"📱 Phone: "}</Text>
+            <Text b>{user.phoneNumber}</Text>
+          </Row>
+        )}
+        {user.lnurlPublicKey && (
+          <Row justify="space-between" align="center">
+            <Text>{"⚡ Wallet: "}</Text>
+            <Text b>{user.lnurlPublicKey}</Text>
+          </Row>
+        )}
         <Spacer />
         <Row>
           <Text b>Lightsats User ID</Text>
@@ -124,37 +147,9 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
   );
 }
 
-function TippeeProfile({ mutateUser, session, user }: ProfileInternalProps) {
-  const { data: tips } = useSWR<Tip[]>(
-    session ? `/api/tippee/tips` : null,
-    defaultFetcher
-  );
+function TippeeProfile() {
+  const { data: tips } = useReceivedTips();
   const hasWithdrawnTip = tips?.some((tip) => tip.status === "WITHDRAWN");
-  const [isSubmitting, setSubmitting] = React.useState(false);
-
-  const becomeTipper = React.useCallback(() => {
-    if (isSubmitting) {
-      throw new Error("Already submitting");
-    }
-    setSubmitting(true);
-
-    (async () => {
-      const transitionRequest: TransitionUserRequest = {
-        to: "tipper",
-      };
-      const result = await fetch(`/api/users/${user.id}/transition`, {
-        method: "POST",
-        body: JSON.stringify(transitionRequest),
-        headers: { "Content-Type": "application/json" },
-      });
-      if (result.ok) {
-        await mutateUser();
-      } else {
-        toast.error("Failed to update profile: " + result.statusText);
-      }
-      setSubmitting(false);
-    })();
-  }, [isSubmitting, mutateUser, user.id]);
 
   return (
     <>
@@ -176,28 +171,7 @@ function TippeeProfile({ mutateUser, session, user }: ProfileInternalProps) {
           <Spacer />
         </>
       )}
-      <Card css={{ dropShadow: "$sm" }}>
-        <Card.Body>
-          <Text h3>Ready to start tipping in bitcoin?</Text>
-          <Text>
-            Lightsats makes it easy for you to send tips and onboard people to
-            bitcoin.
-          </Text>
-          <Spacer />
-          <Button
-            auto
-            color="primary"
-            onClick={becomeTipper}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <Loading color="currentColor" size="sm" />
-            ) : (
-              <>{"🚀 Let's go!"}</>
-            )}
-          </Button>
-        </Card.Body>
-      </Card>
+      <BecomeATipper />
     </>
   );
 }
@@ -211,6 +185,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
       name: user.name ?? undefined,
       twitterUsername: user.twitterUsername ?? undefined,
       avatarURL: user.avatarURL ?? undefined,
+      lightningAddress: user.lightningAddress ?? undefined,
       isAnonymous: user.isAnonymous,
     },
   });
@@ -231,6 +206,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
           name: data.name,
           twitterUsername: data.twitterUsername,
           avatarURL: data.avatarURL,
+          lightningAddress: data.lightningAddress,
           isAnonymous: data.isAnonymous,
         };
         const result = await fetch(`/api/users/${user.id}`, {
@@ -301,6 +277,21 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
               fullWidth
               bordered
               type="url"
+            />
+          )}
+        />
+        <Spacer />
+        <Controller
+          name="lightningAddress"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              label="Lightning Address"
+              placeholder="reneaaron@getalby.com"
+              fullWidth
+              bordered
+              type="email"
             />
           )}
         />

@@ -8,7 +8,8 @@ export function generateAuthLink(
   email: string | undefined,
   phoneNumber: string | undefined,
   locale: string,
-  callbackUrl: string
+  callbackUrl: string,
+  linkUserId?: string
 ) {
   if (!process.env.NEXTAUTH_SECRET) {
     throw new Error("No NEXTAUTH_SECRET set");
@@ -18,6 +19,7 @@ export function generateAuthLink(
     email,
     phoneNumber,
     callbackUrl,
+    linkUserId,
   };
   const token = jwt.sign(twoFactorAuthToken, process.env.NEXTAUTH_SECRET, {
     expiresIn: LOGIN_LINK_EXPIRATION_DAYS + " days",

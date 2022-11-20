@@ -57,6 +57,7 @@ model User {
   name String?
   avatarURL String?
   twitterUsername String?
+  lightningAddress String?
   tipsSent Tip[] @relation("tipsSent")
   tipsReceived Tip[] @relation("tipsReceived")
   lnbitsWallet LnbitsWallet?

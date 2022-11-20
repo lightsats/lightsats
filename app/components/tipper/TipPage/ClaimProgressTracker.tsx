@@ -23,25 +23,3 @@ export function ClaimProgressTracker({ tipId }: ClaimProgressTrackerProps) {
     </>
   );
 }
-
-/*
-(publicTip && publicTip.tippee ? (
-      <>
-        
-        <Spacer />
-        <Progress
-          value={
-            (publicTip.tippee.journeyStep / bitcoinJourneyPages.length) * 100
-          }
-          color="success"
-          status="success"
-        />
-        <Text blockquote>
-          On page {bitcoinJourneyPages[publicTip.tippee.journeyStep - 1]}
-        </Text>
-
-        <Spacer />
-      </>
-      ) : (
-      <Loading color="currentColor" size="sm" />
-      ))*/

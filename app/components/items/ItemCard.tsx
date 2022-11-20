@@ -1,5 +1,5 @@
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
-import { Button, Collapse, Row, Text } from "@nextui-org/react";
+import { Button, Collapse, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import {
   ItemFeatureBadge,
@@ -17,6 +17,7 @@ import { Wallet } from "types/Wallet";
 
 type ItemCardProps = {
   item: Item;
+  expanded?: boolean;
 };
 
 function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
@@ -67,8 +68,7 @@ function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
   return itemFeatures;
 }
 
-export function ItemCard({ item }: ItemCardProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
+export function ItemCard({ item, expanded }: ItemCardProps) {
   const features: ItemFeatureBadgeProps[] = React.useMemo(
     () => getItemFeatures(item),
     [item]
@@ -76,7 +76,7 @@ export function ItemCard({ item }: ItemCardProps) {
 
   return (
     <Collapse
-      onChange={(_, __, value) => setIsOpen(value || false)}
+      expanded={expanded}
       contentLeft={
         <NextImage
           alt=""
@@ -92,13 +92,10 @@ export function ItemCard({ item }: ItemCardProps) {
           blurDataURL={item.placeholderDataUrl ?? defaultPlaceholderDataUrl}
         />
       }
-      title={<Text b>{item.name}</Text>}
-      subtitle={
-        <Text css={isOpen ? {} : { maxHeight: "90px", overflowY: "hidden" }}>
-          {item.slogan}
-        </Text>
-      }
+      title={item.name}
     >
+      <Text color="$gray">{item.slogan}</Text>
+      <Spacer y={1} />
       <NextLink href={item.link} passHref>
         <a target="_blank" rel="noreferrer noopener">
           <Row align="center" css={{ p: 10, br: 10 }}>

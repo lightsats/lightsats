@@ -1,4 +1,13 @@
-import { Button, Card, Input, Loading, Spacer } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Divider,
+  Input,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { useTranslation } from "next-i18next";
@@ -39,6 +48,7 @@ export default function EmailSignIn({
   const router = useRouter();
   const callbackUrlWithFallback =
     callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
+  const linkExistingAccount = router.query["link"] === "true";
 
   // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
 
@@ -62,6 +72,7 @@ export default function EmailSignIn({
             email: data.email,
             callbackUrl: callbackUrlWithFallback,
             locale: router.locale ?? DEFAULT_LOCALE,
+            linkExistingAccount,
           };
 
           const result = await fetch(`/api/auth/2fa/send`, {
@@ -85,12 +96,18 @@ export default function EmailSignIn({
         setSubmitting(false);
       })();
     },
-    [callbackUrlWithFallback, isSubmitting, router]
+    [callbackUrlWithFallback, isSubmitting, linkExistingAccount, router]
   );
 
   return (
     <>
       <Card css={{ dropShadow: "$sm" }}>
+        <Card.Header>
+          <Row justify="center">
+            <Text css={{ fontWeight: "bold" }}>{t("email")}</Text>
+          </Row>
+        </Card.Header>
+        <Divider />
         <Card.Body>
           <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
             <Controller
@@ -100,7 +117,6 @@ export default function EmailSignIn({
                 <Input
                   bordered
                   {...field}
-                  label={t("email")}
                   type="email"
                   placeholder="satoshin@gmx.com"
                   autoComplete="email"
@@ -119,7 +135,7 @@ export default function EmailSignIn({
               {isSubmitting ? (
                 <Loading color="currentColor" size="sm" />
               ) : (
-                <>{submitText ?? "Login"}</>
+                <>{submitText ?? "Sign in"}</>
               )}
             </Button>
           </form>

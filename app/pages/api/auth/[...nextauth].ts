@@ -93,11 +93,33 @@ export const authOptions: NextAuthOptions = {
               },
             });
             if (!user) {
-              user = await prisma.user.create({
-                data: {
-                  email: decoded.email,
-                },
-              });
+              if (decoded.linkUserId) {
+                user = await prisma.user.findUnique({
+                  where: {
+                    id: decoded.linkUserId,
+                  },
+                });
+                if (!user) {
+                  throw new Error(
+                    "User to link does not exist: " + decoded.linkUserId
+                  );
+                } else {
+                  await prisma.user.update({
+                    where: {
+                      id: user.id,
+                    },
+                    data: {
+                      email: decoded.email,
+                    },
+                  });
+                }
+              } else {
+                user = await prisma.user.create({
+                  data: {
+                    email: decoded.email,
+                  },
+                });
+              }
             }
             return user;
           } else if (decoded.phoneNumber) {

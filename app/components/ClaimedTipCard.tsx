@@ -2,6 +2,7 @@ import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
   Badge,
+  Button,
   Card,
   Col,
   Loading,
@@ -15,24 +16,24 @@ import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistanceStrict } from "date-fns";
+import { useExchangeRates } from "hooks/useExchangeRates";
 import { DEFAULT_FIAT_CURRENCY, DEFAULT_NAME } from "lib/constants";
 import { bitcoinJourneyPages } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
-import { getAvatarUrl } from "lib/utils";
-import useSWR from "swr";
-import { ExchangeRates } from "types/ExchangeRates";
+import { getAvatarUrl, hasTipExpired } from "lib/utils";
 import { PublicTip } from "types/PublicTip";
 
 type ClaimedTipCardProps = {
   publicTip: PublicTip | undefined;
   viewing: "tipper" | "tippee";
+  showContinueButton?: boolean;
 };
 
-export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
-  const { data: exchangeRates } = useSWR<ExchangeRates>(
-    `/api/exchange/rates`,
-    defaultFetcher
-  );
+export function ClaimedTipCard({
+  publicTip,
+  viewing,
+  showContinueButton,
+}: ClaimedTipCardProps) {
+  const { data: exchangeRates } = useExchangeRates();
 
   if (!publicTip) {
     return <Loading color="currentColor" size="sm" />;
@@ -47,7 +48,15 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
       : "warning";
 
   return (
-    <Card css={{ background: "$gray900", dropShadow: "$sm" }}>
+    <Card
+      css={{
+        dropShadow: "$sm",
+        background:
+          publicTip.status === "WITHDRAWN"
+            ? `url('/images/confetti.svg'), $gray900`
+            : "$gray900",
+      }}
+    >
       <Card.Body>
         <Row align="center">
           <Avatar
@@ -66,7 +75,11 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
                   (viewing === "tippee" ? publicTip.tippeeName : undefined) ??
                   DEFAULT_NAME}
               </Text>
-              <ExpiryBadge tip={publicTip} viewing={viewing} />
+              {publicTip.status === "CLAIMED" ? (
+                <ExpiryBadge tip={publicTip} viewing={viewing} />
+              ) : (
+                <TipStatusBadge status={publicTip.status} />
+              )}
             </Row>
             <Row css={{ mt: 6 }}>
               <Text color="white" small>
@@ -99,8 +112,8 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
         {publicTip.note && (
           <>
             <Spacer />
-            <Card css={{ background: "$black" }}>
-              <Card.Body>
+            <Card css={{ background: "#000000AA" }}>
+              <Card.Body css={{ padding: "$sm" }}>
                 <Row>
                   <Icon color="white">
                     <ChatBubbleOvalLeftIcon />
@@ -166,6 +179,18 @@ export function ClaimedTipCard({ publicTip, viewing }: ClaimedTipCardProps) {
             </Row>
           </>
         )}
+        {showContinueButton &&
+          publicTip.status === "CLAIMED" &&
+          !hasTipExpired(publicTip) && (
+            <>
+              <Spacer />
+              <Row justify="flex-end">
+                <Button size="sm" auto>
+                  Withdraw&nbsp;🚀
+                </Button>
+              </Row>
+            </>
+          )}
       </Card.Body>
     </Card>
   );

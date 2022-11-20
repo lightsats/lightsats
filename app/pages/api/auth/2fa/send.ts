@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { generateEmailTemplate } from "lib/email/generateEmailTemplate";
 
 import { sendEmail } from "lib/email/sendEmail";
 import { generateAuthLink } from "lib/generateAuthLink";
@@ -8,6 +9,8 @@ import prisma from "lib/prismadb";
 
 import { sendSms } from "lib/sms/sendSms";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "pages/api/auth/[...nextauth]";
 import { TwoFactorLoginRequest } from "types/TwoFactorLoginRequest";
 
 export default async function handler(
@@ -15,6 +18,31 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const twoFactorLoginRequest = req.body as TwoFactorLoginRequest;
+  let linkUserId: string | undefined;
+
+  if (twoFactorLoginRequest.linkExistingAccount) {
+    if (twoFactorLoginRequest.email) {
+      if (
+        await prisma.user.findUnique({
+          where: {
+            email: twoFactorLoginRequest.email,
+          },
+        })
+      ) {
+        // account already exists
+        res.status(StatusCodes.CONFLICT).end();
+        return;
+      }
+    } else {
+      throw new Error("Unsupported link account type");
+    }
+    const session = await unstable_getServerSession(req, res, authOptions);
+    if (!session) {
+      res.status(StatusCodes.UNAUTHORIZED).end();
+      return;
+    }
+    linkUserId = session.user.id;
+  }
 
   const i18n = await getApiI18n(twoFactorLoginRequest.locale);
 
@@ -22,17 +50,20 @@ export default async function handler(
     twoFactorLoginRequest.email,
     twoFactorLoginRequest.phoneNumber,
     twoFactorLoginRequest.locale,
-    twoFactorLoginRequest.callbackUrl
+    twoFactorLoginRequest.callbackUrl,
+    linkUserId
   );
 
   if (twoFactorLoginRequest.email) {
     try {
       await sendEmail({
         to: twoFactorLoginRequest.email,
-        subject: i18n("common:verifyEmailSubject"),
-        html: i18n("common:verifyEmailMessage", {
+        subject: i18n("login.subject", { ns: "email" }),
+        html: generateEmailTemplate({
+          template: "login",
           verifyUrl,
-        }) as string,
+          i18n,
+        }),
         from: `Lightsats <${process.env.EMAIL_FROM}>`,
       });
       res.status(StatusCodes.NO_CONTENT).end();
@@ -82,7 +113,7 @@ export default async function handler(
       }
 
       const smsBody =
-        i18n("common:verifyPhoneMessage") +
+        i18n("verifyPhoneMessage", { ns: "common" }) +
         " " +
         ((await generateShortLink(verifyUrl)) ?? verifyUrl);
 

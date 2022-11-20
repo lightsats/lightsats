@@ -10,9 +10,9 @@ const SignInPage: NextPage = () => {
       <Head>
         <title>Lightsats⚡ - Sign in</title>
       </Head>
-      <h2>Sign in</h2>
-      <p>Choose your preferred way to sign in to Lightsats.</p>
-      <Spacer />
+      <h2>Welcome! 👋</h2>
+      <p>Please choose your preferred way to sign in.</p>
+      <Spacer y={1.5} />
       <Login defaultLoginMethod="lightning" />
     </>
   );

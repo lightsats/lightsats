@@ -11,33 +11,26 @@ import {
   Text,
   Tooltip,
 } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
+import { NewTipButton } from "components/tipper/NewTipButton";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistance } from "date-fns";
+import { useExchangeRates } from "hooks/useExchangeRates";
+import { useSentTips } from "hooks/useTips";
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import { hasTipExpired } from "lib/utils";
 import { useSession } from "next-auth/react";
 import { CSSProperties } from "react";
-import useSWR from "swr";
-import { ExchangeRates } from "types/ExchangeRates";
 
 const cardLinkStyle: CSSProperties = { flex: 1 };
 
-export function Tips() {
+export function SentTips() {
   const { data: session } = useSession();
-  const { data: tips } = useSWR<Tip[]>(
-    session ? "/api/tipper/tips" : null,
-    defaultFetcher
-  );
-  const { data: exchangeRates } = useSWR<ExchangeRates>(
-    `/api/exchange/rates`,
-    defaultFetcher
-  );
+  const { data: tips } = useSentTips();
+  const { data: exchangeRates } = useExchangeRates();
 
   if (session && !tips) {
     return <Loading color="currentColor" size="sm" />;
@@ -163,10 +156,10 @@ export function Tips() {
                         </Row>
                         <Spacer y={0.5} />
                         <Row justify="space-between" align="flex-end">
-                          <Row align="center" css={{ color: "$gray800" }}>
+                          <Row align="center" css={{ color: "$gray700" }}>
                             {tip.tippeeName && (
                               <>
-                                <Text color="$gray800" size="small">
+                                <Text color="$gray700" size="small">
                                   To {tip.tippeeName}
                                 </Text>
                                 <Spacer x={0.25} />
@@ -174,7 +167,7 @@ export function Tips() {
                                 <Spacer x={0.25} />
                               </>
                             )}
-                            <Text size="small" color="$gray800">
+                            <Text size="small" color="$gray700">
                               Created&nbsp;
                               {formatDistance(
                                 Date.now(),
@@ -199,8 +192,11 @@ export function Tips() {
       {!tips ||
         (!tips.length && (
           <>
-            {"No tips available yet, let's create your first one now!"}
+            <Text>
+              {"No tips available yet, let's create your first one now!"}
+            </Text>
             <Spacer />
+            <NewTipButton />
           </>
         ))}
     </>
