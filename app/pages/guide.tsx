@@ -17,11 +17,12 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { Guide } from "types/Guide";
 
-const guides: Guide[] = [
+export const guides: Guide[] = [
   {
     name: "Spend 🛒",
     description:
       "Spend at stores accepting Bitcoin, purchase gift cards, pre-paid visa cards, pay bills",
+    shortDescription: "Spend at stores accepting Bitcoin",
     icon: <CreditCardIcon />,
     link: Routes.guideSpend,
   },
@@ -65,6 +66,7 @@ const guides: Guide[] = [
     name: "Learn 📙",
     description:
       'Learn more about Bitcoin and why "Bitcoin Fixes This" - Philosophy, Engineering, Economics, Politics, History...',
+    shortDescription: "Learn more about Bitcoin",
     icon: <BookOpenIcon />,
     link: Routes.guideLearn,
   },

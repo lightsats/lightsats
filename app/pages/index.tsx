@@ -2,6 +2,7 @@ import { Button, Image, Loading, Spacer, Text } from "@nextui-org/react";
 import { Alert } from "components/Alert";
 import { NextLink } from "components/NextLink";
 import { TipHistory } from "components/TipHistory";
+import { TippeeSuggestions } from "components/tippee/TippeeSuggestions";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { UserCard } from "components/UserCard";
 import { useUser } from "hooks/useUser";
@@ -33,12 +34,16 @@ const Home: NextPage = () => {
           <Spacer />
           <UserCard userId={user.id} />
           <Spacer />
-          {user?.userType === "tipper" && (
+          {user?.userType === "tipper" ? (
             <>
               <NewTipButton />
             </>
+          ) : (
+            <>
+              <TippeeSuggestions />
+            </>
           )}
-          <Spacer y={2} />
+          <Spacer />
           <TipHistory />
         </>
       ) : (
