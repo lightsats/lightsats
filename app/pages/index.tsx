@@ -1,8 +1,3 @@
-import { Tweet } from "react-twitter-widgets";
-
-import { hasTipExpired } from "lib/utils";
-import { Scoreboard as ScoreboardType } from "types/Scoreboard";
-
 import {
   Avatar,
   Button,
@@ -10,26 +5,30 @@ import {
   Grid,
   Image,
   Loading,
-  Row,
   Spacer,
   Text,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { NextLink } from "components/NextLink";
+import { TipHistory } from "components/TipHistory";
+import { TippeeSuggestions } from "components/tippee/TippeeSuggestions";
 import { NewTipButton } from "components/tipper/NewTipButton";
-import { Tips } from "components/tipper/Tips";
 import { UserCard } from "components/UserCard";
 import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
+import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import ClaimedPage from "pages/journey/claimed";
 import React from "react";
 import CountUp from "react-countup";
+import { Tweet } from "react-twitter-widgets";
 import useSWR from "swr";
+import { Scoreboard as ScoreboardType } from "types/Scoreboard";
+
 const Home: NextPage = () => {
   const { data: session, status: sessionStatus } = useSession();
   const { data: user } = useUser();
@@ -44,28 +43,27 @@ const Home: NextPage = () => {
         <title>Lightsats⚡</title>
       </Head>
 
-      {session && user ? (
+      {user ? (
         <>
-          <Row align="center" css={{ fd: "column", maxWidth: "600px" }}>
-            {user?.userType === "tipper" && (
-              <>
-                <Alert>⚠️ This project is currently in BETA.</Alert>
-              </>
-            )}
-
-            <Spacer />
-            {user?.userType === "tipper" ? (
-              <>
-                <UserCard userId={user.id} />
-                <Spacer />
-                <NewTipButton />
-                <Spacer />
-                <Tips />
-              </>
-            ) : (
-              <TippeeHomepage />
-            )}
-          </Row>
+          {user?.userType === "tipper" && (
+            <>
+              <Alert>⚠️ This project is currently in BETA.</Alert>
+            </>
+          )}
+          <Spacer />
+          <UserCard userId={user.id} />
+          <Spacer />
+          {user?.userType === "tipper" ? (
+            <>
+              <NewTipButton />
+            </>
+          ) : (
+            <>
+              <TippeeSuggestions />
+            </>
+          )}
+          <Spacer />
+          <TipHistory />
         </>
       ) : (
         <>

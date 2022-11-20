@@ -19,9 +19,9 @@ export function ExpiryBadge({ tip, viewing }: Props) {
       color="primary"
       placement="right"
       content={
-        viewing === "tippee"
+        viewing === "tipper"
           ? hasExpired
-            ? "You were too slow. This tip has expired 😭"
+            ? "You didn't withdraw this tip in time 😭"
             : "This tip will expire. Better hurry up! ✌️"
           : hasExpired
           ? `Your recipient didn't withdraw their tip in time. This tip expired ${formatDistanceStrict(

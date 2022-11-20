@@ -102,7 +102,7 @@ export const formatAmount = (amount: number, decimals = 2) => {
   return amount.toFixed(i > 0 ? decimals : 0) + ["", " k", " M", "G"][i];
 };
 
-export const getClaimUrl = (tip: Tip) =>
+export const getClaimUrl = (tip: Tip | PublicTip) =>
   `${getAppUrl()}${getLocalePath(tip.tippeeLocale)}${Routes.tips}/${
     tip.id
   }/claim`;

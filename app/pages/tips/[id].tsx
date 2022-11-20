@@ -1,5 +1,5 @@
 import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
-import { Tip, TipStatus } from "@prisma/client";
+import { TipStatus } from "@prisma/client";
 import { ConfettiContainer } from "components/ConfettiContainer";
 import { NextLink } from "components/NextLink";
 import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTracker";
@@ -7,20 +7,17 @@ import { PayTipInvoice } from "components/tipper/TipPage/PayTipInvoice";
 import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
 import { useScoreboardPosition } from "hooks/useScoreboardPosition";
+import { useTip } from "hooks/useTip";
 import { refundableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import { hasTipExpired, nth } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
-import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
+import { useSWRConfig } from "swr";
 import { requestProvider } from "webln";
-
-// poll tip status once per second to receive updates TODO: consider using websockets
-const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 const TipPage: NextPage = () => {
   const { data: session } = useSession();
@@ -36,11 +33,7 @@ const TipPage: NextPage = () => {
     [mutate]
   );
 
-  const { data: tip } = useSWR<Tip>(
-    id ? `/api/tipper/tips/${id}` : null,
-    defaultFetcher,
-    useTipConfig
-  );
+  const { data: tip } = useTip(id as string, true);
 
   const tipStatus = tip?.status;
   const tipInvoice = tip?.invoice;

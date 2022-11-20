@@ -49,11 +49,13 @@ export default async function handler(
               name: null,
               avatarURL: null,
               twitterUsername: null,
+              lightningAddress: null,
             }
           : {
               name: user.name,
               avatarURL: user.avatarURL,
               twitterUsername: user.twitterUsername,
+              lightningAddress: user.lightningAddress,
             }),
         fallbackAvatarId: getFallbackAvatarId(user),
         numTipsSent: sentTips.length,
@@ -101,6 +103,7 @@ async function updateUser(
       name: updateUserRequest.name ?? null,
       twitterUsername: updateUserRequest.twitterUsername ?? null,
       avatarURL: updateUserRequest.avatarURL ?? null,
+      lightningAddress: updateUserRequest.lightningAddress ?? null,
       isAnonymous: updateUserRequest.isAnonymous,
     },
   });

@@ -14,14 +14,12 @@ import {
 } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { format } from "date-fns";
+import { usePublicUser } from "hooks/usePublicUser";
 import { useScoreboardPosition } from "hooks/useScoreboardPosition";
 import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import React from "react";
-import useSWR from "swr";
-import { PublicUser } from "types/PublicUser";
 
 type Props = {
   userId: string;
@@ -29,12 +27,7 @@ type Props = {
 };
 
 export function UserCard({ userId, forceAnonymous }: Props) {
-  const { data: publicUser } = useSWR<PublicUser>(
-    userId
-      ? `/api/users/${userId}?publicProfile=true&forceAnonymous=${forceAnonymous}`
-      : undefined,
-    defaultFetcher
-  );
+  const { data: publicUser } = usePublicUser(userId, forceAnonymous);
 
   const shareProfile = React.useCallback(() => {
     navigator.share({
