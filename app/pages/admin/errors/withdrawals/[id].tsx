@@ -23,7 +23,7 @@ const AdminWithdrawalErrorPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Lightsats⚡ - Admin - Withdrawal {id}</title>
+        <title>Lightsats⚡ - Admin - Withdrawal Error {id}</title>
       </Head>
       <h1>Admin/Withdrawals</h1>
       <AdminWithdrawalErrorCard withdrawalError={withdrawalError} />

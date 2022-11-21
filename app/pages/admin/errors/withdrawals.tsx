@@ -18,7 +18,7 @@ const AdminWithdrawalsPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Lightsats⚡ - Admin - Withdrawals</title>
+        <title>Lightsats⚡ - Admin - Withdrawal Errors</title>
       </Head>
       <h1>Admin/Withdrawals</h1>
       <AdminWithdrawalErrorsList
