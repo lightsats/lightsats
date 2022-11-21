@@ -68,6 +68,7 @@ model User {
   sessions Session[]
   isAnonymous Boolean @default(false)
   withdrawalLinks WithdrawalLink[]
+  withdrawalErrors WithdrawalError[]
   withdrawals Withdrawal[]
   journeyStep Int @default(1)
   inJourney Boolean @default(false)
@@ -164,6 +165,7 @@ model Withdrawal {
 
 model WithdrawalError {
   id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   message String
   created DateTime @default(now())

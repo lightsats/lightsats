@@ -2,6 +2,7 @@ import { Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
 import { AdminTipsList } from "components/admin/AdminTipsList";
 import { AdminUserCard } from "components/admin/AdminUserCard";
+import { AdminWithdrawalCard } from "components/admin/AdminWithdrawalCard";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -26,7 +27,7 @@ const AdminWithdrawalPage: NextPage = () => {
         <title>Lightsats⚡ - Admin - Withdrawal {id}</title>
       </Head>
       <h1>Admin/Withdrawals</h1>
-      <h6>/{id}</h6>
+      <AdminWithdrawalCard withdrawal={withdrawal} />
       <Spacer />
       <Text>
         Amount withdrawn:{" "}

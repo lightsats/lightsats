@@ -32,6 +32,7 @@ export enum Routes {
   adminUsers = "/admin/users",
   adminTips = "/admin/tips",
   adminWithdrawals = "/admin/withdrawals",
+  adminWithdrawalErrors = "/admin/errors/withdrawals",
   about = "/about",
   login = "/signin",
   features = "/features",

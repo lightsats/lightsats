@@ -85,7 +85,7 @@ export async function completeWithdrawal(
       },
     });
   } catch (error) {
-    console.error("Failed to compelte withdrawal", error);
+    console.error("Failed to complete withdrawal", error);
     await prisma.withdrawalError.create({
       data: {
         message:

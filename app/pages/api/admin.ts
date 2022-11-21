@@ -78,6 +78,14 @@ async function handleGetAdminDashboard(
         created: "desc",
       },
     }),
+    withdrawalErrors: await prisma.withdrawalError.findMany({
+      include: {
+        user: true,
+      },
+      orderBy: {
+        created: "desc",
+      },
+    }),
     lnbitsDashboardUrl: `${process.env.LNBITS_URL}/wallet?usr=${process.env.LNBITS_USER_ID}`,
     users: await prisma.user.findMany(),
     walletBalance,
