@@ -34,7 +34,14 @@ export const fixNextUIButtonLink: MouseEventHandler<HTMLButtonElement> = (
 
 export function calculateFee(amount: number) {
   // always round fees UP to nearest sat value, to simplify calculations and make sure fees are always sufficient
-  return Math.max(MINIMUM_FEE_SATS, Math.ceil(amount * (FEE_PERCENT / 100)));
+  const originalFee = Math.max(
+    MINIMUM_FEE_SATS,
+    Math.ceil(amount * (FEE_PERCENT / 100))
+  );
+
+  // (amount) / (originalFee + amount) is bigger than 99%, breaking our 1% fee reserve.
+  // the original amount must be withdrawable leaving at least 1% reserve.
+  return Math.ceil((amount + originalFee) * (FEE_PERCENT / 100));
 }
 
 export function generateAlphanumeric(length: number): string {
