@@ -61,9 +61,15 @@ const Home: NextPage = () => {
           <UserCard userId={user.id} />
           <Spacer />
           {user?.userType === "tipper" ? (
-            <NewTipButton />
+            <>
+              <NewTipButton />
+              <Spacer />
+            </>
           ) : (
-            <TippeeSuggestions />
+            <>
+              <Spacer />
+              <TippeeSuggestions />
+            </>
           )}
           <Spacer />
           <TipHistory />

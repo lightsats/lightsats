@@ -48,6 +48,7 @@ export default function EmailSignIn({
   const router = useRouter();
   const callbackUrlWithFallback =
     callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
+  const linkExistingAccount = router.query["link"] === "true";
 
   // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
 
@@ -71,6 +72,7 @@ export default function EmailSignIn({
             email: data.email,
             callbackUrl: callbackUrlWithFallback,
             locale: router.locale ?? DEFAULT_LOCALE,
+            linkExistingAccount,
           };
 
           const result = await fetch(`/api/auth/2fa/send`, {
@@ -94,7 +96,7 @@ export default function EmailSignIn({
         setSubmitting(false);
       })();
     },
-    [callbackUrlWithFallback, isSubmitting, router]
+    [callbackUrlWithFallback, isSubmitting, linkExistingAccount, router]
   );
 
   return (

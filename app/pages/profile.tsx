@@ -1,4 +1,4 @@
-import { ClipboardIcon, EyeIcon } from "@heroicons/react/24/solid";
+import { ClipboardIcon, EyeIcon, LinkIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
@@ -91,13 +91,35 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
         title={<Text b>🔗 Connected accounts & more</Text>}
         css={{ width: "100%" }}
       >
-        <Row>
-          <Text>
-            {user.email && "📧 Email: " + user.email}
-            {user.phoneNumber && "📱 Phone: " + user.phoneNumber}
-            {user.lnurlPublicKey && "⚡ Wallet: " + user.lnurlPublicKey}
-          </Text>
+        <Row justify="space-between" align="center">
+          <Text>{"📧 Email: "}</Text>
+          {user.email ? (
+            <Text b>{user.email}</Text>
+          ) : (
+            <NextLink href={`${Routes.emailSignin}?link=true`}>
+              <a>
+                <Button size="sm" auto>
+                  Link&nbsp;
+                  <Icon width={16} height={16}>
+                    <LinkIcon />
+                  </Icon>
+                </Button>
+              </a>
+            </NextLink>
+          )}
         </Row>
+        {user.phoneNumber && (
+          <Row justify="space-between" align="center">
+            <Text>{"📱 Phone: "}</Text>
+            <Text b>{user.phoneNumber}</Text>
+          </Row>
+        )}
+        {user.lnurlPublicKey && (
+          <Row justify="space-between" align="center">
+            <Text>{"⚡ Wallet: "}</Text>
+            <Text b>{user.lnurlPublicKey}</Text>
+          </Row>
+        )}
         <Spacer />
         <Row>
           <Text b>Lightsats User ID</Text>

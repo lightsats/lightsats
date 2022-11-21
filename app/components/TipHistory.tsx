@@ -22,7 +22,7 @@ export function TipHistory() {
   return (
     <>
       <Row>
-        <Text h6>History</Text>
+        <Text h5>History</Text>
       </Row>
       <Card variant="flat" css={{ backgroundColor: "$accents2" }}>
         <Card.Body css={{ p: 5 }}>

@@ -4,4 +4,5 @@ export type TwoFactorLoginRequest = {
   callbackUrl: string;
   locale: string;
   tipId?: string; // for new phone number accounts, must be for a valid tip
+  linkExistingAccount?: boolean;
 };
