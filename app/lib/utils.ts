@@ -41,7 +41,10 @@ export function calculateFee(amount: number) {
 
   // (amount) / (originalFee + amount) is bigger than 99%, breaking our 1% fee reserve.
   // the original amount must be withdrawable leaving at least 1% reserve.
-  return Math.ceil((amount + originalFee) * (FEE_PERCENT / 100));
+  return Math.max(
+    MINIMUM_FEE_SATS,
+    Math.ceil((amount + originalFee) * (FEE_PERCENT / 100))
+  );
 }
 
 export function generateAlphanumeric(length: number): string {
