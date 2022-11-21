@@ -304,37 +304,40 @@ const NewTip: NextPage = () => {
                 )}
               />
             </Row>
-            <Spacer />
+            <Spacer y={1.5} />
             <Row justify="center" align="center">
-              {inputMethod === "sats" ? (
-                <FiatPrice
-                  currency={watchedCurrency}
-                  exchangeRate={exchangeRates?.[watchedCurrency]}
-                  sats={!isNaN(watchedAmount) ? watchedAmount : 0}
-                />
-              ) : (
-                <SatsPrice
-                  exchangeRate={exchangeRates?.[watchedCurrency]}
-                  fiat={!isNaN(watchedAmount) ? watchedAmount : 0}
-                />
-              )}
+              <Text b size={18}>
+                {inputMethod === "sats" ? (
+                  <FiatPrice
+                    currency={watchedCurrency}
+                    exchangeRate={exchangeRates?.[watchedCurrency]}
+                    sats={!isNaN(watchedAmount) ? watchedAmount : 0}
+                  />
+                ) : (
+                  <SatsPrice
+                    exchangeRate={exchangeRates?.[watchedCurrency]}
+                    fiat={!isNaN(watchedAmount) ? watchedAmount : 0}
+                  />
+                )}
+              </Text>
             </Row>
             {watchedExchangeRate ? (
               <Row justify="center" align="center">
                 <Tooltip
                   content={`The ${FEE_PERCENT}% (minimum ${MINIMUM_FEE_SATS} sats) fee covers outbound routing and ${appName} infrastructure costs`}
                 >
-                  <Link>
-                    <Text size="small">
+                  <Link css={{ width: "100%" }}>
+                    <Text size="small" css={{ display: "flex" }}>
                       {"+"}
                       {!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
                       {" sats / "}
+                      &nbsp;
                       <FiatPrice
                         sats={!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
                         currency={watchedCurrency}
                         exchangeRate={watchedExchangeRate}
                       />
-                      {" fee"}
+                      &nbsp;fee
                     </Text>
                   </Link>
                 </Tooltip>
@@ -416,7 +419,7 @@ const NewTip: NextPage = () => {
           {isSubmitting ? (
             <Loading color="currentColor" size="sm" />
           ) : (
-            <>Create Tip</>
+            <>Create tip</>
           )}
         </Button>
       </form>
