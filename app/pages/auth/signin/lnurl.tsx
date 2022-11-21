@@ -34,7 +34,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const router = useRouter();
   const { t } = useTranslation("common");
   const callbackUrlWithFallback =
-    callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
+    callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
   // only retrieve the qr code once
   const { data: qr } = useSWRImmutable<LnurlAuthLoginInfo>(
     "/api/auth/lnurl/generate-secret",

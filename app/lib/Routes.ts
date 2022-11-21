@@ -1,5 +1,6 @@
 export enum Routes {
   home = "/",
+  dashboard = "/dashboard",
   tips = "/tips",
   newTip = "/tips/new",
   fundTip = "/tips/fund",

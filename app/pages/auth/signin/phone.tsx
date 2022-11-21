@@ -57,7 +57,7 @@ export default function PhoneSignIn({
   const [isSubmitting, setSubmitting] = React.useState(false);
   const router = useRouter();
   const callbackUrlWithFallback =
-    callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
+    callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
 
   // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
 

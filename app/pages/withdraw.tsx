@@ -198,7 +198,7 @@ const Withdraw: NextPage = () => {
             } funds to withdraw right now.`}
           </Text>
           <Spacer />
-          <NextLink href={Routes.home} passHref>
+          <NextLink href={Routes.dashboard} passHref>
             <Link>Home</Link>
           </NextLink>
         </>

@@ -47,7 +47,7 @@ export default function EmailSignIn({
   const [isSubmitting, setSubmitting] = React.useState(false);
   const router = useRouter();
   const callbackUrlWithFallback =
-    callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
+    callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
   const linkExistingAccount = router.query["link"] === "true";
 
   // console.log("callbackUrlWithFallback", callbackUrlWithFallback);

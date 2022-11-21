@@ -94,7 +94,7 @@ export function AppNavbar() {
           />
         )}
         <Navbar.Brand>
-          <NextLink href={Routes.home}>
+          <NextLink href={!user ? Routes.dashboard : Routes.dashboard}>
             <a
               onClick={
                 hideNavbar

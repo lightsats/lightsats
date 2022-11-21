@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/react";
 import { ExpiryBadge } from "components/ExpiryBadge";
 import { FiatPrice } from "components/FiatPrice";
-import { HomeButton } from "components/HomeButton";
+import { DashboardButton } from "components/HomeButton";
 import { Login } from "components/Login";
 import { useExchangeRates } from "hooks/useExchangeRates";
 import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
@@ -138,7 +138,7 @@ const ClaimTipPage: NextPage = () => {
         <>
           <Text>This tip is no longer available.</Text>
           <Spacer />
-          <HomeButton />
+          <DashboardButton />
         </>
       ) : publicTip.status === "CLAIMED" && !session ? (
         <>
@@ -161,7 +161,7 @@ const ClaimTipPage: NextPage = () => {
           <Spacer />
           <Text>Not yours?</Text>
           <Spacer />
-          <HomeButton />
+          <DashboardButton />
         </>
       ) : isTipper ? (
         <>
@@ -172,7 +172,7 @@ const ClaimTipPage: NextPage = () => {
           <Spacer y={2} />
           <Text color="error">{t("expired")}</Text>
           <Spacer />
-          <HomeButton />
+          <DashboardButton />
         </>
       ) : (
         <ClaimTipView publicTip={publicTip} />

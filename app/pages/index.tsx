@@ -2,19 +2,13 @@ import {
   Avatar,
   Button,
   Card,
-  Container,
   Grid,
   Image,
   Loading,
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { Alert } from "components/Alert";
 import { NextLink } from "components/NextLink";
-import { TipHistory } from "components/TipHistory";
-import { TippeeSuggestions } from "components/tippee/TippeeSuggestions";
-import { NewTipButton } from "components/tipper/NewTipButton";
-import { UserCard } from "components/UserCard";
 import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -39,46 +33,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Lightsats⚡</title>
       </Head>
-
-      {user ? (
-        <Container
-          xs
-          justify="flex-start"
-          alignItems="center"
-          display="flex"
-          direction="column"
-          fluid
-          css={{
-            padding: 0,
-          }}
-        >
-          {user?.userType === "tipper" && (
-            <>
-              <Alert>⚠️ This project is currently in BETA.</Alert>
-            </>
-          )}
-          <Spacer />
-          <UserCard userId={user.id} />
-          <Spacer />
-          {user?.userType === "tipper" ? (
-            <>
-              <NewTipButton />
-              <Spacer />
-            </>
-          ) : (
-            <>
-              <Spacer />
-              <TippeeSuggestions />
-            </>
-          )}
-          <Spacer />
-          <TipHistory />
-        </Container>
-      ) : (
-        <>
-          <Homepage />
-        </>
-      )}
+      <Homepage />
     </>
   );
 };

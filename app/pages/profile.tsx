@@ -217,7 +217,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
         if (result.ok) {
           toast.success("Profile updated");
           await mutateUser();
-          router.push(Routes.home);
+          router.push(Routes.dashboard);
         } else {
           toast.error("Failed to update profile: " + result.statusText);
         }
