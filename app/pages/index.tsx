@@ -204,7 +204,7 @@ function Homepage() {
         Join the tipping battle
       </Text>
       <Spacer />
-      <Avatar.Group count={123}>
+      <Avatar.Group count={scoreboard.numTippers - 3}>
         <Avatar
           size="xl"
           text="name"
@@ -252,7 +252,7 @@ function Homepage() {
         </a>{" "}
         &{" "}
         <NextLink href={Routes.scoreboard}>
-          <a>123 others</a>
+          <a>{scoreboard.numTippers - 3} others</a>
         </NextLink>{" "}
         to 🍊💊 the world around you.
       </Text>

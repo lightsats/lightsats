@@ -59,8 +59,11 @@ export default async function handler(
     user.tipsReceived.some((tip) => tip.status === "WITHDRAWN")
   ).length;
 
+  const numTippers = users.filter((user) => user.tipsSent.length > 0).length;
+
   const scoreboard: Scoreboard = {
     entries,
+    numTippers,
     numUsersOnboarded,
     numTipsSent: entries.map((e) => e.numTipsSent).reduce((a, b) => a + b),
     totalSatsSent: entries.map((e) => e.satsSent).reduce((a, b) => a + b),
