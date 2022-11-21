@@ -11,7 +11,7 @@ export default function CodeSent() {
         <Card.Body style={{ textAlign: "center" }}>
           <div>
             <div>
-              <Image width={200} src="/images/icons/mail.png" />
+              <Image width={200} src="/images/icons/mail.png" alt="email" />
             </div>
             <Spacer />
             <Text h3>{t("checkEmailTitle")}</Text>
