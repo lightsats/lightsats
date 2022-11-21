@@ -7,6 +7,8 @@ processes = []
 
 [build]
   dockerfile = "Dockerfile.production"
+  [build.args]
+    NEXT_PUBLIC_SENTRY_DSN = "https://ce332bce7d8743b8a2fceba4d74da275@o4504142039416832.ingest.sentry.io/4504196710137856"
 
 [env]
   PORT = "8080"
