@@ -61,6 +61,7 @@ model User {
   tipsSent Tip[] @relation("tipsSent")
   tipsReceived Tip[] @relation("tipsReceived")
   lnbitsWallet LnbitsWallet?
+  locale String @default("en")
 
   // from https://next-auth.js.org/adapters/prisma
   emailVerified DateTime?
