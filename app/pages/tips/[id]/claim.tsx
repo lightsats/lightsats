@@ -1,15 +1,5 @@
-import {
-  Avatar,
-  Card,
-  Col,
-  Collapse,
-  Loading,
-  Row,
-  Spacer,
-  Text,
-} from "@nextui-org/react";
-import { ExpiryBadge } from "components/ExpiryBadge";
-import { FiatPrice } from "components/FiatPrice";
+import { Card, Collapse, Loading, Row, Spacer, Text } from "@nextui-org/react";
+import { ClaimedTipCard } from "components/ClaimedTipCard";
 import { HomeButton } from "components/HomeButton";
 import { Login } from "components/Login";
 import { useExchangeRates } from "hooks/useExchangeRates";
@@ -17,7 +7,7 @@ import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { getAvatarUrl, getCurrentUrl, hasTipExpired } from "lib/utils";
+import { getCurrentUrl, hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
@@ -197,48 +187,7 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
           </Text>
         </>
       )}
-      <Card
-        css={{
-          dropShadow: "$sm",
-          color: "$white",
-          $$cardColor: "$colors$primary",
-        }}
-      >
-        <Card.Body>
-          <Row align="center" justify="space-between">
-            <Col css={{ dflex: "flex-start", ai: "center" }}>
-              <Avatar
-                src={getAvatarUrl(
-                  publicTip.tipper.avatarURL ?? undefined,
-                  publicTip.tipper.fallbackAvatarId
-                )}
-                size="lg"
-                bordered
-              />
-              &nbsp;
-              {publicTip.tipper.name}
-            </Col>
-            <Col css={{ ta: "right" }}>
-              <Text color="$white" b size="$3xl" css={{}}>
-                <FiatPrice
-                  currency={tipCurrency}
-                  exchangeRate={exchangeRates?.[tipCurrency]}
-                  sats={publicTip.amount}
-                  showApprox={false}
-                />
-              </Text>
-            </Col>
-          </Row>
-          <Spacer y={0.5} />
-          <Row justify="space-between" align="center">
-            <ExpiryBadge tip={publicTip} viewing={"tippee"} />
-            <Text color="$white" css={{ mt: -15 }}>
-              {publicTip.amount} sats
-            </Text>
-          </Row>
-          <Note note={publicTip.note} />
-        </Card.Body>
-      </Card>
+      <ClaimedTipCard publicTip={publicTip} viewing="tipper" />
       <Spacer y={3} />
       {
         <>
