@@ -61,6 +61,14 @@ async function handleGetUser(
           created: "desc",
         },
       },
+      withdrawalErrors: {
+        include: {
+          user: true,
+        },
+        orderBy: {
+          created: "desc",
+        },
+      },
     },
   });
 
