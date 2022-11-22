@@ -4,6 +4,7 @@ import {
   Tip,
   User,
   Withdrawal,
+  WithdrawalError,
 } from "@prisma/client";
 
 export type AdminDashboard = {
@@ -12,6 +13,7 @@ export type AdminDashboard = {
   lnbitsDashboardUrl: string;
   tips: Tip[];
   withdrawals: AdminExtendedWithdrawal[];
+  withdrawalErrors: AdminExtendedWithdrawalError[];
   walletBalance: number;
   smsForSatsAccountBalance: number;
 };
@@ -23,6 +25,7 @@ export type AdminExtendedUser = User & {
   lnbitsWalletUrl: string | undefined;
   walletBalance: number;
   withdrawals: AdminExtendedWithdrawal[];
+  withdrawalErrors: AdminExtendedWithdrawalError[];
 };
 
 export type AdminExtendedTip = Tip & {
@@ -36,3 +39,4 @@ export type AdminExtendedTip = Tip & {
 };
 
 export type AdminExtendedWithdrawal = Withdrawal & { tips: Tip[]; user: User };
+export type AdminExtendedWithdrawalError = WithdrawalError & { user: User };

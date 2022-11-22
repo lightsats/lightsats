@@ -251,6 +251,12 @@ const AdminPage: NextPage = () => {
             <Button css={{ bg: "$green700" }}>Withdrawals</Button>
           </a>
         </NextLink>
+        <Spacer />
+        <NextLink href={Routes.adminWithdrawalErrors}>
+          <a>
+            <Button css={{ bg: "$red700" }}>Withdrawal Errors</Button>
+          </a>
+        </NextLink>
       </Row>
     </>
   );

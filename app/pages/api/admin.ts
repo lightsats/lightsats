@@ -4,7 +4,7 @@ import { getWalletBalance } from "lib/lnbits/getWalletBalance";
 import prisma from "lib/prismadb";
 import { getSmsForSatsAccountBalance } from "lib/sms/SmsForSatsAccountProvider";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
+import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { AdminDashboard } from "types/Admin";
 
@@ -25,7 +25,7 @@ export default async function handler(
 
   switch (req.method) {
     case "GET":
-      return handleGetAdminDashboard(session, req, res);
+      return handleGetAdminDashboard(req, res);
     default:
       res.status(StatusCodes.NOT_FOUND).end();
       return;
@@ -33,7 +33,6 @@ export default async function handler(
 }
 
 async function handleGetAdminDashboard(
-  session: Session,
   req: NextApiRequest,
   res: NextApiResponse<AdminDashboard>
 ) {
@@ -72,6 +71,14 @@ async function handleGetAdminDashboard(
     withdrawals: await prisma.withdrawal.findMany({
       include: {
         tips: true,
+        user: true,
+      },
+      orderBy: {
+        created: "desc",
+      },
+    }),
+    withdrawalErrors: await prisma.withdrawalError.findMany({
+      include: {
         user: true,
       },
       orderBy: {

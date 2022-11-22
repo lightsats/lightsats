@@ -13,16 +13,16 @@ RUN yarn install --frozen-lockfile
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Add `ARG` instructions below if you need `NEXT_PUBLIC_` variables
-# then put the value on your fly.toml
-# Example:
-# ARG NEXT_PUBLIC_EXAMPLE="value here"
-
-
 #RUN yarn db:generate:staging
 #RUN yarn db:push:staging
 #RUN yarn db:migrate:resolve:staging
 RUN yarn db:migrate:deploy:staging
+
+# Add `ARG` instructions below if you need `NEXT_PUBLIC_` variables
+# then put the value on your fly.toml
+# Example:
+# ARG NEXT_PUBLIC_EXAMPLE="value here"
+ARG NEXT_PUBLIC_SENTRY_DSN
 
 RUN yarn build
 
@@ -39,7 +39,8 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app ./
+#COPY --from=builder /app ./
+COPY --chown=nextjs:nodejs --from=builder /app/ ./
 
 USER nextjs
 

@@ -39,11 +39,17 @@ async function handlePayInvoice(
       withdrawalRequest.flow,
       withdrawalRequest.invoice,
       session.user.id,
-      "invoice",
-      undefined
+      "invoice"
     );
     res.status(204).end();
   } catch (error) {
+    console.error(
+      "Failed to pay manual invoice " +
+        withdrawalRequest.invoice +
+        " userId " +
+        session.user.id,
+      error
+    );
     res.status(500).json({ error });
   }
 }

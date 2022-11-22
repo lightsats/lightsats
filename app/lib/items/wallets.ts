@@ -1,4 +1,4 @@
-import { getLanguageCode } from "lib/items/getLanguageCode";
+import { getLanguageCode } from "lib/i18n/iso6391";
 import { Wallet } from "types/Wallet";
 
 const wos: Wallet = {

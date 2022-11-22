@@ -21,6 +21,7 @@ import { useExchangeRates } from "hooks/useExchangeRates";
 import {
   appName,
   FEE_PERCENT,
+  MAX_TIP_SATS,
   MINIMUM_FEE_SATS,
   MIN_TIP_SATS,
 } from "lib/constants";
@@ -173,6 +174,13 @@ const NewTip: NextPage = () => {
       if (satsAmount < MIN_TIP_SATS) {
         throw new Error("Tip amount is too small");
       }
+      if (satsAmount > MAX_TIP_SATS) {
+        throw new Error(
+          "Tip amount is too large. Please use a value no more than " +
+            MAX_TIP_SATS +
+            " satoshis"
+        );
+      }
       if (Math.round(satsAmount) !== satsAmount) {
         throw new Error("sat amount must be a whole value");
       }
@@ -293,6 +301,7 @@ const NewTip: NextPage = () => {
                     //   valueAsNumber: true,
                     // }) causes iOS decimal input bug, resetting field value }
                     min={0}
+                    max={MAX_TIP_SATS}
                     step="0.01"
                     type="number"
                     inputMode="decimal"
@@ -304,37 +313,40 @@ const NewTip: NextPage = () => {
                 )}
               />
             </Row>
-            <Spacer />
+            <Spacer y={1.5} />
             <Row justify="center" align="center">
-              {inputMethod === "sats" ? (
-                <FiatPrice
-                  currency={watchedCurrency}
-                  exchangeRate={exchangeRates?.[watchedCurrency]}
-                  sats={!isNaN(watchedAmount) ? watchedAmount : 0}
-                />
-              ) : (
-                <SatsPrice
-                  exchangeRate={exchangeRates?.[watchedCurrency]}
-                  fiat={!isNaN(watchedAmount) ? watchedAmount : 0}
-                />
-              )}
+              <Text b size={18}>
+                {inputMethod === "sats" ? (
+                  <FiatPrice
+                    currency={watchedCurrency}
+                    exchangeRate={exchangeRates?.[watchedCurrency]}
+                    sats={!isNaN(watchedAmount) ? watchedAmount : 0}
+                  />
+                ) : (
+                  <SatsPrice
+                    exchangeRate={exchangeRates?.[watchedCurrency]}
+                    fiat={!isNaN(watchedAmount) ? watchedAmount : 0}
+                  />
+                )}
+              </Text>
             </Row>
             {watchedExchangeRate ? (
               <Row justify="center" align="center">
                 <Tooltip
                   content={`The ${FEE_PERCENT}% (minimum ${MINIMUM_FEE_SATS} sats) fee covers outbound routing and ${appName} infrastructure costs`}
                 >
-                  <Link>
-                    <Text size="small">
+                  <Link css={{ width: "100%" }}>
+                    <Text size="small" css={{ display: "flex" }}>
                       {"+"}
                       {!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
                       {" sats / "}
+                      &nbsp;
                       <FiatPrice
                         sats={!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
                         currency={watchedCurrency}
                         exchangeRate={watchedExchangeRate}
                       />
-                      {" fee"}
+                      &nbsp;fee
                     </Text>
                   </Link>
                 </Tooltip>
@@ -416,7 +428,7 @@ const NewTip: NextPage = () => {
           {isSubmitting ? (
             <Loading color="currentColor" size="sm" />
           ) : (
-            <>Create Tip</>
+            <>Create tip</>
           )}
         </Button>
       </form>

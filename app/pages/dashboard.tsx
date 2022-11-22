@@ -3,6 +3,7 @@ import { Alert } from "components/Alert";
 import { TipHistory } from "components/TipHistory";
 import { TippeeSuggestions } from "components/tippee/TippeeSuggestions";
 import { NewTipButton } from "components/tipper/NewTipButton";
+import { ReturnedTips } from "components/tipper/ReturnedTips";
 import { UserCard } from "components/UserCard";
 import { useUser } from "hooks/useUser";
 import type { NextPage } from "next";
@@ -46,6 +47,7 @@ const Dashboard: NextPage = () => {
             <>
               <NewTipButton />
               <Spacer />
+              <ReturnedTips />
             </>
           ) : (
             <>

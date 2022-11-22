@@ -9,11 +9,9 @@ import {
   Text,
 } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
-import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
-import { useSession } from "next-auth/react";
 import Head from "next/head";
 import CountUp from "react-countup";
 import { Tweet } from "react-twitter-widgets";
@@ -21,13 +19,6 @@ import useSWR from "swr";
 import { Scoreboard as ScoreboardType } from "types/Scoreboard";
 
 const Home: NextPage = () => {
-  const { data: session, status: sessionStatus } = useSession();
-  const { data: user } = useUser();
-
-  if (sessionStatus === "loading" || (session && !user)) {
-    return <Loading color="currentColor" size="sm" />;
-  }
-
   return (
     <>
       <Head>

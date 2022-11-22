@@ -1,9 +1,6 @@
-import { InformationCircleIcon, WalletIcon } from "@heroicons/react/24/solid";
 import {
   Badge,
-  Button,
   Card,
-  Col,
   Grid,
   Loading,
   Row,
@@ -12,7 +9,6 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { FiatPrice } from "components/FiatPrice";
-import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
@@ -36,54 +32,8 @@ export function SentTips() {
     return <Loading color="currentColor" size="sm" />;
   }
 
-  const reclaimedTips = tips?.filter((tip) => tip.status === "RECLAIMED");
-
   return (
     <>
-      {reclaimedTips && reclaimedTips.length > 0 && (
-        <>
-          <Spacer y={2} />
-
-          <Row justify="center">
-            <Text h3>Returned tips</Text>
-            <Tooltip
-              content="Expired or reclaimed tips return back to you. ✌️"
-              color="primary"
-            >
-              &nbsp;
-              <Text color="primary">
-                <Icon style={{ color: "$primary" }}>
-                  <InformationCircleIcon />
-                </Icon>
-              </Text>
-            </Tooltip>
-          </Row>
-          <Card css={{ dropShadow: "$sm" }}>
-            <Card.Body>
-              <Row justify="space-between" align="center">
-                <Col>
-                  <Text size="$lg" b>
-                    {reclaimedTips
-                      .map((tip) => tip.amount)
-                      .reduce((a, b) => a + b)}
-                    &nbsp;sats
-                  </Text>
-                </Col>
-                <NextLink href={Routes.tipperWithdraw}>
-                  <a>
-                    <Button auto color="secondary">
-                      <Icon>
-                        <WalletIcon />
-                      </Icon>
-                      &nbsp;Withdraw
-                    </Button>
-                  </a>
-                </NextLink>
-              </Row>
-            </Card.Body>
-          </Card>
-        </>
-      )}
       {tips && tips.length > 0 && (
         <Grid.Container justify="center" gap={1}>
           {tips.map((tip) => {
