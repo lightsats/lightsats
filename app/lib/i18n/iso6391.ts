@@ -1,4 +1,4 @@
-import ISO6391 from "iso-639-1";
+import ISO6391 from "iso-639-1-plus";
 
 export const getLanguageCode = (languageName: string) => {
   const code = ISO6391.getCode(languageName);
@@ -14,4 +14,8 @@ export const getNativeLanguageName = (languageCode: string) => {
     throw new Error("Unknown language code: " + languageCode);
   }
   return nativeName;
+};
+
+export const validateLanguageCode = (languageCode: string) => {
+  return ISO6391.validate(languageCode);
 };

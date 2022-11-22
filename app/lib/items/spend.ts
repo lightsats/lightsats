@@ -1,4 +1,4 @@
-import { getLanguageCode } from "lib/items/getLanguageCode";
+import { getLanguageCode } from "lib/i18n/iso6391";
 import { Item } from "types/Item";
 
 export const spend: Item[] = [
