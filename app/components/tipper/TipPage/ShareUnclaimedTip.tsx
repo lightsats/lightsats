@@ -31,21 +31,24 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
     <>
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Header>
-          <Text size={20} b>
-            👇 Have your tippee scan this QR code
-          </Text>
-          <Tooltip
-            content="Ask the tippee to scan the below code using their camera app or a QR
+          <Row justify="center">
+            <Text size={20} b>
+              👇 Have your tippee scan this QR code
+            </Text>
+            &nbsp;
+            <Tooltip
+              content="Ask the tippee to scan the below code using their camera app or a QR
             code scanner app. You can also copy the URL to send via a message or
             email."
-            color="primary"
-          >
-            <Text color="primary">
-              <Icon>
-                <InformationCircleIcon />
-              </Icon>
-            </Text>
-          </Tooltip>
+              color="primary"
+            >
+              <Text color="primary">
+                <Icon>
+                  <InformationCircleIcon />
+                </Icon>
+              </Text>
+            </Tooltip>
+          </Row>
         </Card.Header>
         <Card.Divider />
         <Card.Body>
