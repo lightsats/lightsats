@@ -55,7 +55,7 @@ export function AppNavbar() {
     () => [
       {
         name: "Home",
-        href: Routes.home,
+        href: !user ? Routes.home : Routes.dashboard,
         icon: <HomeIcon />,
       },
       {
@@ -74,7 +74,7 @@ export function AppNavbar() {
         icon: <LightBulbIcon />,
       },
     ],
-    []
+    [user]
   );
 
   if (sessionStatus === "loading" || (session && !user)) {
@@ -94,7 +94,7 @@ export function AppNavbar() {
           />
         )}
         <Navbar.Brand>
-          <NextLink href={Routes.home}>
+          <NextLink href={!user ? Routes.home : Routes.dashboard}>
             <a
               onClick={
                 hideNavbar

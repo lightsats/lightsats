@@ -65,7 +65,7 @@ const TipPage: NextPage = () => {
 
   const deleteTip = React.useCallback(() => {
     (async () => {
-      router.push(Routes.home);
+      router.push(Routes.dashboard);
       const result = await fetch(`/api/tipper/tips/${id}`, {
         method: "DELETE",
       });
@@ -79,7 +79,7 @@ const TipPage: NextPage = () => {
 
   const reclaimTip = React.useCallback(() => {
     (async () => {
-      router.push(Routes.home);
+      router.push(Routes.dashboard);
       const result = await fetch(`/api/tipper/tips/${id}/reclaim`, {
         method: "POST",
       });

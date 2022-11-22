@@ -15,7 +15,7 @@ export function LightningLoginButton({
   return (
     <NextLink
       href={`${Routes.lnurlAuthSignin}?callbackUrl=${encodeURIComponent(
-        callbackUrl ?? Routes.home
+        callbackUrl ?? Routes.dashboard
       )}`}
     >
       <a style={{ width: "100%" }}>

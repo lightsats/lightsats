@@ -31,9 +31,10 @@ export default function Layout({
           margin: "0px auto",
           flex: 1,
           ...(router.pathname !== Routes.scoreboard &&
-          router.pathname !== Routes.admin
+          router.pathname !== Routes.admin &&
+          router.pathname !== Routes.home
             ? { maxWidth: "600px" }
-            : {}),
+            : { maxWidth: "1400px" }),
         }}
       >
         {children}

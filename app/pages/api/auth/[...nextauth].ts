@@ -167,7 +167,7 @@ export const authOptions: NextAuthOptions = {
   },
   debug: false,
   pages: {
-    signIn: Routes.home,
+    signIn: Routes.dashboard,
   },
   session: { strategy: "jwt" },
 };

@@ -1,9 +1,7 @@
-import { Card, Collapse, Loading, Row, Spacer, Text } from "@nextui-org/react";
+import { Collapse, Loading, Spacer, Text } from "@nextui-org/react";
 import { ClaimedTipCard } from "components/ClaimedTipCard";
-import { HomeButton } from "components/HomeButton";
+import { DashboardButton } from "components/HomeButton";
 import { Login } from "components/Login";
-import { useExchangeRates } from "hooks/useExchangeRates";
-import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -120,7 +118,7 @@ const ClaimTipPage: NextPage = () => {
         <>
           <Text>This tip is no longer available.</Text>
           <Spacer />
-          <HomeButton />
+          <DashboardButton />
         </>
       ) : publicTip.status === "CLAIMED" && !session ? (
         <>
@@ -143,7 +141,7 @@ const ClaimTipPage: NextPage = () => {
           <Spacer />
           <Text>Not yours?</Text>
           <Spacer />
-          <HomeButton />
+          <DashboardButton />
         </>
       ) : isTipper ? (
         <>
@@ -154,7 +152,7 @@ const ClaimTipPage: NextPage = () => {
           <Spacer y={2} />
           <Text color="error">{t("expired")}</Text>
           <Spacer />
-          <HomeButton />
+          <DashboardButton />
         </>
       ) : (
         <ClaimTipView publicTip={publicTip} />
@@ -172,9 +170,6 @@ type ClaimTipViewProps = {
 function ClaimTipView({ publicTip }: ClaimTipViewProps) {
   const { t } = useTranslation("claim");
   const router = useRouter();
-
-  const { data: exchangeRates } = useExchangeRates();
-  const tipCurrency = publicTip?.currency ?? DEFAULT_FIAT_CURRENCY;
 
   return (
     <>
@@ -205,28 +200,6 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
       <Spacer />
     </>
   );
-}
-
-function Note({ note }: { note: string | null }) {
-  return note ? (
-    <>
-      <Spacer y={0.5} />
-      <Card
-        color="$white"
-        css={{
-          $$cardColor: "#ffffff66",
-          padding: 10,
-          mt: 10,
-        }}
-      >
-        <Row justify="center" align="center" css={{}}>
-          💬
-          <Spacer x={0.25} />
-          <Text i>{note}</Text>
-        </Row>
-      </Card>
-    </>
-  ) : null;
 }
 
 export { getStaticProps, getStaticPaths };
