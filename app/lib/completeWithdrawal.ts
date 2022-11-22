@@ -1,13 +1,16 @@
 import {
   LnbitsWallet,
   Tip,
+  User,
   WithdrawalFlow,
   WithdrawalMethod,
 } from "@prisma/client";
 import { deleteUnusedWithdrawalLinks } from "lib/deleteStaleWithdrawalLinks";
+import { sendEmail } from "lib/email/sendEmail";
 import { createInvoice } from "lib/lnbits/createInvoice";
 import { payInvoice } from "lib/lnbits/payInvoice";
 import prisma from "lib/prismadb";
+import { getTipUrl } from "lib/utils";
 
 export async function completeWithdrawal(
   userId: string,
@@ -16,7 +19,9 @@ export async function completeWithdrawal(
   withdrawalInvoiceId: string,
   withdrawalInvoice: string,
   withdrawalMethod: WithdrawalMethod,
-  tips: Tip[],
+  tips: (Tip & {
+    tipper: User;
+  })[],
   deleteUsedWithdrawalLinks: boolean
 ) {
   if (deleteUsedWithdrawalLinks) {
@@ -138,5 +143,24 @@ export async function completeWithdrawal(
         userId: userId,
       },
     });
+  }
+  for (const tip of tips) {
+    try {
+      if (tip.tipper.email) {
+        await sendEmail({
+          to: tip.tipper.email,
+          subject: "Your recipient has withdrawn their sats!",
+          html: `Good job! Your recipient is one step closer to being 🍊💊. See your tip: <a href="${getTipUrl(
+            tip,
+            tip.tipper.locale
+          )}">click here</a>`,
+          from: `Lightsats <${process.env.EMAIL_FROM}>`,
+        });
+      }
+    } catch (error) {
+      console.error(
+        "Failed to send withdrawn notification email. Tip: " + tip.id
+      );
+    }
   }
 }
