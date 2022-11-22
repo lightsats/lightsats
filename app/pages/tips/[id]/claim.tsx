@@ -74,14 +74,6 @@ const ClaimTipPage: NextPage = () => {
     !hasExpired;
 
   // tip was already claimed by the current user (open old link)
-  console.log(
-    !!session,
-    !!publicTip,
-    publicTip?.status,
-    publicTip?.tippeeId === session?.user.id,
-    !isClaiming,
-    !hasExpired
-  );
   React.useEffect(() => {
     if (
       session &&

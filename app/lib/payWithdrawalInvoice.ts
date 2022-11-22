@@ -10,8 +10,7 @@ export async function payWithdrawalInvoice(
   withdrawalFlow: WithdrawalFlow,
   invoice: string,
   userId: string,
-  withdrawalMethod: WithdrawalMethod,
-  withdrawalLinkId: string | undefined
+  withdrawalMethod: WithdrawalMethod
 ) {
   if (!process.env.LNBITS_API_KEY) {
     throw new Error("No LNBITS_API_KEY provided");
@@ -93,7 +92,7 @@ export async function payWithdrawalInvoice(
       payment.details.bolt11,
       withdrawalMethod,
       tips,
-      withdrawalLinkId
+      withdrawalMethod === "lnurlw"
     );
   }
 }

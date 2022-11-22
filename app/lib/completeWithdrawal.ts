@@ -17,24 +17,9 @@ export async function completeWithdrawal(
   withdrawalInvoice: string,
   withdrawalMethod: WithdrawalMethod,
   tips: Tip[],
-  withdrawalLinkId: string | undefined
+  deleteUsedWithdrawalLinks: boolean
 ) {
-  if (withdrawalLinkId) {
-    try {
-      await prisma.withdrawalLink.update({
-        where: {
-          id: withdrawalLinkId,
-        },
-        data: {
-          used: true,
-        },
-      });
-    } catch (error) {
-      console.error(
-        "Failed to update withdrawal link " + withdrawalLinkId,
-        error
-      );
-    }
+  if (deleteUsedWithdrawalLinks) {
     try {
       await deleteUnusedWithdrawalLinks(userId, false);
     } catch (error) {
