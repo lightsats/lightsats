@@ -10,6 +10,7 @@ const nextConfig = {
   i18n,
   sentry: {
     hideSourceMaps: false,
+    autoInstrumentServerFunctions: true,
   },
 };
 
@@ -19,9 +20,11 @@ const sentryWebpackPluginOptions = {
   // recommended:
   //   release, url, org, project, authToken, configFile, stripPrefix,
   //   urlPrefix, include, ignore
-  // silent: true, // Suppresses all logs
+  silent: true, // Suppresses all logs
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.
+  disableServerWebpackPlugin: false,
+  disableClientWebpackPlugin: false,
 };
 
 // Make sure adding Sentry options is the last code to run before exporting, to

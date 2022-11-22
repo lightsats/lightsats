@@ -1,5 +1,5 @@
+import { getLanguageCode } from "lib/i18n/iso6391";
 import { Item } from "types/Item";
-import { getLanguageCode } from "lib/items/getLanguageCode";
 
 export const save: Item[] = [
   {

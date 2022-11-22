@@ -21,6 +21,7 @@ import { useExchangeRates } from "hooks/useExchangeRates";
 import {
   appName,
   FEE_PERCENT,
+  MAX_TIP_SATS,
   MINIMUM_FEE_SATS,
   MIN_TIP_SATS,
 } from "lib/constants";
@@ -173,6 +174,13 @@ const NewTip: NextPage = () => {
       if (satsAmount < MIN_TIP_SATS) {
         throw new Error("Tip amount is too small");
       }
+      if (satsAmount > MAX_TIP_SATS) {
+        throw new Error(
+          "Tip amount is too large. Please use a value no more than " +
+            MAX_TIP_SATS +
+            " satoshis"
+        );
+      }
       if (Math.round(satsAmount) !== satsAmount) {
         throw new Error("sat amount must be a whole value");
       }
@@ -293,6 +301,7 @@ const NewTip: NextPage = () => {
                     //   valueAsNumber: true,
                     // }) causes iOS decimal input bug, resetting field value }
                     min={0}
+                    max={MAX_TIP_SATS}
                     step="0.01"
                     type="number"
                     inputMode="decimal"

@@ -25,6 +25,7 @@ export type AdminExtendedUser = User & {
   lnbitsWalletUrl: string | undefined;
   walletBalance: number;
   withdrawals: AdminExtendedWithdrawal[];
+  withdrawalErrors: AdminExtendedWithdrawalError[];
 };
 
 export type AdminExtendedTip = Tip & {

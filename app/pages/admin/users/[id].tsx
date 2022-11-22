@@ -2,6 +2,7 @@ import { Link, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
 import { AdminTipsList } from "components/admin/AdminTipsList";
+import { AdminWithdrawalErrorsList } from "components/admin/AdminWithdrawalErrorsList";
 import { AdminWithdrawalsList } from "components/admin/AdminWithdrawalsList";
 import { NextUIUser } from "components/NextUIUser";
 import { DEFAULT_NAME } from "lib/constants";
@@ -57,6 +58,9 @@ const AdminUserPage: NextPage = () => {
       <Spacer />
       <h2>Withdrawals</h2>
       <AdminWithdrawalsList withdrawals={user.withdrawals} />
+      <Spacer />
+      <h2>Withdrawal Errors</h2>
+      <AdminWithdrawalErrorsList withdrawalErrors={user.withdrawalErrors} />
       <Spacer />
       <AdminJSONDumpCard entity={user} />
     </>

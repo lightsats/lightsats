@@ -10,6 +10,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import { StatusCodes } from "http-status-codes";
+import { getStaticProps } from "lib/i18n/i18next";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -180,3 +181,5 @@ const ForwardedPhoneInput = React.forwardRef<
   );
 });
 ForwardedPhoneInput.displayName = "ForwardedInput";
+
+export { getStaticProps };

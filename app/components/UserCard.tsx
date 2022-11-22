@@ -13,6 +13,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Icon } from "components/Icon";
+import copy from "copy-to-clipboard";
 import { format } from "date-fns";
 import { usePublicUser } from "hooks/usePublicUser";
 import { useScoreboardPosition } from "hooks/useScoreboardPosition";
@@ -20,6 +21,7 @@ import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { getUserAvatarUrl } from "lib/utils";
 import React from "react";
+import toast from "react-hot-toast";
 
 type Props = {
   userId: string;
@@ -30,10 +32,18 @@ export function UserCard({ userId, forceAnonymous }: Props) {
   const { data: publicUser } = usePublicUser(userId, forceAnonymous);
 
   const shareProfile = React.useCallback(() => {
-    navigator.share({
-      url: `${Routes.users}/${userId}`,
-      title: (publicUser?.name ?? DEFAULT_NAME) + " on Lightsats",
-    });
+    const url = `${Routes.users}/${userId}`;
+    (async () => {
+      try {
+        await navigator.share({
+          url,
+          title: (publicUser?.name ?? DEFAULT_NAME) + " on Lightsats",
+        });
+      } catch (error) {
+        copy(url);
+        toast.success("Copied link to clipboard");
+      }
+    })();
   }, [userId, publicUser?.name]);
 
   const placing = useScoreboardPosition(
