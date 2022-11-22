@@ -1,4 +1,4 @@
-import { getLanguageCode } from "lib/items/getLanguageCode";
+import { getLanguageCode } from "lib/i18n/iso6391";
 import { LearnItem } from "types/LearnItem";
 
 export const learn: LearnItem[] = [

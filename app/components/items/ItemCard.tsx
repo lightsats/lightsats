@@ -6,8 +6,8 @@ import {
   ItemFeatureBadgeProps,
 } from "components/items/ItemFeatureBadge";
 import { NextLink } from "components/NextLink";
-import ISO6391 from "iso-639-1";
 import { placeholderDataUrl as defaultPlaceholderDataUrl } from "lib/constants";
+import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { getItemImageLocation } from "lib/utils";
 import NextImage from "next/image";
 import React from "react";
@@ -24,7 +24,7 @@ function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
   //const hasLanguage = item.languageCodes.indexOf("en") > -1;
   const itemFeatures: ItemFeatureBadgeProps[] = [
     {
-      name: ISO6391.getNativeName("en"), // TODO: current language
+      name: getNativeLanguageName("en"), // TODO: current language
       // variant: hasLanguage ? "success" : "warning",
     },
   ];

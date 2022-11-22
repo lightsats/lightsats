@@ -52,7 +52,7 @@
     "http-status-codes": "^2.2.0",
     "i18next": "^22.0.4",
     "i18next-fs-backend": "^2.0.0",
-    "iso-639-1": "^2.1.15",
+    "iso-639-1-plus": "^3.0.3",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "lnurl": "^0.24.2",

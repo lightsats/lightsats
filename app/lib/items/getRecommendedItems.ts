@@ -1,4 +1,4 @@
-import ISO6391 from "iso-639-1";
+import { validateLanguageCode } from "lib/i18n/iso6391";
 import { catalog } from "lib/items/catalog";
 import { Item, ItemCategory } from "types/Item";
 import { Wallet } from "types/Wallet";
@@ -28,7 +28,7 @@ export function getRecommendedItems(
   tippeeBalance: number,
   checkTippeeBalance: boolean
 ): Item[] {
-  if (!ISO6391.validate(languageCode)) {
+  if (!validateLanguageCode(languageCode)) {
     throw new Error("Unsupported language code: " + languageCode);
   }
   const filterOptions: CategoryFilterOptions = {
