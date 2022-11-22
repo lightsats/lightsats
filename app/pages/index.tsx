@@ -149,10 +149,10 @@ function Homepage() {
             start={0}
             useEasing={true}
             enableScrollSpy
-            scrollSpyDelay={1000}
+            scrollSpyDelay={2000}
             scrollSpyOnce
             separator=","
-            end={+(scoreboard.totalSatsSent / 1000).toFixed(0)}
+            end={+(2300 / 1000).toFixed(0)}
             suffix="k sats"
             duration={2}
           ></CountUp>
@@ -219,7 +219,7 @@ function Homepage() {
       <Text style={{ textAlign: "center" }}>
         Join{" "}
         <a
-          href="https://twitter.com/juangb87"
+          href="https://lightsats.com/users/cl9q2861o0015grf6z64ls8mj"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -227,15 +227,15 @@ function Homepage() {
         </a>
         ,{" "}
         <a
-          href="https://twitter.com/_reneaaron"
+          href="https://lightsats.com/users/cl9milvij0003j9f6eseeugra"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Rene
+          René
         </a>
         ,{" "}
         <a
-          href="https://twitter.com/rolznz"
+          href="https://lightsats.com/users/cl9gmxceu0000fjf67ozj59n5"
           target="_blank"
           rel="noopener noreferrer"
         >
