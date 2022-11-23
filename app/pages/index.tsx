@@ -12,6 +12,7 @@ import { NextLink } from "components/NextLink";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import CountUp from "react-countup";
 import { Tweet } from "react-twitter-widgets";
@@ -30,6 +31,19 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+function HomepageCTA() {
+  const { data: session } = useSession();
+  return (
+    <NextLink href={session ? Routes.dashboard : Routes.login} passHref>
+      <a>
+        <Button color="primary" size="lg">
+          {session ? <>Open dashboard</> : <>Create your first tip &raquo;</>}
+        </Button>
+      </a>
+    </NextLink>
+  );
+}
 
 function Homepage() {
   const { data: scoreboard } = useSWR<ScoreboardType>(
@@ -59,13 +73,7 @@ function Homepage() {
         One tip at a time.
       </Text>
       <Spacer />
-      <NextLink href={Routes.login} passHref>
-        <a>
-          <Button color="primary" size="lg">
-            Create your first tip &raquo;
-          </Button>
-        </a>
-      </NextLink>
+      <HomepageCTA />
       <Spacer y={5} />
       <Grid.Container sm={10} justify="center">
         <Card>
@@ -152,7 +160,7 @@ function Homepage() {
             scrollSpyDelay={2000}
             scrollSpyOnce
             separator=","
-            end={+(2300 / 1000).toFixed(0)}
+            end={+(scoreboard.totalSatsSent / 1000).toFixed(0)}
             suffix="k sats"
             duration={2}
           ></CountUp>
@@ -248,9 +256,7 @@ function Homepage() {
         to 🍊💊 the world around you.
       </Text>
       <Spacer y={2} />
-      <Button color="primary" size="lg">
-        Create your first tip &raquo;
-      </Button>
+      <HomepageCTA />
       <Spacer y={4} />
     </>
   );
