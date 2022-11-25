@@ -117,3 +117,8 @@ export const getTipUrl = (tip: Tip | PublicTip, locale: string | undefined) =>
 
 export const getClaimUrl = (tip: Tip | PublicTip) =>
   `${getTipUrl(tip, tip.tippeeLocale)}/claim`;
+
+export const switchRouterLocale = (router: NextRouter, nextLocale: string) => {
+  const { pathname, asPath, query } = router;
+  router.push({ pathname, query }, asPath, { locale: nextLocale });
+};
