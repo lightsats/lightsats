@@ -12,11 +12,11 @@ import {
 } from "@nextui-org/react";
 
 import { User } from "@prisma/client";
-import { Alert } from "components/Alert";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { BecomeATipper } from "components/tippee/BecomeATipper";
+import { WithdrawSuggestion } from "components/tippee/WithdrawSuggestion";
 import { UserCard } from "components/UserCard";
 import copy from "copy-to-clipboard";
 import { useReceivedTips } from "hooks/useTips";
@@ -25,6 +25,7 @@ import { MAX_USER_NAME_LENGTH } from "lib/constants";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { DEFAULT_LOCALE, locales } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
+import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -87,11 +88,13 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
       </Row>
       <Spacer />
 
-      {user.userType === "tipper" ? (
-        <TipperProfile mutateUser={mutateUser} session={session} user={user} />
-      ) : (
-        <TippeeProfile />
-      )}
+      <UpdateProfileForm
+        mutateUser={mutateUser}
+        session={session}
+        user={user}
+      />
+
+      {user.userType === "tippee" && <TippeeProfile />}
 
       <Spacer />
       <Collapse
@@ -157,34 +160,25 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
 
 function TippeeProfile() {
   const { data: tips } = useReceivedTips();
-  const hasWithdrawnTip = tips?.some((tip) => tip.status === "WITHDRAWN");
+  const hasWithdrawableTip = tips?.some(
+    (tip) => tip.status === "CLAIMED" && !hasTipExpired(tip)
+  );
 
   return (
     <>
-      {!hasWithdrawnTip && (
+      <Spacer />
+      {hasWithdrawableTip && (
         <>
-          <Alert>
-            {
-              "You've got some tips. Make sure to withdraw them before they expire."
-            }
-            &nbsp;&nbsp;
-            <NextLink href={Routes.journeyClaimed} passHref>
-              <a>
-                <Button auto color="success">
-                  Withdraw
-                </Button>
-              </a>
-            </NextLink>
-          </Alert>
+          <WithdrawSuggestion />
           <Spacer />
         </>
       )}
-      <BecomeATipper />
+      {!hasWithdrawableTip && <BecomeATipper />}
     </>
   );
 }
 
-function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
+function UpdateProfileForm({ mutateUser, user }: ProfileInternalProps) {
   const [isSubmitting, setSubmitting] = React.useState(false);
 
   const { control, handleSubmit, setFocus, watch, setValue } =
@@ -271,85 +265,89 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
             width="100px"
           />
         </Row>
-        <Spacer />
-        <Controller
-          name="twitterUsername"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              label="Twitter Username"
-              placeholder="jack"
-              contentLeft="@"
-              fullWidth
-              bordered
-              css={{
-                fontWeight: "bold",
-                ".nextui-input-content--left": {
-                  pr: 0,
-                },
-              }}
-            />
-          )}
-        />
-        <Spacer />
-        <Controller
-          name="avatarURL"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              label="Avatar URL"
-              placeholder="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
-              fullWidth
-              bordered
-              type="url"
-            />
-          )}
-        />
-        <Spacer />
-        <Controller
-          name="lightningAddress"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              label="Lightning Address"
-              placeholder="you@example.com"
-              fullWidth
-              bordered
-              type="email"
-            />
-          )}
-        />
-        <Spacer />
-        <Row>
-          <Card variant="bordered">
-            <Card.Body css={{ backgroundColor: "$accents0" }}>
-              <Row align="center" justify="center">
-                <Icon>
-                  <EyeIcon />
-                </Icon>
-                <Spacer x={0.5} />
-                <Text weight="medium">
-                  Anonymise my info on scoreboard & public profile
-                </Text>
-                <Spacer />
-                <Controller
-                  name="isAnonymous"
-                  control={control}
-                  render={({ field }) => (
-                    <Switch
-                      {...field}
-                      checked={field.value}
-                      onChange={(e) => field.onChange(e.target.checked)}
-                    />
-                  )}
+        {user.userType === "tipper" && (
+          <>
+            <Spacer />
+            <Controller
+              name="twitterUsername"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  label="Twitter Username"
+                  placeholder="jack"
+                  contentLeft="@"
+                  fullWidth
+                  bordered
+                  css={{
+                    fontWeight: "bold",
+                    ".nextui-input-content--left": {
+                      pr: 0,
+                    },
+                  }}
                 />
-              </Row>
-            </Card.Body>
-          </Card>
-        </Row>
+              )}
+            />
+            <Spacer />
+            <Controller
+              name="avatarURL"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  label="Avatar URL"
+                  placeholder="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
+                  fullWidth
+                  bordered
+                  type="url"
+                />
+              )}
+            />
+            <Spacer />
+            <Controller
+              name="lightningAddress"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  label="Lightning Address"
+                  placeholder="you@example.com"
+                  fullWidth
+                  bordered
+                  type="email"
+                />
+              )}
+            />
+            <Spacer />
+            <Row>
+              <Card variant="bordered">
+                <Card.Body css={{ backgroundColor: "$accents0" }}>
+                  <Row align="center" justify="center">
+                    <Icon>
+                      <EyeIcon />
+                    </Icon>
+                    <Spacer x={0.5} />
+                    <Text weight="medium">
+                      Anonymise my info on scoreboard & public profile
+                    </Text>
+                    <Spacer />
+                    <Controller
+                      name="isAnonymous"
+                      control={control}
+                      render={({ field }) => (
+                        <Switch
+                          {...field}
+                          checked={field.value}
+                          onChange={(e) => field.onChange(e.target.checked)}
+                        />
+                      )}
+                    />
+                  </Row>
+                </Card.Body>
+              </Card>
+            </Row>
+          </>
+        )}
 
         <Spacer />
         <Button type="submit" disabled={isSubmitting} css={{ width: "100%" }}>

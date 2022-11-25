@@ -1,7 +1,10 @@
 import { Button, Card, Col, Link, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
+import { WithdrawSuggestion } from "components/tippee/WithdrawSuggestion";
+import { useReceivedTips } from "hooks/useTips";
 import { Routes } from "lib/Routes";
+import { hasTipExpired } from "lib/utils";
 import { guides } from "pages/guide";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -10,7 +13,14 @@ import { Guide } from "types/Guide";
 const suggestions: Guide[] = [guides[0], guides[2], guides[7]];
 
 export function TippeeSuggestions() {
-  return (
+  const { data: tips } = useReceivedTips();
+  const hasWithdrawableTip = tips?.some(
+    (tip) => tip.status === "CLAIMED" && !hasTipExpired(tip)
+  );
+
+  return hasWithdrawableTip ? (
+    <WithdrawSuggestion />
+  ) : (
     <>
       <Row justify="space-between" align="center">
         <Text css={{ m: 0 }} h5>
