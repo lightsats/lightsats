@@ -98,7 +98,7 @@ const TipPage: NextPage = () => {
             <Card.Body>
               <Row justify="center">
                 <Text h2 css={{ color: "$white" }}>
-                  Personalise your tip
+                  Personalize your tip
                 </Text>
               </Row>
               <Row justify="center">
@@ -111,10 +111,9 @@ const TipPage: NextPage = () => {
               </Row>
               <Row>
                 <Text css={{ textAlign: "center", color: "$white" }}>
-                  The goal is to onboard the recipient to bitcoin, so aim to
-                  fill out all the fields in order to increase the authenticity
-                  of your tip and improve your {"recipient's"} initial
-                  impression.
+                  {
+                    "Provide extra details to improve your recipient's onboarding experience"
+                  }
                 </Text>
               </Row>
               <Spacer />
@@ -122,7 +121,7 @@ const TipPage: NextPage = () => {
                 <NextLink href={`${Routes.tips}/${tip.id}/edit`} passHref>
                   <a>
                     <Button size="lg" color="secondary">
-                      Personalise tip🪄
+                      Personalize tip🪄
                     </Button>
                   </a>
                 </NextLink>
