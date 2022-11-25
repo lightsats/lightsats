@@ -5,7 +5,6 @@ import {
   Card,
   Col,
   Divider,
-  Image,
   Link,
   Loading,
   Row,
@@ -13,6 +12,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Icon } from "components/Icon";
+import { NextImage } from "components/NextImage";
 import copy from "copy-to-clipboard";
 import { format } from "date-fns";
 import { usePublicUser } from "hooks/usePublicUser";
@@ -78,7 +78,7 @@ export function UserCard({ userId, forceAnonymous }: Props) {
                       >
                         <Text>@{publicUser.twitterUsername}</Text>
                         &nbsp;
-                        <Image
+                        <NextImage
                           alt="twitter"
                           src="/icons/twitter.svg"
                           width={16}

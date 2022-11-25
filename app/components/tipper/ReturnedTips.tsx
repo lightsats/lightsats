@@ -2,7 +2,6 @@ import { InformationCircleIcon, WalletIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
-  Image,
   Loading,
   Row,
   Spacer,
@@ -10,6 +9,7 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { Icon } from "components/Icon";
+import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { useSentTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
@@ -52,7 +52,12 @@ export function ReturnedTips() {
           <Card css={{ dropShadow: "$sm", background: "$primary" }}>
             <Card.Body>
               <Row align="center">
-                <Image src="/images/icons/zap.png" width={150} alt="zap" />
+                <NextImage
+                  src="/images/icons/zap.png"
+                  width={150}
+                  height={150}
+                  alt="zap"
+                />
               </Row>
               <Row justify="center">
                 <Text

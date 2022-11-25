@@ -9,7 +9,6 @@ import {
   Avatar,
   Button,
   Dropdown,
-  Image,
   Link,
   Navbar,
   Spacer,
@@ -17,6 +16,7 @@ import {
 } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { LanguagePicker } from "components/LanguagePicker";
+import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
@@ -76,14 +76,16 @@ export function AppNavbar() {
     [user]
   );
 
-  if (sessionStatus === "loading" || (session && !user)) {
-    return null;
-  }
+  const isLoading = sessionStatus === "loading" || (session && !user);
 
   return (
     <Navbar
       variant="sticky"
-      css={{ backgroundColor: "$white", $$navbarBackgroundColor: "$white" }}
+      css={{
+        backgroundColor: "$white",
+        $$navbarBackgroundColor: "$white",
+        visibility: isLoading ? "hidden" : undefined,
+      }}
     >
       <Navbar.Content activeColor="primary">
         {!hideNavbar && (
@@ -103,7 +105,12 @@ export function AppNavbar() {
                   : closeNavbar
               }
             >
-              <Image alt="logo" src="/images/logo.svg" width={150} />
+              <NextImage
+                alt="logo"
+                src="/images/logo.svg"
+                width={150}
+                height={150}
+              />
             </a>
           </NextLink>
         </Navbar.Brand>

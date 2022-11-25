@@ -3,11 +3,11 @@ import {
   Button,
   Card,
   Grid,
-  Image,
   Loading,
   Spacer,
   Text,
 } from "@nextui-org/react";
+import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -50,6 +50,7 @@ function Homepage() {
     `/api/scoreboard`,
     defaultFetcher
   );
+
   if (!scoreboard) {
     return <Loading color="currentColor" size="lg" />;
   }
@@ -57,7 +58,12 @@ function Homepage() {
   return (
     <>
       <Spacer />
-      <Image alt="" src="images/orange-pill.png" width={250} />
+      <NextImage
+        alt=""
+        src="/images/orange-pill.png"
+        width={250}
+        height={250}
+      />
       <Spacer />
       <Text
         h1
@@ -90,7 +96,12 @@ function Homepage() {
                   ta: "center",
                 }}
               >
-                <Image alt="" src="images/gift.png" width={128} />
+                <NextImage
+                  alt=""
+                  src="/images/gift.png"
+                  width={128}
+                  height={128}
+                />
                 <Text h3>Gift sats without losing them</Text>
                 <Text color="$gray700">
                   {
@@ -109,7 +120,12 @@ function Homepage() {
                   fg: 1,
                 }}
               >
-                <Image alt="" src="images/flag.png" width={128} />
+                <NextImage
+                  alt=""
+                  src="/images/flag.png"
+                  width={128}
+                  height={128}
+                />
                 <Text h3>Progress tracker</Text>
                 <Text color="$gray700">
                   Follow your tippees along their journey into the rabbit hole.
@@ -127,7 +143,12 @@ function Homepage() {
                   fg: 1,
                 }}
               >
-                <Image alt="" src="images/onboarding.png" width={128} />
+                <NextImage
+                  alt=""
+                  src="/images/onboarding.png"
+                  width={128}
+                  height={128}
+                />
                 <Text h3>Onboarding is on us</Text>
                 <Text color="$gray700">
                   Have your tippees go through proper onboarding and install
@@ -145,25 +166,26 @@ function Homepage() {
         </Text>
         <Spacer y={0.5} />
         <Text
-          size="$8xl"
           b
           css={{
             textGradient: "45deg, #ff9400 -20%, #ffcf00 50%",
             lineHeight: "$xs",
             mt: -10,
+            fontSize: "$4xl",
+            "@lg": {
+              fontSize: "$8xl",
+            },
           }}
         >
           <CountUp
             start={0}
             useEasing={true}
             enableScrollSpy
-            scrollSpyDelay={2000}
-            scrollSpyOnce
             separator=","
-            end={+(scoreboard.totalSatsSent / 1000).toFixed(0)}
-            suffix="k sats"
+            end={scoreboard.totalSatsSent * 1000000}
+            suffix=" sats"
             duration={2}
-          ></CountUp>
+          />
         </Text>
         <Spacer />
         <Text h3>have been tipped to date.</Text>
