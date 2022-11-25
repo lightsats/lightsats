@@ -182,7 +182,7 @@ function Homepage() {
             useEasing={true}
             enableScrollSpy
             separator=","
-            end={scoreboard.totalSatsSent * 1000000}
+            end={scoreboard.totalSatsSent}
             suffix=" sats"
             duration={2}
           />
