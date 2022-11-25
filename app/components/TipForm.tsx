@@ -383,45 +383,45 @@ export function TipForm({
                   />
                 )}
               />
-              <Spacer />
-              <Row>
-                <Tooltip
-                  content={`Incentivize the recipient to accept the tip before expiry. Expired tips can reclaimed.`}
-                >
-                  <Text>Tip expires in</Text>
-                </Tooltip>
-              </Row>
-              <Row gap={0} justify="space-between" align="flex-end">
-                <Controller
-                  name="expiresIn"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      aria-label="Tip expires in"
-                      {...field}
-                      {...register("expiresIn", {
-                        valueAsNumber: true,
-                      })}
-                      min={1}
-                      width="200px"
-                      type="number"
-                      inputMode="decimal"
-                      bordered
-                      color="primary"
-                    />
-                  )}
-                />
-
-                <Spacer />
-                <CustomSelect
-                  options={expiryUnitSelectOptions}
-                  defaultValue={watchedExpiryUnit}
-                  onChange={setDropdownSelectedExpiryUnit}
-                  width="100px"
-                />
-              </Row>
             </>
           )}
+          <Spacer />
+          <Row>
+            <Tooltip
+              content={`Incentivize the recipient to accept the tip before expiry. Expired tips can reclaimed.`}
+            >
+              <Text>Tip expires in</Text>
+            </Tooltip>
+          </Row>
+          <Row gap={0} justify="space-between" align="flex-end">
+            <Controller
+              name="expiresIn"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  aria-label="Tip expires in"
+                  {...field}
+                  {...register("expiresIn", {
+                    valueAsNumber: true,
+                  })}
+                  min={1}
+                  width="200px"
+                  type="number"
+                  inputMode="decimal"
+                  bordered
+                  color="primary"
+                />
+              )}
+            />
+
+            <Spacer />
+            <CustomSelect
+              options={expiryUnitSelectOptions}
+              defaultValue={watchedExpiryUnit}
+              onChange={setDropdownSelectedExpiryUnit}
+              width="100px"
+            />
+          </Row>
         </Card.Body>
       </Card>
       <Spacer y={2} />

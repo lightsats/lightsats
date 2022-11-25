@@ -104,6 +104,8 @@ const TipPage: NextPage = () => {
     ) {
       return (
         <>
+          <ClaimProgressTracker tipId={tip.id} />
+          <Spacer />
           <Card css={{ dropShadow: "$sm", background: "$primary" }}>
             <Card.Body>
               <Row justify="center">
@@ -149,7 +151,6 @@ const TipPage: NextPage = () => {
               </Row>
             </Card.Body>
           </Card>
-          <Spacer />
         </>
       );
     }

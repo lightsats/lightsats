@@ -81,9 +81,11 @@ async function handlePostTip(
     throw new Error("Only tips with positive, whole amounts are allowed");
   }
 
-  const expiry = add(new Date(), {
-    months: 1,
-  });
+  const expiry =
+    createTipRequest.expiry ??
+    add(new Date(), {
+      months: 1,
+    });
   const fee = calculateFee(createTipRequest.amount);
   const tip = await prisma.tip.create({
     data: {

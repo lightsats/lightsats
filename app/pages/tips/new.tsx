@@ -1,6 +1,7 @@
 import { Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { TipForm, TipFormSubmitData } from "components/TipForm";
+import { add } from "date-fns";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -18,6 +19,9 @@ const NewTip: NextPage = () => {
         const createTipRequest: CreateTipRequest = {
           amount: data.satsAmount,
           currency: data.currency,
+          expiry: add(new Date(), {
+            [data.expiryUnit]: data.expiresIn,
+          }),
         };
         const result = await fetch("/api/tipper/tips", {
           method: "POST",
