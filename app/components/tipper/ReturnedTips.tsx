@@ -51,7 +51,7 @@ export function ReturnedTips() {
           </Row>
           <Card css={{ dropShadow: "$sm", background: "$primary" }}>
             <Card.Body>
-              <Row align="center">
+              <Row justify="center">
                 <NextImage
                   src="/images/icons/zap.png"
                   width={150}

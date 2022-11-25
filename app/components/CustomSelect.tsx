@@ -18,6 +18,7 @@ export function CustomSelect({
   const { theme } = useTheme();
   return (
     <Select
+      menuPortalTarget={document.body}
       options={options}
       defaultValue={options.find(
         (option: SelectOption) => option.value === defaultValue

@@ -1,4 +1,5 @@
 import { Tip, User } from "@prisma/client";
+import getSymbolFromCurrency from "currency-symbol-map";
 import { format, isAfter } from "date-fns";
 import {
   expirableTipStatuses,
@@ -122,3 +123,6 @@ export const switchRouterLocale = (router: NextRouter, nextLocale: string) => {
   const { pathname, asPath, query } = router;
   router.push({ pathname, query }, asPath, { locale: nextLocale });
 };
+
+export const getSymbolFromCurrencyWithFallback = (currency: string) =>
+  getSymbolFromCurrency(currency) || "$";
