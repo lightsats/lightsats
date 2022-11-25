@@ -405,7 +405,7 @@ export function TipForm({
                     valueAsNumber: true,
                   })}
                   min={1}
-                  width="200px"
+                  width="150px"
                   type="number"
                   inputMode="decimal"
                   bordered
