@@ -1,5 +1,5 @@
-import { Item } from "types/Item";
 import { getLanguageCode } from "lib/items/getLanguageCode";
+import { Item } from "types/Item";
 
 export const save: Item[] = [
   {
@@ -22,7 +22,7 @@ export const save: Item[] = [
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AP/09PHZ2f/09P/09ACRVlk+AAB2NDl9P0EAm2NkRAAAOwAAgEBEAP/09Pvo6Pvm5v/09PgpHPwvH3F5AAAAAElFTkSuQmCC",
     name: "COLDCARD",
     slogan:
-      "SCOLDCARD Is The Most Trusted and Secure Bitcoin Signing Device (aka. Bitcoin Hardware Wallet)	",
+      "COLDCARD Is The Most Trusted and Secure Bitcoin Signing Device (aka. Bitcoin Hardware Wallet)",
     link: "https://lgt.st/coldcard",
   },
   {
@@ -34,7 +34,7 @@ export const save: Item[] = [
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAOElEQVR4nAXBoREAMAgDQGaIqENE5A6BYT5WYFc0rv8GICIkvfeM5O52d2aau9/dzFSVAZBEEsAHWt4NPCHj1HgAAAAASUVORK5CYII=",
     name: "Ledger",
     slogan:
-      "SCOLDCARD Is The Most Trusted and Secure Bitcoin Signing Device (aka. Bitcoin Hardware Wallet)	",
+      "Secure your Bitcoin. Give yourself peace of mind by knowing that your Bitcoin is safe",
     link: "https://lgt.st/ledger",
   },
   {

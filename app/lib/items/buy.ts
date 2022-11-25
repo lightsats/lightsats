@@ -111,7 +111,7 @@ export const buy: Item[] = [
   {
     category: "buy",
     link: "https://lgt.st/pocket",
-    image: "casa.jpeg",
+    image: "pocket.jpeg",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANklEQVR4nGNgYOhkYJjCwDCHgWEGAwPDhEfn/+9c+J+BYSqI8//9/0t7oJxOBoY+BoYJDAwzAbscEV8Aou+YAAAAAElFTkSuQmCC",
@@ -123,7 +123,7 @@ export const buy: Item[] = [
   {
     category: "buy",
     link: "https://lgt.st/casa",
-    image: "pocket.jpeg",
+    image: "casa.jpeg",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPElEQVR4nGPQZ9iYwLA3jGGHPsNGBjOGTe9P/P//478GwxoGC4ZNb079n5y5k4FhIojjyLCFgaFelGEdACj4FFqC4nZ2AAAAAElFTkSuQmCC",

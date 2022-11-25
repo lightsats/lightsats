@@ -65,13 +65,61 @@ export const earn: Item[] = [
   {
     category: "earn",
     link: "https://lgt.st/lolli",
-    image: "lolli.jpeg",
+    image: "lolli.webp",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAMElEQVR4nGNgYMhkYEgVY6hmYEhjKLDZ+eXo//8v/meYbWFgYMjUY+iQZ6hnYMgCAOZWDELO0RL3AAAAAElFTkSuQmCC",
-    name: "Lolli",
+    name: "Lolli - Earn $5",
     slogan:
       "Lolli is a rewards application that gives you bitcoin when you shop at your favorite stores.",
     platforms: ["mobile", "desktop"],
   },
+  {
+  category: "earn",
+  link: "https://lgt.st/fold",
+  image: "fold.webp",
+  languageCodes: [getLanguageCode("English")],
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAMElEQVR4nGNgYMhkYEgVY6hmYEhjKLDZ+eXo//8v/meYbWFgYMjUY+iQZ6hnYMgCAOZWDELO0RL3AAAAAElFTkSuQmCC",
+  name: "Fold - Earn 20,000 sats ",
+  slogan:
+    "Fold is the bitcoin rewards debit card and bitcoin-back shopping app. Earn bitcoin on everything with the Fold bitcoin cashback debit card. Request access to sign up for our bitcoinback debit card.",
+  platforms: ["mobile", "desktop"],
+},
+{
+  category: "earn",
+  link: "https://lgt.st/carrot",
+  image: "carrot.webp",
+  languageCodes: [getLanguageCode("English")],
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAMElEQVR4nGNgYMhkYEgVY6hmYEhjKLDZ+eXo//8v/meYbWFgYMjUY+iQZ6hnYMgCAOZWDELO0RL3AAAAAElFTkSuQmCC",
+  name: "Carrot",
+  slogan:
+    "Carrot gives you a place to earn bitcoin for by reading articles about Bitcoin and supporting your favorite communities, organizations, and initiatives! Ready to earn?",
+  platforms: ["mobile", "desktop"],
+},
+{
+  category: "earn",
+  link: "https://lgt.st/stackernews",
+  image: "stackernews.png",
+  languageCodes: [getLanguageCode("English")],
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAMElEQVR4nGNgYMhkYEgVY6hmYEhjKLDZ+eXo//8v/meYbWFgYMjUY+iQZ6hnYMgCAOZWDELO0RL3AAAAAElFTkSuQmCC",
+  name: "stacker news",
+  slogan:
+    "It's like Hacker News but we pay you Bitcoin.",
+  platforms: ["desktop"],
+},
+{
+  category: "earn",
+  link: "https://lgt.st/satsback",
+  image: "satsback.png",
+  languageCodes: [getLanguageCode("English")],
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAMElEQVR4nGNgYMhkYEgVY6hmYEhjKLDZ+eXo//8v/meYbWFgYMjUY+iQZ6hnYMgCAOZWDELO0RL3AAAAAElFTkSuQmCC",
+  name: "satsback",
+  slogan:
+    "Satsback is the evolution of cashback and loyalty rewards - the easiest and safest way to start saving bitcoin with more than 10,000 connected merchants.",
+  platforms: ["desktop"],
+},
 ];
