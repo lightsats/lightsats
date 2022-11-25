@@ -6,12 +6,27 @@ import copy from "copy-to-clipboard";
 import React from "react";
 import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
+import { requestProvider } from "webln";
 
 type PayTipInvoiceProps = {
   invoice: string;
 };
 
 export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
+  React.useEffect(() => {
+    if (invoice) {
+      (async () => {
+        try {
+          console.log("Launching webln");
+          const webln = await requestProvider();
+          webln.sendPayment(invoice);
+        } catch (error) {
+          console.error("Failed to load webln", error);
+        }
+      })();
+    }
+  }, [invoice]);
+
   const copyInvoice = React.useCallback(() => {
     copy(invoice);
     toast.success("Copied to clipboard");
