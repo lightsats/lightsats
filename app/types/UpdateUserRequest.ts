@@ -4,4 +4,5 @@ export type UpdateUserRequest = {
   avatarURL: string;
   isAnonymous: boolean;
   lightningAddress: string;
+  locale: string;
 };

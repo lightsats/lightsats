@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import prisma from "lib/prismadb";
 import { getFallbackAvatarId } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -105,6 +106,7 @@ async function updateUser(
       avatarURL: updateUserRequest.avatarURL ?? null,
       lightningAddress: updateUserRequest.lightningAddress ?? null,
       isAnonymous: updateUserRequest.isAnonymous,
+      locale: updateUserRequest.locale ?? DEFAULT_LOCALE,
     },
   });
 

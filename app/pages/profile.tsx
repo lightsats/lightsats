@@ -13,6 +13,7 @@ import {
 
 import { User } from "@prisma/client";
 import { Alert } from "components/Alert";
+import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { BecomeATipper } from "components/tippee/BecomeATipper";
@@ -21,11 +22,12 @@ import copy from "copy-to-clipboard";
 import { useReceivedTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
 import { MAX_USER_NAME_LENGTH } from "lib/constants";
+import { getNativeLanguageName } from "lib/i18n/iso6391";
+import { DEFAULT_LOCALE, locales } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -34,6 +36,7 @@ import { UpdateUserRequest } from "types/UpdateUserRequest";
 
 type ProfileFormData = {
   name: string;
+  locale: string;
   twitterUsername: string;
   avatarURL: string;
   lightningAddress: string;
@@ -47,6 +50,11 @@ const formStyle: React.CSSProperties = {
   justifyContent: "center",
   width: "100%",
 };
+
+const localeSelectOptions: SelectOption[] = locales.map((locale) => ({
+  value: locale,
+  label: getNativeLanguageName(locale),
+}));
 
 const Profile: NextPage = () => {
   const { data: session } = useSession();
@@ -177,22 +185,32 @@ function TippeeProfile() {
 }
 
 function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
-  const router = useRouter();
   const [isSubmitting, setSubmitting] = React.useState(false);
 
-  const { control, handleSubmit, setFocus } = useForm<ProfileFormData>({
-    defaultValues: {
-      name: user.name ?? undefined,
-      twitterUsername: user.twitterUsername ?? undefined,
-      avatarURL: user.avatarURL ?? undefined,
-      lightningAddress: user.lightningAddress ?? undefined,
-      isAnonymous: user.isAnonymous,
-    },
-  });
+  const { control, handleSubmit, setFocus, watch, setValue } =
+    useForm<ProfileFormData>({
+      defaultValues: {
+        name: user.name ?? undefined,
+        locale: user.locale ?? DEFAULT_LOCALE,
+        twitterUsername: user.twitterUsername ?? undefined,
+        avatarURL: user.avatarURL ?? undefined,
+        lightningAddress: user.lightningAddress ?? undefined,
+        isAnonymous: user.isAnonymous,
+      },
+    });
 
   React.useEffect(() => {
     setFocus("name");
   }, [setFocus]);
+
+  const watchedLocale = watch("locale");
+
+  const setDropdownSelectedLocale = React.useCallback(
+    (locale: string) => {
+      setValue("locale", locale);
+    },
+    [setValue]
+  );
 
   const onSubmit = React.useCallback(
     (data: ProfileFormData) => {
@@ -208,6 +226,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
           avatarURL: data.avatarURL,
           lightningAddress: data.lightningAddress,
           isAnonymous: data.isAnonymous,
+          locale: data.locale,
         };
         const result = await fetch(`/api/users/${user.id}`, {
           method: "PUT",
@@ -217,33 +236,41 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
         if (result.ok) {
           toast.success("Profile updated");
           await mutateUser();
-          router.push(Routes.dashboard);
         } else {
           toast.error("Failed to update profile: " + result.statusText);
         }
         setSubmitting(false);
       })();
     },
-    [isSubmitting, mutateUser, router, user.id]
+    [isSubmitting, mutateUser, user.id]
   );
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-        <Controller
-          name="name"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              label="Your Name"
-              placeholder="John Galt"
-              fullWidth
-              maxLength={MAX_USER_NAME_LENGTH}
-              bordered
-            />
-          )}
-        />
+        <Row justify="space-between" align="flex-end">
+          <Controller
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                label="Your Name"
+                placeholder="John Galt"
+                fullWidth
+                maxLength={MAX_USER_NAME_LENGTH}
+                bordered
+              />
+            )}
+          />
+          <Spacer />
+          <CustomSelect
+            options={localeSelectOptions}
+            defaultValue={watchedLocale}
+            onChange={setDropdownSelectedLocale}
+            width="100px"
+          />
+        </Row>
         <Spacer />
         <Controller
           name="twitterUsername"

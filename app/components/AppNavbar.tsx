@@ -15,7 +15,6 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { LanguagePicker } from "components/LanguagePicker";
 import { NextLink } from "components/NextLink";
@@ -164,19 +163,6 @@ export function AppNavbar() {
                 aria-label="User menu actions"
                 disabledKeys={["language"]}
               >
-                <Dropdown.Item key="language">
-                  <FlexBox
-                    style={{
-                      flexDirection: "row",
-
-                      width: "100%",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    Language&nbsp;
-                    <LanguagePicker />
-                  </FlexBox>
-                </Dropdown.Item>
                 <Dropdown.Item key="profile">
                   <NextLink href={Routes.profile} passHref>
                     <a>
