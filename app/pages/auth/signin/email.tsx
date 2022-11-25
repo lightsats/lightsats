@@ -1,11 +1,21 @@
-import { Button, Input, Loading, Spacer } from "@nextui-org/react";
-import { notifyError } from "components/Toasts";
+import {
+  Button,
+  Card,
+  Divider,
+  Input,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
+import { getStaticProps } from "lib/i18n/i18next";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { TwoFactorLoginRequest } from "types/TwoFactorLoginRequest";
 
 const formStyle: React.CSSProperties = {
@@ -38,9 +48,10 @@ export default function EmailSignIn({
   const [isSubmitting, setSubmitting] = React.useState(false);
   const router = useRouter();
   const callbackUrlWithFallback =
-    callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
+    callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
+  const linkExistingAccount = router.query["link"] === "true";
 
-  console.log("callbackUrlWithFallback", callbackUrlWithFallback);
+  // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
 
   React.useEffect(() => {
     setFocus("email");
@@ -52,7 +63,7 @@ export default function EmailSignIn({
         return;
       }
       if (!data.email) {
-        notifyError("Please enter a valid email address");
+        toast.error("Please enter a valid email address");
         return;
       }
       setSubmitting(true);
@@ -62,6 +73,7 @@ export default function EmailSignIn({
             email: data.email,
             callbackUrl: callbackUrlWithFallback,
             locale: router.locale ?? DEFAULT_LOCALE,
+            linkExistingAccount,
           };
 
           const result = await fetch(`/api/auth/2fa/send`, {
@@ -73,53 +85,65 @@ export default function EmailSignIn({
             console.error(
               "Failed to create email login link: " + result.status
             );
-            notifyError("Something went wrong. Please try again.");
+            toast.error("Something went wrong. Please try again.");
+          } else {
+            router.push(Routes.checkEmail);
           }
-          router.push(Routes.checkEmail);
         } catch (error) {
           console.error(error);
-          notifyError("login failed");
+          toast.error("login failed");
         }
 
         setSubmitting(false);
       })();
     },
-    [callbackUrlWithFallback, isSubmitting, router]
+    [callbackUrlWithFallback, isSubmitting, linkExistingAccount, router]
   );
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => (
-            <Input
-              bordered
-              {...field}
-              label={t("email")}
-              type="email"
-              placeholder="satoshin@gmx.com"
-              autoComplete="email"
-              fullWidth
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Header>
+          <Row justify="center">
+            <Text css={{ fontWeight: "bold" }}>{t("email")}</Text>
+          </Row>
+        </Card.Header>
+        <Divider />
+        <Card.Body>
+          <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  bordered
+                  {...field}
+                  type="email"
+                  placeholder="satoshin@gmx.com"
+                  autoComplete="email"
+                  fullWidth
+                />
+              )}
             />
-          )}
-        />
-        <Spacer />
-        <Button
-          css={{ width: "100%" }}
-          color="primary"
-          type="submit"
-          auto
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <Loading type="points" color="currentColor" size="sm" />
-          ) : (
-            <>{submitText ?? "Login"}</>
-          )}
-        </Button>
-      </form>
+            <Spacer />
+            <Button
+              css={{ width: "100%" }}
+              color="primary"
+              type="submit"
+              auto
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <Loading color="currentColor" size="sm" />
+              ) : (
+                <>{submitText ?? "Sign in"}</>
+              )}
+            </Button>
+          </form>
+        </Card.Body>
+      </Card>
     </>
   );
 }
+
+export { getStaticProps };

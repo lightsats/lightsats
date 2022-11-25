@@ -20,7 +20,7 @@ const Logout: NextPage = () => {
       <Head>
         <title>Lightsats⚡ - Log out</title>
       </Head>
-      <Loading type="spinner" color="currentColor" size="sm" />
+      <Loading color="currentColor" size="sm" />
     </>
   );
 };

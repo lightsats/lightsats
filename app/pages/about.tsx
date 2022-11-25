@@ -9,6 +9,16 @@ const AboutPage: NextPage = () => {
         <title>Lightsats⚡ - About</title>
       </Head>
       <h2>About</h2>
+      <iframe
+        width="100%"
+        height="500px"
+        src="https://www.youtube.com/embed/hX58ynrSNW8"
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
+      <Spacer />
       <h3>For Recipients</h3>
       <Row>
         <Text>

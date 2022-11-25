@@ -1,80 +1,69 @@
 import { StatusCodes } from "http-status-codes";
-import jwt from "jsonwebtoken";
+import { generateEmailTemplate } from "lib/email/generateEmailTemplate";
+
+import { sendEmail } from "lib/email/sendEmail";
+import { generateAuthLink } from "lib/generateAuthLink";
+import { generateShortLink } from "lib/generateShortLink";
 import { getApiI18n } from "lib/i18n/api";
-import { Routes } from "lib/Routes";
-import { getLocalePath } from "lib/utils";
+import prisma from "lib/prismadb";
+
+import { sendSms } from "lib/sms/sendSms";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as nodemailer from "nodemailer";
-import twilio from "twilio";
-import { TwoFactorAuthToken } from "types/TwoFactorAuthToken";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "pages/api/auth/[...nextauth]";
 import { TwoFactorLoginRequest } from "types/TwoFactorLoginRequest";
-
-if (
-  !process.env.EMAIL_SERVER_USER ||
-  !process.env.EMAIL_SERVER_PASSWORD ||
-  !process.env.EMAIL_SERVER_HOST ||
-  !process.env.EMAIL_SERVER_PORT ||
-  !process.env.EMAIL_FROM
-) {
-  throw new Error("Email config not setup. Please see .env.example");
-}
-
-let twilioClient: twilio.Twilio | undefined;
-
-if (
-  !process.env.TWILIO_ACCOUNT_SID ||
-  !process.env.TWILIO_AUTH_TOKEN ||
-  !process.env.TWILIO_PHONE_NUMBER ||
-  !process.env.TWILIO_MESSAGING_SERVICE_SID
-) {
-  console.warn("SMS config not setup. Please see .env.example");
-} else {
-  twilioClient = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
-}
-
-const transport = nodemailer.createTransport({
-  host: process.env.EMAIL_SERVER_HOST,
-  port: parseInt(process.env.EMAIL_SERVER_PORT),
-  auth: {
-    user: process.env.EMAIL_SERVER_USER,
-    pass: process.env.EMAIL_SERVER_PASSWORD,
-  },
-});
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (!process.env.NEXTAUTH_SECRET) {
-    throw new Error("No NEXTAUTH_SECRET set");
-  }
   const twoFactorLoginRequest = req.body as TwoFactorLoginRequest;
+  let linkUserId: string | undefined;
+
+  if (twoFactorLoginRequest.linkExistingAccount) {
+    if (twoFactorLoginRequest.email) {
+      if (
+        await prisma.user.findUnique({
+          where: {
+            email: twoFactorLoginRequest.email,
+          },
+        })
+      ) {
+        // account already exists
+        res.status(StatusCodes.CONFLICT).end();
+        return;
+      }
+    } else {
+      throw new Error("Unsupported link account type");
+    }
+    const session = await unstable_getServerSession(req, res, authOptions);
+    if (!session) {
+      res.status(StatusCodes.UNAUTHORIZED).end();
+      return;
+    }
+    linkUserId = session.user.id;
+  }
 
   const i18n = await getApiI18n(twoFactorLoginRequest.locale);
-  const twoFactorAuthToken: TwoFactorAuthToken = {
-    email: twoFactorLoginRequest.email,
-    phoneNumber: twoFactorLoginRequest.phoneNumber,
-    callbackUrl: twoFactorLoginRequest.callbackUrl,
-  };
-  const token = jwt.sign(twoFactorAuthToken, process.env.NEXTAUTH_SECRET, {
-    expiresIn: "30 days",
-  });
 
-  const verifyUrl = `${process.env.APP_URL}${getLocalePath(
-    twoFactorLoginRequest.locale
-  )}${Routes.verifySignin}/${token}`;
+  const verifyUrl = generateAuthLink(
+    twoFactorLoginRequest.email,
+    twoFactorLoginRequest.phoneNumber,
+    twoFactorLoginRequest.locale,
+    twoFactorLoginRequest.callbackUrl,
+    linkUserId
+  );
 
   if (twoFactorLoginRequest.email) {
     try {
-      transport.sendMail({
+      await sendEmail({
         to: twoFactorLoginRequest.email,
-        subject: i18n("common:verifyEmailSubject"),
-        html: i18n("common:verifyEmailMessage", {
+        subject: i18n("login.subject", { ns: "email" }),
+        html: generateEmailTemplate({
+          template: "login",
           verifyUrl,
-        }) as string,
+          i18n,
+        }),
         from: `Lightsats <${process.env.EMAIL_FROM}>`,
       });
       res.status(StatusCodes.NO_CONTENT).end();
@@ -84,18 +73,51 @@ export default async function handler(
         error
       );
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      return;
     }
   } else if (twoFactorLoginRequest.phoneNumber) {
     try {
-      if (!twilioClient) {
-        throw new Error("SMS config not setup. Please see .env.example");
-      }
-      await twilioClient.messages.create({
-        to: twoFactorLoginRequest.phoneNumber,
-        from: process.env.TWILIO_PHONE_NUMBER, // TODO: consider Alphanumeric Sender ID ("Lightsats")
-        body: i18n("common:verifyPhoneMessage") + " " + verifyUrl,
-        messagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID,
+      const user = await prisma.user.findFirst({
+        where: {
+          phoneNumber: twoFactorLoginRequest.phoneNumber,
+        },
       });
+      if (!user) {
+        if (twoFactorLoginRequest.tipId) {
+          const tip = await prisma.tip.findFirst({
+            where: {
+              id: twoFactorLoginRequest.tipId,
+            },
+          });
+          if (!tip) {
+            res.status(StatusCodes.NOT_FOUND).end();
+            return;
+          }
+          if (tip.numSmsTokens < 1) {
+            res.status(StatusCodes.CONFLICT).end();
+            return;
+          }
+          await prisma.tip.update({
+            where: {
+              id: twoFactorLoginRequest.tipId,
+            },
+            data: {
+              numSmsTokens: tip.numSmsTokens - 1,
+            },
+          });
+        } else {
+          // don't allow users to login with phone number unless they have a phone number
+          res.status(StatusCodes.NOT_FOUND).end();
+          return;
+        }
+      }
+
+      const smsBody =
+        i18n("verifyPhoneMessage", { ns: "common" }) +
+        " " +
+        ((await generateShortLink(verifyUrl)) ?? verifyUrl);
+
+      await sendSms(twoFactorLoginRequest.phoneNumber, smsBody);
 
       res.status(StatusCodes.NO_CONTENT).end();
     } catch (error) {

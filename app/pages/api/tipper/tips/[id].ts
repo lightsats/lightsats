@@ -5,6 +5,7 @@ import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
+import { UpdateTipRequest } from "types/TipRequest";
 
 export default async function handler(
   req: NextApiRequest,
@@ -35,6 +36,8 @@ export default async function handler(
       return deleteTip(tip, req, res);
     case "GET":
       return getTip(tip, req, res);
+    case "PUT":
+      return updateTip(tip, req, res);
     default:
       res.status(StatusCodes.NOT_FOUND).end();
       return;
@@ -99,4 +102,27 @@ async function getTip(
   tip = await checkTipHasBeenFunded(tip);
 
   res.status(StatusCodes.OK).json(tip);
+}
+
+async function updateTip(
+  tip: Tip,
+  req: NextApiRequest,
+  res: NextApiResponse<Tip>
+) {
+  const updateTipRequest = req.body as UpdateTipRequest;
+
+  const updatedTip = await prisma.tip.update({
+    where: {
+      id: tip.id,
+    },
+    data: {
+      expiry: updateTipRequest.expiry,
+      currency: updateTipRequest.currency,
+      note: updateTipRequest.note,
+      tippeeName: updateTipRequest.tippeeName,
+      tippeeLocale: updateTipRequest.tippeeLocale,
+    },
+  });
+
+  res.json(updatedTip);
 }

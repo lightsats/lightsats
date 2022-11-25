@@ -1,5 +1,4 @@
-import { Loading, Spacer, Text } from "@nextui-org/react";
-import { BackButton } from "components/BackButton";
+import { Loading, Text } from "@nextui-org/react";
 import { ItemsList } from "components/items/ItemsList";
 import { catalog } from "lib/items/catalog";
 import type { NextPage } from "next";
@@ -13,7 +12,7 @@ const GuideCategoryPage: NextPage = () => {
   const category = categoryString as ItemCategory;
 
   if (!category) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
 
   const categoryItems = catalog[category];
@@ -23,7 +22,7 @@ const GuideCategoryPage: NextPage = () => {
       <Head>
         <title>Lightsats⚡ - {category} Guide</title>
       </Head>
-      <h4>{category}</h4>
+      <Text h3>{category[0].toUpperCase() + category.slice(1)}</Text>
       {categoryItems?.length ? (
         <ItemsList category={category} checkTippeeBalance={false} />
       ) : (
@@ -35,8 +34,6 @@ const GuideCategoryPage: NextPage = () => {
           </Text>
         </>
       )}
-      <Spacer />
-      <BackButton />
     </>
   );
 };

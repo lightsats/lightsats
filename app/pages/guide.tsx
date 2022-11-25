@@ -9,7 +9,7 @@ import {
   PaperAirplaneIcon,
   WalletIcon,
 } from "@heroicons/react/24/solid";
-import { Button, Col, Grid, Row, Spacer, Text } from "@nextui-org/react";
+import { Button, Card, Col, Grid, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { Routes } from "lib/Routes";
@@ -17,11 +17,12 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { Guide } from "types/Guide";
 
-const guides: Guide[] = [
+export const guides: Guide[] = [
   {
     name: "Spend 🛒",
     description:
       "Spend at stores accepting Bitcoin, purchase gift cards, pre-paid visa cards, pay bills",
+    shortDescription: "Spend at stores accepting Bitcoin",
     icon: <CreditCardIcon />,
     link: Routes.guideSpend,
   },
@@ -65,6 +66,7 @@ const guides: Guide[] = [
     name: "Learn 📙",
     description:
       'Learn more about Bitcoin and why "Bitcoin Fixes This" - Philosophy, Engineering, Economics, Politics, History...',
+    shortDescription: "Learn more about Bitcoin and Lightning",
     icon: <BookOpenIcon />,
     link: Routes.guideLearn,
   },
@@ -82,9 +84,9 @@ const GuidePage: NextPage = () => {
       <Head>
         <title>Lightsats⚡ - Guide</title>
       </Head>
-      <Text>What would you like to do with your Bitcoin?</Text>
+      <Text h3>What would you like to do with your Bitcoin?</Text>
       <Spacer />
-      <Grid.Container gap={2} justify="center">
+      <Grid.Container gap={1}>
         {guides.map((guide) => (
           <GuideCard key={guide.name} guide={guide} />
         ))}
@@ -101,30 +103,28 @@ type GuideCardProps = {
 
 function GuideCard({ guide }: GuideCardProps) {
   return (
-    <Grid xs={12} justify="center" css={{ px: 0 }}>
-      <NextLink href={guide.link}>
-        <a style={{ width: "100%" }}>
-          <Row align="center" style={{ height: "100%" }}>
-            <Col span={1.2}>
-              <Row justify="flex-start">
-                <Button color="primary" auto flat css={{ px: 8 }}>
+    <NextLink href={guide.link}>
+      <a style={{ width: "100%" }}>
+        <Grid css={{ size: "100%" }}>
+          <Card isHoverable isPressable css={{ dropShadow: "$sm" }}>
+            <Card.Body>
+              <Row align="center">
+                <Spacer x={0.33} />
+                <Button color="primary" auto flat css={{ px: 18 }} size="xl">
                   <Icon>{guide.icon}</Icon>
                 </Button>
+                <Spacer x={1} />
+                <Col>
+                  <Text b>{guide.name}</Text>
+                  <Text color="$gray700" css={{ lh: "$sm", mt: 0 }}>
+                    {guide.description}
+                  </Text>
+                </Col>
               </Row>
-            </Col>
-            <Col>
-              <Row>
-                <Text b>{guide.name}</Text>
-              </Row>
-              <Row>
-                <Text color="gray" size="small">
-                  {guide.description}
-                </Text>
-              </Row>
-            </Col>
-          </Row>
-        </a>
-      </NextLink>
-    </Grid>
+            </Card.Body>
+          </Card>
+        </Grid>
+      </a>
+    </NextLink>
   );
 }

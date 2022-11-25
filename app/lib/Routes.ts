@@ -1,5 +1,6 @@
 export enum Routes {
   home = "/",
+  dashboard = "/dashboard",
   tips = "/tips",
   newTip = "/tips/new",
   fundTip = "/tips/fund",
@@ -29,6 +30,10 @@ export enum Routes {
   guideLearn = "/guide/learn",
   guideWallets = "/guide/wallets",
   admin = "/admin",
+  adminUsers = "/admin/users",
+  adminTips = "/admin/tips",
+  adminWithdrawals = "/admin/withdrawals",
+  adminWithdrawalErrors = "/admin/errors/withdrawals",
   about = "/about",
   login = "/signin",
   features = "/features",

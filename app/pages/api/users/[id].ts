@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import prisma from "lib/prismadb";
 import { getFallbackAvatarId } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -13,14 +14,10 @@ export default async function handler(
   res: NextApiResponse<User | PublicUser | never>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
-  }
 
-  const { id, publicProfile } = req.query;
+  const { id, publicProfile, forceAnonymous } = req.query;
 
-  if (session.user.id !== id || publicProfile === "true") {
+  if (session?.user.id !== id || publicProfile === "true") {
     if (req.method === "GET") {
       const user = await prisma.user.findUnique({
         where: {
@@ -39,28 +36,32 @@ export default async function handler(
       const sentTips = user.tipsSent.filter(
         (tip) => tip.status === "WITHDRAWN"
       );
-      const satsDonated = sentTips.length
+      const satsTipped = sentTips.length
         ? sentTips.map((tip) => tip.amount).reduce((a, b) => a + b)
         : 0;
 
       const publicUser: PublicUser = {
+        id: user.id,
         created: user.created,
         userType: user.userType,
-        ...(user.isAnonymous
+        ...(user.isAnonymous &&
+        (forceAnonymous === "true" || user.id !== session?.user.id)
           ? {
               name: null,
               avatarURL: null,
               twitterUsername: null,
+              lightningAddress: null,
             }
           : {
               name: user.name,
               avatarURL: user.avatarURL,
               twitterUsername: user.twitterUsername,
+              lightningAddress: user.lightningAddress,
             }),
         fallbackAvatarId: getFallbackAvatarId(user),
         numTipsSent: sentTips.length,
         numTipsReceived: user.tipsReceived.length,
-        satsDonated,
+        satsTipped: satsTipped,
       };
       return res.json(publicUser);
     }
@@ -103,7 +104,9 @@ async function updateUser(
       name: updateUserRequest.name ?? null,
       twitterUsername: updateUserRequest.twitterUsername ?? null,
       avatarURL: updateUserRequest.avatarURL ?? null,
+      lightningAddress: updateUserRequest.lightningAddress ?? null,
       isAnonymous: updateUserRequest.isAnonymous,
+      locale: updateUserRequest.locale ?? DEFAULT_LOCALE,
     },
   });
 

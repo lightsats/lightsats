@@ -8,7 +8,7 @@ type SatsPriceProps = {
 
 export function SatsPrice({ exchangeRate, fiat }: SatsPriceProps) {
   if (!exchangeRate) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
-  return <>{getSatsAmount(fiat, exchangeRate)} satoshis⚡</>;
+  return <>{getSatsAmount(fiat, exchangeRate)} sats</>;
 }

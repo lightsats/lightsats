@@ -1,14 +1,11 @@
-import { Collapse, CSS, Spacer } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
+import { Collapse, CSS, Spacer, Text } from "@nextui-org/react";
 import { ItemCard } from "components/items/ItemCard";
+import { useReceivedTips } from "hooks/useTips";
 import {
   getOtherItems,
   getRecommendedItems,
 } from "lib/items/getRecommendedItems";
-import { defaultFetcher } from "lib/swr";
-import { useSession } from "next-auth/react";
 import React from "react";
-import useSWR from "swr";
 import { ItemCategory } from "types/Item";
 
 type ItemsListProps = {
@@ -16,14 +13,10 @@ type ItemsListProps = {
   checkTippeeBalance: boolean;
 };
 
-const collapseGroupCss: CSS = { px: 0, width: "100%" };
+const collapseGroupCss: CSS = { width: "100%" };
 
 export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
-  const session = useSession();
-  const { data: tips } = useSWR<Tip[]>(
-    checkTippeeBalance && session ? `/api/tippee/tips` : null,
-    defaultFetcher
-  );
+  const { data: tips } = useReceivedTips();
 
   const receivedTips = React.useMemo(
     () =>
@@ -52,17 +45,26 @@ export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
 
   return (
     <>
-      {otherItems.length > 0 && <h4>Recommended Wallets</h4>}
-      <Collapse.Group css={collapseGroupCss}>
+      {otherItems.length > 0 && <h4>Recommended wallet</h4>}
+
+      <Collapse.Group shadow css={collapseGroupCss}>
         {recommendedItems.map((item) => (
-          <ItemCard key={item.name} item={item} />
+          <ItemCard
+            key={item.name}
+            item={item}
+            expanded={recommendedItems.length === 1}
+          />
         ))}
       </Collapse.Group>
+
       {otherItems.length > 0 && (
         <>
           <Spacer />
-          <h4>More Wallets</h4>
-          <Collapse.Group css={collapseGroupCss}>
+
+          <Text small b h4 transform="uppercase">
+            Other wallets
+          </Text>
+          <Collapse.Group shadow css={collapseGroupCss}>
             {otherItems.map((item) => (
               <ItemCard key={item.name} item={item} />
             ))}

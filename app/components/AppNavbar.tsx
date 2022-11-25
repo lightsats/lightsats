@@ -1,4 +1,5 @@
 import {
+  BookOpenIcon,
   ChartBarIcon,
   HomeIcon,
   InformationCircleIcon,
@@ -8,24 +9,21 @@ import {
   Avatar,
   Button,
   Dropdown,
-  Image,
   Link,
   Navbar,
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { User } from "@prisma/client";
-import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { LanguagePicker } from "components/LanguagePicker";
+import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
+import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import useSWR from "swr";
 
 const navbarCollapseToggleId = "app-navbar-collapse-toggle";
 
@@ -48,10 +46,7 @@ const closeNavbar = () => {
 
 export function AppNavbar() {
   const { data: session, status: sessionStatus } = useSession();
-  const { data: user } = useSWR<User>(
-    session ? `/api/users/${session.user.id}` : null,
-    defaultFetcher
-  );
+  const { data: user } = useUser();
   const router = useRouter();
   const hideNavbar = router.pathname.endsWith("/claim"); // || user?.inJourney;
 
@@ -59,11 +54,11 @@ export function AppNavbar() {
     () => [
       {
         name: "Home",
-        href: Routes.home,
+        href: !user ? Routes.home : Routes.dashboard,
         icon: <HomeIcon />,
       },
       {
-        name: "Scoreboard",
+        name: "Leaderboard",
         href: Routes.scoreboard,
         icon: <ChartBarIcon />,
       },
@@ -81,16 +76,18 @@ export function AppNavbar() {
     [user]
   );
 
-  if (sessionStatus === "loading" || (session && !user)) {
-    return null;
-  }
+  const isLoading = sessionStatus === "loading" || (session && !user);
 
   return (
     <Navbar
       variant="sticky"
-      css={{ backgroundColor: "$white", $$navbarBackgroundColor: "$white" }}
+      css={{
+        backgroundColor: "$white",
+        $$navbarBackgroundColor: "$white",
+        visibility: isLoading ? "hidden" : undefined,
+      }}
     >
-      <Navbar.Content>
+      <Navbar.Content activeColor="primary">
         {!hideNavbar && (
           <Navbar.Toggle
             aria-label="toggle navigation"
@@ -98,7 +95,7 @@ export function AppNavbar() {
           />
         )}
         <Navbar.Brand>
-          <NextLink href={Routes.home}>
+          <NextLink href={!user ? Routes.home : Routes.dashboard}>
             <a
               onClick={
                 hideNavbar
@@ -108,7 +105,12 @@ export function AppNavbar() {
                   : closeNavbar
               }
             >
-              <Image alt="logo" src="/images/logo.svg" width={150} />
+              <NextImage
+                alt="logo"
+                src="/images/logo.svg"
+                width={150}
+                height={150}
+              />
             </a>
           </NextLink>
         </Navbar.Brand>
@@ -120,15 +122,28 @@ export function AppNavbar() {
           </>
         )}
         {user?.userType === "tipper" && !hideNavbar && (
-          <Navbar.Item hideIn="xs">
-            <NextLink href={Routes.newTip}>
-              <a>
-                <Button auto size="sm">
-                  Create new tip
-                </Button>
-              </a>
-            </NextLink>
-          </Navbar.Item>
+          <>
+            <Navbar.Link
+              hideIn="xs"
+              href={Routes.guide}
+              isActive={router.route.startsWith(Routes.guide)}
+            >
+              <Icon>
+                <BookOpenIcon />
+              </Icon>
+              &nbsp;Guide
+            </Navbar.Link>
+            <Navbar.Link
+              hideIn="xs"
+              href={Routes.scoreboard}
+              isActive={router.route === Routes.scoreboard}
+            >
+              <Icon>
+                <ChartBarIcon></ChartBarIcon>
+              </Icon>
+              &nbsp;Leaderboard
+            </Navbar.Link>
+          </>
         )}
       </Navbar.Content>
 
@@ -145,7 +160,7 @@ export function AppNavbar() {
                   <Avatar
                     bordered
                     as="button"
-                    color="secondary"
+                    color="primary"
                     size="md"
                     src={getUserAvatarUrl(user)}
                   />
@@ -155,19 +170,6 @@ export function AppNavbar() {
                 aria-label="User menu actions"
                 disabledKeys={["language"]}
               >
-                <Dropdown.Item key="language">
-                  <FlexBox
-                    style={{
-                      flexDirection: "row",
-
-                      width: "100%",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    Language&nbsp;
-                    <LanguagePicker />
-                  </FlexBox>
-                </Dropdown.Item>
                 <Dropdown.Item key="profile">
                   <NextLink href={Routes.profile} passHref>
                     <a>
@@ -178,7 +180,7 @@ export function AppNavbar() {
                 <Dropdown.Item key="logout" withDivider>
                   <NextLink href={Routes.logout} passHref>
                     <a>
-                      <Text color="error">Log Out</Text>
+                      <Text color="error">Log out</Text>
                     </a>
                   </NextLink>
                 </Dropdown.Item>
@@ -193,9 +195,7 @@ export function AppNavbar() {
             <Navbar.Item hideIn="xs">
               <NextLink href={Routes.login} passHref>
                 <a>
-                  <Button auto flat>
-                    Get started
-                  </Button>
+                  <Button auto>Get started</Button>
                 </a>
               </NextLink>
             </Navbar.Item>

@@ -1,13 +1,16 @@
 import {
   LnbitsWallet,
   Tip,
+  User,
   WithdrawalFlow,
   WithdrawalMethod,
 } from "@prisma/client";
 import { deleteUnusedWithdrawalLinks } from "lib/deleteStaleWithdrawalLinks";
+import { sendEmail } from "lib/email/sendEmail";
 import { createInvoice } from "lib/lnbits/createInvoice";
 import { payInvoice } from "lib/lnbits/payInvoice";
 import prisma from "lib/prismadb";
+import { getTipUrl } from "lib/utils";
 
 export async function completeWithdrawal(
   userId: string,
@@ -16,25 +19,12 @@ export async function completeWithdrawal(
   withdrawalInvoiceId: string,
   withdrawalInvoice: string,
   withdrawalMethod: WithdrawalMethod,
-  tips: Tip[],
-  withdrawalLinkId: string | undefined
+  tips: (Tip & {
+    tipper: User;
+  })[],
+  deleteUsedWithdrawalLinks: boolean
 ) {
-  if (withdrawalLinkId) {
-    try {
-      await prisma.withdrawalLink.update({
-        where: {
-          id: withdrawalLinkId,
-        },
-        data: {
-          used: true,
-        },
-      });
-    } catch (error) {
-      console.error(
-        "Failed to update withdrawal link " + withdrawalLinkId,
-        error
-      );
-    }
+  if (deleteUsedWithdrawalLinks) {
     try {
       await deleteUnusedWithdrawalLinks(userId, false);
     } catch (error) {
@@ -46,20 +36,20 @@ export async function completeWithdrawal(
     Math.abs(possiblyNegativeOutboundFeeMsats) / 1000
   );
 
+  if (!process.env.LNBITS_API_KEY) {
+    throw new Error("No LNBITS_API_KEY provided");
+  }
+  if (!userWallet.userId) {
+    throw new Error("User wallet has no user ID: " + userWallet.id);
+  }
+
+  if (!tips.length) {
+    throw new Error("Cannot complete withdrawal without any tips");
+  }
+  const withdrawalFlow: WithdrawalFlow =
+    tips[0].status === "CLAIMED" ? "tippee" : "tipper";
+
   try {
-    if (!process.env.LNBITS_API_KEY) {
-      throw new Error("No LNBITS_API_KEY provided");
-    }
-    if (!userWallet.userId) {
-      throw new Error("User wallet has no user ID: " + userWallet.id);
-    }
-
-    if (!tips.length) {
-      throw new Error("Cannot complete withdrawal without any tips");
-    }
-    const withdrawalFlow: WithdrawalFlow =
-      tips[0].status === "CLAIMED" ? "tippee" : "tipper";
-
     await prisma.tip.updateMany({
       where: {
         id: {
@@ -85,7 +75,7 @@ export async function completeWithdrawal(
       },
     });
   } catch (error) {
-    console.error("Failed to compelte withdrawal", error);
+    console.error("Failed to complete withdrawal", error);
     await prisma.withdrawalError.create({
       data: {
         message:
@@ -153,5 +143,26 @@ export async function completeWithdrawal(
         userId: userId,
       },
     });
+  }
+  if (withdrawalFlow === "tippee") {
+    for (const tip of tips) {
+      try {
+        if (tip.tipper.email) {
+          await sendEmail({
+            to: tip.tipper.email,
+            subject: "Your recipient has withdrawn their sats!",
+            html: `Good job! Your recipient is one step closer to being 🍊💊. See your tip: <a href="${getTipUrl(
+              tip,
+              tip.tipper.locale
+            )}">click here</a>`,
+            from: `Lightsats <${process.env.EMAIL_FROM}>`,
+          });
+        }
+      } catch (error) {
+        console.error(
+          "Failed to send withdrawn notification email. Tip: " + tip.id
+        );
+      }
+    }
   }
 }

@@ -3,4 +3,6 @@ export type UpdateUserRequest = {
   twitterUsername: string;
   avatarURL: string;
   isAnonymous: boolean;
+  lightningAddress: string;
+  locale: string;
 };

@@ -4,10 +4,14 @@ export const appName = "lightsats";
 export const SATS_TO_BTC = 100000000;
 export const DEFAULT_FIAT_CURRENCY = "USD";
 export const MIN_TIP_SATS = 1;
+export const MAX_TIP_SATS = 1000000;
 export const MAX_USER_NAME_LENGTH = 50;
-export const DEFAULT_NAME = "anon";
+export const DEFAULT_NAME = "Anon";
 export const FEE_PERCENT = 1;
 export const MINIMUM_FEE_SATS = 10;
+export const TIP_NUM_SMS_TOKENS = 3;
+export const LOGIN_LINK_EXPIRATION_DAYS = 30;
+export const DEFAULT_PAGE_SIZE = 10;
 
 export const refundableTipStatuses: TipStatus[] = [
   "UNCLAIMED",

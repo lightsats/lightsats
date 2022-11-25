@@ -1,34 +1,40 @@
-import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
-import { Tip, TipStatus } from "@prisma/client";
-import { BackButton } from "components/BackButton";
+import {
+  Button,
+  Card,
+  Link,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
+import { TipStatus } from "@prisma/client";
 import { ConfettiContainer } from "components/ConfettiContainer";
+import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTracker";
 import { PayTipInvoice } from "components/tipper/TipPage/PayTipInvoice";
 import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
-import { notifyError, notifySuccess } from "components/Toasts";
-import { formatDistance, isAfter } from "date-fns";
+import { useScoreboardPosition } from "hooks/useScoreboardPosition";
+import { useTip } from "hooks/useTip";
 import { expirableTipStatuses, refundableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
-import { nth } from "lib/utils";
+import { hasTipExpired, nth } from "lib/utils";
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
-import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
-import { Scoreboard } from "types/Scoreboard";
-import { requestProvider } from "webln";
-
-// poll tip status once per second to receive updates TODO: consider using websockets
-const useTipConfig: SWRConfiguration = { refreshInterval: 1000 };
+import toast from "react-hot-toast";
+import { useSWRConfig } from "swr";
 
 const TipPage: NextPage = () => {
+  const { data: session, status: sessionStatus } = useSession();
   const router = useRouter();
   const { id } = router.query;
   const [prevTipStatus, setPrevTipStatus] = React.useState<
     TipStatus | undefined
   >();
+  const [skipPersonalize, setSkipPersonalize] = React.useState(false);
 
   const { mutate } = useSWRConfig();
   const mutateTips = React.useCallback(
@@ -36,58 +42,39 @@ const TipPage: NextPage = () => {
     [mutate]
   );
 
-  const { data: tip } = useSWR<Tip>(
-    id ? `/api/tipper/tips/${id}` : null,
-    defaultFetcher,
-    useTipConfig
-  );
+  const { data: tip } = useTip(id as string, true);
+
+  React.useEffect(() => {
+    // tipper might have accidentally linked the current page
+    // navigate to the claim page
+    // TODO: support claiming and managing tip on the same page
+    // TODO: add redirect or fallback from the old claim page to this one
+    if (sessionStatus === "unauthenticated") {
+      router.push(`${Routes.tips}/${id}/claim`);
+    }
+  }, [id, router, sessionStatus]);
 
   const tipStatus = tip?.status;
-  const tipInvoice = tip?.invoice;
 
   React.useEffect(() => {
     if (prevTipStatus === "UNFUNDED" && tipStatus === "UNCLAIMED") {
-      notifySuccess("Tip funded");
+      toast.success("Tip funded");
     }
     setPrevTipStatus(tipStatus);
   }, [prevTipStatus, tipStatus]);
 
-  const hasExpired =
-    tip &&
-    expirableTipStatuses.indexOf(tip.status) >= 0 &&
-    isAfter(new Date(), new Date(tip.expiry));
+  const hasExpired = tip && hasTipExpired(tip);
 
-  React.useEffect(() => {
-    if (tipStatus === "UNFUNDED" && !hasExpired && tipInvoice) {
-      (async () => {
-        try {
-          console.log("Launching webln");
-          const webln = await requestProvider();
-          webln.sendPayment(tipInvoice);
-        } catch (error) {
-          console.error("Failed to load webln", error);
-        }
-      })();
-    }
-  }, [tipStatus, tipInvoice, hasExpired]);
-
-  const { data: scoreboard } = useSWR<Scoreboard>(
-    tip && tip.status === "WITHDRAWN" ? `/api/scoreboard` : null,
-    defaultFetcher
-  );
-
-  const placing = scoreboard
-    ? scoreboard.entries.findIndex((entry) => entry.isMe) + 1
-    : undefined;
+  const placing = useScoreboardPosition(session?.user.id);
 
   const deleteTip = React.useCallback(() => {
     (async () => {
-      router.push(Routes.home);
+      router.push(Routes.dashboard);
       const result = await fetch(`/api/tipper/tips/${id}`, {
         method: "DELETE",
       });
       if (!result.ok) {
-        notifyError("Failed to delete tip: " + result.statusText);
+        toast.error("Failed to delete tip: " + result.statusText);
       } else {
         mutateTips();
       }
@@ -96,12 +83,12 @@ const TipPage: NextPage = () => {
 
   const reclaimTip = React.useCallback(() => {
     (async () => {
-      router.push(Routes.home);
+      router.push(Routes.dashboard);
       const result = await fetch(`/api/tipper/tips/${id}/reclaim`, {
         method: "POST",
       });
       if (!result.ok) {
-        notifyError("Failed to reclaim tip: " + result.statusText);
+        toast.error("Failed to reclaim tip: " + result.statusText);
       } else {
         mutateTips();
       }
@@ -109,6 +96,64 @@ const TipPage: NextPage = () => {
   }, [id, mutateTips, router]);
 
   if (tip) {
+    if (
+      !skipPersonalize &&
+      !hasExpired &&
+      expirableTipStatuses.indexOf(tip.status) > -1 &&
+      !tip.note
+    ) {
+      return (
+        <>
+          <ClaimProgressTracker tipId={tip.id} />
+          <Spacer />
+          <Card css={{ dropShadow: "$sm", background: "$primary" }}>
+            <Card.Body>
+              <Row justify="center">
+                <Text h2 css={{ color: "$white" }}>
+                  Personalize your tip
+                </Text>
+              </Row>
+              <Row justify="center">
+                <NextImage
+                  src="/images/icons/zap.png"
+                  width={150}
+                  height={150}
+                  alt="zap"
+                />
+              </Row>
+              <Row justify="center">
+                <Text css={{ textAlign: "center", color: "$white" }}>
+                  {
+                    "Provide extra details to improve your recipient's onboarding experience"
+                  }
+                </Text>
+              </Row>
+              <Spacer />
+              <Row justify="center">
+                <NextLink href={`${Routes.tips}/${tip.id}/edit`} passHref>
+                  <a>
+                    <Button size="lg" color="secondary">
+                      Personalize tip🪄
+                    </Button>
+                  </a>
+                </NextLink>
+              </Row>
+              <Spacer />
+              <Row justify="center">
+                <Button
+                  color="secondary"
+                  size="sm"
+                  bordered
+                  onClick={() => setSkipPersonalize(true)}
+                >
+                  Skip for now
+                </Button>
+              </Row>
+            </Card.Body>
+          </Card>
+        </>
+      );
+    }
     return (
       <>
         {!hasExpired ? (
@@ -117,8 +162,7 @@ const TipPage: NextPage = () => {
           </>
         ) : (
           <>
-            <Text h2>Oh no! 😔</Text>
-            <Text color="error">This tip has expired.</Text>
+            <Text h2>Oh no, this tip has expired 😔</Text>
           </>
         )}
         <Spacer />
@@ -127,9 +171,23 @@ const TipPage: NextPage = () => {
         {!hasExpired && (
           <>
             {tip.status === "UNFUNDED" && tip.invoice && (
-              <PayTipInvoice invoice={tip.invoice} />
+              <>
+                <PayTipInvoice invoice={tip.invoice} />
+                <Spacer />
+              </>
             )}
             {tip.status === "UNCLAIMED" && <ShareUnclaimedTip tip={tip} />}
+          </>
+        )}
+
+        {expirableTipStatuses.indexOf(tip.status) > -1 && (
+          <>
+            <NextLink href={`${Routes.tips}/${tip.id}/edit`} passHref>
+              <a>
+                <Button>Edit Tip</Button>
+              </a>
+            </NextLink>
+            <Spacer />
           </>
         )}
 
@@ -164,7 +222,7 @@ const TipPage: NextPage = () => {
                 <Spacer />
               </>
             ) : (
-              <Loading type="spinner" color="currentColor" size="sm" />
+              <Loading color="currentColor" size="sm" />
             )}
             <Spacer />
             <NextLink href={Routes.newTip} passHref>
@@ -172,17 +230,6 @@ const TipPage: NextPage = () => {
                 <Button>Create another tip</Button>
               </a>
             </NextLink>
-
-            <Spacer />
-          </>
-        )}
-
-        <Spacer y={4} />
-        {!hasExpired && expirableTipStatuses.indexOf(tip.status) > -1 && (
-          <>
-            <Text small>
-              Expires in {formatDistance(new Date(tip.expiry), Date.now())}
-            </Text>
             <Spacer />
           </>
         )}
@@ -191,25 +238,24 @@ const TipPage: NextPage = () => {
             <Button onClick={deleteTip} color="error">
               Delete Tip
             </Button>
-            <Spacer />
           </>
         )}
         {refundableTipStatuses.indexOf(tip.status) >= 0 && (
           <>
             <Button onClick={reclaimTip} color="error">
-              Reclaim Tip
+              Reclaim tip
             </Button>
-            <Spacer />
           </>
         )}
-        <BackButton />
       </>
     );
   } else {
     return (
       <>
-        <Loading type="spinner" color="currentColor" size="lg" />
-        <Text>Loading invoice</Text>
+        <Spacer y={4} />
+        <Loading color="currentColor" size="lg">
+          Loading...
+        </Loading>
       </>
     );
   }

@@ -4,6 +4,7 @@ body,
 #__next,
 div[data-overlay-container="true"] {
   min-height: 100%;
+  height: 100%;
 }
 
 /* Fix Nextui button text showing through nav bug https://github.com/nextui-org/nextui/issues/724 */
@@ -13,16 +14,4 @@ div[data-overlay-container="true"] {
 
 input {
   font-weight: 500;
-}
-
-@keyframes toast {
-  0% {
-    opacity: 0;
-  }
-  25% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
 }

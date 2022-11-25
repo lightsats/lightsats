@@ -1,26 +1,29 @@
 import { Link, Row, Spacer, Text } from "@nextui-org/react";
-import { LightningLoginButton } from "components/LightningLoginButton";
 import { useTranslation } from "next-i18next";
 import EmailSignIn from "pages/auth/signin/email";
+import LnurlAuthSignIn from "pages/auth/signin/lnurl";
 import PhoneSignIn from "pages/auth/signin/phone";
 import { useState } from "react";
+import { LoginMethod, loginMethods } from "types/LoginMethod";
 
 type LoginProps = {
   instructionsText?(loginMethod: LoginMethod): string;
   submitText?: string;
   callbackUrl?: string;
+  tipId?: string;
+  defaultLoginMethod: LoginMethod;
 };
-
-const loginMethods = ["phone", "email", "lightning"] as const;
-type LoginMethod = typeof loginMethods[number];
 
 export function Login({
   submitText,
   callbackUrl,
   instructionsText,
+  tipId,
+  defaultLoginMethod,
 }: LoginProps) {
   const { t } = useTranslation(["claim", "common"]);
-  const [loginMethod, setLoginMethod] = useState<LoginMethod>("phone");
+  const [loginMethod, setLoginMethod] =
+    useState<LoginMethod>(defaultLoginMethod);
 
   return (
     <>
@@ -31,19 +34,22 @@ export function Login({
         </>
       )}
       {loginMethod === "phone" && (
-        <PhoneSignIn callbackUrl={callbackUrl} submitText={submitText} />
+        <PhoneSignIn
+          callbackUrl={callbackUrl}
+          submitText={submitText}
+          tipId={tipId}
+        />
       )}
       {loginMethod === "email" && (
         <EmailSignIn callbackUrl={callbackUrl} submitText={submitText} />
       )}
       {loginMethod === "lightning" && (
         <>
-          <Spacer />
-          <LightningLoginButton callbackUrl={callbackUrl} />
+          <LnurlAuthSignIn callbackUrl={callbackUrl} />
         </>
       )}
 
-      <Spacer y={1} />
+      <Spacer />
       <Row justify="center" align="center">
         <Text>Use &nbsp;</Text>
         {loginMethods
@@ -58,7 +64,7 @@ export function Login({
               </>
             );
           })}
-        <Text></Text>
+        <Text>&nbsp; instead</Text>
       </Row>
     </>
   );

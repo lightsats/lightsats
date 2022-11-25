@@ -3,6 +3,7 @@ import { Tip, User } from "@prisma/client";
 // TODO: add tipperName, expiry etc.
 export type PublicTip = Pick<
   Tip,
+  | "id"
   | "amount"
   | "tipperId"
   | "tippeeId"
@@ -13,6 +14,7 @@ export type PublicTip = Pick<
   | "tippeeName"
   | "claimLinkViewed"
   | "created"
+  | "tippeeLocale"
 > & {
   hasClaimed: boolean;
   tipper: Pick<User, "name" | "twitterUsername" | "avatarURL"> & {

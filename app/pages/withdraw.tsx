@@ -1,5 +1,8 @@
+import { ClipboardDocumentIcon, WalletIcon } from "@heroicons/react/24/solid";
 import {
   Button,
+  Card,
+  Collapse,
   Input,
   Link,
   Loading,
@@ -7,28 +10,26 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { Tip, WithdrawalFlow } from "@prisma/client";
+import { WithdrawalFlow } from "@prisma/client";
+import { Alert } from "components/Alert";
+import { FlexBox } from "components/FlexBox";
+import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
-import { notifyError, notifySuccess } from "components/Toasts";
 import copy from "copy-to-clipboard";
-import { formatDistance, isBefore } from "date-fns";
-import { DEFAULT_NAME } from "lib/constants";
+import { isBefore } from "date-fns";
+import { useTips } from "hooks/useTips";
 import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
-import useSWR, { SWRConfiguration } from "swr";
 import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
-import { PublicTip } from "types/PublicTip";
 import { requestProvider } from "webln";
-
-const useTipsConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 const Withdraw: NextPage = () => {
   const { data: session } = useSession();
@@ -36,11 +37,7 @@ const Withdraw: NextPage = () => {
   const flow = (router.query["flow"] as WithdrawalFlow) ?? "tippee";
 
   // poll to get updated statuses after withdrawing
-  const { data: tips } = useSWR<Tip[]>(
-    session ? `/api/${flow}/tips` : null,
-    defaultFetcher,
-    useTipsConfig
-  );
+  const { data: tips } = useTips(flow, true);
 
   const [invoiceFieldValue, setInvoiceFieldValue] = React.useState("");
   const [withdrawalLinkLnurl, setWithdrawalLinkLnurl] = React.useState("");
@@ -63,16 +60,16 @@ const Withdraw: NextPage = () => {
             headers: { "Content-Type": "application/json" },
           });
           if (result.ok) {
-            notifySuccess("Funds withdrawn!");
+            toast.success("Funds withdrawn!");
           } else {
             const body = await result.text();
-            notifyError(
+            toast.error(
               "Failed to withdraw: " + result.statusText + `\n${body}`
             );
           }
         } catch (error) {
           console.error(error);
-          notifyError(
+          toast.error(
             "Withdrawal failed: " +
               JSON.stringify(error, Object.getOwnPropertyNames(error)) +
               ". Please try again."
@@ -103,14 +100,14 @@ const Withdraw: NextPage = () => {
     [flow, tips]
   );
 
-  const nextExpiry =
-    flow === "tippee" &&
-    withdrawableTips?.find(
-      (tip) =>
-        !withdrawableTips.some((other) =>
-          isBefore(new Date(other.expiry), new Date(tip.expiry))
-        )
-    )?.expiry;
+  // const nextExpiry =
+  //   flow === "tippee" &&
+  //   withdrawableTips?.find(
+  //     (tip) =>
+  //       !withdrawableTips.some((other) =>
+  //         isBefore(new Date(other.expiry), new Date(tip.expiry))
+  //       )
+  //   )?.expiry;
 
   const tipIds = React.useMemo(
     () =>
@@ -149,7 +146,7 @@ const Withdraw: NextPage = () => {
           setWithdrawalLinkLnurl(await result.json());
         } else {
           const body = await result.text();
-          notifyError(
+          toast.error(
             "Failed to create withdraw link: " + result.statusText + `\n${body}`
           );
         }
@@ -179,7 +176,7 @@ const Withdraw: NextPage = () => {
   const copyWithdrawLinkUrl = React.useCallback(() => {
     if (withdrawalLinkLnurl) {
       copy(withdrawalLinkLnurl);
-      notifySuccess("Copied to clipboard");
+      toast.success("Copied to clipboard");
     }
   }, [withdrawalLinkLnurl]);
 
@@ -201,96 +198,129 @@ const Withdraw: NextPage = () => {
             } funds to withdraw right now.`}
           </Text>
           <Spacer />
-          <NextLink href={Routes.home} passHref>
+          <NextLink href={Routes.dashboard} passHref>
             <Link>Home</Link>
           </NextLink>
         </>
       ) : (
-        <>
-          <Text>
-            You have {availableBalance} reclaimed satoshis⚡ ready to withdraw.
-          </Text>
-
-          <Spacer />
+        <div style={{ maxWidth: "100%" }}>
+          <Text h3>Ready to withdraw your bitcoin?</Text>
           {withdrawalLinkLnurl ? (
             <>
               <Text>
-                Scan, tap or copy the below link into your lightning wallet to
-                Withdraw.
+                Scan, tap or copy the below link into your bitcoin wallet to
+                withdraw them.
               </Text>
               <Spacer />
-              <Loading type="points" color="currentColor" size="sm" />
-              <Spacer />
-              <NextLink href={`lightning:${withdrawalLinkLnurl}`}>
-                <a>
-                  <QRCode value={withdrawalLinkLnurl} />
-                </a>
-              </NextLink>
-              <Spacer />
-              <Button onClick={copyWithdrawLinkUrl}>Copy</Button>
+              <FlexBox>
+                <Card
+                  color="primary"
+                  css={{
+                    dropShadow: "$sm",
+                  }}
+                >
+                  <Card.Header>
+                    <Row justify="center">
+                      <Text>
+                        Withdraw <strong>{availableBalance} sats</strong> to
+                        your wallet
+                      </Text>
+                    </Row>
+                  </Card.Header>
+                  <Card.Divider />
+                  <Card.Body>
+                    <FlexBox style={{ alignItems: "center" }}>
+                      <NextLink href={`lightning:${withdrawalLinkLnurl}`}>
+                        <a>
+                          <QRCode value={withdrawalLinkLnurl} />
+                        </a>
+                      </NextLink>
+                    </FlexBox>
+                  </Card.Body>
+                  <Card.Divider />
+                  <Card.Footer>
+                    <Row justify="space-between">
+                      <Button
+                        auto
+                        color="secondary"
+                        onClick={copyWithdrawLinkUrl}
+                      >
+                        <Icon>
+                          <ClipboardDocumentIcon />
+                        </Icon>
+                        Copy
+                      </Button>
+                      <NextLink href={`lightning:${withdrawalLinkLnurl}`}>
+                        <a>
+                          <Button auto>
+                            <Icon>
+                              <WalletIcon />
+                            </Icon>
+                            &nbsp; Open in wallet
+                          </Button>
+                        </a>
+                      </NextLink>
+                    </Row>
+                  </Card.Footer>
+                </Card>
+              </FlexBox>
             </>
           ) : (
             <>
-              <Loading type="spinner" color="currentColor" size="sm" />
+              <Loading />
             </>
           )}
-          <Spacer y={4} />
-          <Text>Manual withdrawal</Text>
-          <Text>
-            Create an invoice for{" "}
-            <strong>exactly {availableBalance} sats</strong> and paste the
-            invoice into the field below.
-          </Text>
-          <Text color="warning">
-            If the invoice amount does not match your available balance, the
-            transaction will fail.
-          </Text>
-          <Spacer />
-          <Input
-            label="Lightning Invoice"
-            fullWidth
-            value={invoiceFieldValue}
-            onChange={(event) => setInvoiceFieldValue(event.target.value)}
-          />
-          <Spacer />
-          <Button
-            onClick={submitForm}
-            disabled={isSubmitting || !invoiceFieldValue}
-          >
-            {isSubmitting ? (
-              <Loading type="points" color="currentColor" size="sm" />
-            ) : (
-              <>Withdraw</>
-            )}
-          </Button>
-          {nextExpiry && (
-            <>
-              <Spacer y={0.5} />
-              <Text small color="error">
-                Expiring in {formatDistance(new Date(nextExpiry), Date.now())}
+          <Spacer y={1} />
+          <Collapse shadow title={<Text b>Manual withdrawal</Text>}>
+            <Text>
+              Create an invoice for exactly&nbsp;
+              <strong>{availableBalance} sats</strong> and paste the invoice
+              into the field below.
+            </Text>
+            <Spacer />
+            <Alert>
+              <Text small>
+                If the invoice amount does not match your available balance, the
+                transaction will fail.
               </Text>
-            </>
-          )}
-        </>
+            </Alert>
+            <Text color="warning"></Text>
+            <Spacer />
+            <Input
+              label="Lightning Invoice"
+              fullWidth
+              value={invoiceFieldValue}
+              onChange={(event) => setInvoiceFieldValue(event.target.value)}
+            />
+            <Spacer />
+            <Button
+              onClick={submitForm}
+              disabled={isSubmitting || !invoiceFieldValue}
+            >
+              {isSubmitting ? (
+                <Loading color="currentColor" size="sm" />
+              ) : (
+                <>Withdraw</>
+              )}
+            </Button>
+          </Collapse>
+        </div>
       )}
       {tipIds && <Spacer />}
-      {tipIds?.map((tipId) => (
-        <ContactTipper key={tipId} tipId={tipId} />
-      ))}
     </>
   );
 };
 
 export default Withdraw;
 
-// this is inefficient as it does 1 call per tipper, but most users will probably only have one tipper
+/*// this is inefficient as it does 1 call per tipper, but most users will probably only have one tipper
 function ContactTipper({ tipId: tipperId }: { tipId: string }) {
   const { data: publicTip } = useSWR<PublicTip>(
     `/api/tippee/tips/${tipperId}`,
     defaultFetcher
   );
   if (!publicTip) {
-    return <Loading type="spinner" color="currentColor" size="sm" />;
+    return <Loading color="currentColor" size="sm" />;
   }
   return (
     <Row justify="center" align="center">
@@ -311,4 +341,4 @@ function ContactTipper({ tipId: tipperId }: { tipId: string }) {
       )}
     </Row>
   );
-}
+}*/

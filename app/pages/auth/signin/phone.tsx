@@ -1,5 +1,7 @@
 import {
   Button,
+  Card,
+  Divider,
   FormElement,
   Input,
   Loading,
@@ -7,7 +9,8 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { notifyError } from "components/Toasts";
+import { StatusCodes } from "http-status-codes";
+import { getStaticProps } from "lib/i18n/i18next";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -15,6 +18,7 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import PhoneInput, {
   Country,
   DefaultInputComponentProps,
@@ -38,6 +42,7 @@ type PhoneFormData = {
 type PhoneSignInProps = {
   callbackUrl?: string;
   submitText?: React.ReactNode;
+  tipId?: string;
 };
 
 type MyIp = { country: Country; ip: string };
@@ -45,6 +50,7 @@ type MyIp = { country: Country; ip: string };
 export default function PhoneSignIn({
   callbackUrl,
   submitText,
+  tipId,
 }: PhoneSignInProps) {
   const { data: myIp } = useSWR<MyIp>("https://api.country.is", defaultFetcher);
   const { t } = useTranslation("common");
@@ -52,9 +58,9 @@ export default function PhoneSignIn({
   const [isSubmitting, setSubmitting] = React.useState(false);
   const router = useRouter();
   const callbackUrlWithFallback =
-    callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
+    callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
 
-  console.log("callbackUrlWithFallback", callbackUrlWithFallback);
+  // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
 
   React.useEffect(() => {
     setFocus("phone");
@@ -66,7 +72,7 @@ export default function PhoneSignIn({
         return;
       }
       if (!data.phone) {
-        notifyError("Please enter a valid phone address");
+        toast.error("Please enter a valid phone number");
         return;
       }
       setSubmitting(true);
@@ -76,6 +82,7 @@ export default function PhoneSignIn({
             phoneNumber: data.phone,
             callbackUrl: callbackUrlWithFallback,
             locale: router.locale ?? DEFAULT_LOCALE,
+            tipId,
           };
 
           const result = await fetch(`/api/auth/2fa/send`, {
@@ -87,57 +94,71 @@ export default function PhoneSignIn({
             console.error(
               "Failed to create phone login link: " + result.status
             );
-            notifyError("Something went wrong. Please try again.");
+            if (result.status === StatusCodes.NOT_FOUND) {
+              toast.error(
+                "It looks like an account doesn't exist for this phone number. Please try email or lightning login instead."
+              );
+            } else {
+              toast.error("Something went wrong. Please try again.");
+            }
+          } else {
+            router.push(Routes.checkPhone);
           }
-          router.push(Routes.checkPhone);
         } catch (error) {
           console.error(error);
-          notifyError("login failed");
+          toast.error("Login failed");
         }
 
         setSubmitting(false);
       })();
     },
-    [callbackUrlWithFallback, isSubmitting, router]
+    [callbackUrlWithFallback, isSubmitting, router, tipId]
   );
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-        <Row>
-          <Text>{t("phone")}</Text>
-        </Row>
-        <Controller
-          name="phone"
-          control={control}
-          render={({ field }) => (
-            <PhoneInput
-              {...field}
-              placeholder="Enter phone number"
-              defaultCountry={myIp?.country}
-              inputComponent={ForwardedPhoneInput}
-              style={{
-                width: "100%",
-              }}
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Header>
+          <Row justify="center">
+            <Text css={{ fontWeight: "bold" }}>{t("phone")}</Text>
+          </Row>
+        </Card.Header>
+        <Divider />
+        <Card.Body>
+          <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <PhoneInput
+                  {...field}
+                  placeholder="Enter phone number"
+                  defaultCountry={myIp?.country}
+                  inputComponent={ForwardedPhoneInput}
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              )}
             />
-          )}
-        />
 
-        <Spacer />
-        <Button
-          css={{ width: "100%" }}
-          color="primary"
-          type="submit"
-          auto
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <Loading type="points" color="currentColor" size="sm" />
-          ) : (
-            <>{submitText ?? "Login"}</>
-          )}
-        </Button>
-      </form>
+            <Spacer />
+            <Button
+              css={{ width: "100%" }}
+              color="primary"
+              type="submit"
+              auto
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <Loading color="currentColor" size="sm" />
+              ) : (
+                <>{submitText ?? "Login"}</>
+              )}
+            </Button>
+          </form>
+        </Card.Body>
+      </Card>
     </>
   );
 }
@@ -160,3 +181,5 @@ const ForwardedPhoneInput = React.forwardRef<
   );
 });
 ForwardedPhoneInput.displayName = "ForwardedInput";
+
+export { getStaticProps };

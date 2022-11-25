@@ -1,25 +1,20 @@
-import { Avatar, Loading, Row, Spacer, Text } from "@nextui-org/react";
-import { BackButton } from "components/BackButton";
-import { FiatPrice } from "components/FiatPrice";
+import { Collapse, Loading, Spacer, Text } from "@nextui-org/react";
+import { ClaimedTipCard } from "components/ClaimedTipCard";
+import { DashboardButton } from "components/HomeButton";
 import { Login } from "components/Login";
-import { notifyError } from "components/Toasts";
-import { formatDistance, isAfter } from "date-fns";
-import { useDateFnsLocale } from "hooks/useDateFnsLocale";
-
-import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
-import { getAvatarUrl, getCurrentUrl } from "lib/utils";
+import { getCurrentUrl, hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+import toast from "react-hot-toast";
 import useSWR from "swr";
 import { ClaimTipRequest } from "types/ClaimTipRequest";
-import { ExchangeRates } from "types/ExchangeRates";
 import { PublicTip } from "types/PublicTip";
 
 const ClaimTipPage: NextPage = () => {
@@ -42,7 +37,8 @@ const ClaimTipPage: NextPage = () => {
     if (
       publicTip &&
       !publicTip.claimLinkViewed &&
-      (!session || session.user.id !== publicTip.tipperId)
+      ((!session && sessionStatus !== "loading") ||
+        (session && session.user.id !== publicTip.tipperId))
     ) {
       (async () => {
         const result = await fetch(`/api/tippee/tips/${id}/view`, {
@@ -54,12 +50,9 @@ const ClaimTipPage: NextPage = () => {
         }
       })();
     }
-  }, [id, publicTip, session]);
+  }, [id, publicTip, session, sessionStatus]);
 
-  const hasExpired =
-    publicTip &&
-    expirableTipStatuses.indexOf(publicTip.status) >= 0 &&
-    isAfter(new Date(), new Date(publicTip.expiry));
+  const hasExpired = publicTip && hasTipExpired(publicTip);
 
   const canClaim =
     publicTip &&
@@ -75,11 +68,12 @@ const ClaimTipPage: NextPage = () => {
       publicTip &&
       publicTip.status === "CLAIMED" &&
       publicTip.tippeeId === session.user.id &&
-      !isClaiming
+      !isClaiming &&
+      !hasExpired
     ) {
       router.push(destinationRoute);
     }
-  }, [destinationRoute, isClaiming, publicTip, router, session]);
+  }, [destinationRoute, isClaiming, publicTip, router, session, hasExpired]);
 
   // autoclaim after login
   React.useEffect(() => {
@@ -93,7 +87,7 @@ const ClaimTipPage: NextPage = () => {
           headers: { "Content-Type": "application/json" },
         });
         if (!result.ok) {
-          notifyError(
+          toast.error(
             "Failed to claim tip: " +
               result.statusText +
               ". Please refresh the page to try again."
@@ -112,28 +106,53 @@ const ClaimTipPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Lightsats⚡ - Claim gift</title>
+        <title>Lightsats⚡ - Claim tip</title>
       </Head>
       {isLoading ? (
         <>
-          <Loading type="spinner" color="currentColor" size="sm" />
+          <Loading color="currentColor" size="sm" />
         </>
-      ) : publicTip.status !== "UNCLAIMED" ? (
+      ) : publicTip.status !== "UNCLAIMED" &&
+        (publicTip.status !== "CLAIMED" ||
+          (session && session.user.id !== publicTip.tippeeId)) ? (
         <>
           <Text>This tip is no longer available.</Text>
           <Spacer />
-          <BackButton />
+          <DashboardButton />
+        </>
+      ) : publicTip.status === "CLAIMED" && !session ? (
+        <>
+          <Text>This tip has been claimed but not withdrawn yet.</Text>
+          <Spacer />
+          <Collapse
+            bordered
+            title={<Text b>This is my Tip🙋</Text>}
+            css={{ width: "100%" }}
+          >
+            <>
+              <Login
+                instructionsText={() => "Confirm your account to continue"}
+                callbackUrl={getCurrentUrl(router)}
+                tipId={publicTip.id}
+                defaultLoginMethod="phone"
+              />
+            </>
+          </Collapse>
+          <Spacer />
+          <Text>Not yours?</Text>
+          <Spacer />
+          <DashboardButton />
         </>
       ) : isTipper ? (
         <>
-          <Text>You created this tip so cannot claim it. 😥</Text>
-          <Spacer />
-          <BackButton />
+          <ClaimTipView publicTip={publicTip} />
         </>
       ) : hasExpired ? (
         <>
           <Spacer y={2} />
           <Text color="error">{t("expired")}</Text>
+          <Spacer />
+          <DashboardButton />
         </>
       ) : (
         <ClaimTipView publicTip={publicTip} />
@@ -151,61 +170,20 @@ type ClaimTipViewProps = {
 function ClaimTipView({ publicTip }: ClaimTipViewProps) {
   const { t } = useTranslation("claim");
   const router = useRouter();
-  const dateFnsLocale = useDateFnsLocale(router.locale);
-
-  const { data: exchangeRates } = useSWR<ExchangeRates>(
-    `/api/exchange/rates`,
-    defaultFetcher
-  );
-  const tipCurrency = publicTip?.currency ?? DEFAULT_FIAT_CURRENCY;
 
   return (
     <>
       {publicTip.tippeeName && (
         <>
-          <Text h5>
+          <Text h3>
             {t("hello", {
               tippeeName: publicTip.tippeeName,
             })}
           </Text>
-          <Spacer />
         </>
       )}
-      <Row justify="center" align="center">
-        {publicTip.tipper.name && (
-          <>
-            <Avatar
-              src={getAvatarUrl(
-                publicTip.tipper.avatarURL ?? undefined,
-                publicTip.tipper.fallbackAvatarId
-              )}
-              size="md"
-              bordered
-            />
-          </>
-        )}
-        <Text b size={16}>
-          &nbsp;
-          {publicTip.tipper.name
-            ? t("tipperHasGiftedYou", {
-                tipperName: publicTip.tipper.name,
-              })
-            : t("youHaveBeenGifted")}
-        </Text>
-      </Row>
-      <Text h1>
-        <FiatPrice
-          currency={tipCurrency}
-          exchangeRate={exchangeRates?.[tipCurrency]}
-          sats={publicTip.amount}
-          showApprox={false}
-        />
-      </Text>
-      <Spacer y={-0.5} />
-      <Text>{publicTip.amount} sats</Text>
-      <Spacer />
-      <Note note={publicTip.note} />
-
+      <ClaimedTipCard publicTip={publicTip} viewing="tipper" />
+      <Spacer y={3} />
       {
         <>
           <Login
@@ -214,34 +192,14 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
             }
             submitText={t("claim:claim")}
             callbackUrl={getCurrentUrl(router)}
+            tipId={publicTip.id}
+            defaultLoginMethod="phone"
           />
-          <Spacer />
-          <Row justify="center" align="center">
-            <Text small color="error">
-              {t("expiresIn", {
-                expiry: formatDistance(new Date(publicTip.expiry), Date.now(), {
-                  locale: dateFnsLocale,
-                }),
-              })}
-            </Text>
-          </Row>
         </>
       }
       <Spacer />
     </>
   );
-}
-
-function Note({ note }: { note: string | null }) {
-  return note ? (
-    <>
-      <Row justify="center" align="center">
-        💬
-        <Spacer x={0.25} />
-        <Text size="small">{note}</Text>
-      </Row>
-    </>
-  ) : null;
 }
 
 export { getStaticProps, getStaticPaths };
