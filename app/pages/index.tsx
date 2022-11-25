@@ -33,12 +33,21 @@ const Home: NextPage = () => {
 export default Home;
 
 function HomepageCTA() {
-  const { data: session } = useSession();
+  const { status: sessionStatus } = useSession();
   return (
-    <NextLink href={session ? Routes.dashboard : Routes.login} passHref>
+    <NextLink
+      href={sessionStatus === "authenticated" ? Routes.dashboard : Routes.login}
+      passHref
+    >
       <a>
         <Button color="primary" size="lg">
-          {session ? <>Open dashboard</> : <>Create your first tip &raquo;</>}
+          {sessionStatus === "authenticated" ? (
+            <>Open dashboard</>
+          ) : sessionStatus === "unauthenticated" ? (
+            <>Create your first tip &raquo;</>
+          ) : (
+            ""
+          )}
         </Button>
       </a>
     </NextLink>
