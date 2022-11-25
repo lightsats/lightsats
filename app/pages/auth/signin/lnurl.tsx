@@ -12,6 +12,7 @@ import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
 import { getStaticProps } from "lib/i18n/i18next";
+import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { signIn } from "next-auth/react";
@@ -55,6 +56,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
           const result = await signIn("lnurl", {
             k1: qr.k1,
             callbackUrl: callbackUrlWithFallback,
+            locale: router.locale || DEFAULT_LOCALE,
             redirect: false,
           });
 

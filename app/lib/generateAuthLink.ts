@@ -20,6 +20,7 @@ export function generateAuthLink(
     phoneNumber,
     callbackUrl,
     linkUserId,
+    locale,
   };
   const token = jwt.sign(twoFactorAuthToken, process.env.NEXTAUTH_SECRET, {
     expiresIn: LOGIN_LINK_EXPIRATION_DAYS + " days",
