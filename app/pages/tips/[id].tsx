@@ -28,7 +28,7 @@ import toast from "react-hot-toast";
 import { useSWRConfig } from "swr";
 
 const TipPage: NextPage = () => {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const router = useRouter();
   const { id } = router.query;
   const [prevTipStatus, setPrevTipStatus] = React.useState<
@@ -43,6 +43,16 @@ const TipPage: NextPage = () => {
   );
 
   const { data: tip } = useTip(id as string, true);
+
+  React.useEffect(() => {
+    // tipper might have accidentally linked the current page
+    // navigate to the claim page
+    // TODO: support claiming and managing tip on the same page
+    // TODO: add redirect or fallback from the old claim page to this one
+    if (sessionStatus === "unauthenticated") {
+      router.push(`${Routes.tips}/${id}/claim`);
+    }
+  }, [id, router, sessionStatus]);
 
   const tipStatus = tip?.status;
 
