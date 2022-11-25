@@ -257,6 +257,23 @@ function Homepage() {
       </Text>
       <Spacer y={2} />
       <HomepageCTA />
+      <Spacer y={5} />
+      <Text h3 style={{ textAlign: "center" }}>
+        Learn More
+      </Text>
+      <Text css={{ maxWidth: "500px", textAlign: "center" }}>
+        {
+          "Watch our pitch for the BOLT FUN Legends of Lightning ⚡️ tournment, Tipper and recipient flows, our team, and more"
+        }
+      </Text>
+      <Spacer />
+      <NextLink href={Routes.about} passHref>
+        <a>
+          <Button color="primary" size="lg">
+            About
+          </Button>
+        </a>
+      </NextLink>
       <Spacer y={4} />
     </>
   );
