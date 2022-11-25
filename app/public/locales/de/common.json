@@ -1,0 +1,12 @@
+{
+  "email": "📧 Email",
+  "phone": "📱 Handy",
+  "lightning": "⚡ Lightning",
+  "loginWithLightning": "Login mit Lightning",
+  "or": "oder",
+  "verifyPhoneMessage": "Lightsats login",
+  "checkEmailTitle": "Check Deine inbox",
+  "checkEmailText": "Wir haben Dir einen 🪄 magic link via mail geschickt. Klick den Link und bestätige Deine E-Mail Adresse.",
+  "checkSMSTitle": "Check Dein Handy",
+  "checkSMSText": "Wir haben Dir einen 🪄 magic link via SMS geschickt. Klick den Link und bestätige Deine Handynummer."
+}
