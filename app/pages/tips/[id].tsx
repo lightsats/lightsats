@@ -109,7 +109,7 @@ const TipPage: NextPage = () => {
                   alt="zap"
                 />
               </Row>
-              <Row>
+              <Row align="center">
                 <Text css={{ textAlign: "center", color: "$white" }}>
                   {
                     "Provide extra details to improve your recipient's onboarding experience"
