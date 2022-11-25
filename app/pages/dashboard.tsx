@@ -1,5 +1,4 @@
 import { Container, Loading, Spacer } from "@nextui-org/react";
-import { Alert } from "components/Alert";
 import { TipHistory } from "components/TipHistory";
 import { TippeeSuggestions } from "components/tippee/TippeeSuggestions";
 import { NewTipButton } from "components/tipper/NewTipButton";
@@ -35,12 +34,6 @@ const Dashboard: NextPage = () => {
             padding: 0,
           }}
         >
-          {user?.userType === "tipper" && (
-            <>
-              <Alert>⚠️ This project is currently in BETA.</Alert>
-            </>
-          )}
-          <Spacer />
           <UserCard userId={user.id} />
           <Spacer />
           {user?.userType === "tipper" ? (

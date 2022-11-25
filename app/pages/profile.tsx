@@ -288,7 +288,7 @@ function TipperProfile({ mutateUser, user }: ProfileInternalProps) {
             <Input
               {...field}
               label="Lightning Address"
-              placeholder="reneaaron@getalby.com"
+              placeholder="you@example.com"
               fullWidth
               bordered
               type="email"
