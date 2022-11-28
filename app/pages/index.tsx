@@ -60,11 +60,11 @@ function Homepage() {
     `/api/scoreboard`,
     defaultFetcher
   );
-  const [showCountUp, setShowCountUp] = React.useState(false);
+  const [pageLoaded, setPageLoaded] = React.useState(false);
 
   React.useEffect(() => {
     const onPageLoad = () => {
-      setShowCountUp(true);
+      setPageLoaded(true);
     };
 
     if (document.readyState === "complete") {
@@ -201,7 +201,7 @@ function Homepage() {
             },
           }}
         >
-          {showCountUp ? (
+          {pageLoaded ? (
             <CountUp
               start={0}
               useEasing={true}
@@ -223,23 +223,25 @@ function Homepage() {
       <Text h3 style={{ textAlign: "center" }}>
         🧡 What others have to say about us
       </Text>
-      <Grid.Container gap={2} sm={12} justify="center" alignContent="center">
-        <Grid xs={12} sm={4}>
-          <div style={{ width: "100%" }}>
-            <Tweet tweetId="1594009088421085185" />
-          </div>
-        </Grid>
-        <Grid xs={12} sm={4}>
-          <div style={{ width: "100%" }}>
-            <Tweet tweetId="1591901975649869824" />
-          </div>
-        </Grid>
-        <Grid xs={12} sm={4}>
-          <div style={{ width: "100%" }}>
-            <Tweet tweetId="1590860149471973376" />
-          </div>
-        </Grid>
-      </Grid.Container>
+      {pageLoaded && (
+        <Grid.Container gap={2} sm={12} justify="center" alignContent="center">
+          <Grid xs={12} sm={4}>
+            <div style={{ width: "100%" }}>
+              <Tweet tweetId="1594009088421085185" />
+            </div>
+          </Grid>
+          <Grid xs={12} sm={4}>
+            <div style={{ width: "100%" }}>
+              <Tweet tweetId="1591901975649869824" />
+            </div>
+          </Grid>
+          <Grid xs={12} sm={4}>
+            <div style={{ width: "100%" }}>
+              <Tweet tweetId="1590860149471973376" />
+            </div>
+          </Grid>
+        </Grid.Container>
+      )}
       <Spacer y={5} />
       <Text
         h1
