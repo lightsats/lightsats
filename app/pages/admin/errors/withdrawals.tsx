@@ -20,7 +20,7 @@ const AdminWithdrawalsPage: NextPage = () => {
       <Head>
         <title>Lightsats⚡ - Admin - Withdrawal Errors</title>
       </Head>
-      <h1>Admin/Withdrawals</h1>
+      <h1>Admin/Withdrawal Errors</h1>
       <AdminWithdrawalErrorsList
         withdrawalErrors={adminDashboard.withdrawalErrors}
       />

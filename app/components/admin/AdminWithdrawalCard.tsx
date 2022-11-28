@@ -34,6 +34,7 @@ export function AdminWithdrawalCard({ withdrawal }: AdminWithdrawalCardProps) {
             </Row>
             <Spacer />
             <Row justify="space-between">
+              <Text>Method: {withdrawal.withdrawalMethod}</Text>
               <Text>Amount: {amount} sats</Text>
               <Text>Fees: {tipFees} sats</Text>
             </Row>

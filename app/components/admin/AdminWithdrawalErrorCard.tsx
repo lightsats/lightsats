@@ -25,7 +25,9 @@ export function AdminWithdrawalErrorCard({
               <Col>
                 <Text>{withdrawalError.id}</Text>
                 <Text>{new Date(withdrawalError.created).toISOString()}</Text>
-                <Text>{withdrawalError.message}</Text>
+                <Text css={{ wordBreak: "break-word" }}>
+                  {withdrawalError.message}
+                </Text>
               </Col>
               <NextUIUser
                 name={withdrawalError.user.name ?? DEFAULT_NAME}
