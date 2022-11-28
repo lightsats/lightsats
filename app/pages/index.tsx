@@ -14,11 +14,12 @@ import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import React from "react";
-import CountUp from "react-countup";
+import React, { useRef } from "react";
+import { useInViewport } from "react-in-viewport";
 import { Tweet } from "react-twitter-widgets";
 import useSWR from "swr";
 import { Scoreboard as ScoreboardType } from "types/Scoreboard";
+import { CountUp } from "use-count-up";
 
 const Home: NextPage = () => {
   return (
@@ -184,41 +185,7 @@ function Homepage() {
         </Card>
       </Grid.Container>
       <Spacer y={5} />
-      <div style={{ textAlign: "center" }}>
-        <Text small b transform="uppercase">
-          With lightsats
-        </Text>
-        <Spacer y={0.5} />
-        <Text
-          b
-          css={{
-            textGradient: "45deg, #ff9400 -20%, #ffcf00 50%",
-            lineHeight: "$xs",
-            mt: -10,
-            fontSize: "$4xl",
-            "@lg": {
-              fontSize: "$8xl",
-            },
-          }}
-        >
-          {pageLoaded ? (
-            <CountUp
-              start={0}
-              useEasing={true}
-              enableScrollSpy
-              separator=","
-              end={scoreboard.totalSatsSent}
-              suffix=" sats"
-              duration={2}
-            />
-          ) : (
-            0
-          )}
-        </Text>
-        <Spacer />
-        <Text h3>have been tipped to date.</Text>
-        <Text h3></Text>
-      </div>
+      <TipCounter totalSatsSent={scoreboard.totalSatsSent} />
       <Spacer y={5} />
       <Text h3 style={{ textAlign: "center" }}>
         🧡 What others have to say about us
@@ -328,5 +295,42 @@ function Homepage() {
       </NextLink>
       <Spacer y={4} />
     </>
+  );
+}
+
+function TipCounter({ totalSatsSent }: { totalSatsSent: number }) {
+  const myRef = useRef<HTMLElement>(null);
+  const { inViewport } = useInViewport(myRef, {}, { disconnectOnLeave: false });
+
+  return (
+    <div style={{ textAlign: "center" }}>
+      <Text small b transform="uppercase">
+        With lightsats
+      </Text>
+      <Spacer y={0.5} />
+      <Text
+        b
+        ref={myRef}
+        css={{
+          textGradient: "45deg, #ff9400 -20%, #ffcf00 50%",
+          lineHeight: "$xs",
+          mt: -10,
+          fontSize: "$4xl",
+          "@lg": {
+            fontSize: "$8xl",
+          },
+        }}
+      >
+        {inViewport ? (
+          <CountUp isCounting end={totalSatsSent} duration={2} />
+        ) : (
+          0
+        )}
+        &nbsp;sats
+      </Text>
+      <Spacer />
+      <Text h3>have been tipped to date.</Text>
+      <Text h3></Text>
+    </div>
   );
 }
