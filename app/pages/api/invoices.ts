@@ -51,6 +51,6 @@ async function handlePayInvoice(
         session.user.id,
       error
     );
-    res.status(500).json({ error });
+    res.status(500).json((error as Error).message);
   }
 }
