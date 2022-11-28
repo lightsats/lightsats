@@ -14,6 +14,7 @@ import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import React from "react";
 import CountUp from "react-countup";
 import { Tweet } from "react-twitter-widgets";
 import useSWR from "swr";
@@ -59,6 +60,20 @@ function Homepage() {
     `/api/scoreboard`,
     defaultFetcher
   );
+  const [showCountUp, setShowCountUp] = React.useState(false);
+
+  React.useEffect(() => {
+    const onPageLoad = () => {
+      setShowCountUp(true);
+    };
+
+    if (document.readyState === "complete") {
+      onPageLoad();
+    } else {
+      window.addEventListener("load", onPageLoad);
+      return () => window.removeEventListener("load", onPageLoad);
+    }
+  }, []);
 
   if (!scoreboard) {
     return <Loading color="currentColor" size="lg" />;
@@ -186,15 +201,19 @@ function Homepage() {
             },
           }}
         >
-          <CountUp
-            start={0}
-            useEasing={true}
-            enableScrollSpy
-            separator=","
-            end={scoreboard.totalSatsSent}
-            suffix=" sats"
-            duration={2}
-          />
+          {showCountUp ? (
+            <CountUp
+              start={0}
+              useEasing={true}
+              enableScrollSpy
+              separator=","
+              end={scoreboard.totalSatsSent}
+              suffix=" sats"
+              duration={2}
+            />
+          ) : (
+            0
+          )}
         </Text>
         <Spacer />
         <Text h3>have been tipped to date.</Text>
