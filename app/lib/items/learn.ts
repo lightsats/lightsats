@@ -40,4 +40,29 @@ export const learn: LearnItem[] = [
     link: "https://lgt.st/sayloracademy",
     difficulty: "hard",
   },
+  {
+    category: "learn",
+    image: "bitcoinqa.png",
+    languageCodes: [getLanguageCode("English")],
+    platforms: ["web"],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AOLj5MbKy97k6PDy8wAgLC8AGyRmgpCbrbQAbXV2Dyo0ABAdYGxtAPf397rAxL3Eyerr690NHAp/k8G8AAAAAElFTkSuQmCC",
+    name: "Bitcoin Q+A",
+    slogan: "A collection of Bitcoin resources by Bitcoin Q+A",
+    link: "https://lgt.st/bitcoinqa",
+    difficulty: "hard",
+  },
+  {
+    category: "learn",
+    image: "jamesonlopp.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    platforms: ["web"],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AOLj5MbKy97k6PDy8wAgLC8AGyRmgpCbrbQAbXV2Dyo0ABAdYGxtAPf397rAxL3Eyerr690NHAp/k8G8AAAAAElFTkSuQmCC",
+    name: "Jameson Lopp",
+    slogan:
+      "If you're looking for structured sets of lecture materials and challenges, one of the many online courses may be helpful. Most of the online courses are free or fairly low cost.",
+    link: "https://lgt.st/jamesonlopp",
+    difficulty: "hard",
+  },
 ];

@@ -10,7 +10,8 @@ export const save: Item[] = [
     placeholderDataUrl:
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAKklEQVR4nB3JsQ0AIBDDQLfZwYtQsj4zUTzkKksG2AWQ5FYS1FPqn6teDX4wDl+IxOk6AAAAAElFTkSuQmCC",
     name: "Trezor",
-    slogan: "SeedSigner: Air-gapped DIY Bitcoin Signing Device",
+    slogan:
+      "Trezor hardware wallets are the safest and most resilient way to secure Bitcoin assets offline.",
     link: "https://lgt.st/trezor",
   },
   {

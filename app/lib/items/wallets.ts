@@ -147,4 +147,71 @@ const alby: Wallet = {
   ],
   platforms: ["desktop"],
 };
-export const wallets: Wallet[] = [wos, blue, muun, breez, alby];
+const phoenix: Wallet = {
+  features: ["lnurl-auth", "lnurl-withdraw"],
+  lightsatsRecommended: true,
+  category: "wallets",
+  minBalance: 10000,
+  link: "https://lgt.st/phoenix",
+  image: "phoenix.jpeg",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+  name: "Phoenix",
+  slogan: "The Bitcoin wallet from the future",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile"],
+};
+const lntips: Wallet = {
+  features: [],
+  lightsatsRecommended: true,
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/lntips",
+  image: "lntips.jpeg",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+  name: "lntips (Telegram)",
+  slogan: "Bitcoin Lightning wallet on Telegram.",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile"],
+};
+const lntxbot: Wallet = {
+  features: [],
+  lightsatsRecommended: true,
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/lntxbot",
+  image: "lntxbot.jpeg",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+  name: "lntxbot (Telegram)",
+  slogan: "A Bitcoin Lightning wallet on Telegram.",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile"],
+};
+const sbw: Wallet = {
+  features: [],
+  lightsatsRecommended: true,
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/sbw",
+  image: "sbw.webp",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+  name: "Simple Bitcoin Wallet",
+  slogan:
+    "Simple Bitcoin Wallet (aka SBW) is an open-source, non-custodial, autonomous wallet for Android devices which can store, send and receive bitcoins.",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile"],
+};
+export const wallets: Wallet[] = [
+  wos,
+  blue,
+  muun,
+  breez,
+  alby,
+  phoenix,
+  lntips,
+  lntxbot,
+  sbw,
+];

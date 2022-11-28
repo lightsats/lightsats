@@ -121,4 +121,167 @@ export const earn: Item[] = [
       "Satsback is the evolution of cashback and loyalty rewards - the easiest and safest way to start saving bitcoin with more than 10,000 connected merchants.",
     platforms: ["desktop"],
   },
+  {
+    category: "earn",
+    image: "thebitcoincompany.jpg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/thebitcoincompany",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "The Bitcoin Company",
+    slogan: "The easiest way to spend bitcoin and earn rewards.",
+    platforms: ["mobile"],
+  },
+  {
+    category: "earn",
+    image: "satsy.png",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/satsy",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "Satsy",
+    slogan:
+      "Just sign up, shop, and get some free bitcoin. Answer a few surveys, and stack more sats. Lots of ways to earn risk free bitcoin	",
+    platforms: ["desktop"],
+  },
+  {
+    category: "earn",
+    image: "oshi.png",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/oshi",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "Oshi",
+    slogan: "Earn bitcoin by supporting your local economy.",
+    platforms: ["mobile"],
+  },
+  {
+    category: "earn",
+    image: "fountain.webp",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/fountain",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "Fountain",
+    slogan:
+      "Listen, learn, and earn for the value you bring to Fountain. Available on iOS and Android.",
+    platforms: ["mobile"],
+  },
+  {
+    category: "earn",
+    image: "smiles.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/fountain",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "sMiles",
+    slogan:
+      "Bitcoin App for iOS or Android to Earn Free Bitcoin. How To Get Free Bitcoin Instantly. Playing Games. Proof of Work. Win. BTC. Sats. Free Bitcoin.",
+    platforms: ["mobile"],
+  },
+  {
+    category: "earn",
+    image: "webdeveloper.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/webdeveloper",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "webdeveloper",
+    slogan: "Serving the #webDeveloper community, earn sats",
+    platforms: ["desktop"],
+  },
+  {
+    category: "earn",
+    image: "zebedee.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/zebedee",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "ZEBEDEE",
+    slogan:
+      "We make the points you earn in games matter. By harnessing the power of Bitcoin, we attach real-world value to points, scores and economies in virtual worlds",
+    platforms: ["mobile"],
+  },
+  {
+    category: "earn",
+    image: "sparkwallet.png",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/spark",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "Spark Wallet",
+    slogan:
+      "Earn Rewards on every transaction. Send and receive instantly. Get a visa debit card. Swap your bitcoin. Buy gift cards at 5% back. Earn free rewards when sharing Spark Wallet with your friends!",
+    platforms: ["mobile"],
+  },
+  {
+    category: "earn",
+    image: "mintgox.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/mintgox",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "MintGox",
+    slogan:
+      "Play games. Collect Bitcoin. Spend them! MintGox is a brand new style of esports tournament. Games become more engaging and rewarding when real currency is added, so we went ahead and did just that! Now you can earn Bitcoin, tip streamers and even power up your favorite players! Welcome to the future of esports!",
+    platforms: ["mobile"],
+  },
+  {
+    category: "earn",
+    image: "mash.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/mash",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "Mash",
+    slogan:
+      "Mash is the easiest creators and indie hackers to earn money and get donations. Make money for your Tools, Apps, Software, Games, Newsletters, Interactive Experiences, Live-Streams, Video Content, Education Content, Bogs, Articles, Local News and Podcasts.",
+    platforms: ["desktop"],
+  },
+  {
+    category: "earn",
+    image: "slice.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/slash",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "Slice",
+    slogan:
+      "Add the Slice extension to your browser today and claim your fair share of the $455 billion digital advertising pie.",
+    platforms: ["desktop"],
+  },
+  {
+    category: "earn",
+    image: "lncal.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/lncal",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "LNCal.com",
+    slogan: "Earn Bitcoins by getting booked on your public calendar.",
+    platforms: ["desktop"],
+  },
+  {
+    category: "earn",
+    image: "satscrap.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/satscrap",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "SatsCrap",
+    slogan: "An online Bitcoin marketplace",
+    platforms: ["desktop"],
+  },
+  {
+    category: "earn",
+    image: "tweetoshi.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/tweetoshi",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AFwAAEoAAEkAAFEADQDCYFD/4N7/x8ytQFQAwGIx/9u5/8CnggAPAI4oAHgAAHQAAH4AAN8HEk3sGa4dAAAAAElFTkSuQmCC",
+    name: "Tweetoshi",
+    slogan:
+      "Get Bitcoin daily just for using Twitter! — Twitter client which shares revenue with users and has integrated lightning network for tipping with no KYC.	",
+    platforms: ["mobile"],
+  },
 ];

@@ -62,4 +62,50 @@ export const donate: Item[] = [
       "Bitcoin Ekasi (Mossel Bay, South Africa) is inspired by Bitcoin Beach (El Zonte, El Salvador) Bitcoin Ekasi is an extension of The Surfer Kids Non-Profit.",
     platforms: ["web"],
   },
+  {
+    category: "donate",
+    link: "https://lgt.st/bitcoinbeach",
+    image: "bitcoinbeach.png",
+    languageCodes: [getLanguageCode("English")],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGNgZWVz9fT3CwxjZ2dn0Dc0+rK79PeleUbG5gyc3Hz/vyz9f6VDQlKWgYGBQVRU1M3Tn42dHQCD6g5J96ZEDAAAAABJRU5ErkJggg==",
+    name: "Bitcoin Beach",
+    slogan: "Bitcoin Beach - The first circular economy on bitcoin.",
+    platforms: ["web"],
+  },
+  {
+    category: "donate",
+    link: "https://lgt.st/praiabitcoin",
+    image: "praiabitcoin.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGNgZWVz9fT3CwxjZ2dn0Dc0+rK79PeleUbG5gyc3Hz/vyz9f6VDQlKWgYGBQVRU1M3Tn42dHQCD6g5J96ZEDAAAAABJRU5ErkJggg==",
+    name: "Praia Bitcoin",
+    slogan:
+      "Inspired by Bitcoin Beach optimized to Brazil, Praia Bitcoin experiment is building a Bitcoin Circular Economy in Jericoacoara- Ceará.",
+    platforms: ["web"],
+  },
+  {
+    category: "donate",
+    link: "https://lgt.st/pacodelaindia",
+    image: "pacodelaindia.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGNgZWVz9fT3CwxjZ2dn0Dc0+rK79PeleUbG5gyc3Hz/vyz9f6VDQlKWgYGBQVRU1M3Tn42dHQCD6g5J96ZEDAAAAABJRU5ErkJggg==",
+    name: "Run with Bitcoin",
+    slogan: "22/40 countries traveled with Bitcoin",
+    platforms: ["web"],
+  },
+  {
+    category: "donate",
+    link: "https://lgt.st/bff",
+    image: "bitcoinforfairness.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGNgZWVz9fT3CwxjZ2dn0Dc0+rK79PeleUbG5gyc3Hz/vyz9f6VDQlKWgYGBQVRU1M3Tn42dHQCD6g5J96ZEDAAAAABJRU5ErkJggg==",
+    name: "Bitcoin for Fairness",
+    slogan:
+      "Bitcoin for Fairness is a non-profit raising knowledge and understanding of BTC for people in emerging countries and for the disadvantaged.",
+    platforms: ["web"],
+  },
 ];
