@@ -49,3 +49,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 5. `flyctl postgres attach --app lightsats lightsats-db` OR `flyctl secrets set DATABASE_URL=postgres://postgres:XXXXXXXXXXXXXXXXXX@lightsats-db.internal:5432/lightsats?schema=public --app lightsats`
 6. set NEXTAUTH_SECRET: `flyctl secrets set NEXTAUTH_SECRET=XXXXXXXXXXXXXXXXXXXXX --app lightsats-prod`
 7. add other secrets (see .env.example)
+8. create .sentryclirc (see .sentryclirc.example)
