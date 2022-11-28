@@ -55,7 +55,11 @@ async function getWithdrawalLink(
       tag: "withdrawRequest",
       callback: `${getWithdrawalLinkUrl(withdrawalLink.id)}/pay`, // The URL which LN SERVICE would accept a withdrawal Lightning invoice as query parameter
       k1: "unused",
-      defaultDescription: `${appName} withdrawal`, // A default withdrawal invoice description
+      defaultDescription: `${appName} withdrawal${
+        withdrawalLink.withdrawalFlow === "tippee"
+          ? ` - after withdrawing make sure to return to ${process.env.APP_URL} to finish your journey!`
+          : ""
+      }`, // A default withdrawal invoice description
       minWithdrawable: minMax, // Min amount (in millisatoshis) the user can withdraw from LN SERVICE, or 0
       maxWithdrawable: minMax, // Max amount (in millisatoshis) the user can withdraw from LN SERVICE, or equal to minWithdrawable if the user has no choice over the amounts
     });
