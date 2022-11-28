@@ -45,7 +45,7 @@ const Withdraw: NextPage = () => {
   const [hasLaunchedWebln, setLaunchedWebln] = React.useState(false);
 
   const executeWithdrawal = React.useCallback(
-    (invoice: string) => {
+    (invoice: string, isWebln: boolean) => {
       if (isSubmitting) {
         throw new Error("Already submitting");
       }
@@ -54,7 +54,7 @@ const Withdraw: NextPage = () => {
       (async () => {
         try {
           const withdrawalRequest: InvoiceWithdrawalRequest = { invoice, flow };
-          const result = await fetch("/api/invoices", {
+          const result = await fetch(`/api/invoices?isWebln=${isWebln}`, {
             method: "POST",
             body: JSON.stringify(withdrawalRequest),
             headers: { "Content-Type": "application/json" },
@@ -85,7 +85,7 @@ const Withdraw: NextPage = () => {
     if (!invoiceFieldValue) {
       throw new Error("No invoice set");
     }
-    executeWithdrawal(invoiceFieldValue);
+    executeWithdrawal(invoiceFieldValue, false);
   }, [executeWithdrawal, invoiceFieldValue]);
 
   const withdrawableTips = React.useMemo(
@@ -164,7 +164,7 @@ const Withdraw: NextPage = () => {
             const makeInvoiceResponse = await webln.makeInvoice({
               amount: availableBalance,
             });
-            executeWithdrawal(makeInvoiceResponse.paymentRequest);
+            executeWithdrawal(makeInvoiceResponse.paymentRequest, true);
           }
         } catch (error) {
           console.error("Failed to load webln", error);

@@ -31,6 +31,7 @@ async function handlePayInvoice(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const { isWebln } = req.query;
   const withdrawalRequest = req.body as InvoiceWithdrawalRequest;
   checkWithdrawalFlow(withdrawalRequest.flow);
 
@@ -39,7 +40,7 @@ async function handlePayInvoice(
       withdrawalRequest.flow,
       withdrawalRequest.invoice,
       session.user.id,
-      "invoice"
+      isWebln === "true" ? "webln" : "invoice"
     );
     res.status(204).end();
   } catch (error) {

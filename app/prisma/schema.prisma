@@ -219,6 +219,7 @@ enum WithdrawalFlow {
 enum WithdrawalMethod {
   lnurlw
   invoice
+  webln
 }
 
 enum RoleType {
