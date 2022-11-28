@@ -133,7 +133,11 @@ export function ClaimedTipCard({
           <>
             <Spacer />
             <Progress
-              value={(journeyStep / bitcoinJourneyPages.length) * 100}
+              value={
+                publicTip.status === "WITHDRAWN"
+                  ? 100
+                  : (journeyStep / bitcoinJourneyPages.length) * 100
+              }
               status={progressColor}
               color={progressColor}
             />
