@@ -80,6 +80,7 @@ model User {
   updated DateTime @default(now()) @updatedAt
 
   sentReminders SentReminder[]
+  lastWithdrawal DateTime?
 }
 
 model Tip {
