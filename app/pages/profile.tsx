@@ -80,6 +80,12 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
     copy(user.id);
     toast.success("User ID Copied to clipboard");
   }, [user.id]);
+  const copyUserWalletPublicKey = React.useCallback(() => {
+    if (user.lnurlPublicKey) {
+      copy(user.lnurlPublicKey);
+      toast.success("Wallet public key Copied to clipboard");
+    }
+  }, [user.lnurlPublicKey]);
 
   return (
     <>
@@ -125,19 +131,48 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
             <Text b>{user.phoneNumber}</Text>
           </Row>
         )}
-        {user.lnurlPublicKey && (
-          <Row justify="space-between" align="center">
-            <Text>{"⚡ Wallet: "}</Text>
-            <Text b>{user.lnurlPublicKey}</Text>
-          </Row>
-        )}
+        <Row justify="space-between" align="center">
+          <Text>{"⚡ Wallet: "}</Text>
+          {user.lnurlPublicKey ? (
+            <Row css={{ width: "200px" }} align="center" justify="flex-end">
+              <Text b>
+                {user.lnurlPublicKey.slice(0, 6)}...
+                {user.lnurlPublicKey.slice(user.lnurlPublicKey.length - 6)}
+              </Text>
+              <Spacer x={0.25} />
+              <Button
+                auto
+                light
+                color="primary"
+                size="sm"
+                css={{ p: 0 }}
+                onClick={copyUserWalletPublicKey}
+              >
+                <Icon width={16} height={16}>
+                  <ClipboardIcon />
+                </Icon>
+              </Button>
+            </Row>
+          ) : (
+            <NextLink href={`${Routes.lnurlAuthSignin}?link=true`}>
+              <a>
+                <Button size="sm" auto>
+                  Link&nbsp;
+                  <Icon width={16} height={16}>
+                    <LinkIcon />
+                  </Icon>
+                </Button>
+              </a>
+            </NextLink>
+          )}
+        </Row>
         <Spacer />
         <Row>
           <Text b>Lightsats User ID</Text>
         </Row>
         <Row align="center">
           <Text>
-            @{user.id.slice(0, 6)}...{user.id.slice(user.id.length - 6)}{" "}
+            @{user.id.slice(0, 6)}...{user.id.slice(user.id.length - 6)}
           </Text>
           <Spacer x={0.25} />
           <Button

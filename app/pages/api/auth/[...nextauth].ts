@@ -50,12 +50,34 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user) {
-          user = await prisma.user.create({
-            data: {
-              lnurlPublicKey: authKey.key,
-              locale: credentials.locale,
-            },
-          });
+          if (authKey.linkUserId) {
+            user = await prisma.user.findUnique({
+              where: {
+                id: authKey.linkUserId,
+              },
+            });
+            if (!user) {
+              throw new Error(
+                "User to link does not exist: " + authKey.linkUserId
+              );
+            } else {
+              await prisma.user.update({
+                where: {
+                  id: user.id,
+                },
+                data: {
+                  lnurlPublicKey: authKey.key,
+                },
+              });
+            }
+          } else {
+            user = await prisma.user.create({
+              data: {
+                lnurlPublicKey: authKey.key,
+                locale: credentials.locale,
+              },
+            });
+          }
         }
         return user;
       },

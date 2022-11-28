@@ -127,6 +127,7 @@ model LnurlAuthKey {
   k1 String @id
   key String?
   created DateTime @default(now())
+  linkUserId String?
 }
 
 model WithdrawalLink {

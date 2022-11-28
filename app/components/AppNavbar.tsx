@@ -76,7 +76,10 @@ export function AppNavbar() {
     [user]
   );
 
-  const isLoading = sessionStatus === "loading" || (session && !user);
+  const isLoading =
+    sessionStatus === "loading" ||
+    (session && !user) ||
+    router.pathname.startsWith(Routes.verifySignin);
 
   return (
     <Navbar
@@ -191,7 +194,7 @@ export function AppNavbar() {
       )}
       {!user && (
         <Navbar.Content>
-          {!hideNavbar && (
+          {!hideNavbar && !router.pathname.startsWith(Routes.login) && (
             <Navbar.Item hideIn="xs">
               <NextLink href={Routes.login} passHref>
                 <a>
