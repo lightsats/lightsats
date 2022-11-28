@@ -44,19 +44,18 @@ export default async function handler(
         id: user.id,
         created: user.created,
         userType: user.userType,
+        lightningAddress: user.lightningAddress,
         ...(user.isAnonymous &&
         (forceAnonymous === "true" || user.id !== session?.user.id)
           ? {
               name: null,
               avatarURL: null,
               twitterUsername: null,
-              lightningAddress: null,
             }
           : {
               name: user.name,
               avatarURL: user.avatarURL,
               twitterUsername: user.twitterUsername,
-              lightningAddress: user.lightningAddress,
             }),
         fallbackAvatarId: getFallbackAvatarId(user),
         numTipsSent: sentTips.length,
