@@ -8,6 +8,7 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
+import { getStaticProps } from "lib/i18n/i18next";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { useTranslation } from "next-i18next";
@@ -47,7 +48,7 @@ export default function EmailSignIn({
   const [isSubmitting, setSubmitting] = React.useState(false);
   const router = useRouter();
   const callbackUrlWithFallback =
-    callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
+    callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
   const linkExistingAccount = router.query["link"] === "true";
 
   // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
@@ -144,3 +145,5 @@ export default function EmailSignIn({
     </>
   );
 }
+
+export { getStaticProps };

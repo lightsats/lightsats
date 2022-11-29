@@ -10,6 +10,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import { StatusCodes } from "http-status-codes";
+import { getStaticProps } from "lib/i18n/i18next";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -57,7 +58,7 @@ export default function PhoneSignIn({
   const [isSubmitting, setSubmitting] = React.useState(false);
   const router = useRouter();
   const callbackUrlWithFallback =
-    callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
+    callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
 
   // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
 
@@ -180,3 +181,5 @@ const ForwardedPhoneInput = React.forwardRef<
   );
 });
 ForwardedPhoneInput.displayName = "ForwardedInput";
+
+export { getStaticProps };

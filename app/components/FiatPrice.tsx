@@ -1,6 +1,9 @@
-import { Loading } from "@nextui-org/react";
-import getSymbolFromCurrency from "currency-symbol-map";
-import { getFiatAmount, roundFiat } from "lib/utils";
+import { Loading, Tooltip } from "@nextui-org/react";
+import {
+  getFiatAmount,
+  getSymbolFromCurrencyWithFallback,
+  roundFiat,
+} from "lib/utils";
 
 type FiatPriceProps = {
   currency: string;
@@ -19,14 +22,16 @@ export function FiatPrice({
     return <Loading color="currentColor" size="sm" />;
   }
 
-  const symbol = getSymbolFromCurrency(currency);
+  const symbol = getSymbolFromCurrencyWithFallback(currency);
   const fiatAmount = roundFiat(getFiatAmount(sats, exchangeRate));
 
   return (
-    <>
-      {showApprox && "~"}
-      <span>{symbol}</span>
-      {fiatAmount}
-    </>
+    <Tooltip content={symbol + fiatAmount + " " + currency}>
+      <>
+        {showApprox && "~"}
+        <span>{symbol}</span>
+        {fiatAmount}
+      </>
+    </Tooltip>
   );
 }

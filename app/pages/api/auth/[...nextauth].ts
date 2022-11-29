@@ -23,6 +23,7 @@ export const authOptions: NextAuthOptions = {
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
         k1: { type: "text" },
+        locale: { type: "text" },
       },
       async authorize(credentials) {
         // console.log("LNURL AUTH", credentials?.k1);
@@ -49,11 +50,34 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user) {
-          user = await prisma.user.create({
-            data: {
-              lnurlPublicKey: authKey.key,
-            },
-          });
+          if (authKey.linkUserId) {
+            user = await prisma.user.findUnique({
+              where: {
+                id: authKey.linkUserId,
+              },
+            });
+            if (!user) {
+              throw new Error(
+                "User to link does not exist: " + authKey.linkUserId
+              );
+            } else {
+              await prisma.user.update({
+                where: {
+                  id: user.id,
+                },
+                data: {
+                  lnurlPublicKey: authKey.key,
+                },
+              });
+            }
+          } else {
+            user = await prisma.user.create({
+              data: {
+                lnurlPublicKey: authKey.key,
+                locale: credentials.locale,
+              },
+            });
+          }
         }
         return user;
       },
@@ -117,6 +141,7 @@ export const authOptions: NextAuthOptions = {
                 user = await prisma.user.create({
                   data: {
                     email: decoded.email,
+                    locale: decoded.locale,
                   },
                 });
               }
@@ -132,6 +157,7 @@ export const authOptions: NextAuthOptions = {
               user = await prisma.user.create({
                 data: {
                   phoneNumber: decoded.phoneNumber,
+                  locale: decoded.locale,
                 },
               });
             }
@@ -167,7 +193,7 @@ export const authOptions: NextAuthOptions = {
   },
   debug: false,
   pages: {
-    signIn: Routes.home,
+    signIn: Routes.dashboard,
   },
   session: { strategy: "jwt" },
 };

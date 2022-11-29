@@ -66,14 +66,17 @@ export async function createLnbitsUserAndWallet(name: string): Promise<{
     }
   );
   console.log(
-    "Create user response: ",
+    "Create lnbits user response: ",
     createLnbitsUserResponse.status,
     createLnbitsUserResponse.statusText
   );
 
   const createLnbitsUserResponseBody =
     (await createLnbitsUserResponse.json()) as CreateLnbitsUserResponse;
-  console.log("Create user response body: ", createLnbitsUserResponseBody);
+  console.log(
+    "Create lnbits user response body: ",
+    createLnbitsUserResponseBody
+  );
   return {
     createLnbitsUserResponse,
     createLnbitsUserResponseBody,

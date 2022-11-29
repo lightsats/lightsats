@@ -1,6 +1,15 @@
-import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Link,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { TipStatus } from "@prisma/client";
 import { ConfettiContainer } from "components/ConfettiContainer";
+import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTracker";
 import { PayTipInvoice } from "components/tipper/TipPage/PayTipInvoice";
@@ -8,7 +17,7 @@ import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
 import { useScoreboardPosition } from "hooks/useScoreboardPosition";
 import { useTip } from "hooks/useTip";
-import { refundableTipStatuses } from "lib/constants";
+import { expirableTipStatuses, refundableTipStatuses } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { hasTipExpired, nth } from "lib/utils";
 import type { NextPage } from "next";
@@ -17,15 +26,15 @@ import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
 import { useSWRConfig } from "swr";
-import { requestProvider } from "webln";
 
 const TipPage: NextPage = () => {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const router = useRouter();
   const { id } = router.query;
   const [prevTipStatus, setPrevTipStatus] = React.useState<
     TipStatus | undefined
   >();
+  const [skipPersonalize, setSkipPersonalize] = React.useState(false);
 
   const { mutate } = useSWRConfig();
   const mutateTips = React.useCallback(
@@ -35,8 +44,17 @@ const TipPage: NextPage = () => {
 
   const { data: tip } = useTip(id as string, true);
 
+  React.useEffect(() => {
+    // tipper might have accidentally linked the current page
+    // navigate to the claim page
+    // TODO: support claiming and managing tip on the same page
+    // TODO: add redirect or fallback from the old claim page to this one
+    if (sessionStatus === "unauthenticated") {
+      router.push(`${Routes.tips}/${id}/claim`);
+    }
+  }, [id, router, sessionStatus]);
+
   const tipStatus = tip?.status;
-  const tipInvoice = tip?.invoice;
 
   React.useEffect(() => {
     if (prevTipStatus === "UNFUNDED" && tipStatus === "UNCLAIMED") {
@@ -47,25 +65,11 @@ const TipPage: NextPage = () => {
 
   const hasExpired = tip && hasTipExpired(tip);
 
-  React.useEffect(() => {
-    if (tipStatus === "UNFUNDED" && !hasExpired && tipInvoice) {
-      (async () => {
-        try {
-          console.log("Launching webln");
-          const webln = await requestProvider();
-          webln.sendPayment(tipInvoice);
-        } catch (error) {
-          console.error("Failed to load webln", error);
-        }
-      })();
-    }
-  }, [tipStatus, tipInvoice, hasExpired]);
-
   const placing = useScoreboardPosition(session?.user.id);
 
   const deleteTip = React.useCallback(() => {
     (async () => {
-      router.push(Routes.home);
+      router.push(Routes.dashboard);
       const result = await fetch(`/api/tipper/tips/${id}`, {
         method: "DELETE",
       });
@@ -79,7 +83,7 @@ const TipPage: NextPage = () => {
 
   const reclaimTip = React.useCallback(() => {
     (async () => {
-      router.push(Routes.home);
+      router.push(Routes.dashboard);
       const result = await fetch(`/api/tipper/tips/${id}/reclaim`, {
         method: "POST",
       });
@@ -92,6 +96,64 @@ const TipPage: NextPage = () => {
   }, [id, mutateTips, router]);
 
   if (tip) {
+    if (
+      !skipPersonalize &&
+      !hasExpired &&
+      expirableTipStatuses.indexOf(tip.status) > -1 &&
+      !tip.note
+    ) {
+      return (
+        <>
+          <ClaimProgressTracker tipId={tip.id} />
+          <Spacer />
+          <Card css={{ dropShadow: "$sm", background: "$primary" }}>
+            <Card.Body>
+              <Row justify="center">
+                <Text h2 css={{ color: "$white" }}>
+                  Personalize your tip
+                </Text>
+              </Row>
+              <Row justify="center">
+                <NextImage
+                  src="/images/icons/zap.png"
+                  width={150}
+                  height={150}
+                  alt="zap"
+                />
+              </Row>
+              <Row justify="center">
+                <Text css={{ textAlign: "center", color: "$white" }}>
+                  {
+                    "Provide extra details to improve your recipient's onboarding experience"
+                  }
+                </Text>
+              </Row>
+              <Spacer />
+              <Row justify="center">
+                <NextLink href={`${Routes.tips}/${tip.id}/edit`} passHref>
+                  <a>
+                    <Button size="lg" color="secondary">
+                      Personalize tip🪄
+                    </Button>
+                  </a>
+                </NextLink>
+              </Row>
+              <Spacer />
+              <Row justify="center">
+                <Button
+                  color="secondary"
+                  size="sm"
+                  bordered
+                  onClick={() => setSkipPersonalize(true)}
+                >
+                  Skip for now
+                </Button>
+              </Row>
+            </Card.Body>
+          </Card>
+        </>
+      );
+    }
     return (
       <>
         {!hasExpired ? (
@@ -109,11 +171,26 @@ const TipPage: NextPage = () => {
         {!hasExpired && (
           <>
             {tip.status === "UNFUNDED" && tip.invoice && (
-              <PayTipInvoice invoice={tip.invoice} />
+              <>
+                <PayTipInvoice invoice={tip.invoice} />
+                <Spacer />
+              </>
             )}
             {tip.status === "UNCLAIMED" && <ShareUnclaimedTip tip={tip} />}
           </>
         )}
+
+        {expirableTipStatuses.indexOf(tip.status) > -1 && (
+          <>
+            <NextLink href={`${Routes.tips}/${tip.id}/edit`} passHref>
+              <a>
+                <Button>Edit Tip</Button>
+              </a>
+            </NextLink>
+            <Spacer />
+          </>
+        )}
+
         {tip.status === "WITHDRAWN" && (
           <>
             <ConfettiContainer />
@@ -158,7 +235,6 @@ const TipPage: NextPage = () => {
         )}
         {tip.status === "UNFUNDED" && (
           <>
-            <Spacer />
             <Button onClick={deleteTip} color="error">
               Delete Tip
             </Button>
@@ -166,7 +242,6 @@ const TipPage: NextPage = () => {
         )}
         {refundableTipStatuses.indexOf(tip.status) >= 0 && (
           <>
-            <Spacer />
             <Button onClick={reclaimTip} color="error">
               Reclaim tip
             </Button>

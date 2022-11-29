@@ -1,0 +1,11 @@
+{
+  "hello": "Hallo {{tippeeName}}!",
+  "tipperHasGiftedYou": "{{tipperName}} will Dir eine Spende zukommen lassen",
+  "youHaveBeenGifted": "Du bist beschenkt worden",
+  "expired": "Diese Spende ist abgelaufen.",
+  "instructions.phone": "Bitte gebe Deine Handynummer ein und klick den Button um Deine Spende zu erhalten.",
+  "instructions.email": "Bitte gebe Deine E-Mail Adresse ein und klick den Button um Deine Spende zu erhalten.",
+  "instructions.lightning": "Login mit Lightning",
+  "expiresIn": "Läuft ab am {{expiry}}",
+  "claim": "Spende in Empfang nehmen"
+}

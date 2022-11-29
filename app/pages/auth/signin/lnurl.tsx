@@ -11,6 +11,8 @@ import {
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
+import { getStaticProps } from "lib/i18n/i18next";
+import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { signIn } from "next-auth/react";
@@ -33,11 +35,12 @@ type LnurlAuthSignInProps = {
 export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const router = useRouter();
   const { t } = useTranslation("common");
+  const linkExistingAccount = router.query["link"] === "true";
   const callbackUrlWithFallback =
-    callbackUrl || (router.query["callbackUrl"] as string) || Routes.home;
+    callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
   // only retrieve the qr code once
   const { data: qr } = useSWRImmutable<LnurlAuthLoginInfo>(
-    "/api/auth/lnurl/generate-secret",
+    `/api/auth/lnurl/generate-secret?linkExistingAccount=${linkExistingAccount}`,
     defaultFetcher
   );
 
@@ -54,6 +57,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
           const result = await signIn("lnurl", {
             k1: qr.k1,
             callbackUrl: callbackUrlWithFallback,
+            locale: router.locale || DEFAULT_LOCALE,
             redirect: false,
           });
 
@@ -136,3 +140,5 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
     </>
   );
 }
+
+export { getStaticProps };

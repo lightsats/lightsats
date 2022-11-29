@@ -41,7 +41,7 @@ const Scoreboard: NextPage = () => {
                 <Text size={12} weight="bold" transform="uppercase">
                   # Total tips sent
                 </Text>
-                <Text h4>{scoreboard.numTipsSent}</Text>
+                <Text h3>{scoreboard.numTipsSent}</Text>
               </Col>
             </Card.Header>
           </Card>
@@ -65,7 +65,9 @@ const Scoreboard: NextPage = () => {
                 <Text size={12} weight="bold">
                   TOTAL TIP VALUE (sats)
                 </Text>
-                <Text h3>{formatAmount(scoreboard.totalSatsSent, 0)}</Text>
+                <Text h3 css={{ whiteSpace: "nowrap" }}>
+                  {formatAmount(scoreboard.totalSatsSent, 1)}
+                </Text>
               </Col>
             </Card.Header>
           </Card>

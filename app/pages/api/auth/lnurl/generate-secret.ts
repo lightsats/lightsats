@@ -1,7 +1,10 @@
 import { randomBytes } from "crypto";
+import { StatusCodes } from "http-status-codes";
 import prisma from "lib/prismadb";
 import * as lnurl from "lnurl";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "pages/api/auth/[...nextauth]";
 import { LnurlAuthLoginInfo } from "types/LnurlAuthLoginInfo";
 
 export default async function handler(
@@ -11,12 +14,27 @@ export default async function handler(
   if (!req.headers.host) {
     throw new Error("No host in request headers");
   }
+
+  const { linkExistingAccount } = req.query;
+
+  let linkUserId: string | undefined;
+
+  if (linkExistingAccount === "true") {
+    const session = await unstable_getServerSession(req, res, authOptions);
+    if (!session) {
+      res.status(StatusCodes.UNAUTHORIZED).end();
+      return;
+    }
+    linkUserId = session.user.id;
+  }
+
   const k1 = generateSecret();
 
   // store the random secret in the DB so it can only be used once
   await prisma.lnurlAuthKey.create({
     data: {
       k1,
+      linkUserId: linkUserId || null,
     },
   });
 

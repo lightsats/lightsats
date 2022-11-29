@@ -10,16 +10,15 @@ import {
   Badge,
   Button,
   Dropdown,
-  Image,
   Link,
   Navbar,
   Row,
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { LanguagePicker } from "components/LanguagePicker";
+import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
@@ -57,7 +56,7 @@ export function AppNavbar() {
     () => [
       {
         name: "Home",
-        href: Routes.home,
+        href: !user ? Routes.home : Routes.dashboard,
         icon: <HomeIcon />,
       },
       {
@@ -76,17 +75,22 @@ export function AppNavbar() {
         icon: <LightBulbIcon />,
       },
     ],
-    []
+    [user]
   );
 
-  if (sessionStatus === "loading" || (session && !user)) {
-    return null;
-  }
+  const isLoading =
+    sessionStatus === "loading" ||
+    (session && !user) ||
+    router.pathname.startsWith(Routes.verifySignin);
 
   return (
     <Navbar
       variant="sticky"
-      css={{ backgroundColor: "$white", $$navbarBackgroundColor: "$white" }}
+      css={{
+        backgroundColor: "$white",
+        $$navbarBackgroundColor: "$white",
+        visibility: isLoading ? "hidden" : undefined,
+      }}
     >
       <Navbar.Content activeColor="primary">
         {!hideNavbar && (
@@ -96,7 +100,7 @@ export function AppNavbar() {
           />
         )}
         <Navbar.Brand>
-          <NextLink href={Routes.home}>
+          <NextLink href={!user ? Routes.home : Routes.dashboard}>
             <a
               onClick={
                 hideNavbar
@@ -106,7 +110,12 @@ export function AppNavbar() {
                   : closeNavbar
               }
             >
-              <Image alt="logo" src="/images/logo.svg" width={150} />
+              <NextImage
+                alt="logo"
+                src="/images/logo.svg"
+                width={150}
+                height={150}
+              />
             </a>
           </NextLink>
         </Navbar.Brand>
@@ -170,19 +179,6 @@ export function AppNavbar() {
                 aria-label="User menu actions"
                 disabledKeys={["language"]}
               >
-                <Dropdown.Item key="language">
-                  <FlexBox
-                    style={{
-                      flexDirection: "row",
-
-                      width: "100%",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    Language&nbsp;
-                    <LanguagePicker />
-                  </FlexBox>
-                </Dropdown.Item>
                 <Dropdown.Item key="profile">
                   <Row>
                     <NextLink href={Routes.profile} passHref>
@@ -207,7 +203,7 @@ export function AppNavbar() {
       )}
       {!user && (
         <Navbar.Content>
-          {!hideNavbar && (
+          {!hideNavbar && !router.pathname.startsWith(Routes.login) && (
             <Navbar.Item hideIn="xs">
               <NextLink href={Routes.login} passHref>
                 <a>

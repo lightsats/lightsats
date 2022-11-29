@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import prisma from "lib/prismadb";
 import { getFallbackAvatarId } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -43,19 +44,18 @@ export default async function handler(
         id: user.id,
         created: user.created,
         userType: user.userType,
+        lightningAddress: user.lightningAddress,
         ...(user.isAnonymous &&
         (forceAnonymous === "true" || user.id !== session?.user.id)
           ? {
               name: null,
               avatarURL: null,
               twitterUsername: null,
-              lightningAddress: null,
             }
           : {
               name: user.name,
               avatarURL: user.avatarURL,
               twitterUsername: user.twitterUsername,
-              lightningAddress: user.lightningAddress,
             }),
         fallbackAvatarId: getFallbackAvatarId(user),
         numTipsSent: sentTips.length,
@@ -105,6 +105,7 @@ async function updateUser(
       avatarURL: updateUserRequest.avatarURL ?? null,
       lightningAddress: updateUserRequest.lightningAddress ?? null,
       isAnonymous: updateUserRequest.isAnonymous,
+      locale: updateUserRequest.locale ?? DEFAULT_LOCALE,
     },
   });
 

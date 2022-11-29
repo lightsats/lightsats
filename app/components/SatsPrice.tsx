@@ -10,5 +10,5 @@ export function SatsPrice({ exchangeRate, fiat }: SatsPriceProps) {
   if (!exchangeRate) {
     return <Loading color="currentColor" size="sm" />;
   }
-  return <>{getSatsAmount(fiat, exchangeRate)} satoshis⚡</>;
+  return <>{getSatsAmount(fiat, exchangeRate)} sats</>;
 }

@@ -31,6 +31,7 @@ async function handlePayInvoice(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const { isWebln } = req.query;
   const withdrawalRequest = req.body as InvoiceWithdrawalRequest;
   checkWithdrawalFlow(withdrawalRequest.flow);
 
@@ -39,11 +40,17 @@ async function handlePayInvoice(
       withdrawalRequest.flow,
       withdrawalRequest.invoice,
       session.user.id,
-      "invoice",
-      undefined
+      isWebln === "true" ? "webln" : "invoice"
     );
     res.status(204).end();
   } catch (error) {
-    res.status(500).json({ error });
+    console.error(
+      "Failed to pay manual invoice " +
+        withdrawalRequest.invoice +
+        " userId " +
+        session.user.id,
+      error
+    );
+    res.status(500).json((error as Error).message);
   }
 }

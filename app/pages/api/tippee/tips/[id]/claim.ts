@@ -1,8 +1,9 @@
 import { Tip } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { sendEmail } from "lib/email/sendEmail";
 import prisma from "lib/prismadb";
 import { stageTip } from "lib/stageTip";
-import { hasTipExpired } from "lib/utils";
+import { getTipUrl, hasTipExpired } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -38,6 +39,7 @@ async function handleClaimTip(
     },
     include: {
       lnbitsWallet: true,
+      tipper: true,
     },
   });
   if (!tip) {
@@ -78,5 +80,22 @@ async function handleClaimTip(
       userType: "tippee",
     },
   });
+  if (tip.tipper.email) {
+    try {
+      await sendEmail({
+        to: tip.tipper.email,
+        subject: "Your tip has been claimed!",
+        html: `View your recipient's journey: <a href="${getTipUrl(
+          tip,
+          tip.tipper.locale
+        )}">click here</a>`,
+        from: `Lightsats <${process.env.EMAIL_FROM}>`,
+      });
+    } catch (error) {
+      console.error(
+        "Failed to send claimed notification email. Tip: " + tip.id
+      );
+    }
+  }
   res.status(204).end();
 }

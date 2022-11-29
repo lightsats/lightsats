@@ -1,0 +1,8 @@
+[defaults]
+url=https://sentry.io/
+org=lightsats
+project=lightsats
+
+[auth]
+token=XXXX
+dsn=https://***

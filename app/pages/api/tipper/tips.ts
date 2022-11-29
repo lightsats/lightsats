@@ -1,17 +1,17 @@
 import { Tip } from "@prisma/client";
 import { add } from "date-fns";
 import { StatusCodes } from "http-status-codes";
-import { createFundingInvoice } from "lib/lnbits/createInvoice";
 import {
   createLnbitsUserAndWallet,
   generateUserAndWalletName,
 } from "lib/lnbits/createLnbitsUserAndWallet";
 import prisma from "lib/prismadb";
+import { recreateTipFundingInvoice } from "lib/recreateTipFundingInvoice";
 import { calculateFee } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
-import { CreateTipRequest } from "types/CreateTipRequest";
+import { CreateTipRequest } from "types/TipRequest";
 
 export default async function handler(
   req: NextApiRequest,
@@ -73,14 +73,6 @@ async function handlePostTip(
     throw new Error("No LNBITS_USER_ID provided");
   }
 
-  // console.log(
-  //   "create tip",
-  //   "request body",
-  //   req.body,
-  //   "config:",
-  //   process.env.APP_URL,
-  //   process.env.LNBITS_URL
-  // );
   const createTipRequest = req.body as CreateTipRequest;
   if (
     createTipRequest.amount <= 0 ||
@@ -95,7 +87,7 @@ async function handlePostTip(
       months: 1,
     });
   const fee = calculateFee(createTipRequest.amount);
-  const tip = await prisma.tip.create({
+  let tip = await prisma.tip.create({
     data: {
       tipperId: session.user.id,
       amount: createTipRequest.amount,
@@ -103,10 +95,7 @@ async function handlePostTip(
       status: "UNFUNDED",
       expiry,
       currency: createTipRequest.currency,
-      note: createTipRequest.note,
-      tippeeName: createTipRequest.tippeeName,
       version: 1 /* 0=all tips in same bucket, 1=one wallet per tip */,
-      tippeeLocale: createTipRequest.tippeeLocale,
     },
   });
 
@@ -147,21 +136,7 @@ async function handlePostTip(
     throw new Error("Failed to save tip lnbits wallet to database");
   }
 
-  // create the tip's funding invoice
-  const fundingInvoice = await createFundingInvoice(
-    createTipRequest.amount + fee,
-    lnbitsWallet.adminkey
-  );
-
-  await prisma.tip.update({
-    where: {
-      id: tip.id,
-    },
-    data: {
-      invoice: fundingInvoice.invoice,
-      invoiceId: fundingInvoice.invoiceId,
-    },
-  });
+  tip = await recreateTipFundingInvoice(tip, lnbitsWallet.adminkey);
 
   res.json(tip);
 }

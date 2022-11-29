@@ -61,6 +61,7 @@ model User {
   tipsSent Tip[] @relation("tipsSent")
   tipsReceived Tip[] @relation("tipsReceived")
   lnbitsWallet LnbitsWallet?
+  locale String @default("en")
 
   // from https://next-auth.js.org/adapters/prisma
   emailVerified DateTime?
@@ -68,6 +69,7 @@ model User {
   sessions Session[]
   isAnonymous Boolean @default(false)
   withdrawalLinks WithdrawalLink[]
+  withdrawalErrors WithdrawalError[]
   withdrawals Withdrawal[]
   journeyStep Int @default(1)
   inJourney Boolean @default(false)
@@ -78,6 +80,7 @@ model User {
   updated DateTime @default(now()) @updatedAt
 
   sentReminders SentReminder[]
+  lastWithdrawal DateTime?
 }
 
 model Tip {
@@ -124,6 +127,7 @@ model LnurlAuthKey {
   k1 String @id
   key String?
   created DateTime @default(now())
+  linkUserId String?
 }
 
 model WithdrawalLink {
@@ -164,6 +168,7 @@ model Withdrawal {
 
 model WithdrawalError {
   id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   message String
   created DateTime @default(now())
@@ -216,6 +221,7 @@ enum WithdrawalFlow {
 enum WithdrawalMethod {
   lnurlw
   invoice
+  webln
 }
 
 enum RoleType {

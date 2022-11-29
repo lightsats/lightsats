@@ -45,7 +45,7 @@ const Withdraw: NextPage = () => {
   const [hasLaunchedWebln, setLaunchedWebln] = React.useState(false);
 
   const executeWithdrawal = React.useCallback(
-    (invoice: string) => {
+    (invoice: string, isWebln: boolean) => {
       if (isSubmitting) {
         throw new Error("Already submitting");
       }
@@ -54,7 +54,7 @@ const Withdraw: NextPage = () => {
       (async () => {
         try {
           const withdrawalRequest: InvoiceWithdrawalRequest = { invoice, flow };
-          const result = await fetch("/api/invoices", {
+          const result = await fetch(`/api/invoices?isWebln=${isWebln}`, {
             method: "POST",
             body: JSON.stringify(withdrawalRequest),
             headers: { "Content-Type": "application/json" },
@@ -85,7 +85,7 @@ const Withdraw: NextPage = () => {
     if (!invoiceFieldValue) {
       throw new Error("No invoice set");
     }
-    executeWithdrawal(invoiceFieldValue);
+    executeWithdrawal(invoiceFieldValue, false);
   }, [executeWithdrawal, invoiceFieldValue]);
 
   const withdrawableTips = React.useMemo(
@@ -164,7 +164,7 @@ const Withdraw: NextPage = () => {
             const makeInvoiceResponse = await webln.makeInvoice({
               amount: availableBalance,
             });
-            executeWithdrawal(makeInvoiceResponse.paymentRequest);
+            executeWithdrawal(makeInvoiceResponse.paymentRequest, true);
           }
         } catch (error) {
           console.error("Failed to load webln", error);
@@ -198,14 +198,19 @@ const Withdraw: NextPage = () => {
             } funds to withdraw right now.`}
           </Text>
           <Spacer />
-          <NextLink href={Routes.home} passHref>
+          <NextLink href={Routes.dashboard} passHref>
             <Link>Home</Link>
           </NextLink>
         </>
       ) : (
         <div style={{ maxWidth: "100%" }}>
-          <Text h3>Ready to withdraw your bitcoin?</Text>
-          {withdrawalLinkLnurl ? (
+          <Text h3>
+            {isSubmitting
+              ? "Withdrawing..."
+              : "Ready to withdraw your bitcoin?"}
+          </Text>
+
+          {withdrawalLinkLnurl && !isSubmitting ? (
             <>
               <Text>
                 Scan, tap or copy the below link into your bitcoin wallet to
@@ -266,44 +271,48 @@ const Withdraw: NextPage = () => {
               </FlexBox>
             </>
           ) : (
-            <>
+            <Row justify="center">
               <Loading />
+            </Row>
+          )}
+          {!isSubmitting && (
+            <>
+              <Spacer y={1} />
+              <Collapse shadow title={<Text b>Manual withdrawal</Text>}>
+                <Text>
+                  Create an invoice for exactly&nbsp;
+                  <strong>{availableBalance} sats</strong> and paste the invoice
+                  into the field below.
+                </Text>
+                <Spacer />
+                <Alert>
+                  <Text small>
+                    If the invoice amount does not match your available balance,
+                    the transaction will fail.
+                  </Text>
+                </Alert>
+                <Text color="warning"></Text>
+                <Spacer />
+                <Input
+                  label="Lightning Invoice"
+                  fullWidth
+                  value={invoiceFieldValue}
+                  onChange={(event) => setInvoiceFieldValue(event.target.value)}
+                />
+                <Spacer />
+                <Button
+                  onClick={submitForm}
+                  disabled={isSubmitting || !invoiceFieldValue}
+                >
+                  {isSubmitting ? (
+                    <Loading color="currentColor" size="sm" />
+                  ) : (
+                    <>Withdraw</>
+                  )}
+                </Button>
+              </Collapse>
             </>
           )}
-          <Spacer y={1} />
-          <Collapse shadow title={<Text b>Manual withdrawal</Text>}>
-            <Text>
-              Create an invoice for exactly&nbsp;
-              <strong>{availableBalance} sats</strong> and paste the invoice
-              into the field below.
-            </Text>
-            <Spacer />
-            <Alert>
-              <Text small>
-                If the invoice amount does not match your available balance, the
-                transaction will fail.
-              </Text>
-            </Alert>
-            <Text color="warning"></Text>
-            <Spacer />
-            <Input
-              label="Lightning Invoice"
-              fullWidth
-              value={invoiceFieldValue}
-              onChange={(event) => setInvoiceFieldValue(event.target.value)}
-            />
-            <Spacer />
-            <Button
-              onClick={submitForm}
-              disabled={isSubmitting || !invoiceFieldValue}
-            >
-              {isSubmitting ? (
-                <Loading color="currentColor" size="sm" />
-              ) : (
-                <>Withdraw</>
-              )}
-            </Button>
-          </Collapse>
         </div>
       )}
       {tipIds && <Spacer />}

@@ -1,4 +1,5 @@
 import { Tip, User } from "@prisma/client";
+import getSymbolFromCurrency from "currency-symbol-map";
 import { format, isAfter } from "date-fns";
 import {
   expirableTipStatuses,
@@ -34,7 +35,17 @@ export const fixNextUIButtonLink: MouseEventHandler<HTMLButtonElement> = (
 
 export function calculateFee(amount: number) {
   // always round fees UP to nearest sat value, to simplify calculations and make sure fees are always sufficient
-  return Math.max(MINIMUM_FEE_SATS, Math.ceil(amount * (FEE_PERCENT / 100)));
+  const originalFee = Math.max(
+    MINIMUM_FEE_SATS,
+    Math.ceil(amount * (FEE_PERCENT / 100))
+  );
+
+  // (amount) / (originalFee + amount) is bigger than 99%, breaking our 1% fee reserve.
+  // the original amount must be withdrawable leaving at least 1% reserve.
+  return Math.max(
+    MINIMUM_FEE_SATS,
+    Math.ceil((amount + originalFee) * (FEE_PERCENT / 100))
+  );
 }
 
 export function generateAlphanumeric(length: number): string {
@@ -102,7 +113,16 @@ export const formatAmount = (amount: number, decimals = 2) => {
   return amount.toFixed(i > 0 ? decimals : 0) + ["", " k", " M", "G"][i];
 };
 
+export const getTipUrl = (tip: Tip | PublicTip, locale: string | undefined) =>
+  `${getAppUrl()}${getLocalePath(locale)}${Routes.tips}/${tip.id}`;
+
 export const getClaimUrl = (tip: Tip | PublicTip) =>
-  `${getAppUrl()}${getLocalePath(tip.tippeeLocale)}${Routes.tips}/${
-    tip.id
-  }/claim`;
+  `${getTipUrl(tip, tip.tippeeLocale)}/claim`;
+
+export const switchRouterLocale = (router: NextRouter, nextLocale: string) => {
+  const { pathname, asPath, query } = router;
+  router.push({ pathname, query }, asPath, { locale: nextLocale });
+};
+
+export const getSymbolFromCurrencyWithFallback = (currency: string) =>
+  getSymbolFromCurrency(currency) || "$";

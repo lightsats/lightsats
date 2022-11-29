@@ -1,4 +1,4 @@
-import { WithdrawalFlow, WithdrawalMethod } from "@prisma/client";
+import { Prisma, WithdrawalFlow, WithdrawalMethod } from "@prisma/client";
 import * as bolt11 from "bolt11";
 import { completeWithdrawal } from "lib/completeWithdrawal";
 import { getPayment } from "lib/lnbits/getPayment";
@@ -10,9 +10,40 @@ export async function payWithdrawalInvoice(
   withdrawalFlow: WithdrawalFlow,
   invoice: string,
   userId: string,
-  withdrawalMethod: WithdrawalMethod,
-  withdrawalLinkId: string | undefined
+  withdrawalMethod: WithdrawalMethod
 ) {
+  const [lastWithdrawalResult] = await prisma.$transaction(
+    [
+      prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { lastWithdrawal: true },
+      }),
+      prisma.user.update({
+        where: { id: userId },
+        data: { lastWithdrawal: new Date() },
+      }),
+    ],
+    {
+      isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+    }
+  );
+
+  if (
+    lastWithdrawalResult.lastWithdrawal &&
+    Date.now() - new Date(lastWithdrawalResult.lastWithdrawal).getTime() <
+      60000 /* allow withdrawals once per minute */
+  ) {
+    const errorMessage =
+      "Your last withdrawal was less than a minute ago. Please try again soon.";
+    await prisma.withdrawalError.create({
+      data: {
+        message: errorMessage,
+        userId,
+      },
+    });
+    throw new Error(errorMessage);
+  }
+
   if (!process.env.LNBITS_API_KEY) {
     throw new Error("No LNBITS_API_KEY provided");
   }
@@ -23,6 +54,9 @@ export async function payWithdrawalInvoice(
   // FIXME: this needs to be in a transaction / only use the ids of tips originally retrieved, not the same query
   const tips = await prisma.tip.findMany({
     where: getWithdrawableTipsQuery(userId, withdrawalFlow),
+    include: {
+      tipper: true,
+    },
   });
 
   if (!tips.length) {
@@ -93,7 +127,7 @@ export async function payWithdrawalInvoice(
       payment.details.bolt11,
       withdrawalMethod,
       tips,
-      withdrawalLinkId
+      withdrawalMethod === "lnurlw"
     );
   }
 }
