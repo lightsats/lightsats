@@ -1,16 +1,21 @@
 import {
+  ArrowLeftOnRectangleIcon,
+  BellIcon,
   BookOpenIcon,
   ChartBarIcon,
   HomeIcon,
   InformationCircleIcon,
   LightBulbIcon,
+  UserIcon,
 } from "@heroicons/react/24/solid";
 import {
   Avatar,
+  Badge,
   Button,
   Dropdown,
   Link,
   Navbar,
+  Row,
   Spacer,
   Text,
 } from "@nextui-org/react";
@@ -18,6 +23,7 @@ import { Icon } from "components/Icon";
 import { LanguagePicker } from "components/LanguagePicker";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
+import { useNotifications } from "hooks/useNotifications";
 import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
 import { getUserAvatarUrl } from "lib/utils";
@@ -49,6 +55,9 @@ export function AppNavbar() {
   const { data: user } = useUser();
   const router = useRouter();
   const hideNavbar = router.pathname.endsWith("/claim"); // || user?.inJourney;
+  const notifications = useNotifications();
+  const numNotifications =
+    router.pathname === Routes.notifications ? 0 : notifications.length;
 
   const collapseItems: CollapseItem[] = React.useMemo(
     () => [
@@ -80,6 +89,16 @@ export function AppNavbar() {
     sessionStatus === "loading" ||
     (session && !user) ||
     router.pathname.startsWith(Routes.verifySignin);
+
+  const userAvatar = (
+    <Avatar
+      bordered
+      as="button"
+      color="primary"
+      size="md"
+      src={getUserAvatarUrl(user)}
+    />
+  );
 
   return (
     <Navbar
@@ -160,30 +179,87 @@ export function AppNavbar() {
             <Dropdown placement="bottom-right">
               <Navbar.Item>
                 <Dropdown.Trigger>
-                  <Avatar
-                    bordered
-                    as="button"
-                    color="primary"
-                    size="md"
-                    src={getUserAvatarUrl(user)}
-                  />
+                  {numNotifications > 0 ? (
+                    <div>
+                      <Badge
+                        color="error"
+                        content={
+                          <Icon width={16} height={16}>
+                            <BellIcon />
+                          </Icon>
+                        }
+                        css={{ p: 4 }}
+                      >
+                        {userAvatar}
+                      </Badge>
+                    </div>
+                  ) : (
+                    userAvatar
+                  )}
                 </Dropdown.Trigger>
               </Navbar.Item>
               <Dropdown.Menu
                 aria-label="User menu actions"
                 disabledKeys={["language"]}
               >
-                <Dropdown.Item key="profile">
+                <Dropdown.Item
+                  key="notifications"
+                  icon={
+                    <Badge
+                      color={numNotifications > 0 ? "error" : "primary"}
+                      css={{ p: 4 }}
+                    >
+                      <Icon width={16} height={16}>
+                        <BellIcon />
+                      </Icon>
+                    </Badge>
+                  }
+                >
+                  <NextLink href={Routes.notifications} passHref>
+                    <a>
+                      <Row justify="space-between">
+                        <Text
+                          color={numNotifications > 0 ? "error" : "primary"}
+                        >
+                          Notifications
+                        </Text>
+                        {numNotifications > 0 && (
+                          <Badge color="error">{numNotifications}</Badge>
+                        )}
+                      </Row>
+                    </a>
+                  </NextLink>
+                </Dropdown.Item>
+                <Dropdown.Item
+                  key="profile"
+                  icon={
+                    <Badge color="primary" css={{ p: 4 }}>
+                      <Icon width={16} height={16}>
+                        <UserIcon />
+                      </Icon>
+                    </Badge>
+                  }
+                >
                   <NextLink href={Routes.profile} passHref>
                     <a>
                       <Text color="primary">Profile</Text>
                     </a>
                   </NextLink>
                 </Dropdown.Item>
-                <Dropdown.Item key="logout" withDivider>
+                <Dropdown.Item
+                  key="logout"
+                  withDivider
+                  icon={
+                    <Badge color="default" css={{ p: 4 }}>
+                      <Icon width={16} height={16}>
+                        <ArrowLeftOnRectangleIcon />
+                      </Icon>
+                    </Badge>
+                  }
+                >
                   <NextLink href={Routes.logout} passHref>
                     <a>
-                      <Text color="error">Log out</Text>
+                      <Text color="default">Log out</Text>
                     </a>
                   </NextLink>
                 </Dropdown.Item>

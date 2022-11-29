@@ -41,6 +41,8 @@ import { KeyedMutator } from "swr";
 import { DeleteLinkedAccountRequest } from "types/DeleteLinkedAccountRequest";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
 
+export const connectedAccountsElementId = "connected-accounts";
+
 type ProfileFormData = {
   name: string;
   locale: string;
@@ -92,6 +94,27 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
       toast.success("Wallet public key Copied to clipboard");
     }
   }, [user.lnurlPublicKey]);
+  const [connectedAccountsExpanded, setConnectedAccountsExpanded] =
+    React.useState(false);
+  const [highlightConnectedAccounts, setHighlightConnectedAccounts] =
+    React.useState(false);
+
+  React.useEffect(() => {
+    if (window.location.hash) {
+      setConnectedAccountsExpanded(true);
+      setTimeout(() => {
+        document
+          .getElementById(window.location.hash.substring(1))
+          ?.scrollIntoView({ behavior: "smooth" });
+        setTimeout(() => {
+          setHighlightConnectedAccounts(true);
+          setTimeout(() => {
+            setHighlightConnectedAccounts(false);
+          }, 1000);
+        }, 500);
+      }, 1000);
+    }
+  }, []);
 
   return (
     <>
@@ -112,8 +135,14 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
       <Collapse
         bordered
         title={<Text b>🔗 Connected accounts & more</Text>}
-        css={{ width: "100%" }}
+        css={{
+          width: "100%",
+          background: highlightConnectedAccounts ? "$red300" : undefined,
+          transition: "background 0.5s",
+        }}
+        expanded={connectedAccountsExpanded}
       >
+        <div id={connectedAccountsElementId} />
         <Row justify="space-between" align="center">
           <Text>{"📧 Email: "}</Text>
           {user.email ? (
@@ -436,7 +465,6 @@ type UnlinkButtonProps = {
 
 function UnlinkButton({ user, mutateUser, accountType }: UnlinkButtonProps) {
   const [isSubmitting, setSubmitting] = React.useState(false);
-  const userId = user.id;
   const isLastLoginMethod =
     [user.phoneNumber, user.email, user.lnurlPublicKey].filter(
       (loginMethod) => !!loginMethod
