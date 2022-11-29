@@ -204,8 +204,13 @@ const Withdraw: NextPage = () => {
         </>
       ) : (
         <div style={{ maxWidth: "100%" }}>
-          <Text h3>Ready to withdraw your bitcoin?</Text>
-          {withdrawalLinkLnurl ? (
+          <Text h3>
+            {isSubmitting
+              ? "Withdrawing..."
+              : "Ready to withdraw your bitcoin?"}
+          </Text>
+
+          {withdrawalLinkLnurl && !isSubmitting ? (
             <>
               <Text>
                 Scan, tap or copy the below link into your bitcoin wallet to
@@ -266,44 +271,48 @@ const Withdraw: NextPage = () => {
               </FlexBox>
             </>
           ) : (
-            <>
+            <Row justify="center">
               <Loading />
+            </Row>
+          )}
+          {!isSubmitting && (
+            <>
+              <Spacer y={1} />
+              <Collapse shadow title={<Text b>Manual withdrawal</Text>}>
+                <Text>
+                  Create an invoice for exactly&nbsp;
+                  <strong>{availableBalance} sats</strong> and paste the invoice
+                  into the field below.
+                </Text>
+                <Spacer />
+                <Alert>
+                  <Text small>
+                    If the invoice amount does not match your available balance,
+                    the transaction will fail.
+                  </Text>
+                </Alert>
+                <Text color="warning"></Text>
+                <Spacer />
+                <Input
+                  label="Lightning Invoice"
+                  fullWidth
+                  value={invoiceFieldValue}
+                  onChange={(event) => setInvoiceFieldValue(event.target.value)}
+                />
+                <Spacer />
+                <Button
+                  onClick={submitForm}
+                  disabled={isSubmitting || !invoiceFieldValue}
+                >
+                  {isSubmitting ? (
+                    <Loading color="currentColor" size="sm" />
+                  ) : (
+                    <>Withdraw</>
+                  )}
+                </Button>
+              </Collapse>
             </>
           )}
-          <Spacer y={1} />
-          <Collapse shadow title={<Text b>Manual withdrawal</Text>}>
-            <Text>
-              Create an invoice for exactly&nbsp;
-              <strong>{availableBalance} sats</strong> and paste the invoice
-              into the field below.
-            </Text>
-            <Spacer />
-            <Alert>
-              <Text small>
-                If the invoice amount does not match your available balance, the
-                transaction will fail.
-              </Text>
-            </Alert>
-            <Text color="warning"></Text>
-            <Spacer />
-            <Input
-              label="Lightning Invoice"
-              fullWidth
-              value={invoiceFieldValue}
-              onChange={(event) => setInvoiceFieldValue(event.target.value)}
-            />
-            <Spacer />
-            <Button
-              onClick={submitForm}
-              disabled={isSubmitting || !invoiceFieldValue}
-            >
-              {isSubmitting ? (
-                <Loading color="currentColor" size="sm" />
-              ) : (
-                <>Withdraw</>
-              )}
-            </Button>
-          </Collapse>
         </div>
       )}
       {tipIds && <Spacer />}
