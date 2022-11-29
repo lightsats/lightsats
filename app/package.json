@@ -33,7 +33,8 @@
     "prettier:check": "yarn prettier --check . --check '!.db'",
     "logs:staging": "fly logs -a lightsats",
     "logs:production": "fly logs -a lightsats-prod",
-    "items:placeholders": "cli-confirm \"Confirm no outstanding changes\" && ts-node generateItemPlaceholders.ts && yarn prettier:fix",
+    "items:deletePlaceholders": "cli-confirm \"Confirm no outstanding changes\" && ts-node deletePlaceholders.ts && yarn prettier:fix",
+    "items:placeholders": "cli-confirm \"Confirm no outstanding changes\" && ts-node deletePlaceholders.ts && ts-node generateItemPlaceholders.ts && yarn prettier:fix",
     "items:filesizes": "ts-node checkItemImageFilesizes.ts"
   },
   "dependencies": {

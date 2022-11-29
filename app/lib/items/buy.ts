@@ -7,9 +7,9 @@ export const buy: Item[] = [
     link: "https://lgt.st/swan",
     image: "swan.jpeg",
     languageCodes: [getLanguageCode("English")],
-    name: "Swan",
     placeholderDataUrl:
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AM3i9wlHbAA5X8/j+AAAK1LB1+1uja0ABDUABEFn7///vNToAClRANnt/z5oigA0XN3w/32KGWQSLeGBAAAAAElFTkSuQmCC",
+    name: "Swan",
     slogan:
       "Swan Bitcoin provides savings plans, instant buys, Private Client for businesses and HNWI, Advisor Services for financial advisors, and world-class Bitcoin education.",
     platforms: ["web", "mobile"],
@@ -114,7 +114,7 @@ export const buy: Item[] = [
     image: "pocket.jpeg",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANklEQVR4nGNgYOhkYJjCwDCHgWEGAwPDhEfn/+9c+J+BYSqI8//9/0t7oJxOBoY+BoYJDAwzAbscEV8Aou+YAAAAAElFTkSuQmCC",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPElEQVR4nGPQZ9iYwLA3jGGHPsNGBjOGTe9P/P//478GwxoGC4ZNb079n5y5k4FhIojjyLCFgaFelGEdACj4FFqC4nZ2AAAAAElFTkSuQmCC",
     name: "Pocket",
     slogan:
       "Experience the best way to buy and store Bitcoin. From your bank account directly into your self-custody. One-off or recurring at the most recent exchange rate.",
@@ -126,7 +126,7 @@ export const buy: Item[] = [
     image: "casa.jpeg",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPElEQVR4nGPQZ9iYwLA3jGGHPsNGBjOGTe9P/P//478GwxoGC4ZNb079n5y5k4FhIojjyLCFgaFelGEdACj4FFqC4nZ2AAAAAElFTkSuQmCC",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANklEQVR4nGNgYOhkYJjCwDCHgWEGAwPDhEfn/+9c+J+BYSqI8//9/0t7oJxOBoY+BoYJDAwzAbscEV8Aou+YAAAAAElFTkSuQmCC",
     name: "Casa",
     slogan:
       "Casa is the leading provider of Bitcoin self-custody solutions. Buy, sell, and receive bitcoin with our ultimate blend of security, privacy, and control.",

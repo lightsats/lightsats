@@ -61,6 +61,29 @@ export const spend: Item[] = [
   },
   {
     category: "spend",
+    image: "oshi.png",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/oshi",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAALklEQVR4nGNgYGBgYWERFxdnZmZmYGBgePPmzb9//0AsTk7O3bt329jYgDjIAAAHRwkZ5bhLBwAAAABJRU5ErkJggg==",
+    name: "Oshi",
+    slogan: "Earn bitcoin by supporting your local economy.",
+    platforms: ["mobile"],
+  },
+  {
+    category: "spend",
+    image: "sparkwallet.png",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/spark",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAALElEQVR4nGNgYGBgY+OQk1ZkgID/a57+v/8fxjl6+/+Co1COnIQYCzMTkAUAKGcLNDsIiM4AAAAASUVORK5CYII=",
+    name: "Spark Wallet",
+    slogan:
+      "Earn Rewards on every transaction. Send and receive instantly. Get a visa debit card. Swap your bitcoin. Buy gift cards at 5% back. Earn free rewards when sharing Spark Wallet with your friends!",
+    platforms: ["mobile"],
+  },
+  {
+    category: "spend",
     image: "ibexpay.jpeg",
     languageCodes: [getLanguageCode("English")],
     link: "https://lgt.st/ibexpay",
@@ -69,6 +92,6 @@ export const spend: Item[] = [
     name: "iBEXPay",
     slogan:
       "IBEX is a bitcoin infrastructure company specialized in the Lightning Network (LN) enterprise solutions.",
-    platforms: ["web", "mobile"],
+    platforms: ["web"],
   },
 ];
