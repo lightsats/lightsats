@@ -1,4 +1,9 @@
-import { ClipboardIcon, EyeIcon, LinkIcon } from "@heroicons/react/24/solid";
+import {
+  ClipboardIcon,
+  EyeIcon,
+  LinkIcon,
+  TrashIcon,
+} from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
@@ -33,6 +38,7 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { KeyedMutator } from "swr";
+import { DeleteLinkedAccountRequest } from "types/DeleteLinkedAccountRequest";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
 
 type ProfileFormData = {
@@ -111,25 +117,34 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
         <Row justify="space-between" align="center">
           <Text>{"📧 Email: "}</Text>
           {user.email ? (
-            <Text b>{user.email}</Text>
+            <>
+              <Text b>{user.email}</Text>
+              <Spacer x={0.25} />
+              <UnlinkButton
+                accountType="email"
+                mutateUser={mutateUser}
+                user={user}
+              />
+            </>
           ) : (
-            <NextLink href={`${Routes.emailSignin}?link=true`}>
-              <a>
-                <Button size="sm" auto>
-                  Link&nbsp;
-                  <Icon width={16} height={16}>
-                    <LinkIcon />
-                  </Icon>
-                </Button>
-              </a>
-            </NextLink>
+            <LinkButton route={Routes.emailSignin} />
           )}
         </Row>
+        <Spacer />
         {user.phoneNumber && (
-          <Row justify="space-between" align="center">
-            <Text>{"📱 Phone: "}</Text>
-            <Text b>{user.phoneNumber}</Text>
-          </Row>
+          <>
+            <Row justify="space-between" align="center">
+              <Text>{"📱 Phone: "}</Text>
+              <Text b>{user.phoneNumber}</Text>
+              <Spacer x={0.25} />
+              <UnlinkButton
+                accountType="phoneNumber"
+                mutateUser={mutateUser}
+                user={user}
+              />
+            </Row>
+            <Spacer />
+          </>
         )}
         <Row justify="space-between" align="center">
           <Text>{"⚡ Wallet: "}</Text>
@@ -152,18 +167,15 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
                   <ClipboardIcon />
                 </Icon>
               </Button>
+              <Spacer x={0.25} />
+              <UnlinkButton
+                accountType="lnurlPublicKey"
+                mutateUser={mutateUser}
+                user={user}
+              />
             </Row>
           ) : (
-            <NextLink href={`${Routes.lnurlAuthSignin}?link=true`}>
-              <a>
-                <Button size="sm" auto>
-                  Link&nbsp;
-                  <Icon width={16} height={16}>
-                    <LinkIcon />
-                  </Icon>
-                </Button>
-              </a>
-            </NextLink>
+            <LinkButton route={Routes.lnurlAuthSignin} />
           )}
         </Row>
         <Spacer />
@@ -398,3 +410,85 @@ function UpdateProfileForm({ mutateUser, user }: ProfileInternalProps) {
 }
 
 export default Profile;
+
+type LinkButtonProps = { route: Routes };
+
+function LinkButton({ route }: LinkButtonProps) {
+  return (
+    <NextLink href={`${route}?link=true`}>
+      <a>
+        <Button size="sm" auto>
+          Link&nbsp;
+          <Icon width={16} height={16}>
+            <LinkIcon />
+          </Icon>
+        </Button>
+      </a>
+    </NextLink>
+  );
+}
+
+type UnlinkButtonProps = {
+  user: User;
+  accountType: DeleteLinkedAccountRequest["accountType"];
+  mutateUser: () => void;
+};
+
+function UnlinkButton({ user, mutateUser, accountType }: UnlinkButtonProps) {
+  const [isSubmitting, setSubmitting] = React.useState(false);
+  const userId = user.id;
+  const isLastLoginMethod =
+    [user.phoneNumber, user.email, user.lnurlPublicKey].filter(
+      (loginMethod) => !!loginMethod
+    ).length === 1;
+  const onClick = React.useCallback(async () => {
+    if (isSubmitting) {
+      throw new Error("Already submitting");
+    }
+    if (
+      window.confirm(
+        `Are you sure you wish to unlink this login method?${
+          isLastLoginMethod
+            ? " WARNING: This is your only login method. If you unlink all login methods your account will be anonymized and you will not be able to login once you have logged out of this session."
+            : ""
+        }`
+      )
+    ) {
+      setSubmitting(true);
+      const deleteLinkedAccountRequest: DeleteLinkedAccountRequest = {
+        accountType,
+      };
+      const result = await fetch(`/api/users/${user.id}/linkedAccounts`, {
+        method: "DELETE",
+        body: JSON.stringify(deleteLinkedAccountRequest),
+        headers: { "Content-Type": "application/json" },
+      });
+      if (result.ok) {
+        await mutateUser();
+      } else {
+        toast.error("Failed to unlink login method: " + result.statusText);
+      }
+      setSubmitting(false);
+    }
+  }, [accountType, isLastLoginMethod, isSubmitting, mutateUser, user.id]);
+
+  return (
+    <Button
+      size="sm"
+      color="error"
+      auto
+      onClick={onClick}
+      disabled={isSubmitting}
+    >
+      {isSubmitting ? (
+        <Loading color="currentColor" size="sm" />
+      ) : (
+        <>
+          <Icon width={16} height={16}>
+            <TrashIcon />
+          </Icon>
+        </>
+      )}
+    </Button>
+  );
+}
