@@ -1,11 +1,4 @@
 /* TODO: manage global styling with NextUI */
-html,
-body,
-#__next,
-div[data-overlay-container="true"] {
-  min-height: 100%;
-  height: 100%;
-}
 
 /* Fix Nextui button text showing through nav bug https://github.com/nextui-org/nextui/issues/724 */
 .nextui-button-text {
