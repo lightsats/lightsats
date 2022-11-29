@@ -1,12 +1,12 @@
 import { Tip } from "@prisma/client";
 import { add } from "date-fns";
 import { StatusCodes } from "http-status-codes";
-import { createFundingInvoice } from "lib/lnbits/createInvoice";
 import {
   createLnbitsUserAndWallet,
   generateUserAndWalletName,
 } from "lib/lnbits/createLnbitsUserAndWallet";
 import prisma from "lib/prismadb";
+import { recreateTipFundingInvoice } from "lib/recreateTipFundingInvoice";
 import { calculateFee } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
@@ -87,7 +87,7 @@ async function handlePostTip(
       months: 1,
     });
   const fee = calculateFee(createTipRequest.amount);
-  const tip = await prisma.tip.create({
+  let tip = await prisma.tip.create({
     data: {
       tipperId: session.user.id,
       amount: createTipRequest.amount,
@@ -136,21 +136,7 @@ async function handlePostTip(
     throw new Error("Failed to save tip lnbits wallet to database");
   }
 
-  // create the tip's funding invoice
-  const fundingInvoice = await createFundingInvoice(
-    createTipRequest.amount + fee,
-    lnbitsWallet.adminkey
-  );
-
-  await prisma.tip.update({
-    where: {
-      id: tip.id,
-    },
-    data: {
-      invoice: fundingInvoice.invoice,
-      invoiceId: fundingInvoice.invoiceId,
-    },
-  });
+  tip = await recreateTipFundingInvoice(tip, lnbitsWallet.adminkey);
 
   res.json(tip);
 }
