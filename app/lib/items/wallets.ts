@@ -155,7 +155,7 @@ const phoenix: Wallet = {
   link: "https://lgt.st/phoenix",
   image: "phoenix.jpeg",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AP///8jPx87TzP///wDX3NZKXUYAGwCAj34ArberECsMJj4hxc3EAPT19NTa0/z9/P///0JGIGVwaLfEAAAAAElFTkSuQmCC",
   name: "Phoenix",
   slogan: "The Bitcoin wallet from the future",
   languageCodes: [getLanguageCode("English")],
@@ -169,7 +169,7 @@ const lntips: Wallet = {
   link: "https://lgt.st/lntips",
   image: "lntips.jpeg",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGNgZfER5AhmYPBgYPBkMGNI2l1248XV/0riCQxOjDmTU/f8//h/Ss1xBkYWHwYGFwYGNxY2HwCGSQ+j4puuEwAAAABJRU5ErkJggg==",
   name: "lntips (Telegram)",
   slogan: "Bitcoin Lightning wallet on Telegram.",
   languageCodes: [getLanguageCode("English")],
@@ -183,7 +183,7 @@ const lntxbot: Wallet = {
   link: "https://lgt.st/lntxbot",
   image: "lntxbot.jpeg",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nB3JoRUAIAhFUXZgLkmsYvuL0ohG2qsevfUasD/AujszY8XMGODukt5UlaTzXTx1IMR3DRAKAAAAAElFTkSuQmCC",
   name: "lntxbot (Telegram)",
   slogan: "A Bitcoin Lightning wallet on Telegram.",
   languageCodes: [getLanguageCode("English")],
@@ -197,7 +197,7 @@ const sbw: Wallet = {
   link: "https://lgt.st/sbw",
   image: "sbw.webp",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAM0lEQVR4nGNgkEhicOtn0CwBMRgkkqx3fc65+p9BrZCBQTp18e//S/78h8owGNeCkEQSAJekECqxrsHvAAAAAElFTkSuQmCC",
   name: "Simple Bitcoin Wallet",
   slogan:
     "Simple Bitcoin Wallet (aka SBW) is an open-source, non-custodial, autonomous wallet for Android devices which can store, send and receive bitcoins.",

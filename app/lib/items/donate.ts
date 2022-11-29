@@ -68,7 +68,7 @@ export const donate: Item[] = [
     image: "bitcoinbeach.png",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGNgZWVz9fT3CwxjZ2dn0Dc0+rK79PeleUbG5gyc3Hz/vyz9f6VDQlKWgYGBQVRU1M3Tn42dHQCD6g5J96ZEDAAAAABJRU5ErkJggg==",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AP///7eVZrmYaf///wD///+DUQCCUQD+//8A5+jpBwQEHBoZ5OXmAPLy8ltcYmZpbvLy80mGHs83LiIlAAAAAElFTkSuQmCC",
     name: "Bitcoin Beach",
     slogan: "Bitcoin Beach - The first circular economy on bitcoin.",
     platforms: ["web"],
@@ -79,7 +79,7 @@ export const donate: Item[] = [
     image: "praiabitcoin.jpeg",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGNgZWVz9fT3CwxjZ2dn0Dc0+rK79PeleUbG5gyc3Hz/vyz9f6VDQlKWgYGBQVRU1M3Tn42dHQCD6g5J96ZEDAAAAABJRU5ErkJggg==",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANklEQVR4nB3CMQqAMBAAsNDnCS5FOnQ5/yxd9QVCt44nGCLnaDTyvQT9H9g42KnIdQdnkev5AI8SD0lgCisdAAAAAElFTkSuQmCC",
     name: "Praia Bitcoin",
     slogan:
       "Inspired by Bitcoin Beach optimized to Brazil, Praia Bitcoin experiment is building a Bitcoin Circular Economy in Jericoacoara- Ceará.",
@@ -91,7 +91,7 @@ export const donate: Item[] = [
     image: "pacodelaindia.jpeg",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGNgZWVz9fT3CwxjZ2dn0Dc0+rK79PeleUbG5gyc3Hz/vyz9f6VDQlKWgYGBQVRU1M3Tn42dHQCD6g5J96ZEDAAAAABJRU5ErkJggg==",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/ACUaEd2xmYF0Yi0lGgA6KBzHnZFxXFz/6ckAclk858bS4anC566OAEI4JP/i2v/i4xcOAEkIGL9RVnN6AAAAAElFTkSuQmCC",
     name: "Run with Bitcoin",
     slogan: "22/40 countries traveled with Bitcoin",
     platforms: ["web"],
@@ -102,7 +102,7 @@ export const donate: Item[] = [
     image: "bitcoinforfairness.jpeg",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGNgZWVz9fT3CwxjZ2dn0Dc0+rK79PeleUbG5gyc3Hz/vyz9f6VDQlKWgYGBQVRU1M3Tn42dHQCD6g5J96ZEDAAAAABJRU5ErkJggg==",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AOro6A0IDQcAA/Lv8ACYl5txXEiCe3eTkJMAdnV3W0Y1TkhFZmNlAPLw8BwaHh0YGf77/EVfFmsnYQNqAAAAAElFTkSuQmCC",
     name: "Bitcoin for Fairness",
     slogan:
       "Bitcoin for Fairness is a non-profit raising knowledge and understanding of BTC for people in emerging countries and for the disadvantaged.",
