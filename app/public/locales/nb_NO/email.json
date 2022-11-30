@@ -1,1 +1,8 @@
-{}
+{
+    "login": {
+        "title": "Velkommen",
+        "text": "Her er den forespurte magiske lenken for innlogging:",
+        "buttonText": "Logg inn",
+        "subject": "Magisk innloggingslenke for Lightsats"
+    }
+}
