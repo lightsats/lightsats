@@ -3,9 +3,13 @@ import { catalog } from "lib/items/catalog";
 import { Item, ItemCategory } from "types/Item";
 import { Wallet } from "types/Wallet";
 
-type CategoryFilterOptions = {
+export type CategoryFilterOptions = {
   tippeeBalance?: number;
   checkTippeeBalance?: boolean;
+  lnurlAuthCapable?: boolean;
+  recommendedLimit?: number;
+  filterOtherItems?: boolean;
+  shadow?: boolean;
 };
 
 type ScoringFunction = (item: Item) => number;
@@ -24,38 +28,39 @@ const categoryScoringFuncs: Partial<Record<ItemCategory, ScoringFunction>> = {
 
 export function getRecommendedItems(
   category: ItemCategory,
-  languageCode: string,
-  tippeeBalance: number,
-  checkTippeeBalance: boolean
+  locale: string,
+  options: CategoryFilterOptions
 ): Item[] {
-  if (!validateLanguageCode(languageCode)) {
-    throw new Error("Unsupported language code: " + languageCode);
+  if (!validateLanguageCode(locale)) {
+    throw new Error("Unsupported locale: " + locale);
   }
-  const filterOptions: CategoryFilterOptions = {
-    checkTippeeBalance,
-    tippeeBalance,
-  };
   const categoryItems = catalog[category];
   let recommendedItems = categoryItems.filter(
-    (item) => item.languageCodes.indexOf(languageCode) > -1
+    (item) => item.languageCodes.indexOf(locale) > -1
   );
   recommendedItems =
-    categoryFilterFunctions[category]?.(recommendedItems, filterOptions) ??
+    categoryFilterFunctions[category]?.(recommendedItems, options) ??
     recommendedItems;
 
   sortItems(recommendedItems, categoryScoringFuncs[category]);
-  const limit = category === "wallets" ? 1 : undefined;
+  const limit =
+    category === "wallets" && !options.lnurlAuthCapable ? 1 : undefined;
   return recommendedItems.slice(0, limit);
 }
 
 export function getOtherItems(
   category: ItemCategory,
+  options: CategoryFilterOptions,
   recommendedItems: Item[]
 ) {
   const categoryItems = catalog[category];
-  const otherItems = categoryItems.filter(
+  let otherItems = categoryItems.filter(
     (item) => recommendedItems.indexOf(item) === -1
   );
+  if (options.filterOtherItems) {
+    otherItems =
+      categoryFilterFunctions[category]?.(otherItems, options) ?? otherItems;
+  }
   sortItems(otherItems, categoryScoringFuncs[category]);
   return otherItems;
 }
@@ -66,8 +71,9 @@ export function getRecommendedWallets(
 ): Item[] {
   const recommendedWallets = (items as Wallet[]).filter(
     (wallet) =>
-      !options.checkTippeeBalance ||
-      wallet.minBalance <= (options.tippeeBalance ?? 0)
+      (!options.checkTippeeBalance ||
+        wallet.minBalance <= (options.tippeeBalance ?? 0)) &&
+      (!options.lnurlAuthCapable || wallet.features.indexOf("lnurl-auth") > -1)
   );
 
   return recommendedWallets;

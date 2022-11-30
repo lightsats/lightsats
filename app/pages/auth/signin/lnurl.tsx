@@ -2,6 +2,7 @@ import { ClipboardIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
+  Collapse,
   Divider,
   Loading,
   Row,
@@ -9,10 +10,12 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Icon } from "components/Icon";
+import { ItemsList } from "components/items/ItemsList";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
 import { getStaticProps } from "lib/i18n/i18next";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
+import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { signIn } from "next-auth/react";
@@ -81,6 +84,11 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
     }
   }, [qr]);
 
+  const categoryFilterOptions: CategoryFilterOptions = React.useMemo(
+    () => ({ lnurlAuthCapable: true, filterOtherItems: true, shadow: false }),
+    []
+  );
+
   return (
     <>
       <Card css={{ dropShadow: "$sm" }}>
@@ -137,6 +145,17 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
           </>
         )}
       </Card>
+      <Spacer />
+      <Card>
+        <Card.Body css={{ p: 0 }}>
+          <Collapse.Group>
+            <Collapse title={"Compatible Wallets"}>
+              <ItemsList category="wallets" options={categoryFilterOptions} />
+            </Collapse>
+          </Collapse.Group>
+        </Card.Body>
+      </Card>
+      <Spacer />
     </>
   );
 }

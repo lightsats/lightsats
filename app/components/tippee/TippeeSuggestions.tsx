@@ -42,7 +42,7 @@ export function TippeeSuggestions() {
             <SwiperSlide key={suggestion.link} style={{ paddingBottom: 20 }}>
               <NextLink href={suggestion.link}>
                 <a>
-                  <Card css={{ width: "100%", dropShadow: "$sm" }}>
+                  <Card css={{ width: "100%" }} variant="flat">
                     <Card.Body>
                       <Row align="center">
                         <Button

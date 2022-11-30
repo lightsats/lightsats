@@ -1,53 +1,40 @@
 import { Collapse, CSS, Spacer, Text } from "@nextui-org/react";
 import { ItemCard } from "components/items/ItemCard";
-import { useReceivedTips } from "hooks/useTips";
+import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import {
+  CategoryFilterOptions,
   getOtherItems,
   getRecommendedItems,
 } from "lib/items/getRecommendedItems";
+import { useRouter } from "next/router";
 import React from "react";
 import { ItemCategory } from "types/Item";
 
 type ItemsListProps = {
   category: ItemCategory;
-  checkTippeeBalance: boolean;
+  options: CategoryFilterOptions;
 };
 
 const collapseGroupCss: CSS = { width: "100%" };
 
-export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
-  const { data: tips } = useReceivedTips();
-
-  const receivedTips = React.useMemo(
-    () =>
-      tips?.filter(
-        (tip) => tip.status === "CLAIMED" || tip.status === "WITHDRAWN"
-      ),
-    [tips]
-  );
+export function ItemsList({ category, options }: ItemsListProps) {
+  const router = useRouter();
 
   const recommendedItems = React.useMemo(
     () =>
-      getRecommendedItems(
-        category,
-        "en",
-        receivedTips?.length
-          ? receivedTips.map((tip) => tip.amount).reduce((a, b) => a + b)
-          : 0,
-        checkTippeeBalance
-      ),
-    [category, receivedTips, checkTippeeBalance]
+      getRecommendedItems(category, router.locale || DEFAULT_LOCALE, options),
+    [category, options, router.locale]
   );
   const otherItems = React.useMemo(
-    () => getOtherItems(category, recommendedItems),
-    [category, recommendedItems]
+    () => getOtherItems(category, options, recommendedItems),
+    [category, recommendedItems, options]
   );
 
   return (
     <>
       {otherItems.length > 0 && <h4>Recommended wallet</h4>}
 
-      <Collapse.Group shadow css={collapseGroupCss}>
+      <Collapse.Group shadow={options.shadow ?? true} css={collapseGroupCss}>
         {recommendedItems.map((item) => (
           <ItemCard
             key={item.name}
@@ -64,7 +51,10 @@ export function ItemsList({ category, checkTippeeBalance }: ItemsListProps) {
           <Text small b h4 transform="uppercase">
             Other wallets
           </Text>
-          <Collapse.Group shadow css={collapseGroupCss}>
+          <Collapse.Group
+            shadow={options.shadow ?? true}
+            css={collapseGroupCss}
+          >
             {otherItems.map((item) => (
               <ItemCard key={item.name} item={item} />
             ))}
