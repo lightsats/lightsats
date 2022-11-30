@@ -13,3 +13,7 @@ Project on Bolt fun: https://makers.bolt.fun/project/Lightsats
 We would love any contributions, especially translations in your native language!
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for more info.
+
+### Translations
+
+We use Weblate for Translations: https://hosted.weblate.org/projects/lightsats/

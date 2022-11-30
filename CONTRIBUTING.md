@@ -1,6 +1,10 @@
 # Translations
 
-Currently we have partial translation support for the recipient side of the flow.
+## Weblate
+
+We use Weblate for Translations: https://hosted.weblate.org/projects/lightsats/
+
+## Adding a new language
 
 Please see https://github.com/lightsats/lightsats/pull/34 for an example.
 
