@@ -97,6 +97,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
             <Text h4 css={{ fontWeight: "bold", m: 0 }}>
               {t("lightning")}
             </Text>
+            <Spacer x={0.5} /> {/* shift Lightning into center */}
           </Row>
         </Card.Header>
         <Divider />
