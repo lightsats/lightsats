@@ -1,12 +1,12 @@
 {
-  "email": "📧 Email",
-  "phone": "📱 Phone",
-  "lightning": "⚡ Lightning",
-  "loginWithLightning": "Login with Lightning",
-  "or": "or",
-  "verifyPhoneMessage": "Lightsats login",
-  "checkEmailTitle": "Check your inbox",
-  "checkEmailText": "We've sent a 🪄 magic link to your inbox. Click the link to confirm your email address.",
-  "checkSMSTitle": "Check your phone",
-  "checkSMSText": "We've sent a 🪄 magic link to your phone. Click the link to confirm your phone number."
+    "email": "📧 E-mail",
+    "phone": "📱 Phone",
+    "lightning": "⚡ Lightning",
+    "loginWithLightning": "Log in with Lightning",
+    "or": "or",
+    "verifyPhoneMessage": "Lightsats login",
+    "checkEmailTitle": "Check your inbox",
+    "checkEmailText": "🪄 A magic link has been sent to your inbox. Click it to confirm your e-mail address.",
+    "checkSMSTitle": "Check your phone",
+    "checkSMSText": "🪄 A magic link has been sent to your phone. Click it to confirm your phone number."
 }
