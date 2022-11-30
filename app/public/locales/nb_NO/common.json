@@ -1,12 +1,12 @@
 {
-    "email": "",
-    "phone": "",
-    "lightning": "",
-    "loginWithLightning": "",
-    "or": "",
-    "verifyPhoneMessage": "",
-    "checkEmailTitle": "",
-    "checkEmailText": "",
-    "checkSMSTitle": "",
-    "checkSMSText": ""
+    "email": "📧 E-post",
+    "phone": "📱 Telefon",
+    "lightning": "⚡ Lightning",
+    "loginWithLightning": "Logg inn med Lightning",
+    "or": "eller",
+    "verifyPhoneMessage": "Lightsats-innlogging",
+    "checkEmailTitle": "Sjekk innboksen din",
+    "checkEmailText": "Du har fått en 🪄 magisk lenke i innboksen. Klikk den for å bekrefte e-postadressen din.",
+    "checkSMSTitle": "Sjekk telefonen din",
+    "checkSMSText": "🪄 En magisk lenke har blitt sendt til telefonen din. Klikk den for å bekrefte telefonnummeret ditt."
 }
