@@ -93,8 +93,10 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
     <>
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Header>
-          <Row justify="center">
-            <Text css={{ fontWeight: "bold" }}>{t("lightning")}</Text>
+          <Row justify="center" align="center">
+            <Text h4 css={{ fontWeight: "bold", m: 0 }}>
+              {t("lightning")}
+            </Text>
           </Row>
         </Card.Header>
         <Divider />
@@ -146,10 +148,10 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
         )}
       </Card>
       <Spacer />
-      <Card>
+      <Card variant="flat">
         <Card.Body css={{ p: 0 }}>
           <Collapse.Group>
-            <Collapse title={"Compatible Wallets"}>
+            <Collapse title={<Text b>Compatible Wallets</Text>}>
               <ItemsList category="wallets" options={categoryFilterOptions} />
             </Collapse>
           </Collapse.Group>

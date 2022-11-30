@@ -120,7 +120,9 @@ export default function PhoneSignIn({
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Header>
           <Row justify="center">
-            <Text css={{ fontWeight: "bold" }}>{t("phone")}</Text>
+            <Text h4 css={{ fontWeight: "bold", m: 0 }}>
+              {t("phone")}
+            </Text>
           </Row>
         </Card.Header>
         <Divider />
