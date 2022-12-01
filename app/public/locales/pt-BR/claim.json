@@ -1,11 +1,11 @@
 {
-  "hello": "Olá, {{tippeeName}}!",
-  "tipperHasGiftedYou": "{{tipperName}} presenteou você",
-  "youHaveBeenGifted": "Você recebeu um presente",
-  "expired": "Este presente expirou.",
-  "instructions.phone": "Insira o seu telefone abaixo e pressione o botão para receber seus satoshis.",
-  "instructions.email": "Insira o seu e-mail abaixo e pressione o botão para receber seus satoshis.",
-  "instructions.lightning": "Fazer login com a Lightning",
-  "expiresIn": "Expira em {{expiry}}",
-  "claim": "Pegar meus satoshis"
+    "hello": "Olá, {{tippeeName}}!",
+    "tipperHasGiftedYou": "{{tipperName}} presenteou você",
+    "youHaveBeenGifted": "Você recebeu um presente",
+    "expired": "Este presente expirou.",
+    "instructions.phone": "Insira o seu telefone abaixo e pressione o botão para receber seus satoshis.",
+    "instructions.email": "Insira o seu e-mail abaixo e pressione o botão para receber seus satoshis.",
+    "instructions.lightning": "Fazer login com a Lightning",
+    "expiresIn": "Expira em {{expiry}}",
+    "claim": "Pegar meus satoshis"
 }
