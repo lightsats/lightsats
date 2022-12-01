@@ -48,7 +48,15 @@ function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
       // variant: hasSafePlatform ? "success" : "warning",
     });
   }
-  if ((item as Wallet).features?.indexOf("lnurl-auth") > -1) {
+  if (item.category === "wallets") {
+    const nonCustodial =
+      (item as Wallet).features?.indexOf("non-custodial") > -1;
+    itemFeatures.push({
+      name: nonCustodial ? "non-custodial" : "custodial",
+      variant: nonCustodial ? "success" : "warning",
+    });
+  }
+  if ((item as Wallet).features?.indexOf("non-custodial") > -1) {
     itemFeatures.push({
       name: `Scan to login`,
       // variant: "success",

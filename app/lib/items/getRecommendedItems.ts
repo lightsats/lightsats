@@ -106,6 +106,9 @@ function getWalletScore(item: Item) {
   if (wallet.features.indexOf("lnurl-auth") > -1) {
     ++score;
   }
+  if (wallet.features.indexOf("non-custodial") > -1) {
+    ++score;
+  }
   if (wallet.platforms.indexOf("mobile") > -1) {
     ++score;
   }

@@ -55,7 +55,7 @@ const muun: Wallet = {
 };
 
 const breez: Wallet = {
-  features: ["lnurl-auth", "lnurl-withdraw"],
+  features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   lightsatsRecommended: true,
   category: "wallets",
   minBalance: 2000,
@@ -77,7 +77,7 @@ const breez: Wallet = {
 };
 
 const blue: Wallet = {
-  features: ["lnurl-auth", "lnurl-withdraw"],
+  features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   category: "wallets",
   minBalance: 0,
   link: "https://lgt.st/bluewallet",
@@ -130,7 +130,7 @@ const blue: Wallet = {
 };
 
 const alby: Wallet = {
-  features: ["lnurl-auth", "lnurl-withdraw"],
+  features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   lightsatsRecommended: true,
   category: "wallets",
   minBalance: 0,
@@ -148,8 +148,7 @@ const alby: Wallet = {
   platforms: ["desktop"],
 };
 const phoenix: Wallet = {
-  features: ["lnurl-auth", "lnurl-withdraw"],
-  lightsatsRecommended: true,
+  features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   category: "wallets",
   minBalance: 10000,
   link: "https://lgt.st/phoenix",
@@ -163,7 +162,6 @@ const phoenix: Wallet = {
 };
 const lntips: Wallet = {
   features: [],
-  lightsatsRecommended: true,
   category: "wallets",
   minBalance: 0,
   link: "https://lgt.st/lntips",
@@ -177,7 +175,6 @@ const lntips: Wallet = {
 };
 const lntxbot: Wallet = {
   features: [],
-  lightsatsRecommended: true,
   category: "wallets",
   minBalance: 0,
   link: "https://lgt.st/lntxbot",
@@ -190,8 +187,7 @@ const lntxbot: Wallet = {
   platforms: ["mobile"],
 };
 const sbw: Wallet = {
-  features: [],
-  lightsatsRecommended: true,
+  features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   category: "wallets",
   minBalance: 0,
   link: "https://lgt.st/sbw",
@@ -202,7 +198,7 @@ const sbw: Wallet = {
   slogan:
     "Simple Bitcoin Wallet (aka SBW) is an open-source, non-custodial, autonomous wallet for Android devices which can store, send and receive bitcoins.",
   languageCodes: [getLanguageCode("English")],
-  platforms: ["mobile"],
+  platforms: ["android-only"],
 };
 export const wallets: Wallet[] = [
   wos,

@@ -1,1 +1,6 @@
-export type Platform = "mobile" | "desktop" | "web";
+export type Platform =
+  | "mobile"
+  | "desktop"
+  | "web"
+  | "android-only"
+  | "ios-only";
