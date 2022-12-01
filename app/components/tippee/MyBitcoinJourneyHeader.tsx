@@ -54,7 +54,7 @@ export function MyBitcoinJourneyHeader() {
       </Text>
       <Spacer y={0.5} />
       <Progress value={progress} color="primary" status="primary" size="sm" />
-      <Spacer />
+      <Spacer y={2} />
     </>
   );
 }

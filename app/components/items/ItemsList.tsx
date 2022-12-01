@@ -26,8 +26,14 @@ export function ItemsList({ category, options }: ItemsListProps) {
     [category, options, router.locale]
   );
   const otherItems = React.useMemo(
-    () => getOtherItems(category, options, recommendedItems),
-    [category, recommendedItems, options]
+    () =>
+      getOtherItems(
+        category,
+        options,
+        recommendedItems,
+        router.locale || DEFAULT_LOCALE
+      ),
+    [category, options, recommendedItems, router.locale]
   );
 
   return (

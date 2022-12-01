@@ -1,3 +1,4 @@
+import { Spacer, Text } from "@nextui-org/react";
 import { ItemsList } from "components/items/ItemsList";
 import { MyBitcoinJourneyContent } from "components/tippee/MyBitcoinJourneyContent";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
@@ -7,11 +8,9 @@ import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import React from "react";
 
 const SelectWalletPage: NextPage = () => {
-  const router = useRouter();
   const { data: tips } = useReceivedTips();
   const receivedTips = React.useMemo(
     () =>
@@ -40,6 +39,12 @@ const SelectWalletPage: NextPage = () => {
       <MyBitcoinJourneyHeader />
 
       <MyBitcoinJourneyContent>
+        <Text>
+          {
+            "By withdrawing your bitcoin to a wallet, you alone have access to it. This responsibility might be a bit scary at first, but your Bitcoin will be safe from the high long term risk of a third party losing your funds."
+          }
+        </Text>
+        <Spacer />
         <ItemsList category="wallets" options={categoryFilterOptions} />
       </MyBitcoinJourneyContent>
       <MyBitcoinJourneyFooter

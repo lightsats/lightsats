@@ -1,12 +1,8 @@
-import { FlexBox } from "components/FlexBox";
+import { Col } from "@nextui-org/react";
 import React from "react";
 
 export function MyBitcoinJourneyContent({
   children,
 }: React.PropsWithChildren<unknown>) {
-  return (
-    <FlexBox style={{ justifyContent: "center", alignItems: "center" }}>
-      {children}
-    </FlexBox>
-  );
+  return <Col>{children}</Col>;
 }
