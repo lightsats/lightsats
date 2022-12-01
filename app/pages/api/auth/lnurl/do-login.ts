@@ -12,8 +12,7 @@ export default async function handler(
 
   const authKey = await getAuthKey(k1 as string);
   if (!authKey) {
-    res.status(StatusCodes.NOT_FOUND).end();
-    return;
+    return res.status(StatusCodes.NOT_FOUND).end();
   }
 
   if (
@@ -23,8 +22,7 @@ export default async function handler(
       key as string
     )
   ) {
-    res.status(StatusCodes.BAD_REQUEST).end();
-    return;
+    return res.status(StatusCodes.BAD_REQUEST).end();
   }
 
   await prisma.lnurlAuthKey.update({

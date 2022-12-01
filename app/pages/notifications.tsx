@@ -1,55 +1,105 @@
 import { BellIcon } from "@heroicons/react/24/solid";
-import { Button, Card, Col, Grid, Row, Spacer, Text } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Col,
+  Grid,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
+import { Notification } from "@prisma/client";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { useNotifications } from "hooks/useNotifications";
+import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
+import { connectedAccountsElementId } from "pages/profile";
+
+type NotificationCardProps = {
+  title: string;
+  description: string;
+  href: string;
+};
 
 const NotificationsPage: NextPage = () => {
-  const notifications = useNotifications();
+  const { data: session } = useSession();
+  const { data: notifications, mutate: mutateNotifications } =
+    useNotifications();
+  if (!session || !notifications) {
+    return <Loading />;
+  }
   return (
     <>
       <Head>
         <title>Lightsats⚡ - Notifications</title>
       </Head>
       <h2>Notifications</h2>
-      {notifications.length ? (
+      {notifications?.length ? (
         <Grid.Container gap={1}>
-          {notifications.map((notification) => (
-            <Grid key={notification.title} xs={12}>
-              <NextLink href={notification.href}>
-                <a style={{ width: "100%" }}>
-                  <Card css={{ width: "100%" }}>
-                    <Card.Body>
-                      <Row align="center">
-                        <Button
-                          color="error"
-                          auto
-                          flat
-                          css={{ px: 18 }}
-                          size="xl"
-                        >
-                          <Icon>
-                            <BellIcon />
-                          </Icon>
-                        </Button>
-                        <Spacer />
-                        <Col>
-                          <Row>
-                            <Text b>{notification.title}</Text>
-                          </Row>
-                          <Row>
-                            <Text>{notification.description}</Text>
-                          </Row>
-                        </Col>
-                      </Row>
-                    </Card.Body>
-                  </Card>
-                </a>
-              </NextLink>
-            </Grid>
-          ))}
+          {notifications.map((notification) => {
+            const notificationCardProps =
+              getNotificationCardProps(notification);
+            return (
+              <Grid key={notificationCardProps.title} xs={12}>
+                <NextLink href={notificationCardProps.href}>
+                  <a
+                    style={{ width: "100%" }}
+                    onClick={() =>
+                      markNotificationRead(
+                        session.user.id,
+                        notification.id,
+                        mutateNotifications
+                      )
+                    }
+                  >
+                    <Card
+                      css={{
+                        width: "100%",
+                        background: notification.read ? "$accents1" : undefined,
+                      }}
+                    >
+                      <Card.Body>
+                        <Row align="center">
+                          <Button
+                            color={notification.read ? "default" : "error"}
+                            auto
+                            flat
+                            css={{
+                              px: 18,
+                              background: notification.read
+                                ? "$accents2"
+                                : undefined,
+                              color: notification.read
+                                ? "$accents5"
+                                : undefined,
+                            }}
+                            size="xl"
+                          >
+                            <Icon>
+                              <BellIcon />
+                            </Icon>
+                          </Button>
+                          <Spacer />
+                          <Col>
+                            <Row>
+                              <Text b>{notificationCardProps.title}</Text>
+                            </Row>
+                            <Row>
+                              <Text>{notificationCardProps.description}</Text>
+                            </Row>
+                          </Col>
+                        </Row>
+                      </Card.Body>
+                    </Card>
+                  </a>
+                </NextLink>
+              </Grid>
+            );
+          })}
         </Grid.Container>
       ) : (
         <Text>
@@ -63,3 +113,42 @@ const NotificationsPage: NextPage = () => {
 };
 
 export default NotificationsPage;
+
+function getNotificationCardProps(
+  notification: Notification
+): NotificationCardProps {
+  switch (notification.type) {
+    case "LINK_EMAIL":
+      return {
+        title: "Connect an Email address",
+        description: "Get notified when your tips are claimed and withdrawn",
+        href: Routes.profile + "#" + connectedAccountsElementId,
+      };
+    case "COMPLETE_PROFILE":
+      return {
+        title: "Complete your tipper profile",
+        description: "Improve the authenticity of your tips",
+        href: Routes.profile,
+      };
+    default:
+      throw new Error("Unsupported notification type: " + notification.type);
+  }
+}
+async function markNotificationRead(
+  userId: string,
+  notificationId: string,
+  mutateNotifications: () => void
+) {
+  const result = await fetch(
+    `/api/users/${userId}/notifications/${notificationId}/markRead`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+  if (!result.ok) {
+    console.error("Failed to mark notification as read: " + result.status);
+  } else {
+    mutateNotifications();
+  }
+}

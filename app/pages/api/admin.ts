@@ -14,12 +14,11 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
+    return res.status(StatusCodes.UNAUTHORIZED).end();
   }
 
   if (!isAdmin(session.user.id)) {
-    res.status(StatusCodes.FORBIDDEN).end();
+    return res.status(StatusCodes.FORBIDDEN).end();
     return;
   }
 
@@ -27,8 +26,7 @@ export default async function handler(
     case "GET":
       return handleGetAdminDashboard(req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 

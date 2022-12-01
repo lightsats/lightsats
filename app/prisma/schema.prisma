@@ -81,6 +81,7 @@ model User {
 
   sentReminders SentReminder[]
   lastWithdrawal DateTime?
+  notifications Notification[]
 }
 
 model Tip {
@@ -198,6 +199,24 @@ model SentReminder {
   updated DateTime @default(now()) @updatedAt
 
   @@id([userId, tipId, reminderType])
+}
+
+model Notification {
+  id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  tipId String?
+  type NotificationType
+  created DateTime @default(now())
+  updated DateTime @default(now()) @updatedAt
+  read Boolean @default(false)
+}
+
+enum NotificationType {
+  COMPLETE_PROFILE
+  LINK_EMAIL
+  TIP_CLAIMED
+  TIP_WITHDRAWN
 }
 
 enum ReminderType {

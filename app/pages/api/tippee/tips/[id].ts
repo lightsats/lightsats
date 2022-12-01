@@ -12,8 +12,7 @@ export default async function handler(
     case "GET":
       return getTip(req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
@@ -28,9 +27,8 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     },
   });
   if (!tip) {
-    res.status(StatusCodes.NOT_FOUND).end();
-    return;
+    return res.status(StatusCodes.NOT_FOUND).end();
   }
 
-  res.status(StatusCodes.OK).json(mapTipToPublicTip(tip));
+  return res.status(StatusCodes.OK).json(mapTipToPublicTip(tip));
 }

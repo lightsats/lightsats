@@ -24,16 +24,14 @@ export default async function handler(
     },
   });
   if (!withdrawalLink) {
-    res.status(StatusCodes.NOT_FOUND).end();
-    return;
+    return res.status(StatusCodes.NOT_FOUND).end();
   }
 
   switch (req.method) {
     case "GET":
       return initiatePayWithdrawalLink(withdrawalLink, req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 async function initiatePayWithdrawalLink(

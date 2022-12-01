@@ -29,6 +29,6 @@ export default async function handler(
 
   if (getInvoiceResponse.ok) {
     const invoiceData = await getInvoiceResponse.json();
-    res.status(StatusCodes.OK).json(invoiceData);
+    return res.status(StatusCodes.OK).json(invoiceData);
   }
 }

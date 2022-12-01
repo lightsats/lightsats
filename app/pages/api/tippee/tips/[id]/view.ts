@@ -11,8 +11,7 @@ export default async function handler(
     case "POST":
       return handleViewTip(req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 
@@ -27,5 +26,5 @@ async function handleViewTip(req: NextApiRequest, res: NextApiResponse<Tip>) {
     },
   });
 
-  res.status(204).end();
+  return res.status(204).end();
 }

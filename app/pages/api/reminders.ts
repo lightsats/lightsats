@@ -30,8 +30,7 @@ export default async function handler(
     case "POST":
       return handlePostReminder(req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 
@@ -43,10 +42,10 @@ async function handlePostReminder(
 
   try {
     await sendReminder(reminder);
-    res.status(StatusCodes.NO_CONTENT).end();
+    return res.status(StatusCodes.NO_CONTENT).end();
   } catch (error) {
     console.error("Failed to send reminder", reminder, error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
   }
 }
 

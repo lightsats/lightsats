@@ -55,9 +55,11 @@ export function AppNavbar() {
   const { data: user } = useUser();
   const router = useRouter();
   const hideNavbar = router.pathname.endsWith("/claim"); // || user?.inJourney;
-  const notifications = useNotifications();
+  const { data: notifications } = useNotifications();
   const numNotifications =
-    router.pathname === Routes.notifications ? 0 : notifications.length;
+    router.pathname === Routes.notifications
+      ? 0
+      : notifications?.filter((notification) => !notification.read).length ?? 0;
 
   const collapseItems: CollapseItem[] = React.useMemo(
     () => [

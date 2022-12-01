@@ -14,8 +14,7 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
+    return res.status(StatusCodes.UNAUTHORIZED).end();
   }
 
   const { id } = req.query;
@@ -25,11 +24,10 @@ export default async function handler(
     },
   });
   if (!tip) {
-    res.status(StatusCodes.NOT_FOUND).end();
-    return;
+    return res.status(StatusCodes.NOT_FOUND).end();
   }
   if (session.user.id !== tip.tipperId) {
-    res.status(StatusCodes.FORBIDDEN).end();
+    return res.status(StatusCodes.FORBIDDEN).end();
   }
 
   switch (req.method) {
@@ -40,8 +38,7 @@ export default async function handler(
     case "PUT":
       return updateTip(tip, req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 async function deleteTip(
@@ -91,7 +88,7 @@ async function deleteTip(
     });
   }
 
-  res.status(StatusCodes.NO_CONTENT).end();
+  return res.status(StatusCodes.NO_CONTENT).end();
 }
 async function getTip(
   tip: Tip,
@@ -104,7 +101,7 @@ async function getTip(
 
   tip = await regenerateExpiredTipInvoice(tip);
 
-  res.status(StatusCodes.OK).json(tip);
+  return res.status(StatusCodes.OK).json(tip);
 }
 
 async function updateTip(

@@ -11,19 +11,17 @@ export default async function handler(
   res: NextApiResponse<never>
 ) {
   if (req.method !== "PUT") {
-    res.status(StatusCodes.NOT_FOUND).end();
-    return;
+    return res.status(StatusCodes.NOT_FOUND).end();
   }
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
+    return res.status(StatusCodes.UNAUTHORIZED).end();
   }
 
   const { id } = req.query;
   if (session.user.id !== id) {
-    res.status(StatusCodes.FORBIDDEN).end();
+    return res.status(StatusCodes.FORBIDDEN).end();
   }
 
   const journey = req.body as UpdateUserJourneyRequest;

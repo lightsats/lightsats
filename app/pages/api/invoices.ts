@@ -13,16 +13,14 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
+    return res.status(StatusCodes.UNAUTHORIZED).end();
   }
 
   switch (req.method) {
     case "POST":
       return handlePayInvoice(session, req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 
@@ -42,7 +40,7 @@ async function handlePayInvoice(
       session.user.id,
       isWebln === "true" ? "webln" : "invoice"
     );
-    res.status(204).end();
+    return res.status(204).end();
   } catch (error) {
     console.error(
       "Failed to pay manual invoice " +
@@ -51,6 +49,6 @@ async function handlePayInvoice(
         session.user.id,
       error
     );
-    res.status(500).json((error as Error).message);
+    return res.status(500).json((error as Error).message);
   }
 }

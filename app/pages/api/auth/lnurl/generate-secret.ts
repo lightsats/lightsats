@@ -22,8 +22,7 @@ export default async function handler(
   if (linkExistingAccount === "true") {
     const session = await unstable_getServerSession(req, res, authOptions);
     if (!session) {
-      res.status(StatusCodes.UNAUTHORIZED).end();
-      return;
+      return res.status(StatusCodes.UNAUTHORIZED).end();
     }
     linkUserId = session.user.id;
   }

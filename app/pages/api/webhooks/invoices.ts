@@ -14,8 +14,7 @@ export default async function handler(
   const { key } = req.query;
   if (key !== process.env.LNBITS_WEBHOOK_SECRET_KEY) {
     console.log("Received invoice - key mismatch");
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
+    return res.status(StatusCodes.UNAUTHORIZED).end();
   }
   console.warn("INVOICE WEBHOOK IS DISABLED");
   // handled in get /api/tipper/tips/[id].tsx
@@ -34,6 +33,6 @@ export default async function handler(
       },
     },
   });*/
-  res.status(StatusCodes.GONE).end();
+  return res.status(StatusCodes.GONE).end();
   //res.status(StatusCodes.OK).end();
 }

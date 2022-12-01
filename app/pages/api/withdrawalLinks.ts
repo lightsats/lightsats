@@ -17,16 +17,14 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
+    return res.status(StatusCodes.UNAUTHORIZED).end();
   }
 
   switch (req.method) {
     case "POST":
       return postWithdrawLink(session, req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 
@@ -44,16 +42,14 @@ async function postWithdrawLink(
 
   if (!tips.length) {
     // no tips to claim
-    res.status(StatusCodes.CONFLICT).end();
-    return;
+    return res.status(StatusCodes.CONFLICT).end();
   }
 
   const amount = tips.map((tip) => tip.amount).reduce((a, b) => a + b);
   const fee = tips.map((tip) => tip.fee).reduce((a, b) => a + b);
 
   if (withdrawalRequest.amount !== amount) {
-    res.status(StatusCodes.CONFLICT).end();
-    return;
+    return res.status(StatusCodes.CONFLICT).end();
   }
 
   const userWallet = await prisma.lnbitsWallet.findUnique({
@@ -82,8 +78,7 @@ async function postWithdrawLink(
   });
 
   if (existingWithdrawLink) {
-    res.status(StatusCodes.OK).json(existingWithdrawLink.lnurl);
-    return;
+    return res.status(StatusCodes.OK).json(existingWithdrawLink.lnurl);
   }
 
   const withdrawalLinkId: string = uuidv4();
@@ -107,5 +102,5 @@ async function postWithdrawLink(
     },
   });
 
-  res.status(StatusCodes.OK).json(lnurlValue);
+  return res.status(StatusCodes.OK).json(lnurlValue);
 }

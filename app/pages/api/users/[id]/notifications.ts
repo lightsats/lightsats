@@ -1,15 +1,15 @@
+import { Notification } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
-import { TransitionUserRequest } from "types/TransitionUserRequest";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<never>
+  res: NextApiResponse<Notification[]>
 ) {
-  if (req.method !== "POST") {
+  if (req.method !== "GET") {
     return res.status(StatusCodes.NOT_FOUND).end();
   }
   const session = await unstable_getServerSession(req, res, authOptions);
@@ -23,26 +23,10 @@ export default async function handler(
     return res.status(StatusCodes.FORBIDDEN).end();
   }
 
-  const transitionUserRequest = req.body as TransitionUserRequest;
-  if (
-    transitionUserRequest.to !== "tippee" &&
-    transitionUserRequest.to !== "tipper"
-  ) {
-    return res.status(StatusCodes.BAD_REQUEST).end();
-  }
-
-  await prisma.user.update({
+  const notifications = await prisma.notification.findMany({
     where: {
-      id: session.user.id,
-    },
-    data: {
-      userType: transitionUserRequest.to,
-      ...(transitionUserRequest.to === "tipper"
-        ? {
-            inJourney: false,
-          }
-        : {}),
+      userId: session.user.id,
     },
   });
-  return res.status(StatusCodes.NO_CONTENT).end();
+  return res.json(notifications);
 }

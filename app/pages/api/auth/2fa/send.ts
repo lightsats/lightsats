@@ -30,16 +30,14 @@ export default async function handler(
         })
       ) {
         // account already exists
-        res.status(StatusCodes.CONFLICT).end();
-        return;
+        return res.status(StatusCodes.CONFLICT).end();
       }
     } else {
       throw new Error("Unsupported link account type");
     }
     const session = await unstable_getServerSession(req, res, authOptions);
     if (!session) {
-      res.status(StatusCodes.UNAUTHORIZED).end();
-      return;
+      return res.status(StatusCodes.UNAUTHORIZED).end();
     }
     linkUserId = session.user.id;
   }
@@ -66,14 +64,13 @@ export default async function handler(
         }),
         from: `Lightsats <${process.env.EMAIL_FROM}>`,
       });
-      res.status(StatusCodes.NO_CONTENT).end();
+      return res.status(StatusCodes.NO_CONTENT).end();
     } catch (error) {
       console.error(
         "Failed to send email to " + twoFactorLoginRequest.email,
         error
       );
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
-      return;
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
   } else if (twoFactorLoginRequest.phoneNumber) {
     try {
@@ -90,12 +87,10 @@ export default async function handler(
             },
           });
           if (!tip) {
-            res.status(StatusCodes.NOT_FOUND).end();
-            return;
+            return res.status(StatusCodes.NOT_FOUND).end();
           }
           if (tip.numSmsTokens < 1) {
-            res.status(StatusCodes.CONFLICT).end();
-            return;
+            return res.status(StatusCodes.CONFLICT).end();
           }
           await prisma.tip.update({
             where: {
@@ -107,8 +102,7 @@ export default async function handler(
           });
         } else {
           // don't allow users to login with phone number unless they have a phone number
-          res.status(StatusCodes.NOT_FOUND).end();
-          return;
+          return res.status(StatusCodes.NOT_FOUND).end();
         }
       }
 
@@ -119,15 +113,15 @@ export default async function handler(
 
       await sendSms(twoFactorLoginRequest.phoneNumber, smsBody);
 
-      res.status(StatusCodes.NO_CONTENT).end();
+      return res.status(StatusCodes.NO_CONTENT).end();
     } catch (error) {
       console.error(
         "Failed to send SMS to " + twoFactorLoginRequest.phoneNumber,
         error
       );
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
   } else {
-    res.status(StatusCodes.BAD_REQUEST).end();
+    return res.status(StatusCodes.BAD_REQUEST).end();
   }
 }

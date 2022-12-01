@@ -19,8 +19,7 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
+    return res.status(StatusCodes.UNAUTHORIZED).end();
   }
 
   switch (req.method) {
@@ -29,8 +28,7 @@ export default async function handler(
     case "GET":
       return getTips(session, req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 async function getTips(
@@ -49,7 +47,7 @@ async function getTips(
     },
   });
 
-  res.status(StatusCodes.OK).json(tips);
+  return res.status(StatusCodes.OK).json(tips);
 }
 
 async function handlePostTip(

@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { NotificationType, User } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import prisma from "lib/prismadb";
@@ -29,8 +29,7 @@ export default async function handler(
         },
       });
       if (!user) {
-        res.status(StatusCodes.NOT_FOUND).end();
-        return;
+        return res.status(StatusCodes.NOT_FOUND).end();
       }
 
       const sentTips = user.tipsSent.filter(
@@ -64,8 +63,7 @@ export default async function handler(
       };
       return res.json(publicUser);
     }
-    res.status(StatusCodes.FORBIDDEN).end();
-    return;
+    return res.status(StatusCodes.FORBIDDEN).end();
   }
 
   const user = await prisma.user.findUnique({
@@ -74,8 +72,7 @@ export default async function handler(
     },
   });
   if (!user) {
-    res.status(StatusCodes.NOT_FOUND).end();
-    return;
+    return res.status(StatusCodes.NOT_FOUND).end();
   }
 
   switch (req.method) {
@@ -84,8 +81,7 @@ export default async function handler(
     case "GET":
       return getUser(user, req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 async function updateUser(
@@ -109,12 +105,48 @@ async function updateUser(
     },
   });
 
-  res.status(StatusCodes.NO_CONTENT).end();
+  return res.status(StatusCodes.NO_CONTENT).end();
 }
 async function getUser(
   user: User,
   req: NextApiRequest,
   res: NextApiResponse<User>
 ) {
-  res.status(StatusCodes.OK).json(user);
+  if (user.userType === "tipper") {
+    if (!user.email) {
+      await addNotification(user.id, "LINK_EMAIL");
+    }
+    if (!user.name || !user.avatarURL) {
+      await addNotification(user.id, "COMPLETE_PROFILE");
+    }
+  }
+
+  return res.status(StatusCodes.OK).json(user);
+}
+
+async function addNotification(
+  userId: string,
+  type: NotificationType,
+  tipId?: string
+) {
+  const notifications = await prisma.notification.findMany({
+    where: {
+      userId,
+    },
+  });
+
+  const isRepeatable = type === "TIP_CLAIMED" || type === "TIP_WITHDRAWN";
+
+  if (
+    isRepeatable ||
+    !notifications.some((notification) => notification.type === type)
+  ) {
+    await prisma.notification.create({
+      data: {
+        userId,
+        type,
+        tipId,
+      },
+    });
+  }
 }

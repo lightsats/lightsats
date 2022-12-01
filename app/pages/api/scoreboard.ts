@@ -69,5 +69,5 @@ export default async function handler(
     totalSatsSent: entries.map((e) => e.satsSent).reduce((a, b) => a + b),
   };
 
-  res.status(StatusCodes.OK).json(scoreboard);
+  return res.status(StatusCodes.OK).json(scoreboard);
 }

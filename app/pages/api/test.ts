@@ -10,5 +10,5 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(StatusCodes.OK).json({ test: "John Galt" });
+  return res.status(StatusCodes.OK).json({ test: "John Galt" });
 }

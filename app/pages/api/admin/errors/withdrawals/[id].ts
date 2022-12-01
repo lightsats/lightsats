@@ -12,21 +12,18 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
+    return res.status(StatusCodes.UNAUTHORIZED).end();
   }
 
   if (!isAdmin(session.user.id)) {
-    res.status(StatusCodes.FORBIDDEN).end();
-    return;
+    return res.status(StatusCodes.FORBIDDEN).end();
   }
 
   switch (req.method) {
     case "GET":
       return handleGetWithdrawalError(req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 
@@ -45,8 +42,7 @@ async function handleGetWithdrawalError(
   });
 
   if (!withdrawalError) {
-    res.status(StatusCodes.NOT_FOUND).end();
-    return;
+    return res.status(StatusCodes.NOT_FOUND).end();
   }
 
   return res.json(withdrawalError);

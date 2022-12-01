@@ -13,16 +13,14 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
+    return res.status(StatusCodes.UNAUTHORIZED).end();
   }
 
   switch (req.method) {
     case "POST":
       return handleReclaimTip(session, req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 
@@ -41,16 +39,13 @@ async function handleReclaimTip(
     },
   });
   if (!tip) {
-    res.status(StatusCodes.NOT_FOUND).end();
-    return;
+    return res.status(StatusCodes.NOT_FOUND).end();
   }
   if (session.user.id !== tip.tipperId) {
-    res.status(StatusCodes.FORBIDDEN).end();
-    return;
+    return res.status(StatusCodes.FORBIDDEN).end();
   }
   if (refundableTipStatuses.indexOf(tip.status) < 0) {
-    res.status(StatusCodes.CONFLICT).end();
-    return;
+    return res.status(StatusCodes.CONFLICT).end();
   }
   await stageTip(session.user.id, tip, "tipper");
   await prisma.tip.update({
@@ -62,5 +57,5 @@ async function handleReclaimTip(
       tippeeId: session.user.id,
     },
   });
-  res.status(204).end();
+  return res.status(204).end();
 }

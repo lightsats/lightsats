@@ -13,8 +13,7 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
-    res.status(StatusCodes.UNAUTHORIZED).end();
-    return;
+    return res.status(StatusCodes.UNAUTHORIZED).end();
   }
   const { publicTip } = req.query;
 
@@ -25,8 +24,7 @@ export default async function handler(
       }
       return getTips(session, req, res);
     default:
-      res.status(StatusCodes.NOT_FOUND).end();
-      return;
+      return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 
@@ -50,7 +48,7 @@ async function getPublicTips(
     },
   });
 
-  res.status(StatusCodes.OK).json(tips.map(mapTipToPublicTip));
+  return res.status(StatusCodes.OK).json(tips.map(mapTipToPublicTip));
 }
 
 async function getTips(
@@ -69,5 +67,5 @@ async function getTips(
     },
   });
 
-  res.status(StatusCodes.OK).json(tips);
+  return res.status(StatusCodes.OK).json(tips);
 }
