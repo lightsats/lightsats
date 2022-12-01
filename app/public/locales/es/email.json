@@ -1,8 +1,8 @@
 {
-  "login": {
-    "subject": "Enlace mágico para iniciar sesión en Lightsats",
-    "title": "Bienvenido",
-    "text": "Has pedido un enlace enlacé mágico para iniciar sesión, acá esta:",
-    "buttonText": "Iniciar sesión"
-  }
+    "login": {
+        "subject": "Enlace mágico para iniciar sesión en Lightsats",
+        "title": "Bienvenido",
+        "text": "Has pedido un enlace enlacé mágico para iniciar sesión, acá esta:",
+        "buttonText": "Iniciar sesión"
+    }
 }
