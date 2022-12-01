@@ -1,8 +1,8 @@
 {
-  "login": {
-    "subject": "Lien de connexion magique pour Lightsats",
-    "title": "Bienvenue",
-    "text": "Vous avez demandé un lien magique pour vous connecter, et le voici:",
-    "buttonText": "Se connecter"
-  }
+    "login": {
+        "subject": "Lien de connexion magique pour Lightsats",
+        "title": "Bienvenue",
+        "text": "Vous avez demandé un lien magique pour vous connecter, et le voici  :",
+        "buttonText": "Se connecter"
+    }
 }
