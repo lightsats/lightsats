@@ -12,12 +12,13 @@ export function ItemFeatureBadge({
   variant = "success",
 }: ItemFeatureBadgeProps) {
   return (
-    <Badge variant="flat" color="primary">
+    <Badge variant="flat" color="primary" size="xs">
       <Icon width={14} height={14}>
         {variant === "success" ? <CheckIcon /> : <XMarkIcon />}
       </Icon>
       &nbsp;
       {name.charAt(0).toUpperCase() + name.slice(1)}
+      &nbsp;
     </Badge>
   );
 }
