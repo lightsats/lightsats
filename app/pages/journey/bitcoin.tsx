@@ -24,7 +24,7 @@ const slides: BitcoinSlideProps[] = [
     image: "/images/guide/anytime-anywhere.jpg",
     title: "Anytime, Anywhere",
     description:
-      "Bitcoin doesn't close on weekends. All you need is a computer or mobile phone to get started. Bitcoin has an uptime of over 99.98% since its inception.",
+      "Bitcoin doesn't close on weekends. All you need is a computer or mobile phone to get started. Bitcoin lets you transact anywhere across the world.",
   },
   {
     image: "/images/guide/own-bank.png",
