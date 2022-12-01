@@ -1,4 +1,5 @@
 import { validateLanguageCode } from "lib/i18n/iso6391";
+import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { catalog } from "lib/items/catalog";
 import { Item, ItemCategory } from "types/Item";
 import { Wallet } from "types/Wallet";
@@ -42,7 +43,7 @@ export function getRecommendedItems(
     categoryFilterFunctions[category]?.(recommendedItems, options) ??
     recommendedItems;
 
-  sortItems(recommendedItems, categoryScoringFuncs[category]);
+  sortItems(recommendedItems, categoryScoringFuncs[category], locale);
   const limit =
     category === "wallets" && !options.lnurlAuthCapable ? 1 : undefined;
   return recommendedItems.slice(0, limit);
@@ -51,7 +52,8 @@ export function getRecommendedItems(
 export function getOtherItems(
   category: ItemCategory,
   options: CategoryFilterOptions,
-  recommendedItems: Item[]
+  recommendedItems: Item[],
+  locale: string
 ) {
   const categoryItems = catalog[category];
   let otherItems = categoryItems.filter(
@@ -61,7 +63,7 @@ export function getOtherItems(
     otherItems =
       categoryFilterFunctions[category]?.(otherItems, options) ?? otherItems;
   }
-  sortItems(otherItems, categoryScoringFuncs[category]);
+  sortItems(otherItems, categoryScoringFuncs[category], locale);
   return otherItems;
 }
 
@@ -81,19 +83,31 @@ export function getRecommendedWallets(
 
 export function sortItems(
   items: Item[],
-  scoringFunc: ScoringFunction | undefined
+  scoringFunc: ScoringFunction | undefined,
+  locale: string
 ) {
   items.sort(
-    (a, b) => getItemScore(b, scoringFunc) - getItemScore(a, scoringFunc)
+    (a, b) =>
+      getItemScore(b, scoringFunc, locale) -
+      getItemScore(a, scoringFunc, locale)
   );
 }
 
-function getItemScore(item: Item, scoringFunc: ScoringFunction | undefined) {
+function getItemScore(
+  item: Item,
+  scoringFunc: ScoringFunction | undefined,
+  locale: string
+) {
   let score = 0;
   if (item.lightsatsRecommended) {
     ++score;
   }
-  // TODO: score languages (native +10, English +5, others +0)
+  if (item.languageCodes.indexOf(locale) > -1) {
+    score += 5;
+  } else if (item.languageCodes.indexOf(DEFAULT_LOCALE) > -1) {
+    score += 2;
+  }
+
   if (scoringFunc) {
     score += scoringFunc(item);
   }

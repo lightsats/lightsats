@@ -8,8 +8,10 @@ import {
 import { NextLink } from "components/NextLink";
 import { placeholderDataUrl as defaultPlaceholderDataUrl } from "lib/constants";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
+import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { getItemImageLocation } from "lib/utils";
 import NextImage from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 import { Item } from "types/Item";
 import { LearnItem } from "types/LearnItem";
@@ -20,12 +22,17 @@ type ItemCardProps = {
   expanded?: boolean;
 };
 
-function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
-  //const hasLanguage = item.languageCodes.indexOf("en") > -1;
+function getItemFeatures(item: Item, locale: string): ItemFeatureBadgeProps[] {
+  const hasLanguage = item.languageCodes.indexOf(locale) > -1;
+  const hasDefaultLanguage = item.languageCodes.indexOf(DEFAULT_LOCALE) > -1;
   const itemFeatures: ItemFeatureBadgeProps[] = [
     {
-      name: getNativeLanguageName("en"), // TODO: current language
-      // variant: hasLanguage ? "success" : "warning",
+      name: hasLanguage
+        ? getNativeLanguageName(locale)
+        : hasDefaultLanguage
+        ? getNativeLanguageName("en")
+        : item.languageCodes.join(", "),
+      variant: hasLanguage ? "success" : "warning",
     },
   ];
   if (((item as Wallet).minBalance || 0) > 0) {
@@ -34,18 +41,12 @@ function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
       variant: "warning",
     });
   }
-  // if (item.lightsatsRecommended) {
-  //   itemFeatures.push({
-  //     name: `LS⚡ recommended`,
-  //     variant: "success",
-  //   });
-  // }
-  // const hasSafePlatform =
-  //   item.platforms.indexOf("mobile") > -1 || item.platforms.indexOf("web") > -1;
+  const hasSafePlatform =
+    item.platforms.indexOf("mobile") > -1 || item.platforms.indexOf("web") > -1;
   for (const platform of item.platforms) {
     itemFeatures.push({
       name: platform,
-      // variant: hasSafePlatform ? "success" : "warning",
+      variant: hasSafePlatform ? "success" : "warning",
     });
   }
   if (item.category === "wallets") {
@@ -77,9 +78,10 @@ function getItemFeatures(item: Item): ItemFeatureBadgeProps[] {
 }
 
 export function ItemCard({ item, expanded }: ItemCardProps) {
+  const router = useRouter();
   const features: ItemFeatureBadgeProps[] = React.useMemo(
-    () => getItemFeatures(item),
-    [item]
+    () => getItemFeatures(item, router.locale || DEFAULT_LOCALE),
+    [item, router.locale]
   );
 
   return (
