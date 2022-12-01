@@ -172,6 +172,10 @@ model WithdrawalError {
   userId String
   message String
   created DateTime @default(now())
+
+  withdrawalFlow WithdrawalFlow?
+  withdrawalMethod WithdrawalMethod?
+  withdrawalInvoice String?
 }
 
 model UserRole {

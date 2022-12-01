@@ -82,6 +82,9 @@ export async function completeWithdrawal(
           "Failed to complete withdrawal " +
           JSON.stringify(error, Object.getOwnPropertyNames(error)),
         userId: userId,
+        withdrawalFlow,
+        withdrawalMethod,
+        withdrawalInvoice,
       },
     });
 
@@ -141,6 +144,8 @@ export async function completeWithdrawal(
           "Failed to withdraw remaining balance from user " +
           JSON.stringify(error, Object.getOwnPropertyNames(error)),
         userId: userId,
+        withdrawalFlow,
+        withdrawalMethod,
       },
     });
   }
