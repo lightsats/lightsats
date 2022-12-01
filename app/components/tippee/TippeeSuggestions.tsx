@@ -31,7 +31,7 @@ export function TippeeSuggestions() {
         </NextLink>
       </Row>
       <Spacer y={0.5} />
-      <Row css={{ overflowX: "auto", gap: 10 }}>
+      <Row>
         <Swiper
           slidesPerView={(global?.window.innerWidth || 0) > 500 ? 1.4 : 1.2}
           spaceBetween={20}
