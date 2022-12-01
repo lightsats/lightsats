@@ -39,7 +39,6 @@ const wos: Wallet = {
   platforms: ["mobile"],
 };
 //
-// https://lgt.st/bluewallet
 const muun: Wallet = {
   category: "wallets",
   features: ["lnurl-withdraw"],
@@ -77,7 +76,7 @@ const breez: Wallet = {
 };
 
 const blue: Wallet = {
-  features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
+  features: ["lnurl-auth", "lnurl-withdraw"],
   category: "wallets",
   minBalance: 0,
   link: "https://lgt.st/bluewallet",
