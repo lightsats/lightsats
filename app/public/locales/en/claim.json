@@ -1,11 +1,11 @@
 {
-  "hello": "Hello {{tippeeName}}!",
-  "tipperHasGiftedYou": "{{tipperName}} has gifted you",
-  "youHaveBeenGifted": "You've been gifted",
-  "expired": "This tip has expired.",
-  "instructions.phone": "Enter your phone number below and press the button to claim your funds.",
-  "instructions.email": "Enter your email below and press the button to claim your funds.",
-  "instructions.lightning": "Login with Lightning",
-  "expiresIn": "Expires in {{expiry}}",
-  "claim": "Claim my funds"
+    "hello": "Hello {{tippeeName}}.",
+    "tipperHasGiftedYou": "{{tipperName}} has gifted you",
+    "youHaveBeenGifted": "You've been gifted",
+    "expired": "This tip has expired.",
+    "instructions.phone": "Enter your phone number below and press the button to claim your funds.",
+    "instructions.email": "Enter your e-mail address below and press the button to claim your funds.",
+    "instructions.lightning": "Log in with Lightning",
+    "expiresIn": "Expires in {{expiry}}",
+    "claim": "Claim my funds"
 }

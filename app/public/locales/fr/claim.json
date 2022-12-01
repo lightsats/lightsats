@@ -1,11 +1,11 @@
 {
-  "hello": "Salut, {{tippeeName}}!",
-  "tipperHasGiftedYou": "{{tipperName}} vous a offert",
-  "youHaveBeenGifted": "Vous avez reçu un don",
-  "expired": "Ce don a expiré.",
-  "instructions.phone": "Saisissez votre numéro de téléphone ci-dessous et appuyez sur le bouton pour réclamer vos dons.",
-  "instructions.email": "Entrez votre email ci-dessous et appuyez sur le bouton pour réclamer vos dons.",
-  "instructions.lightning": "Connectez-vous avec Lightning",
-  "expiresIn": "Expire dans {{expiry}}",
-  "claim": "Réclamer mes dons"
+    "hello": "Salut, {{tippeeName}} !",
+    "tipperHasGiftedYou": "{{tipperName}} vous a offert",
+    "youHaveBeenGifted": "Vous avez reçu un don",
+    "expired": "Ce don a expiré.",
+    "instructions.phone": "Saisissez votre numéro de téléphone ci-dessous et appuyez sur le bouton pour réclamer vos dons.",
+    "instructions.email": "Entrez votre email ci-dessous et appuyez sur le bouton pour réclamer vos dons.",
+    "instructions.lightning": "Connectez-vous avec Lightning",
+    "expiresIn": "Expire dans {{expiry}}",
+    "claim": "Réclamer mes dons"
 }

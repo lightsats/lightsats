@@ -1,0 +1,11 @@
+{
+    "youHaveBeenGifted": "Du har fått",
+    "expired": "Denne begunstigelsen har utløpt.",
+    "tipperHasGiftedYou": "{{tipperName}} har gitt til deg",
+    "expiresIn": "Utløper om {{expiry}}",
+    "claim": "Hent beløpet",
+    "hello": "Hei {{tippeeName}}.",
+    "instructions.phone": "Skriv inn telefonnummeret ditt nedenfor og klikk knappen for å hente beløpet.",
+    "instructions.email": "Skriv inn e-postadressen din nedenfor og klikk knappen for å hente beløpet.",
+    "instructions.lightning": "Logg inn med Lightning"
+}
