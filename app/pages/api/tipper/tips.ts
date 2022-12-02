@@ -1,6 +1,7 @@
 import { Tip } from "@prisma/client";
 import { add } from "date-fns";
 import { StatusCodes } from "http-status-codes";
+import { createAchievement } from "lib/createAchievement";
 import {
   createLnbitsUserAndWallet,
   generateUserAndWalletName,
@@ -135,6 +136,8 @@ async function handlePostTip(
   }
 
   tip = await recreateTipFundingInvoice(tip, lnbitsWallet.adminkey);
+
+  await createAchievement(session.user.id, "CREATED_TIP");
 
   res.json(tip);
 }

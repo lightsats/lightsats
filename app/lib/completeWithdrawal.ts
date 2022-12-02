@@ -5,6 +5,7 @@ import {
   WithdrawalFlow,
   WithdrawalMethod,
 } from "@prisma/client";
+import { createAchievement } from "lib/createAchievement";
 import { createNotification } from "lib/createNotification";
 import { deleteUnusedWithdrawalLinks } from "lib/deleteStaleWithdrawalLinks";
 import { sendEmail } from "lib/email/sendEmail";
@@ -150,9 +151,23 @@ export async function completeWithdrawal(
       },
     });
   }
+  switch (withdrawalMethod) {
+    case "invoice":
+      await createAchievement(userId, "MANUAL_WITHDRAWN");
+      break;
+    case "lnurlw":
+      await createAchievement(userId, "LNURL_WITHDRAWN");
+      break;
+    case "webln":
+      await createAchievement(userId, "WEBLN_WITHDRAWN");
+      break;
+  }
+
   if (withdrawalFlow === "tippee") {
     for (const tip of tips) {
       await createNotification(tip.tipperId, "TIP_WITHDRAWN", tip.id);
+      await createAchievement(tip.tipperId, "TIP_WITHDRAWN");
+
       try {
         if (tip.tipper.email) {
           await sendEmail({

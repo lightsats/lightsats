@@ -153,6 +153,12 @@ function getNotificationCardProps(
         description: "Nice work on the orange pill 🍊💊",
         href: `${Routes.tips}/${notification.tipId}`,
       };
+    case "ACHIEVEMENT_UNLOCKED":
+      return {
+        title: "Achievement unlocked!",
+        description: notification.achievementType ?? "Unknown",
+        href: Routes.profile,
+      };
     default:
       throw new Error("Unsupported notification type: " + notification.type);
   }

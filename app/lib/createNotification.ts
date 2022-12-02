@@ -1,16 +1,24 @@
-import { NotificationType } from "@prisma/client";
+import {
+  AchievementType,
+  Notification,
+  NotificationType,
+} from "@prisma/client";
 import prisma from "lib/prismadb";
 
 export async function createNotification(
   userId: string,
   type: NotificationType,
-  tipId?: string
+  tipId?: string,
+  achievementType?: AchievementType,
+  notifications?: Notification[]
 ) {
-  const notifications = await prisma.notification.findMany({
-    where: {
-      userId,
-    },
-  });
+  notifications =
+    notifications ??
+    (await prisma.notification.findMany({
+      where: {
+        userId,
+      },
+    }));
 
   const isRepeatable = isNotificationTypeRepeatable(type);
 
@@ -22,6 +30,7 @@ export async function createNotification(
       data: {
         userId,
         type,
+        achievementType,
         tipId,
       },
     });
@@ -34,6 +43,7 @@ function isNotificationTypeRepeatable(type: NotificationType) {
       return false;
     case "TIP_CLAIMED":
     case "TIP_WITHDRAWN":
+    case "ACHIEVEMENT_UNLOCKED":
       return true;
   }
 }

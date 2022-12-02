@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { AchievementType, User } from "@prisma/client";
 
 export type PublicUser = Pick<
   User,
@@ -14,5 +14,6 @@ export type PublicUser = Pick<
   numTipsSent: number;
   numTipsReceived: number;
   satsTipped: number;
+  achievements: AchievementType[];
   // scoreboardPosition: number; // TODO: calculate
 };

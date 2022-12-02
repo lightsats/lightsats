@@ -8,12 +8,15 @@ import {
   Card,
   Col,
   Divider,
+  Grid,
   Link,
   Loading,
   Row,
   Spacer,
   Text,
+  Tooltip,
 } from "@nextui-org/react";
+import { AchievementType } from "@prisma/client";
 import { Icon } from "components/Icon";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
@@ -143,6 +146,48 @@ export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
                   {placing !== undefined ? <>#{placing}</> : "No placing yet"}
                 </Text>
               </Col>
+            </Row>
+            <Divider y={2} />
+            <Row>
+              <Text b>Achievements</Text>
+              <Spacer />
+              <Grid.Container gap={1}>
+                {publicUser.achievements.map((achievement) => (
+                  <Grid key={achievement}>
+                    <Tooltip content={achievement}>
+                      <div
+                        style={{
+                          background:
+                            "linear-gradient(180deg, #FFDD00 0%, #FD5C00 100%)",
+                          borderRadius: "50%",
+                          padding: "8px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <div
+                          style={{
+                            background:
+                              "linear-gradient(180deg, #FFF7C3 0%, #FFE69C 100%)",
+                            borderRadius: "100%",
+                            width: "48px",
+                            height: "48px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Text b css={{ m: 0, p: 0, color: "#FD5C00" }}>
+                            #
+                            {Object.values(AchievementType).indexOf(
+                              achievement
+                            )}
+                          </Text>
+                        </div>
+                      </div>
+                    </Tooltip>
+                  </Grid>
+                ))}
+              </Grid.Container>
             </Row>
           </>
         )}

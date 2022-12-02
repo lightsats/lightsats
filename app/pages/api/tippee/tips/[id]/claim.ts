@@ -1,5 +1,6 @@
 import { Tip } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { createAchievement } from "lib/createAchievement";
 import { createNotification } from "lib/createNotification";
 import { sendEmail } from "lib/email/sendEmail";
 import prisma from "lib/prismadb";
@@ -85,6 +86,8 @@ async function handleClaimTip(
     });
   }
   await createNotification(tip.tipperId, "TIP_CLAIMED", tip.id);
+  await createAchievement(session.user.id, "SELF_CLAIMED");
+  await createAchievement(tip.tipperId, "TIP_CLAIMED");
   if (tip.tipper.email) {
     try {
       await sendEmail({
