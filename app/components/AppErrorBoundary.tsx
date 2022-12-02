@@ -12,10 +12,13 @@ export class AppErrorBoundary extends React.Component<
   AppErrorBoundaryState
 > {
   private promiseRejectionHandler = (event: PromiseRejectionEvent) => {
-    if ((event.reason.message as string).indexOf("Prompt was closed") > -1) {
+    if ((event?.reason?.message as string)?.indexOf("Prompt was closed") > -1) {
       toast.error("Wallet Prompt was closed");
     } else {
-      console.error("AppErrorBoundary.promiseRejectionHandler", event.reason);
+      console.error(
+        "AppErrorBoundary.promiseRejectionHandler",
+        event?.reason ?? "Unknown"
+      );
       event.preventDefault();
     }
   };

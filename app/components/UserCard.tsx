@@ -19,7 +19,7 @@ import { usePublicUser } from "hooks/usePublicUser";
 import { useScoreboardPosition } from "hooks/useScoreboardPosition";
 import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
-import { getUserAvatarUrl } from "lib/utils";
+import { getAppUrl, getUserAvatarUrl } from "lib/utils";
 import React from "react";
 import toast from "react-hot-toast";
 
@@ -32,7 +32,7 @@ export function UserCard({ userId, forceAnonymous }: Props) {
   const { data: publicUser } = usePublicUser(userId, forceAnonymous);
 
   const shareProfile = React.useCallback(() => {
-    const url = `${Routes.users}/${userId}`;
+    const url = getAppUrl() + `${Routes.users}/${userId}`;
     (async () => {
       try {
         await navigator.share({
