@@ -27,6 +27,9 @@ export default async function handler(
     where: {
       userId: session.user.id,
     },
+    orderBy: {
+      created: "desc",
+    },
   });
   return res.json(notifications);
 }

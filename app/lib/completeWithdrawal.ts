@@ -5,6 +5,7 @@ import {
   WithdrawalFlow,
   WithdrawalMethod,
 } from "@prisma/client";
+import { createNotification } from "lib/createNotification";
 import { deleteUnusedWithdrawalLinks } from "lib/deleteStaleWithdrawalLinks";
 import { sendEmail } from "lib/email/sendEmail";
 import { createInvoice } from "lib/lnbits/createInvoice";
@@ -151,6 +152,7 @@ export async function completeWithdrawal(
   }
   if (withdrawalFlow === "tippee") {
     for (const tip of tips) {
+      await createNotification(tip.tipperId, "TIP_WITHDRAWN", tip.id);
       try {
         if (tip.tipper.email) {
           await sendEmail({

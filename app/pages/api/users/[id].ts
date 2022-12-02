@@ -1,5 +1,6 @@
-import { NotificationType, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { createNotification } from "lib/createNotification";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import prisma from "lib/prismadb";
 import { getFallbackAvatarId } from "lib/utils";
@@ -114,39 +115,12 @@ async function getUser(
 ) {
   if (user.userType === "tipper") {
     if (!user.email) {
-      await addNotification(user.id, "LINK_EMAIL");
+      await createNotification(user.id, "LINK_EMAIL");
     }
     if (!user.name || !user.avatarURL) {
-      await addNotification(user.id, "COMPLETE_PROFILE");
+      await createNotification(user.id, "COMPLETE_PROFILE");
     }
   }
 
   return res.status(StatusCodes.OK).json(user);
-}
-
-async function addNotification(
-  userId: string,
-  type: NotificationType,
-  tipId?: string
-) {
-  const notifications = await prisma.notification.findMany({
-    where: {
-      userId,
-    },
-  });
-
-  const isRepeatable = type === "TIP_CLAIMED" || type === "TIP_WITHDRAWN";
-
-  if (
-    isRepeatable ||
-    !notifications.some((notification) => notification.type === type)
-  ) {
-    await prisma.notification.create({
-      data: {
-        userId,
-        type,
-        tipId,
-      },
-    });
-  }
 }

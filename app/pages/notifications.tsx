@@ -12,6 +12,7 @@ import {
 import { Notification } from "@prisma/client";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
+import { formatDistance } from "date-fns";
 import { useNotifications } from "hooks/useNotifications";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
@@ -91,6 +92,15 @@ const NotificationsPage: NextPage = () => {
                             <Row>
                               <Text>{notificationCardProps.description}</Text>
                             </Row>
+                            <Row justify="flex-end">
+                              <Text size="small" css={{ mb: -10 }}>
+                                {formatDistance(
+                                  new Date(),
+                                  new Date(notification.created)
+                                )}{" "}
+                                ago
+                              </Text>
+                            </Row>
                           </Col>
                         </Row>
                       </Card.Body>
@@ -129,6 +139,19 @@ function getNotificationCardProps(
         title: "Complete your tipper profile",
         description: "Improve the authenticity of your tips",
         href: Routes.profile,
+      };
+    case "TIP_CLAIMED":
+      return {
+        title: "Your tip was claimed!",
+        description:
+          "Good job. Your recipient has started their Bitcoin journey!",
+        href: `${Routes.tips}/${notification.tipId}`,
+      };
+    case "TIP_WITHDRAWN":
+      return {
+        title: "Your tip was withdrawn!",
+        description: "Nice work on the orange pill 🍊💊",
+        href: `${Routes.tips}/${notification.tipId}`,
       };
     default:
       throw new Error("Unsupported notification type: " + notification.type);

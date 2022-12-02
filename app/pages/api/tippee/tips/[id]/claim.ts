@@ -1,5 +1,6 @@
 import { Tip } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { createNotification } from "lib/createNotification";
 import { sendEmail } from "lib/email/sendEmail";
 import prisma from "lib/prismadb";
 import { stageTip } from "lib/stageTip";
@@ -76,6 +77,7 @@ async function handleClaimTip(
       userType: "tippee",
     },
   });
+  await createNotification(tip.tipperId, "TIP_CLAIMED", tip.id);
   if (tip.tipper.email) {
     try {
       await sendEmail({
