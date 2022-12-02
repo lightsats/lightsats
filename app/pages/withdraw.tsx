@@ -60,7 +60,7 @@ const Withdraw: NextPage = () => {
             headers: { "Content-Type": "application/json" },
           });
           if (result.ok) {
-            toast.success("Funds withdrawn!");
+            toast.success("Funds withdrawn!", { duration: 5000 });
           } else {
             const body = await result.text();
             toast.error(
