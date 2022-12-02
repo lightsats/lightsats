@@ -226,7 +226,7 @@ model Achievement {
 
 enum AchievementType {
   SELF_CLAIMED
-  SELF_WITHDRAWN
+  // SELF_WITHDRAWN - more specific versions below (webln, manual, lnurl)
   BECAME_TIPPER
   LINKED_EMAIL
   LINKED_WALLET
@@ -237,7 +237,7 @@ enum AchievementType {
   FUNDED_TIP
   TIP_CLAIMED
   TIP_WITHDRAWN
-  WEBLN_FUNDED
+  // WEBLN_FUNDED - unable to easily tell
   WEBLN_WITHDRAWN
   MANUAL_WITHDRAWN
   LNURL_WITHDRAWN
