@@ -105,20 +105,19 @@ export function ItemCard({ item, expanded }: ItemCardProps) {
       title={item.name}
     >
       <Text color="$gray">{item.slogan}</Text>
+      <Spacer y={0.5} />
+      <Text color="$gray" size={10} b transform="uppercase">
+        Features
+      </Text>
+      <Row justify="flex-start" align="flex-start" style={{ flexWrap: "wrap" }}>
+        {features.map((feature) => (
+          <ItemFeatureBadge key={feature.name} {...feature} />
+        ))}
+      </Row>
       <Spacer y={1} />
       <NextLink href={item.link} passHref>
         <a target="_blank" rel="noreferrer noopener">
-          <Row align="center" css={{ p: 10, br: 10 }}>
-            <Row
-              justify="flex-start"
-              align="flex-start"
-              style={{ flexWrap: "wrap", gap: "8px" }}
-            >
-              {features.map((feature) => (
-                <ItemFeatureBadge key={feature.name} {...feature} />
-              ))}
-            </Row>
-
+          <Row justify="flex-end">
             <Button auto>
               <Icon>
                 <ArrowTopRightOnSquareIcon />

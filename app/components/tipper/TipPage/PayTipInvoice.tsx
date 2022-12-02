@@ -37,12 +37,13 @@ export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
       <Card css={{ dropShadow: "$xs" }}>
         <Card.Header>
           <Row>
-            <Col>
+            <Col span={10}>
               <Text size={20} b>
                 💸 Fund this tip
               </Text>
             </Col>
-            <Col style={{ textAlign: "right", alignSelf: "center" }}>
+
+            <Col span={2} style={{ textAlign: "right", alignSelf: "center" }}>
               <Loading color="currentColor" size="sm" />
             </Col>
           </Row>

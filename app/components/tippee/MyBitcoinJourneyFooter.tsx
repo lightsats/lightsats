@@ -17,7 +17,7 @@ export function MyBitcoinJourneyFooter({
   return (
     <>
       <Spacer y={3} />
-      <Container style={{ margin: 0 }}>
+      <Container style={{ padding: 0 }}>
         <FlexBox
           style={{
             flexDirection: "row",

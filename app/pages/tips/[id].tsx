@@ -109,7 +109,7 @@ const TipPage: NextPage = () => {
           <Card css={{ dropShadow: "$sm", background: "$primary" }}>
             <Card.Body>
               <Row justify="center">
-                <Text h2 css={{ color: "$white" }}>
+                <Text h3 css={{ color: "$white", ta: "center" }}>
                   Personalize your tip
                 </Text>
               </Row>
@@ -132,22 +132,17 @@ const TipPage: NextPage = () => {
               <Row justify="center">
                 <NextLink href={`${Routes.tips}/${tip.id}/edit`} passHref>
                   <a>
-                    <Button size="lg" color="secondary">
-                      Personalize tip🪄
+                    <Button size="md" color="secondary">
+                      Personalize tip 🪄
                     </Button>
                   </a>
                 </NextLink>
               </Row>
               <Spacer />
               <Row justify="center">
-                <Button
-                  color="secondary"
-                  size="sm"
-                  bordered
-                  onClick={() => setSkipPersonalize(true)}
-                >
-                  Skip for now
-                </Button>
+                <Link onClick={() => setSkipPersonalize(true)}>
+                  <Text color="white">Skip for now</Text>
+                </Link>
               </Row>
             </Card.Body>
           </Card>
