@@ -12,6 +12,35 @@ export async function payWithdrawalInvoice(
   userId: string,
   withdrawalMethod: WithdrawalMethod
 ) {
+  const preliminaryLastWithdrawalResult = await prisma.user.findUniqueOrThrow({
+    where: { id: userId },
+    select: { lastWithdrawal: true },
+  });
+
+  // first do a preliminary check outside of a transaction to see if the user last withdrew less than a minute ago
+  if (
+    preliminaryLastWithdrawalResult.lastWithdrawal &&
+    Date.now() -
+      new Date(preliminaryLastWithdrawalResult.lastWithdrawal).getTime() <
+      60000 /* allow withdrawals once per minute */
+  ) {
+    const errorMessage =
+      "Your last withdrawal attempt was less than a minute ago. Please wait before trying again.";
+    await prisma.withdrawalError.create({
+      data: {
+        message: errorMessage,
+        userId,
+        withdrawalFlow,
+        withdrawalMethod,
+        withdrawalInvoice: invoice,
+      },
+    });
+    throw new Error(errorMessage);
+  }
+
+  // update last withdrawal in a transaction to force withdrawals to be more than one minute apart.
+  // This check will reset the last withdrawal time even if it was less than 60 seconds ago
+  // (the preliminary check above is just to make the process more user friendly)
   const [lastWithdrawalResult] = await prisma.$transaction(
     [
       prisma.user.findUniqueOrThrow({
@@ -34,7 +63,7 @@ export async function payWithdrawalInvoice(
       60000 /* allow withdrawals once per minute */
   ) {
     const errorMessage =
-      "Your last withdrawal was less than a minute ago. Please try again soon.";
+      "Your last withdrawal attempt was less than a minute ago. Please wait a full minute before trying again. (Transaction)";
     await prisma.withdrawalError.create({
       data: {
         message: errorMessage,
