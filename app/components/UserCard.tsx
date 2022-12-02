@@ -1,6 +1,6 @@
 import {
   ArrowTopRightOnSquareIcon,
-  ArrowUpTrayIcon,
+  ShareIcon,
 } from "@heroicons/react/24/solid";
 import {
   Avatar,
@@ -100,7 +100,7 @@ export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
               </Col>
               <Button auto flat css={{ px: 8 }} onClick={shareProfile}>
                 <Icon>
-                  <ArrowUpTrayIcon />
+                  <ShareIcon />
                 </Icon>
               </Button>
               {showViewButton && (
