@@ -205,9 +205,7 @@ const Withdraw: NextPage = () => {
       ) : (
         <div style={{ maxWidth: "100%" }}>
           <Text h3>
-            {isSubmitting
-              ? "Withdrawing..."
-              : "Ready to withdraw your bitcoin?"}
+            {isSubmitting ? "Withdrawing..." : "Ready to withdraw?"}
           </Text>
 
           {withdrawalLinkLnurl && !isSubmitting ? (

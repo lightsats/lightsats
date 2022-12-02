@@ -1,4 +1,4 @@
-import { Grid, Text } from "@nextui-org/react";
+import { Grid, Spacer, Text } from "@nextui-org/react";
 import { ClaimedTipCard } from "components/ClaimedTipCard";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
@@ -33,7 +33,8 @@ const ClaimedPage: NextPage = () => {
       </Head>
       <MyBitcoinJourneyHeader />
       <Text h3>Nice work 👍</Text>
-      <Text h4>{"You've successfully claimed your tip"}</Text>
+      <Text h5>{"You've successfully claimed your tip"}</Text>
+      <Spacer />
       <Grid.Container gap={2}>
         {claimedTips?.map((publicTip) => (
           <ClaimedTipCard

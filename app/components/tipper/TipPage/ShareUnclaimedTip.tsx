@@ -31,9 +31,9 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
     <>
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Header>
-          <Row justify="center">
+          <Row justify="center" align="center">
             <Text size={20} b>
-              👇 Have your tippee scan this QR code
+              👇 Scan this QR code
             </Text>
             &nbsp;
             <Tooltip
@@ -41,6 +41,8 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
             code scanner app. You can also copy the URL to send via a message or
             email."
               color="primary"
+              css={{ minWidth: "50%" }}
+              placement="left"
             >
               <Text color="primary">
                 <Icon>
