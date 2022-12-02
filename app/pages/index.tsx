@@ -281,9 +281,12 @@ function Homepage() {
         Learn More
       </Text>
       <Text css={{ maxWidth: "500px", textAlign: "center" }}>
-        {
-          "Watch our pitch for the BOLT FUN Legends of Lightning ⚡️ tournment, Tipper and recipient flows, our team, and more"
-        }
+        This project is being built during the &nbsp;
+        <a href="https://makers.bolt.fun/tournaments/1/overview">🔩 BOLT.FUN</a>
+        &nbsp;&raquo;Legends of Lightning&laquo; tournament. Check out our&nbsp;
+        <a href="https://makers.bolt.fun/project/Lightsats">project page</a> to
+        see our pitch and to learn more about the product and the team behind
+        it.
       </Text>
       <Spacer />
       <NextLink href={Routes.about} passHref>
@@ -304,9 +307,7 @@ function TipCounter({ totalSatsSent }: { totalSatsSent: number }) {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <Text small b transform="uppercase">
-        With lightsats
-      </Text>
+      <Text h3>With Lightsats</Text>
       <Spacer y={0.5} />
       <Text
         b
@@ -322,7 +323,13 @@ function TipCounter({ totalSatsSent }: { totalSatsSent: number }) {
         }}
       >
         {inViewport ? (
-          <CountUp isCounting end={totalSatsSent} duration={2} />
+          <CountUp
+            isCounting
+            end={totalSatsSent}
+            easing={"easeOutCubic"}
+            duration={2}
+            thousandsSeparator=","
+          />
         ) : (
           0
         )}
@@ -330,7 +337,6 @@ function TipCounter({ totalSatsSent }: { totalSatsSent: number }) {
       </Text>
       <Spacer />
       <Text h3>have been tipped to date.</Text>
-      <Text h3></Text>
     </div>
   );
 }

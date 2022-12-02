@@ -32,8 +32,8 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Header>
           <Row justify="center" align="center">
-            <Text size={20} b>
-              👇 Scan this QR code
+            <Text size={18} b>
+              👇 Let them scan this QR code
             </Text>
             &nbsp;
             <Tooltip
