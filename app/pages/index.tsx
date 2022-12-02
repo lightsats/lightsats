@@ -304,9 +304,7 @@ function TipCounter({ totalSatsSent }: { totalSatsSent: number }) {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <Text small b transform="uppercase">
-        With lightsats
-      </Text>
+      <Text h3>With Lightsats</Text>
       <Spacer y={0.5} />
       <Text
         b
@@ -322,7 +320,13 @@ function TipCounter({ totalSatsSent }: { totalSatsSent: number }) {
         }}
       >
         {inViewport ? (
-          <CountUp isCounting end={totalSatsSent} duration={2} />
+          <CountUp
+            isCounting
+            end={totalSatsSent}
+            easing={"easeOutCubic"}
+            duration={2}
+            thousandsSeparator=","
+          />
         ) : (
           0
         )}
