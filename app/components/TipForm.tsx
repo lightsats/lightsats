@@ -1,9 +1,12 @@
-import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowsRightLeftIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
+  Col,
   Input,
-  Link,
   Loading,
   Row,
   Spacer,
@@ -12,6 +15,7 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
+import { Divider } from "components/Divider";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { SatsPrice } from "components/SatsPrice";
@@ -80,7 +84,7 @@ export function TipForm({
   defaultValues = {
     amountString: "1",
     currency: "USD",
-    expiresIn: 3,
+    expiresIn: 21,
     expiryUnit: "days",
     tippeeLocale: DEFAULT_LOCALE,
   },
@@ -207,6 +211,20 @@ export function TipForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
+      <Row justify="space-between" align="center">
+        <Col>Currency</Col>
+        <Col>
+          {exchangeRateSelectOptions && (
+            <CustomSelect
+              options={exchangeRateSelectOptions}
+              defaultValue={watchedCurrency}
+              onChange={setDropdownSelectedCurrency}
+              width="70px"
+            />
+          )}
+        </Col>
+      </Row>
+      <Spacer />
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
           {mode === "update" && (
@@ -255,6 +273,128 @@ export function TipForm({
 
           {mode === "create" && (
             <>
+              <Row>
+                <Col>
+                  Amount
+                  <br />
+                  <Text small css={{ position: "relative", top: "-5px" }}>
+                    in {inputMethod === "fiat" ? watchedCurrency : inputMethod}
+                  </Text>
+                </Col>
+                <Col>
+                  <Row justify="flex-end">
+                    <Controller
+                      name="amountString"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          // {...register("amount", {
+                          //   valueAsNumber: true,
+                          // }) causes iOS decimal input bug, resetting field value }
+                          min={0}
+                          max={MAX_TIP_SATS}
+                          step="0.01"
+                          type="number"
+                          inputMode="decimal"
+                          aria-label="amount"
+                          css={{ ta: "right", width: "160px" }}
+                          size="lg"
+                          fullWidth
+                          bordered
+                          autoFocus
+                          contentRight={
+                            <>
+                              <Button
+                                css={{ position: "relative", right: "35px" }}
+                                size="xs"
+                                auto
+                                onClick={toggleInputMethod}
+                              >
+                                <Icon width={8} height={8}>
+                                  <ArrowsRightLeftIcon />
+                                </Icon>
+                                &nbsp;
+                                {inputMethod === "fiat"
+                                  ? watchedCurrency
+                                  : inputMethod}
+                              </Button>
+                            </>
+                          }
+                        />
+                      )}
+                    />
+                  </Row>
+                </Col>
+              </Row>
+              <Divider />
+              <Row>
+                <Col>
+                  <Row>
+                    Fees &nbsp;
+                    <Tooltip
+                      placement="right"
+                      content={`The ${FEE_PERCENT}% (minimum ${MINIMUM_FEE_SATS} sats) fee covers outbound routing and ${appName} infrastructure costs`}
+                    >
+                      <Text color="primary">
+                        <Icon width={16} height={16}>
+                          <InformationCircleIcon />
+                        </Icon>
+                      </Text>
+                    </Tooltip>
+                  </Row>
+                </Col>
+                <Col css={{ ta: "right", alignItems: "flex-end", fd: "row" }}>
+                  {watchedExchangeRate ? (
+                    <>
+                      <Text>
+                        {!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
+                        {" sats"}
+                      </Text>
+                      <Text small css={{ position: "relative", top: "-5px" }}>
+                        <FiatPrice
+                          sats={!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
+                          currency={watchedCurrency}
+                          exchangeRate={watchedExchangeRate}
+                        />
+                      </Text>
+                    </>
+                  ) : (
+                    <Loading color="currentColor" size="sm" />
+                  )}
+                </Col>
+              </Row>
+              <Divider />
+              <Row>
+                <Col>
+                  <Text b>Total</Text>
+                </Col>
+                <Col css={{ ta: "right" }}>
+                  <Text css={{ fontWeight: "bold" }}>
+                    <FiatPrice
+                      currency={watchedCurrency}
+                      exchangeRate={exchangeRates?.[watchedCurrency]}
+                      sats={
+                        !isNaN(watchedAmount) && !isNaN(watchedAmountFee)
+                          ? watchedAmount + watchedAmountFee
+                          : 0
+                      }
+                    />
+                  </Text>
+                  <Text small css={{ position: "relative", top: "-5px" }}>
+                    <SatsPrice
+                      exchangeRate={exchangeRates?.[watchedCurrency]}
+                      fiat={
+                        !isNaN(watchedAmount) && !isNaN(watchedAmountFee)
+                          ? watchedAmount + watchedAmountFee
+                          : 0
+                      }
+                    />
+                  </Text>
+                </Col>
+              </Row>
+
+              {/* 
               <Row justify="flex-start" align="center">
                 <Tooltip
                   content={`How much would you like to tip the recipient?`}
@@ -274,6 +414,7 @@ export function TipForm({
                   </Icon>
                 </Button>
               </Row>
+
               <Spacer y={0.25} />
               <Row align="center" justify="space-between">
                 <Controller
@@ -349,6 +490,7 @@ export function TipForm({
               ) : (
                 <Loading color="currentColor" size="sm" />
               )}
+              */}
             </>
           )}
           {mode === "update" && (
@@ -385,35 +527,48 @@ export function TipForm({
               />
             </>
           )}
-          <Spacer />
-          <Row>
-            <Tooltip
-              content={`Incentivize the recipient to accept the tip before expiry. Expired tips can reclaimed.`}
-            >
-              <Text>Tip expires in</Text>
-            </Tooltip>
+        </Card.Body>
+      </Card>
+      <Spacer />
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Body>
+          <Row align="center">
+            <Col>
+              <Text>⌛ Tip expiry</Text>
+              <Text
+                small
+                css={{ mt: 6, lineHeight: 1.2, display: "inline-block" }}
+              >
+                Days until the tip returns back to you.
+              </Text>
+            </Col>
+            <Col css={{ ta: "right" }}>
+              <Controller
+                name="expiresIn"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    aria-label="Tip expires in"
+                    {...field}
+                    {...register("expiresIn", {
+                      valueAsNumber: true,
+                    })}
+                    min={1}
+                    style={{
+                      textAlign: "center",
+                    }}
+                    width="100px"
+                    type="number"
+                    inputMode="decimal"
+                    bordered
+                    color="primary"
+                  />
+                )}
+              />
+            </Col>
           </Row>
+          {/* 
           <Row gap={0} justify="space-between" align="flex-end">
-            <Controller
-              name="expiresIn"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  aria-label="Tip expires in"
-                  {...field}
-                  {...register("expiresIn", {
-                    valueAsNumber: true,
-                  })}
-                  min={1}
-                  width="150px"
-                  type="number"
-                  inputMode="decimal"
-                  bordered
-                  color="primary"
-                />
-              )}
-            />
-
             <Spacer />
             <CustomSelect
               options={expiryUnitSelectOptions}
@@ -422,6 +577,7 @@ export function TipForm({
               width="100px"
             />
           </Row>
+          */}
         </Card.Body>
       </Card>
       <Spacer y={2} />

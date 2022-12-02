@@ -39,7 +39,6 @@ export function CustomSelect({
           border: "none",
           borderRadius: theme?.radii.base.value,
           background: theme?.colors.primaryLight.value,
-          height: "40px",
         }),
         dropdownIndicator: (baseStyles) => ({
           ...baseStyles,
