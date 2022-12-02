@@ -64,7 +64,6 @@ export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
             <Row align="center">
               <Avatar
                 size="xl"
-                zoomed
                 bordered
                 color="primary"
                 src={getUserAvatarUrl(publicUser)}
@@ -130,7 +129,13 @@ export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
                 <Text b>{publicUser.numTipsReceived} tips</Text>
               </Col>
               <Col>
-                <Text size="small">Leaderboard 🏆</Text>
+                <NextLink href={Routes.scoreboard} passHref>
+                  <Link>
+                    <Text size="small" color="$black">
+                      Leaderboard 🏆
+                    </Text>
+                  </Link>
+                </NextLink>
                 <Text
                   b={placing !== undefined}
                   size={placing === undefined ? "small" : undefined}
