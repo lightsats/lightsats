@@ -1,4 +1,7 @@
-import { ArrowUpTrayIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowTopRightOnSquareIcon,
+  ArrowUpTrayIcon,
+} from "@heroicons/react/24/solid";
 import {
   Avatar,
   Button,
@@ -13,6 +16,7 @@ import {
 } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextImage } from "components/NextImage";
+import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
 import { format } from "date-fns";
 import { usePublicUser } from "hooks/usePublicUser";
@@ -26,25 +30,26 @@ import toast from "react-hot-toast";
 type Props = {
   userId: string;
   forceAnonymous?: boolean;
+  showViewButton?: boolean;
 };
 
-export function UserCard({ userId, forceAnonymous }: Props) {
+export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
   const { data: publicUser } = usePublicUser(userId, forceAnonymous);
+  const publicProfileUrl = getAppUrl() + `${Routes.users}/${userId}`;
 
   const shareProfile = React.useCallback(() => {
-    const url = getAppUrl() + `${Routes.users}/${userId}`;
     (async () => {
       try {
         await navigator.share({
-          url,
+          url: publicProfileUrl,
           title: (publicUser?.name ?? DEFAULT_NAME) + " on Lightsats",
         });
       } catch (error) {
-        copy(url);
+        copy(publicProfileUrl);
         toast.success("Copied link to clipboard");
       }
     })();
-  }, [userId, publicUser?.name]);
+  }, [publicProfileUrl, publicUser?.name]);
 
   const placing = useScoreboardPosition(
     publicUser?.userType === "tipper" ? userId : undefined
@@ -99,6 +104,20 @@ export function UserCard({ userId, forceAnonymous }: Props) {
                   <ArrowUpTrayIcon />
                 </Icon>
               </Button>
+              {showViewButton && (
+                <>
+                  <Spacer x={0.5} />
+                  <NextLink href={publicProfileUrl}>
+                    <a target="_blank">
+                      <Button auto flat css={{ px: 8 }}>
+                        <Icon>
+                          <ArrowTopRightOnSquareIcon />
+                        </Icon>
+                      </Button>
+                    </a>
+                  </NextLink>
+                </>
+              )}
             </Row>
             <Divider y={2} />
             <Row>

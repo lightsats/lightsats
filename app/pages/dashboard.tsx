@@ -34,7 +34,7 @@ const Dashboard: NextPage = () => {
             padding: 0,
           }}
         >
-          <UserCard userId={user.id} />
+          <UserCard userId={user.id} showViewButton />
           <Spacer />
           {user?.userType === "tipper" ? (
             <>

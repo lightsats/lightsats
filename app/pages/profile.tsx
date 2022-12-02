@@ -1,15 +1,21 @@
 import {
+  CheckIcon,
   ClipboardIcon,
   EyeIcon,
   LinkIcon,
   TrashIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 import {
+  Badge,
   Button,
   Card,
+  Col,
   Collapse,
+  Grid,
   Input,
   Loading,
+  Progress,
   Row,
   Spacer,
   Switch,
@@ -60,6 +66,13 @@ const formStyle: React.CSSProperties = {
   width: "100%",
 };
 
+const formFieldIds = {
+  name: "name",
+  avatarURL: "avatarURL",
+  lightningAddress: "lightningAddress",
+  email: connectedAccountsElementId,
+};
+
 const localeSelectOptions: SelectOption[] = locales.map((locale) => ({
   value: locale,
   label: getNativeLanguageName(locale),
@@ -99,29 +112,36 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
   const [highlightConnectedAccounts, setHighlightConnectedAccounts] =
     React.useState(false);
 
+  const openConnectedAccounts = React.useCallback(() => {
+    setConnectedAccountsExpanded(true);
+    setTimeout(() => {
+      document
+        .getElementById(window.location.hash.substring(1))
+        ?.scrollIntoView({ behavior: "smooth" });
+      setTimeout(() => {
+        setHighlightConnectedAccounts(true);
+        setTimeout(() => {
+          setHighlightConnectedAccounts(false);
+        }, 1000);
+      }, 500);
+    }, 1000);
+  }, []);
+
   React.useEffect(() => {
     if (window.location.hash) {
-      setConnectedAccountsExpanded(true);
-      setTimeout(() => {
-        document
-          .getElementById(window.location.hash.substring(1))
-          ?.scrollIntoView({ behavior: "smooth" });
-        setTimeout(() => {
-          setHighlightConnectedAccounts(true);
-          setTimeout(() => {
-            setHighlightConnectedAccounts(false);
-          }, 1000);
-        }, 500);
-      }, 1000);
+      openConnectedAccounts();
     }
-  }, []);
+  }, [openConnectedAccounts]);
 
   return (
     <>
       <Row>
-        <UserCard userId={user.id} />
+        <UserCard userId={user.id} showViewButton />
       </Row>
       <Spacer />
+      {user.userType === "tipper" && (
+        <CompleteYourProfile openConnectedAccounts={openConnectedAccounts} />
+      )}
 
       <UpdateProfileForm
         mutateUser={mutateUser}
@@ -327,6 +347,7 @@ function UpdateProfileForm({ mutateUser, user }: ProfileInternalProps) {
                 {...field}
                 label="Your Name"
                 placeholder="John Galt"
+                id={formFieldIds.name}
                 fullWidth
                 maxLength={MAX_USER_NAME_LENGTH}
                 bordered
@@ -376,6 +397,7 @@ function UpdateProfileForm({ mutateUser, user }: ProfileInternalProps) {
                   fullWidth
                   bordered
                   type="url"
+                  id={formFieldIds.avatarURL}
                 />
               )}
             />
@@ -391,6 +413,7 @@ function UpdateProfileForm({ mutateUser, user }: ProfileInternalProps) {
                   fullWidth
                   bordered
                   type="email"
+                  id={formFieldIds.lightningAddress}
                 />
               )}
             />
@@ -518,5 +541,150 @@ function UnlinkButton({ user, mutateUser, accountType }: UnlinkButtonProps) {
         </>
       )}
     </Button>
+  );
+}
+
+type CompleteProfileAction = {
+  completed: boolean;
+  title: string;
+  description: string;
+  fieldId: string;
+  openConnectedAccounts?: boolean;
+};
+
+type CompleteYourProfileProps = {
+  openConnectedAccounts(): void;
+};
+
+function CompleteYourProfile({
+  openConnectedAccounts,
+}: CompleteYourProfileProps) {
+  const { data: user } = useUser();
+  const actions: CompleteProfileAction[] = React.useMemo(() => {
+    return [
+      {
+        completed: !!user?.name,
+        title: "Name",
+        description:
+          "Enter your name so your recipient knows who sent the tip.",
+        fieldId: formFieldIds.name,
+      },
+      {
+        completed: !!user?.avatarURL,
+        title: "Avatar",
+        description: "Add an avatar URL to make your profile more authentic",
+        fieldId: formFieldIds.avatarURL,
+      },
+      {
+        completed: !!user?.lightningAddress,
+        title: "Lightning Address",
+        description: "Receive tips directly from your public profile",
+        fieldId: formFieldIds.lightningAddress,
+      },
+      {
+        completed: !!user?.email,
+        title: "Email",
+        description:
+          "Receive notifications when your tips are claimed and withdrawn",
+        fieldId: formFieldIds.email,
+        openConnectedAccounts: true,
+      },
+      {
+        completed: !!user?.lnurlPublicKey,
+        title: "Wallet",
+        description:
+          "Link your lnurl-auth compatible wallet to easily login to Lightsats. You can also use this method to login from the Lightsats PWA without being redirected to your browser!",
+        fieldId: formFieldIds.email,
+        openConnectedAccounts: true,
+      },
+    ];
+  }, [user]);
+  if (!user) {
+    return null;
+  }
+  const progress = Math.round(
+    (actions.filter((item) => item.completed).length / actions.length) * 100
+  );
+
+  return (
+    <>
+      {progress < 100 ? (
+        <Card>
+          <Card.Body>
+            <Row justify="space-between" align="center">
+              <Text b>Complete your profile</Text>
+              <Text b size="small">
+                {progress}%
+              </Text>
+            </Row>
+            <Spacer />
+            <Progress
+              value={progress}
+              color="primary"
+              status="primary"
+              size="sm"
+            />
+            <Spacer />
+            <Grid.Container gap={1}>
+              {actions.map((action) => (
+                <Grid xs={12} key={action.title}>
+                  <NextLink href={`#${action.fieldId}`}>
+                    <Card
+                      css={{
+                        background: action.completed ? "$accents1" : undefined,
+                      }}
+                      isPressable
+                      isHoverable
+                      onClick={
+                        action.openConnectedAccounts
+                          ? openConnectedAccounts
+                          : undefined
+                      }
+                    >
+                      <Card.Body>
+                        <Row align="center" justify="space-between">
+                          <Col>
+                            <Text b css={{ m: 0 }}>
+                              {action.title}
+                            </Text>
+                            <Text size="small" css={{ m: 0 }}>
+                              {action.description}
+                            </Text>
+                          </Col>
+                          <Spacer />
+                          <Button
+                            flat
+                            auto
+                            css={{
+                              px: 8,
+                              color: action.completed ? "$success" : "$warning",
+                              background: action.completed
+                                ? "$successLight"
+                                : "$warningLight",
+                            }}
+                          >
+                            <Icon>
+                              {action.completed ? <CheckIcon /> : <XMarkIcon />}
+                            </Icon>
+                          </Button>
+                        </Row>
+                      </Card.Body>
+                    </Card>
+                  </NextLink>
+                </Grid>
+              ))}
+            </Grid.Container>
+          </Card.Body>
+        </Card>
+      ) : (
+        <Badge color="success">
+          Profile completed&nbsp;
+          <Icon width={12} height={12}>
+            <CheckIcon />
+          </Icon>
+        </Badge>
+      )}
+      <Spacer />
+    </>
   );
 }
