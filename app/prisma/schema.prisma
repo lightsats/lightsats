@@ -82,6 +82,7 @@ model User {
   sentReminders SentReminder[]
   lastWithdrawal DateTime?
   notifications Notification[]
+  achievements Achievement[]
 }
 
 model Tip {
@@ -206,10 +207,40 @@ model Notification {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   tipId String?
+  achievementType AchievementType?
   type NotificationType
   created DateTime @default(now())
   updated DateTime @default(now()) @updatedAt
   read Boolean @default(false)
+}
+
+model Achievement {
+  type AchievementType
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  created DateTime @default(now())
+  updated DateTime @default(now()) @updatedAt
+
+  @@id([userId, type])
+}
+
+enum AchievementType {
+  SELF_CLAIMED
+  SELF_WITHDRAWN
+  BECAME_TIPPER
+  LINKED_EMAIL
+  LINKED_WALLET
+  SET_NAME
+  SET_AVATAR_URL
+  SET_LIGHTNING_ADDRESS
+  CREATED_TIP
+  FUNDED_TIP
+  TIP_CLAIMED
+  TIP_WITHDRAWN
+  WEBLN_FUNDED
+  WEBLN_WITHDRAWN
+  MANUAL_WITHDRAWN
+  LNURL_WITHDRAWN
 }
 
 enum NotificationType {
@@ -217,6 +248,7 @@ enum NotificationType {
   LINK_EMAIL
   TIP_CLAIMED
   TIP_WITHDRAWN
+  ACHIEVEMENT_UNLOCKED
 }
 
 enum ReminderType {
