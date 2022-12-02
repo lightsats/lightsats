@@ -67,16 +67,23 @@ async function handleClaimTip(
       tippeeId: session.user.id,
     },
   });
-  await prisma.user.update({
+  const userHasTips = !!(await prisma.tip.findFirst({
     where: {
-      id: session.user.id,
+      tipperId: session.user.id,
     },
-    data: {
-      inJourney: true,
-      journeyStep: 1,
-      userType: "tippee",
-    },
-  });
+  }));
+  if (!userHasTips) {
+    await prisma.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        inJourney: true,
+        journeyStep: 1,
+        userType: "tippee",
+      },
+    });
+  }
   await createNotification(tip.tipperId, "TIP_CLAIMED", tip.id);
   if (tip.tipper.email) {
     try {
