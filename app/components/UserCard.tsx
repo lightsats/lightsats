@@ -172,7 +172,7 @@ export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
                 </Grid>
               </NextLink>
               <NextLink
-                href={`${Routes.users}/${userId}/achievements`}
+                href={`${Routes.users}/${userId}#achievements`}
                 passHref
               >
                 <Grid xs={6} sm={3} as="a">
