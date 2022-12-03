@@ -6,6 +6,7 @@ import {
   getOtherItems,
   getRecommendedItems,
 } from "lib/items/getRecommendedItems";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
 import { ItemCategory } from "types/Item";
@@ -18,6 +19,7 @@ type ItemsListProps = {
 const collapseGroupCss: CSS = { width: "100%" };
 
 export function ItemsList({ category, options }: ItemsListProps) {
+  const { t } = useTranslation("login");
   const router = useRouter();
 
   const recommendedItems = React.useMemo(
@@ -38,7 +40,7 @@ export function ItemsList({ category, options }: ItemsListProps) {
 
   return (
     <>
-      {otherItems.length > 0 && <h4>Recommended wallet</h4>}
+      {otherItems.length > 0 && <h4>{t("recommendedWallet")}</h4>}
 
       <Collapse.Group shadow={options.shadow ?? true} css={collapseGroupCss}>
         {recommendedItems.map((item) => (
@@ -55,7 +57,7 @@ export function ItemsList({ category, options }: ItemsListProps) {
           <Spacer />
 
           <Text small b h4 transform="uppercase">
-            Other wallets
+            {t("otherWallets")}
           </Text>
           <Collapse.Group
             shadow={options.shadow ?? true}
