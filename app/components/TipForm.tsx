@@ -365,132 +365,50 @@ export function TipForm({
                 </Col>
               </Row>
               <Divider />
-              <Row>
-                <Col>
-                  <Text b>Total</Text>
-                </Col>
-                <Col css={{ ta: "right" }}>
-                  <Text css={{ fontWeight: "bold" }}>
-                    <FiatPrice
-                      currency={watchedCurrency}
-                      exchangeRate={exchangeRates?.[watchedCurrency]}
-                      sats={
-                        !isNaN(watchedAmount) && !isNaN(watchedAmountFee)
-                          ? watchedAmount + watchedAmountFee
-                          : 0
-                      }
-                    />
-                  </Text>
-                  <Text small css={{ position: "relative", top: "-5px" }}>
-                    <SatsPrice
-                      exchangeRate={exchangeRates?.[watchedCurrency]}
-                      fiat={
-                        !isNaN(watchedAmount) && !isNaN(watchedAmountFee)
-                          ? watchedAmount + watchedAmountFee
-                          : 0
-                      }
-                    />
-                  </Text>
-                </Col>
-              </Row>
-
-              {/* 
-              <Row justify="flex-start" align="center">
-                <Tooltip
-                  content={`How much would you like to tip the recipient?`}
-                >
-                  <Text>
-                    Amount in{" "}
-                    {inputMethod === "fiat" ? watchedCurrency : inputMethod}
-                  </Text>
-                </Tooltip>
-                <Spacer x={0.5} />
-                <Button size="xs" auto onClick={toggleInputMethod}>
-                  Switch to{" "}
-                  {altInputMethod === "fiat" ? watchedCurrency : altInputMethod}
-                  &nbsp;
-                  <Icon width={16} height={16}>
-                    <ArrowsRightLeftIcon />
-                  </Icon>
-                </Button>
-              </Row>
-
-              <Spacer y={0.25} />
-              <Row align="center" justify="space-between">
-                <Controller
-                  name="amountString"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      // {...register("amount", {
-                      //   valueAsNumber: true,
-                      // }) causes iOS decimal input bug, resetting field value }
-                      min={0}
-                      max={MAX_TIP_SATS}
-                      step="0.01"
-                      type="number"
-                      inputMode="decimal"
-                      aria-label="amount"
-                      fullWidth
-                      bordered
-                      autoFocus
-                    />
-                  )}
-                />
-                <Spacer />
-                {exchangeRateSelectOptions && (
-                  <CustomSelect
-                    options={exchangeRateSelectOptions}
-                    defaultValue={watchedCurrency}
-                    onChange={setDropdownSelectedCurrency}
-                    width="100px"
-                  />
-                )}
-              </Row>
-
-              <Spacer y={1.5} />
-              <Row justify="center" align="center">
-                <Text b size={18}>
-                  {inputMethod === "sats" ? (
-                    <FiatPrice
-                      currency={watchedCurrency}
-                      exchangeRate={exchangeRates?.[watchedCurrency]}
-                      sats={!isNaN(watchedAmount) ? watchedAmount : 0}
-                    />
-                  ) : (
-                    <SatsPrice
-                      exchangeRate={exchangeRates?.[watchedCurrency]}
-                      fiat={!isNaN(watchedAmount) ? watchedAmount : 0}
-                    />
-                  )}
-                </Text>
-              </Row>
-              {watchedExchangeRate ? (
-                <Row justify="center" align="center">
-                  <Tooltip
-                    content={`The ${FEE_PERCENT}% (minimum ${MINIMUM_FEE_SATS} sats) fee covers outbound routing and ${appName} infrastructure costs`}
-                  >
-                    <Link css={{ width: "100%" }}>
-                      <Text size="small" css={{ display: "flex" }}>
-                        {"+"}
-                        {!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
-                        {" sats / "}
-                        &nbsp;
-                        <FiatPrice
-                          sats={!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
-                          currency={watchedCurrency}
-                          exchangeRate={watchedExchangeRate}
-                        />
-                        &nbsp;fee
-                      </Text>
-                    </Link>
-                  </Tooltip>
+              {exchangeRates && watchedExchangeRate && (
+                <Row>
+                  <Col>
+                    <Text b>Total</Text>
+                  </Col>
+                  <Col css={{ ta: "right" }}>
+                    <Text css={{ fontWeight: "bold" }}>
+                      <FiatPrice
+                        currency={watchedCurrency}
+                        exchangeRate={exchangeRates[watchedCurrency]}
+                        sats={
+                          !isNaN(watchedAmount)
+                            ? (inputMethod === "fiat"
+                                ? getSatsAmount(
+                                    watchedAmount,
+                                    watchedExchangeRate
+                                  )
+                                : watchedAmount) + watchedAmountFee
+                            : 0
+                        }
+                      />
+                    </Text>
+                    <Text small css={{ position: "relative", top: "-5px" }}>
+                      <SatsPrice
+                        exchangeRate={exchangeRates[watchedCurrency]}
+                        fiat={
+                          !isNaN(watchedAmount)
+                            ? inputMethod === "sats"
+                              ? getFiatAmount(
+                                  watchedAmount + watchedAmountFee,
+                                  watchedExchangeRate
+                                )
+                              : watchedAmount +
+                                getFiatAmount(
+                                  watchedAmountFee,
+                                  watchedExchangeRate
+                                )
+                            : 0
+                        }
+                      />
+                    </Text>
+                  </Col>
                 </Row>
-              ) : (
-                <Loading color="currentColor" size="sm" />
               )}
-              */}
             </>
           )}
           {mode === "update" && (
