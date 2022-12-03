@@ -40,12 +40,10 @@ export default function UserPublicProfile() {
             <Grid.Container gap={1}>
               {publicUser?.achievementTypes.map((achievement) => (
                 <Grid key={achievement}>
-                  <Tooltip content={achievement}>
-                    <Badge
-                      text={Object.values(AchievementType).indexOf(achievement)}
-                      color="#fbc02d"
-                    />
-                  </Tooltip>
+                  <Badge
+                    text={Object.values(AchievementType).indexOf(achievement)}
+                    color="#fbc02d"
+                  />
                 </Grid>
               ))}
             </Grid.Container>
@@ -106,7 +104,7 @@ const Badge = ({ color, text }: BadgeProps) => {
       top: 0,
       transition: "all 0.2s ease",
       "&::hover": {
-        top: -5,
+        top: "-5px",
       },
     },
     before: {
@@ -175,15 +173,17 @@ const Badge = ({ color, text }: BadgeProps) => {
   };
 
   return (
-    <div style={styles.badge}>
-      <div style={styles.before} />
-      <div style={styles.after} />
-      <div style={styles.circle}>
-        <Icon width={32} height={32}>
-          <HandThumbUpIcon />
-        </Icon>
+    <Tooltip content={text}>
+      <div style={styles.badge}>
+        <div style={styles.before} />
+        <div style={styles.after} />
+        <div style={styles.circle}>
+          <Icon width={32} height={32}>
+            <HandThumbUpIcon />
+          </Icon>
+        </div>
+        <div style={styles.ribbon}>{text}</div>
       </div>
-      <div style={styles.ribbon}>{text}</div>
-    </div>
+    </Tooltip>
   );
 };
