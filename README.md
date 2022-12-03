@@ -10,6 +10,8 @@ Project on Bolt fun: https://makers.bolt.fun/project/Lightsats
 
 ## Contributing
 
+Join our discord channel to stay up to date! https://discord.gg/3QkV7ny2EW
+
 We would love any contributions, especially translations in your native language!
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for more info.
