@@ -65,8 +65,12 @@ export default async function handler(
     entries,
     numTippers,
     numUsersOnboarded,
-    numTipsSent: entries.map((e) => e.numTipsSent).reduce((a, b) => a + b),
-    totalSatsSent: entries.map((e) => e.satsSent).reduce((a, b) => a + b),
+    numTipsSent: entries.length
+      ? entries.map((e) => e.numTipsSent).reduce((a, b) => a + b)
+      : 0,
+    totalSatsSent: entries.length
+      ? entries.map((e) => e.satsSent).reduce((a, b) => a + b)
+      : 0,
   };
 
   return res.status(StatusCodes.OK).json(scoreboard);
