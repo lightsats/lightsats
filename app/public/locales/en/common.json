@@ -4,6 +4,8 @@
   "lightning": "⚡ Lightning",
   "loginWithLightning": "Log in with Lightning",
   "or": "or",
+  "copy": "Copy",
+  "copiedToClipboard": "Copied to clipboard",
   "verifyPhoneMessage": "Lightsats login",
   "checkEmailTitle": "Check your inbox",
   "checkEmailText": "A magic link 🪄  has been sent to your inbox. Click it to confirm your e-mail address.",

@@ -37,7 +37,7 @@ type LnurlAuthSignInProps = {
 
 export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const router = useRouter();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["common", "login"]);
   const linkExistingAccount = router.query["link"] === "true";
   const callbackUrlWithFallback =
     callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
@@ -80,9 +80,9 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const copyQr = React.useCallback(() => {
     if (qr) {
       copy(qr.encoded);
-      toast.success("Copied to clipboard");
+      toast.success(t("common:copiedToClipboard"));
     }
-  }, [qr]);
+  }, [qr, t]);
 
   const categoryFilterOptions: CategoryFilterOptions = React.useMemo(
     () => ({ lnurlAuthCapable: true, filterOtherItems: true, shadow: false }),
@@ -95,7 +95,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
         <Card.Header>
           <Row justify="center" align="center">
             <Text h4 css={{ fontWeight: "bold", m: 0 }}>
-              {t("lightning")}
+              {t("common:lightning")}
             </Text>
             <Spacer x={0.5} /> {/* shift Lightning into center */}
           </Row>
@@ -115,15 +115,13 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
             ) : (
               <>
                 <Spacer />
-                <Loading>Generating QR code...</Loading>
+                <Loading>{t("login:generatingQrCode")}</Loading>
               </>
             )}
           </Row>
           <Row justify="center">
             <Text css={{ maxWidth: "250px", ta: "center" }}>
-              {
-                "Scan this code or copy + paste it to your lightning wallet. Or click to login with your browser's wallet."
-              }
+              {t("login:scanQrCode")}
             </Text>
           </Row>
         </Card.Body>
@@ -136,11 +134,11 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
                   <Icon>
                     <ClipboardIcon />
                   </Icon>
-                  &nbsp; Copy
+                  &nbsp; {t("common:copy")}
                 </Button>
                 <NextLink href={`lightning:${qr.encoded}`}>
                   <a>
-                    <Button>Click to connect</Button>
+                    <Button>{t("login:clickToConnect")}</Button>
                   </a>
                 </NextLink>
               </Row>
@@ -152,7 +150,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
       <Card variant="flat">
         <Card.Body css={{ p: 0 }}>
           <Collapse.Group>
-            <Collapse title={<Text b>Compatible Wallets</Text>}>
+            <Collapse title={<Text b>{t("login:compatibleWallets")}</Text>}>
               <ItemsList category="wallets" options={categoryFilterOptions} />
             </Collapse>
           </Collapse.Group>

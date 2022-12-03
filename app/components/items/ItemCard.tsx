@@ -10,6 +10,7 @@ import { placeholderDataUrl as defaultPlaceholderDataUrl } from "lib/constants";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { getItemImageLocation } from "lib/utils";
+import { useTranslation } from "next-i18next";
 import NextImage from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
@@ -78,6 +79,7 @@ function getItemFeatures(item: Item, locale: string): ItemFeatureBadgeProps[] {
 }
 
 export function ItemCard({ item, expanded }: ItemCardProps) {
+  const { t } = useTranslation("login");
   const router = useRouter();
   const features: ItemFeatureBadgeProps[] = React.useMemo(
     () => getItemFeatures(item, router.locale || DEFAULT_LOCALE),
@@ -123,7 +125,7 @@ export function ItemCard({ item, expanded }: ItemCardProps) {
                 <ArrowTopRightOnSquareIcon />
               </Icon>
               &nbsp;
-              {item.category === "wallets" ? "Install" : "Open"}
+              {item.category === "wallets" ? t("install") : t("open")}
             </Button>
           </Row>
         </a>
