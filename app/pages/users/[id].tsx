@@ -4,9 +4,11 @@ import { NextLink } from "components/NextLink";
 import { UserCard } from "components/UserCard";
 import { usePublicUser } from "hooks/usePublicUser";
 import { DEFAULT_NAME } from "lib/constants";
+import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import { getUserAvatarUrl } from "lib/utils";
 import { useSession } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import Script from "next/script";
 
@@ -15,6 +17,7 @@ export default function UserPublicProfile() {
   const router = useRouter();
   const { id } = router.query;
   const { data: publicUser } = usePublicUser(id as string, true);
+  const { t } = useTranslation("achievements");
 
   return (
     <>
@@ -28,9 +31,15 @@ export default function UserPublicProfile() {
       </Row>
       <Row>
         <Grid.Container gap={1}>
-          {publicUser?.achievementTypes.map((achievement) => (
-            <Grid key={achievement}>
-              <Tooltip content={achievement}>
+          {publicUser?.achievementTypes.map((achievementType) => (
+            <Grid key={achievementType}>
+              <Tooltip
+                content={
+                  t(`${achievementType}.title`) +
+                  " - " +
+                  t(`${achievementType}.description`)
+                }
+              >
                 <div
                   style={{
                     background:
@@ -53,7 +62,7 @@ export default function UserPublicProfile() {
                     }}
                   >
                     <Text b css={{ m: 0, p: 0, color: "#FD5C00" }}>
-                      #{Object.values(AchievementType).indexOf(achievement)}
+                      #{Object.values(AchievementType).indexOf(achievementType)}
                     </Text>
                   </div>
                 </div>
@@ -96,3 +105,5 @@ export default function UserPublicProfile() {
     </>
   );
 }
+
+export { getStaticProps, getStaticPaths };
