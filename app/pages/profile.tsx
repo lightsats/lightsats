@@ -101,12 +101,6 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
     copy(user.id);
     toast.success("User ID Copied to clipboard");
   }, [user.id]);
-  const copyUserWalletPublicKey = React.useCallback(() => {
-    if (user.lnurlPublicKey) {
-      copy(user.lnurlPublicKey);
-      toast.success("Wallet public key Copied to clipboard");
-    }
-  }, [user.lnurlPublicKey]);
   const [connectedAccountsExpanded, setConnectedAccountsExpanded] =
     React.useState(false);
   const [highlightConnectedAccounts, setHighlightConnectedAccounts] =
@@ -675,7 +669,15 @@ function CompleteYourProfile({
             {actions.map((action, i) => (
               <>
                 <NextLink href={`#${action.fieldId}`}>
-                  <Row align="center" justify="space-between">
+                  <Row
+                    align="center"
+                    justify="space-between"
+                    onClick={
+                      action.openConnectedAccounts
+                        ? openConnectedAccounts
+                        : undefined
+                    }
+                  >
                     <Col>
                       <Text b small css={{ m: 0 }}>
                         {action.title}
