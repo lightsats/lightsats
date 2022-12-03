@@ -16,7 +16,7 @@ import {
   Text,
   Tooltip,
 } from "@nextui-org/react";
-import { AchievementType } from "@prisma/client";
+import { AchievementBadge } from "components/AchievementBadge";
 import { Icon } from "components/Icon";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
@@ -147,10 +147,15 @@ export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
                 </Text>
               </Col>
             </Row>
-            <Divider y={2} />
+            <Divider y={1} />
+            <Spacer y={0.5} />
             <Row>
-              <Text b>Achievements</Text>
-              <Spacer />
+              <Text b small>
+                Achievements
+              </Text>
+            </Row>
+            <Spacer y={0.5} />
+            <Row>
               <Grid.Container gap={1}>
                 {publicUser.achievements.map((achievement) => (
                   <Grid key={achievement}>
@@ -176,12 +181,7 @@ export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
                             alignItems: "center",
                           }}
                         >
-                          <Text b css={{ m: 0, p: 0, color: "#FD5C00" }}>
-                            #
-                            {Object.values(AchievementType).indexOf(
-                              achievement
-                            )}
-                          </Text>
+                          <AchievementBadge achievement={achievement} />
                         </div>
                       </div>
                     </Tooltip>
