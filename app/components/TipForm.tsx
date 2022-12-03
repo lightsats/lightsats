@@ -1,9 +1,9 @@
-import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
+  Col,
   Input,
-  Link,
   Loading,
   Row,
   Spacer,
@@ -12,6 +12,7 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
+import { Divider } from "components/Divider";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { SatsPrice } from "components/SatsPrice";
@@ -36,12 +37,6 @@ import { Controller, useForm } from "react-hook-form";
 
 export const ExpiryUnitValues = ["minutes", "hours", "days"] as const;
 export type ExpiryUnit = typeof ExpiryUnitValues[number];
-const expiryUnitSelectOptions: SelectOption[] = ExpiryUnitValues.map(
-  (expiryUnit) => ({
-    value: expiryUnit,
-    label: expiryUnit,
-  })
-);
 const tippeeLocaleSelectOptions: SelectOption[] = locales.map((locale) => ({
   value: locale,
   label: getNativeLanguageName(locale),
@@ -80,7 +75,7 @@ export function TipForm({
   defaultValues = {
     amountString: "1",
     currency: "USD",
-    expiresIn: 3,
+    expiresIn: 21,
     expiryUnit: "days",
     tippeeLocale: DEFAULT_LOCALE,
   },
@@ -88,7 +83,6 @@ export function TipForm({
 }: TipFormProps) {
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [inputMethod, setInputMethod] = React.useState<InputMethod>("fiat");
-  const altInputMethod: InputMethod = inputMethod === "fiat" ? "sats" : "fiat";
 
   const { data: exchangeRates } = useExchangeRates();
 
@@ -104,7 +98,6 @@ export function TipForm({
   const watchedAmountString = watch("amountString");
   const watchedAmount = watch("amount");
   const watchedCurrency = watch("currency");
-  const watchedExpiryUnit = watch("expiryUnit");
   const watchedTippeeLocale = watch("tippeeLocale");
   const watchedExchangeRate = exchangeRates?.[watchedCurrency];
   const watchedAmountFee = watchedExchangeRate
@@ -150,11 +143,6 @@ export function TipForm({
 
   const setDropdownSelectedCurrency = React.useCallback(
     (currency: string) => setValue("currency", currency),
-    [setValue]
-  );
-
-  const setDropdownSelectedExpiryUnit = React.useCallback(
-    (expiryUnit: ExpiryUnit) => setValue("expiryUnit", expiryUnit),
     [setValue]
   );
 
@@ -207,6 +195,28 @@ export function TipForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
+      {mode === "create" && (
+        <>
+          <Card css={{ dropShadow: "$sm" }}>
+            <Card.Body>
+              <Row justify="space-between" align="center">
+                <Col>Currency</Col>
+                <Col>
+                  {exchangeRateSelectOptions && (
+                    <CustomSelect
+                      options={exchangeRateSelectOptions}
+                      defaultValue={watchedCurrency}
+                      onChange={setDropdownSelectedCurrency}
+                      width="70px"
+                    />
+                  )}
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+          <Spacer />
+        </>
+      )}
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
           {mode === "update" && (
@@ -255,99 +265,141 @@ export function TipForm({
 
           {mode === "create" && (
             <>
-              <Row justify="flex-start" align="center">
-                <Tooltip
-                  content={`How much would you like to tip the recipient?`}
-                >
-                  <Text>
-                    Amount in{" "}
-                    {inputMethod === "fiat" ? watchedCurrency : inputMethod}
+              <Row>
+                <Col>
+                  Amount
+                  <br />
+                  <Text small css={{ position: "relative", top: "-5px" }}>
+                    in {inputMethod === "fiat" ? watchedCurrency : inputMethod}
                   </Text>
-                </Tooltip>
-                <Spacer x={0.5} />
-                <Button size="xs" auto onClick={toggleInputMethod}>
-                  Switch to{" "}
-                  {altInputMethod === "fiat" ? watchedCurrency : altInputMethod}
-                  &nbsp;
-                  <Icon width={16} height={16}>
-                    <ArrowsRightLeftIcon />
-                  </Icon>
-                </Button>
-              </Row>
-              <Spacer y={0.25} />
-              <Row align="center" justify="space-between">
-                <Controller
-                  name="amountString"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      // {...register("amount", {
-                      //   valueAsNumber: true,
-                      // }) causes iOS decimal input bug, resetting field value }
-                      min={0}
-                      max={MAX_TIP_SATS}
-                      step="0.01"
-                      type="number"
-                      inputMode="decimal"
-                      aria-label="amount"
-                      fullWidth
-                      bordered
-                      autoFocus
+                </Col>
+                <Col>
+                  <Row justify="flex-end">
+                    <Controller
+                      name="amountString"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          // {...register("amount", {
+                          //   valueAsNumber: true,
+                          // }) causes iOS decimal input bug, resetting field value }
+                          min={0}
+                          max={MAX_TIP_SATS}
+                          step="0.01"
+                          type="number"
+                          inputMode="decimal"
+                          aria-label="amount"
+                          css={{ width: "160px" }}
+                          size="lg"
+                          fullWidth
+                          bordered
+                          autoFocus
+                          contentLeft={
+                            <Button
+                              size="xs"
+                              auto
+                              css={{
+                                px: "4px",
+                              }}
+                              onClick={toggleInputMethod}
+                            >
+                              <div style={{ width: "20px" }}>
+                                {inputMethod === "fiat"
+                                  ? getSymbolFromCurrencyWithFallback(
+                                      watchedCurrency
+                                    )
+                                  : "⚡"}
+                              </div>
+                            </Button>
+                          }
+                        />
+                      )}
                     />
-                  )}
-                />
-                <Spacer />
-                {exchangeRateSelectOptions && (
-                  <CustomSelect
-                    options={exchangeRateSelectOptions}
-                    defaultValue={watchedCurrency}
-                    onChange={setDropdownSelectedCurrency}
-                    width="100px"
-                  />
-                )}
+                  </Row>
+                </Col>
               </Row>
-
-              <Spacer y={1.5} />
-              <Row justify="center" align="center">
-                <Text b size={18}>
-                  {inputMethod === "sats" ? (
-                    <FiatPrice
-                      currency={watchedCurrency}
-                      exchangeRate={exchangeRates?.[watchedCurrency]}
-                      sats={!isNaN(watchedAmount) ? watchedAmount : 0}
-                    />
-                  ) : (
-                    <SatsPrice
-                      exchangeRate={exchangeRates?.[watchedCurrency]}
-                      fiat={!isNaN(watchedAmount) ? watchedAmount : 0}
-                    />
-                  )}
-                </Text>
-              </Row>
-              {watchedExchangeRate ? (
-                <Row justify="center" align="center">
-                  <Tooltip
-                    content={`The ${FEE_PERCENT}% (minimum ${MINIMUM_FEE_SATS} sats) fee covers outbound routing and ${appName} infrastructure costs`}
-                  >
-                    <Link css={{ width: "100%" }}>
-                      <Text size="small" css={{ display: "flex" }}>
-                        {"+"}
+              <Divider />
+              <Row>
+                <Col>
+                  <Row>
+                    Fees &nbsp;
+                    <Tooltip
+                      placement="right"
+                      content={`The ${FEE_PERCENT}% (minimum ${MINIMUM_FEE_SATS} sats) fee covers outbound routing and ${appName} infrastructure costs`}
+                    >
+                      <Text color="primary">
+                        <Icon width={16} height={16}>
+                          <InformationCircleIcon />
+                        </Icon>
+                      </Text>
+                    </Tooltip>
+                  </Row>
+                </Col>
+                <Col css={{ ta: "right", alignItems: "flex-end", fd: "row" }}>
+                  {watchedExchangeRate ? (
+                    <>
+                      <Text>
                         {!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
-                        {" sats / "}
-                        &nbsp;
+                        {" sats"}
+                      </Text>
+                      <Text small css={{ position: "relative", top: "-5px" }}>
                         <FiatPrice
                           sats={!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
                           currency={watchedCurrency}
                           exchangeRate={watchedExchangeRate}
                         />
-                        &nbsp;fee
                       </Text>
-                    </Link>
-                  </Tooltip>
+                    </>
+                  ) : (
+                    <Loading color="currentColor" size="sm" />
+                  )}
+                </Col>
+              </Row>
+              <Divider />
+              {exchangeRates && watchedExchangeRate && (
+                <Row>
+                  <Col>
+                    <Text b>Total</Text>
+                  </Col>
+                  <Col css={{ ta: "right" }}>
+                    <Text css={{ fontWeight: "bold" }}>
+                      <FiatPrice
+                        currency={watchedCurrency}
+                        exchangeRate={exchangeRates[watchedCurrency]}
+                        sats={
+                          !isNaN(watchedAmount)
+                            ? (inputMethod === "fiat"
+                                ? getSatsAmount(
+                                    watchedAmount,
+                                    watchedExchangeRate
+                                  )
+                                : watchedAmount) + watchedAmountFee
+                            : 0
+                        }
+                      />
+                    </Text>
+                    <Text small css={{ position: "relative", top: "-5px" }}>
+                      <SatsPrice
+                        exchangeRate={exchangeRates[watchedCurrency]}
+                        fiat={
+                          !isNaN(watchedAmount)
+                            ? inputMethod === "sats"
+                              ? getFiatAmount(
+                                  watchedAmount + watchedAmountFee,
+                                  watchedExchangeRate
+                                )
+                              : watchedAmount +
+                                getFiatAmount(
+                                  watchedAmountFee,
+                                  watchedExchangeRate
+                                )
+                            : 0
+                        }
+                      />
+                    </Text>
+                  </Col>
                 </Row>
-              ) : (
-                <Loading color="currentColor" size="sm" />
               )}
             </>
           )}
@@ -385,42 +437,45 @@ export function TipForm({
               />
             </>
           )}
-          <Spacer />
-          <Row>
-            <Tooltip
-              content={`Incentivize the recipient to accept the tip before expiry. Expired tips can reclaimed.`}
-            >
-              <Text>Tip expires in</Text>
-            </Tooltip>
-          </Row>
-          <Row gap={0} justify="space-between" align="flex-end">
-            <Controller
-              name="expiresIn"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  aria-label="Tip expires in"
-                  {...field}
-                  {...register("expiresIn", {
-                    valueAsNumber: true,
-                  })}
-                  min={1}
-                  width="150px"
-                  type="number"
-                  inputMode="decimal"
-                  bordered
-                  color="primary"
-                />
-              )}
-            />
-
-            <Spacer />
-            <CustomSelect
-              options={expiryUnitSelectOptions}
-              defaultValue={watchedExpiryUnit}
-              onChange={setDropdownSelectedExpiryUnit}
-              width="100px"
-            />
+        </Card.Body>
+      </Card>
+      <Spacer />
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Body>
+          <Row align="center">
+            <Col>
+              <Text>⌛ Tip expiry</Text>
+              <Text
+                small
+                css={{ mt: 6, lineHeight: 1.2, display: "inline-block" }}
+              >
+                Days until the tip returns back to you.
+              </Text>
+            </Col>
+            <Col css={{ ta: "right" }}>
+              <Controller
+                name="expiresIn"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    aria-label="Tip expires in"
+                    {...field}
+                    {...register("expiresIn", {
+                      valueAsNumber: true,
+                    })}
+                    min={1}
+                    style={{
+                      textAlign: "center",
+                    }}
+                    width="100px"
+                    type="number"
+                    inputMode="decimal"
+                    bordered
+                    color="primary"
+                  />
+                )}
+              />
+            </Col>
           </Row>
         </Card.Body>
       </Card>
