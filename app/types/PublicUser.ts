@@ -14,6 +14,6 @@ export type PublicUser = Pick<
   numTipsSent: number;
   numTipsReceived: number;
   satsTipped: number;
-  achievements: AchievementType[];
+  achievementTypes: AchievementType[];
   // scoreboardPosition: number; // TODO: calculate
 };

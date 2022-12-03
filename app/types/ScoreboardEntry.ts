@@ -1,3 +1,5 @@
+import { AchievementType } from "@prisma/client";
+
 export type ScoreboardEntry = {
   userId: string;
   isMe: boolean;
@@ -9,4 +11,5 @@ export type ScoreboardEntry = {
   numTipsWithdrawn: number;
   satsSent: number;
   numTipsSent: number;
+  achievementTypes: AchievementType[];
 };
