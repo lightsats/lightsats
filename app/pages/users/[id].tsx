@@ -1,5 +1,25 @@
-import { HandThumbUpIcon } from "@heroicons/react/24/solid";
-import { Button, Grid, Row, Spacer, Text, Tooltip } from "@nextui-org/react";
+import {
+  ArrowPathRoundedSquareIcon,
+  ArrowsRightLeftIcon,
+  AtSymbolIcon,
+  BoltIcon,
+  IdentificationIcon,
+  LinkIcon,
+  PlusCircleIcon,
+  UserCircleIcon,
+  UserIcon,
+  UserPlusIcon,
+  WalletIcon,
+} from "@heroicons/react/24/solid";
+import {
+  Button,
+  Card,
+  Grid,
+  Row,
+  Spacer,
+  Text,
+  Tooltip,
+} from "@nextui-org/react";
 import { AchievementType } from "@prisma/client";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
@@ -18,61 +38,25 @@ export default function UserPublicProfile() {
   const router = useRouter();
   const { id } = router.query;
   const { data: publicUser } = usePublicUser(id as string, true);
-  const { t } = useTranslation("achievements");
 
   return (
     <>
       <UserCard userId={id as string} forceAnonymous />
       <Spacer />
-      <Row>
-        <Text h4>
-          {publicUser?.name ?? DEFAULT_NAME}
-          {"'s"} Achievements
-        </Text>
-      </Row>
-      <Row>
-        <Grid.Container gap={1}>
-          {publicUser?.achievementTypes.map((achievementType) => (
-            <Grid key={achievementType}>
-              <Tooltip
-                content={
-                  t(`${achievementType}.title`) +
-                  " - " +
-                  t(`${achievementType}.description`)
-                }
-              >
-                <div
-                  style={{
-                    background:
-                      "linear-gradient(180deg, #FFDD00 0%, #FD5C00 100%)",
-                    borderRadius: "50%",
-                    padding: "8px",
-                    cursor: "pointer",
-                  }}
-                >
-                  <div
-                    style={{
-                      background:
-                        "linear-gradient(180deg, #FFF7C3 0%, #FFE69C 100%)",
-                      borderRadius: "100%",
-                      width: "48px",
-                      height: "48px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text b css={{ m: 0, p: 0, color: "#FD5C00" }}>
-                      #{Object.values(AchievementType).indexOf(achievementType)}
-                    </Text>
-                  </div>
-                </div>
-              </Tooltip>
-            </Grid>
-          ))}
-        </Grid.Container>
-      </Row>
-      <Spacer y={2} />
+      <Card>
+        <Card.Header>
+          <Text h5>🏆 Achievements</Text>
+        </Card.Header>
+        <Card.Body css={{ pt: 0 }}>
+          <Grid.Container gap={1}>
+            {publicUser?.achievementTypes.map((achievementType) => (
+              <Grid key={achievementType} lg={5}>
+                <Badge achievementType={achievementType} />
+              </Grid>
+            ))}
+          </Grid.Container>
+        </Card.Body>
+      </Card>
       {publicUser?.lightningAddress && (
         <>
           <Script src="https://embed.twentyuno.net/js/app.js" />
@@ -110,19 +94,63 @@ export default function UserPublicProfile() {
 export { getStaticProps, getStaticPaths };
 
 type BadgeProps = {
+  achievementType: AchievementType;
   color: string;
-  text: string;
 };
 
-const Badge = ({ color, text }: BadgeProps) => {
+const achievements = {
+  SELF_CLAIMED: {
+    icon: <ArrowPathRoundedSquareIcon />,
+    color: "#2E74ED",
+  },
+  BECAME_TIPPER: {
+    icon: <UserIcon />,
+    color: "#2E74ED",
+  },
+  LINKED_EMAIL: {
+    icon: <AtSymbolIcon />,
+    color: "#ffc700",
+  },
+  LINKED_WALLET: {
+    icon: <LinkIcon />,
+    color: "#ffc700",
+  },
+  SET_NAME: {
+    icon: <IdentificationIcon />,
+    color: "#CC69DA",
+  },
+  SET_AVATAR_URL: {
+    icon: <UserCircleIcon />,
+    color: "#CC69DA",
+  },
+  SET_LIGHTNING_ADDRESS: {
+    icon: <BoltIcon />,
+    color: "#FFC560",
+  },
+  CREATED_TIP: {
+    icon: <PlusCircleIcon />,
+    color: "#2E74ED",
+  },
+  FUNDED_TIP: { icon: <WalletIcon />, color: "#ffc700" },
+  TIP_CLAIMED: { icon: <UserPlusIcon />, color: "#FF907D" },
+  TIP_WITHDRAWN: { icon: <ArrowsRightLeftIcon />, color: "#F9F871" },
+  WEBLN_WITHDRAWN: { icon: <ArrowsRightLeftIcon />, color: "#F9F871" },
+  MANUAL_WITHDRAWN: { icon: <ArrowsRightLeftIcon />, color: "#F9F871" },
+  LNURL_WITHDRAWN: { icon: <ArrowsRightLeftIcon />, color: "#F9F871" },
+};
+
+const Badge = ({ achievementType }: BadgeProps) => {
+  const { t } = useTranslation("achievements");
+  const achievement = achievements[achievementType];
+
   const styles = {
     badge: {
-      background: "linear-gradient(to bottom right, #ffeb3b 0%, #fbc02d 100%)",
+      background: `linear-gradient(to bottom right, ${achievement.color} 0%, #AAAAAAAA 100%)`,
       position: "relative",
-      margin: "1.5em 3em",
-      width: "4em",
-      height: "6.2em",
-      borderRadius: "10px",
+      margin: "1em 2em",
+      width: "3em",
+      height: "5em",
+      borderRadius: "6px",
       display: "inline-block",
       top: 0,
       transition: "all 0.2s ease",
@@ -151,15 +179,19 @@ const Badge = ({ color, text }: BadgeProps) => {
       borderRadius: "inherit",
       background: "inherit",
       content: '""',
-      margin: "auto",
       transform: "rotate(-60deg)",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      margin: "auto",
     },
     circle: {
-      color: color,
-      width: "60px",
-      height: "60px",
+      color: achievement.color,
+      width: "50px",
+      height: "50px",
       position: "absolute",
-      paddingTop: "10px",
+      paddingTop: "6px",
       background: "#fff",
       zIndex: 10,
       borderRadius: "50%",
@@ -181,10 +213,10 @@ const Badge = ({ color, text }: BadgeProps) => {
       textAlign: "center",
       whiteSpace: "nowrap",
       zIndex: 11,
-      fontSize: 12,
-      minWidth: "80px",
+      fontSize: 11,
+      minWidth: "70px",
       color: "#fff",
-      bottom: 12,
+      bottom: 5,
       left: "50%",
       transform: "translateX(-50%)",
       boxShadow: "0 1px 2px rgba(0, 0, 0, 0.27)",
@@ -196,16 +228,20 @@ const Badge = ({ color, text }: BadgeProps) => {
   };
 
   return (
-    <Tooltip content={text}>
+    <Tooltip
+      content={t(`${achievementType}.description`)}
+      css={{ mt: 45 }}
+      color="primary"
+    >
       <div style={styles.badge}>
         <div style={styles.before} />
         <div style={styles.after} />
         <div style={styles.circle}>
           <Icon width={32} height={32}>
-            <HandThumbUpIcon />
+            {achievement.icon}
           </Icon>
         </div>
-        <div style={styles.ribbon}>{text}</div>
+        <div style={styles.ribbon}>{t(`${achievementType}.title`)}</div>
       </div>
     </Tooltip>
   );
