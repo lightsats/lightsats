@@ -1,5 +1,5 @@
 {
-    "hello": "Hallo {{tippeeName}}!",
+    "hello": "Hallo {{tippeeName}}.",
     "tipperHasGiftedYou": "{{tipperName}} will Dir eine Spende zukommen lassen",
     "youHaveBeenGifted": "Du bist beschenkt worden",
     "expired": "Diese Spende ist abgelaufen.",

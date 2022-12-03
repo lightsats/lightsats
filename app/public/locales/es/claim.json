@@ -1,11 +1,11 @@
 {
-    "hello": "Hola {{tippeeName}}!",
+    "hello": "Hola {{tippeeName}}.",
     "tipperHasGiftedYou": "{{tipperName}} te ha regalado",
     "youHaveBeenGifted": "Te han regalado",
     "expired": "Este regalo ha expirado.",
-    "instructions.phone": "Ingresa tú número de teléfono abajo para reclamar tu regalo.",
-    "instructions.email": "Ingresa tu correo electrónico abajo para reclamar tu regalo.",
-    "instructions.lightning": "Iniciar sesión con Lightning",
+    "instructions.phone": "Ingresa tú número de teléfono abajo para reclamar tus fondos.",
+    "instructions.email": "Ingresa tu correo electrónico abajo para reclamar tus fondos.",
+    "instructions.lightning": "Inicia sesión con Lightning",
     "expiresIn": "Expira en {{expiry}}",
     "claim": "Reclamar mis fondos"
 }
