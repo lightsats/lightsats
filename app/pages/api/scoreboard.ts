@@ -18,6 +18,7 @@ export default async function handler(
     include: {
       tipsSent: true,
       tipsReceived: true,
+      achievements: true,
     },
   });
 
@@ -50,6 +51,9 @@ export default async function handler(
               twitterUsername: user.twitterUsername ?? undefined,
             }),
         fallbackAvatarId: getFallbackAvatarId(user),
+        achievementTypes: user.achievements.map(
+          (achievement) => achievement.type
+        ),
       };
     });
 

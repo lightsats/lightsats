@@ -1,0 +1,58 @@
+{
+  "SELF_CLAIMED": {
+    "title": "Claimed",
+    "description": "Congratulations! You claimed your first tip."
+  },
+  "BECAME_TIPPER": {
+    "title": "Tipper",
+    "description": "Congratulations! You've become a Lightsats tipper."
+  },
+  "LINKED_EMAIL": {
+    "title": "Email",
+    "description": "You can now login and receive notifications via email."
+  },
+  "LINKED_WALLET": {
+    "title": "Wallet",
+    "description": "You can now login via your lightning wallet."
+  },
+  "SET_NAME": {
+    "title": "Name",
+    "description": "You're no longer an Anon, but always a Pleb!"
+  },
+  "SET_AVATAR_URL": {
+    "title": "Avatar URL",
+    "description": "You put a face to your name. Great!"
+  },
+  "SET_LIGHTNING_ADDRESS": {
+    "title": "Lightning Address",
+    "description": "You can now be tipped directly by other Lightsats users"
+  },
+  "CREATED_TIP": {
+    "title": "Tip Created",
+    "description": "Congratulations! You created your first tip."
+  },
+  "FUNDED_TIP": {
+    "title": "Tip Funded",
+    "description": "Congratulations! You funded your first tip."
+  },
+  "TIP_CLAIMED": {
+    "title": "Tip Claimed",
+    "description": "Congratulations! Your first tip was claimed."
+  },
+  "TIP_WITHDRAWN": {
+    "title": "Tip Withdrawn",
+    "description": "Congratulations! You got someone to withdraw their sats!"
+  },
+  "WEBLN_WITHDRAWN": {
+    "title": "WebLN Withdrawal",
+    "description": "WebLN saves a lot of clicks!"
+  },
+  "MANUAL_WITHDRAWN": {
+    "title": "Manual Withdrawal",
+    "description": "There are better methods than this, but it's good to know how to do manual withdrawals!"
+  },
+  "LNURL_WITHDRAWN": {
+    "title": "WebLN withdrawal",
+    "description": "You withdrew to a LNURL-withdraw capable wallet. Nice!"
+  }
+}
