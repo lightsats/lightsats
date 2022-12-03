@@ -68,7 +68,9 @@ export default async function handler(
         numTipsSent: sentTips.length,
         numTipsReceived: user.tipsReceived.length,
         satsTipped: satsTipped,
-        achievements: user.achievements.map((achievement) => achievement.type),
+        achievementTypes: user.achievements.map(
+          (achievement) => achievement.type
+        ),
       };
       return res.json(publicUser);
     }

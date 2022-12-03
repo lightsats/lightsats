@@ -14,9 +14,7 @@ import {
   Row,
   Spacer,
   Text,
-  Tooltip,
 } from "@nextui-org/react";
-import { AchievementBadge } from "components/AchievementBadge";
 import { Icon } from "components/Icon";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
@@ -122,73 +120,82 @@ export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
               )}
             </Row>
             <Divider y={2} />
-            <Row>
-              <Col>
-                <Text size="small">Sent 👆</Text>
-                <Text b>{publicUser.satsTipped} sats</Text>
-              </Col>
-              <Col>
-                <Text size="small">Received 👇</Text>
-                <Text b>{publicUser.numTipsReceived} tips</Text>
-              </Col>
-              <Col>
-                <NextLink href={Routes.scoreboard} passHref>
-                  <Link>
-                    <Text size="small" color="$black">
-                      Leaderboard 🏆
-                    </Text>
-                  </Link>
-                </NextLink>
-                <Text
-                  b={placing !== undefined}
-                  size={placing === undefined ? "small" : undefined}
+            <Grid.Container gap={2}>
+              <Grid xs={6} sm={3}>
+                <Col
+                  css={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
                 >
-                  {placing !== undefined ? <>#{placing}</> : "No placing yet"}
-                </Text>
-              </Col>
-            </Row>
-            <Divider y={1} />
-            <Spacer y={0.5} />
-            <Row>
-              <Text b small>
-                Achievements
-              </Text>
-            </Row>
-            <Spacer y={0.5} />
-            <Row>
-              <Grid.Container gap={1}>
-                {publicUser.achievements.map((achievement) => (
-                  <Grid key={achievement}>
-                    <Tooltip content={achievement}>
-                      <div
-                        style={{
-                          background:
-                            "linear-gradient(180deg, #FFDD00 0%, #FD5C00 100%)",
-                          borderRadius: "50%",
-                          padding: "8px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <div
-                          style={{
-                            background:
-                              "linear-gradient(180deg, #FFF7C3 0%, #FFE69C 100%)",
-                            borderRadius: "100%",
-                            width: "48px",
-                            height: "48px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <AchievementBadge achievement={achievement} />
-                        </div>
-                      </div>
-                    </Tooltip>
-                  </Grid>
-                ))}
-              </Grid.Container>
-            </Row>
+                  <Text size="small">Sent 👆</Text>
+                  <Text b>{publicUser.satsTipped} sats</Text>
+                </Col>
+              </Grid>
+              <Grid xs={6} sm={3}>
+                <Col
+                  css={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text size="small">Received 👇</Text>
+                  <Text b>{publicUser.numTipsReceived} tips</Text>
+                </Col>
+              </Grid>
+              <NextLink href={Routes.scoreboard} passHref>
+                <Grid xs={6} sm={3} as="a">
+                  <Col
+                    css={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text size="small" color="$black">
+                      Leaderboard 🏅
+                    </Text>
+
+                    <Text
+                      b={placing !== undefined}
+                      size={placing === undefined ? "small" : undefined}
+                    >
+                      {placing !== undefined ? (
+                        <>#{placing}</>
+                      ) : (
+                        "No placing yet"
+                      )}
+                    </Text>
+                  </Col>
+                </Grid>
+              </NextLink>
+              <NextLink
+                href={`${Routes.users}/${userId}#achievements`}
+                passHref
+              >
+                <Grid xs={6} sm={3} as="a">
+                  <Col
+                    css={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text size="small" color="$black">
+                      Achievements 🏆
+                    </Text>
+                    <Text
+                      b={placing !== undefined}
+                      size={placing === undefined ? "small" : undefined}
+                    >
+                      {publicUser.achievementTypes.length}
+                    </Text>
+                  </Col>
+                </Grid>
+              </NextLink>
+            </Grid.Container>
           </>
         )}
       </Card.Body>
