@@ -21,7 +21,7 @@ export function Login({
   tipId,
   defaultLoginMethod,
 }: LoginProps) {
-  const { t } = useTranslation(["claim", "common"]);
+  const { t } = useTranslation(["common", "login"]);
   const [loginMethod, setLoginMethod] =
     useState<LoginMethod>(defaultLoginMethod);
 
@@ -51,7 +51,7 @@ export function Login({
 
       <Spacer />
       <Row justify="center" align="center">
-        <Text>Use &nbsp;</Text>
+        <Text>{t("login:use")} &nbsp;</Text>
         {loginMethods
           .filter((method) => method !== loginMethod)
           .map((method, i) => {
@@ -60,11 +60,11 @@ export function Login({
                 <Link onClick={() => setLoginMethod(method)}>
                   {t(`common:${method}`)}
                 </Link>
-                {i === 0 && <Text>&nbsp;{t("or")}&nbsp;</Text>}
+                {i === 0 && <Text>&nbsp;{t("common:or")}&nbsp;</Text>}
               </>
             );
           })}
-        <Text>&nbsp; instead</Text>
+        <Text>&nbsp; {t("login:instead")}</Text>
       </Row>
     </>
   );
