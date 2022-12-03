@@ -1,7 +1,4 @@
-import {
-  ArrowsRightLeftIcon,
-  InformationCircleIcon,
-} from "@heroicons/react/24/solid";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
@@ -40,12 +37,6 @@ import { Controller, useForm } from "react-hook-form";
 
 export const ExpiryUnitValues = ["minutes", "hours", "days"] as const;
 export type ExpiryUnit = typeof ExpiryUnitValues[number];
-const expiryUnitSelectOptions: SelectOption[] = ExpiryUnitValues.map(
-  (expiryUnit) => ({
-    value: expiryUnit,
-    label: expiryUnit,
-  })
-);
 const tippeeLocaleSelectOptions: SelectOption[] = locales.map((locale) => ({
   value: locale,
   label: getNativeLanguageName(locale),
@@ -92,7 +83,6 @@ export function TipForm({
 }: TipFormProps) {
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [inputMethod, setInputMethod] = React.useState<InputMethod>("fiat");
-  const altInputMethod: InputMethod = inputMethod === "fiat" ? "sats" : "fiat";
 
   const { data: exchangeRates } = useExchangeRates();
 
@@ -108,7 +98,6 @@ export function TipForm({
   const watchedAmountString = watch("amountString");
   const watchedAmount = watch("amount");
   const watchedCurrency = watch("currency");
-  const watchedExpiryUnit = watch("expiryUnit");
   const watchedTippeeLocale = watch("tippeeLocale");
   const watchedExchangeRate = exchangeRates?.[watchedCurrency];
   const watchedAmountFee = watchedExchangeRate
@@ -154,11 +143,6 @@ export function TipForm({
 
   const setDropdownSelectedCurrency = React.useCallback(
     (currency: string) => setValue("currency", currency),
-    [setValue]
-  );
-
-  const setDropdownSelectedExpiryUnit = React.useCallback(
-    (expiryUnit: ExpiryUnit) => setValue("expiryUnit", expiryUnit),
     [setValue]
   );
 
@@ -211,20 +195,28 @@ export function TipForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-      <Row justify="space-between" align="center">
-        <Col>Currency</Col>
-        <Col>
-          {exchangeRateSelectOptions && (
-            <CustomSelect
-              options={exchangeRateSelectOptions}
-              defaultValue={watchedCurrency}
-              onChange={setDropdownSelectedCurrency}
-              width="70px"
-            />
-          )}
-        </Col>
-      </Row>
-      <Spacer />
+      {mode === "create" && (
+        <>
+          <Card css={{ dropShadow: "$sm" }}>
+            <Card.Body>
+              <Row justify="space-between" align="center">
+                <Col>Currency</Col>
+                <Col>
+                  {exchangeRateSelectOptions && (
+                    <CustomSelect
+                      options={exchangeRateSelectOptions}
+                      defaultValue={watchedCurrency}
+                      onChange={setDropdownSelectedCurrency}
+                      width="70px"
+                    />
+                  )}
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+          <Spacer />
+        </>
+      )}
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
           {mode === "update" && (
@@ -298,28 +290,28 @@ export function TipForm({
                           type="number"
                           inputMode="decimal"
                           aria-label="amount"
-                          css={{ ta: "right", width: "160px" }}
+                          css={{ width: "160px" }}
                           size="lg"
                           fullWidth
                           bordered
                           autoFocus
-                          contentRight={
-                            <>
-                              <Button
-                                css={{ position: "relative", right: "35px" }}
-                                size="xs"
-                                auto
-                                onClick={toggleInputMethod}
-                              >
-                                <Icon width={8} height={8}>
-                                  <ArrowsRightLeftIcon />
-                                </Icon>
-                                &nbsp;
+                          contentLeft={
+                            <Button
+                              size="xs"
+                              auto
+                              css={{
+                                px: "4px",
+                              }}
+                              onClick={toggleInputMethod}
+                            >
+                              <div style={{ width: "20px" }}>
                                 {inputMethod === "fiat"
-                                  ? watchedCurrency
-                                  : inputMethod}
-                              </Button>
-                            </>
+                                  ? getSymbolFromCurrencyWithFallback(
+                                      watchedCurrency
+                                    )
+                                  : "⚡"}
+                              </div>
+                            </Button>
                           }
                         />
                       )}
@@ -485,17 +477,6 @@ export function TipForm({
               />
             </Col>
           </Row>
-          {/* 
-          <Row gap={0} justify="space-between" align="flex-end">
-            <Spacer />
-            <CustomSelect
-              options={expiryUnitSelectOptions}
-              defaultValue={watchedExpiryUnit}
-              onChange={setDropdownSelectedExpiryUnit}
-              width="100px"
-            />
-          </Row>
-          */}
         </Card.Body>
       </Card>
       <Spacer y={2} />

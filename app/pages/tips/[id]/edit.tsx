@@ -1,7 +1,7 @@
-import { Loading, Text } from "@nextui-org/react";
+import { Loading, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { TipForm, TipFormData, TipFormSubmitData } from "components/TipForm";
-import { add, differenceInMinutes } from "date-fns";
+import { add, differenceInDays } from "date-fns";
 import { useTip } from "hooks/useTip";
 import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { Routes } from "lib/Routes";
@@ -23,28 +23,15 @@ const EditTip: NextPage = () => {
       return undefined;
     }
 
-    const expiresInMinutes = Math.max(
-      differenceInMinutes(new Date(tip.expiry), new Date()),
-      0
-    );
-    const expiryUnit =
-      expiresInMinutes >= 60 * 24
-        ? "days"
-        : expiresInMinutes >= 60
-        ? "hours"
-        : "minutes";
     const expiresIn = Math.max(
-      Math.ceil(
-        expiresInMinutes /
-          (expiryUnit === "days" ? 60 * 24 : expiryUnit === "hours" ? 60 : 1)
-      ),
+      differenceInDays(new Date(tip.expiry), new Date()),
       1
     );
 
     const defaultValues: Partial<TipFormData> = {
       currency: tip.currency || DEFAULT_FIAT_CURRENCY,
       expiresIn,
-      expiryUnit,
+      expiryUnit: "days",
       tippeeLocale: tip.tippeeLocale,
       note: tip.note || undefined,
       tippeeName: tip.tippeeName || undefined,
@@ -92,7 +79,7 @@ const EditTip: NextPage = () => {
   return (
     <>
       <Text h3>✏️ Edit tip</Text>
-
+      <Spacer />
       <TipForm
         onSubmit={onSubmit}
         defaultValues={tipFormDefaultValues}
