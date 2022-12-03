@@ -112,9 +112,15 @@ const Scoreboard: NextPage = () => {
                       )}
                     </Col>
                     <Col css={{ textAlign: "right" }}>
-                      <Badge variant="flat" color="primary">
-                        {formatAmount(scoreboardEntry.satsSent)}
-                      </Badge>
+                      <Row>
+                        <Badge variant="flat" color="primary">
+                          {formatAmount(scoreboardEntry.satsSent)}⚡
+                        </Badge>
+                        <Spacer x={0.5} />
+                        <Badge variant="flat" color="primary">
+                          {scoreboardEntry.achievementTypes.length}🏆
+                        </Badge>
+                      </Row>
                     </Col>
                   </Row>
                 </Card.Body>
@@ -151,6 +157,9 @@ const Scoreboard: NextPage = () => {
               </Table.Column>
               <Table.Column css={{ textAlign: "center" }}>
                 Tipped sats
+              </Table.Column>
+              <Table.Column css={{ textAlign: "center" }}>
+                Achievements
               </Table.Column>
             </Table.Header>
             <Table.Body>
@@ -192,6 +201,11 @@ const Scoreboard: NextPage = () => {
                     <Table.Cell css={{ textAlign: "center" }}>
                       <Badge variant="flat" color="primary">
                         {formatAmount(scoreboardEntry.satsSent)}
+                      </Badge>
+                    </Table.Cell>
+                    <Table.Cell css={{ textAlign: "center" }}>
+                      <Badge variant="flat" color="secondary">
+                        {formatAmount(scoreboardEntry.achievementTypes.length)}
                       </Badge>
                     </Table.Cell>
                   </Table.Row>
