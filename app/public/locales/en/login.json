@@ -1,0 +1,14 @@
+{
+  "welcome": "Welcome",
+  "chooseSignIn": "Please choose your preferred way to sign in.",
+  "generatingQrCode": "Generating QR code...",
+  "scanQrCode": "Scan this code or copy + paste it to your lightning wallet. Or click to login with your browser's wallet.",
+  "clickToConnect": "Click to connect",
+  "compatibleWallets": "Compatible Wallets",
+  "recommendedWallet": "Recommended wallet",
+  "otherWallets": "Other wallets",
+  "install": "Install",
+  "open": "Open",
+  "use": "Use",
+  "instead": "instead"
+}
