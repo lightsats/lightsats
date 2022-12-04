@@ -20,7 +20,7 @@
     "description": "You're no longer an Anon, but always a Pleb!"
   },
   "SET_AVATAR_URL": {
-    "title": "Avatar URL",
+    "title": "Avatar",
     "description": "You put a face to your name. Great!"
   },
   "SET_LIGHTNING_ADDRESS": {
@@ -52,7 +52,7 @@
     "description": "There are better methods than this, but it's good to know how to do manual withdrawals!"
   },
   "LNURL_WITHDRAWN": {
-    "title": "WebLN withdrawal",
+    "title": "LNURL withdrawal",
     "description": "You withdrew to a LNURL-withdraw capable wallet. Nice!"
   }
 }
