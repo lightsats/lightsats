@@ -14,9 +14,11 @@ import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { formatDistance } from "date-fns";
 import { useNotifications } from "hooks/useNotifications";
+import { getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import { TFunction, useTranslation } from "next-i18next";
 import Head from "next/head";
 import { connectedAccountsElementId } from "pages/profile";
 
@@ -30,6 +32,7 @@ const NotificationsPage: NextPage = () => {
   const { data: session } = useSession();
   const { data: notifications, mutate: mutateNotifications } =
     useNotifications();
+  const { t } = useTranslation("achievements");
   if (!session || !notifications) {
     return <Loading />;
   }
@@ -42,8 +45,10 @@ const NotificationsPage: NextPage = () => {
       {notifications?.length ? (
         <Grid.Container gap={1}>
           {notifications.map((notification) => {
-            const notificationCardProps =
-              getNotificationCardProps(notification);
+            const notificationCardProps = getNotificationCardProps(
+              notification,
+              t
+            );
             return (
               <Grid key={notificationCardProps.title} xs={12}>
                 <NextLink href={notificationCardProps.href}>
@@ -126,7 +131,8 @@ const NotificationsPage: NextPage = () => {
 export default NotificationsPage;
 
 function getNotificationCardProps(
-  notification: Notification
+  notification: Notification,
+  t: TFunction
 ): NotificationCardProps {
   switch (notification.type) {
     case "LINK_EMAIL":
@@ -156,8 +162,10 @@ function getNotificationCardProps(
       };
     case "ACHIEVEMENT_UNLOCKED":
       return {
-        title: "Achievement unlocked!",
-        description: notification.achievementType ?? "Unknown",
+        title: `ACHIEVEMENT UNLOCKED: ${t(
+          `${notification.achievementType}.title`
+        )}`,
+        description: t(`${notification.achievementType}.description`),
         href: Routes.profile,
       };
     default:
@@ -182,3 +190,5 @@ async function markNotificationRead(
     mutateNotifications();
   }
 }
+
+export { getStaticProps };
