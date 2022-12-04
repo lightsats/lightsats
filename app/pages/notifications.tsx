@@ -1,22 +1,21 @@
-import { BellIcon } from "@heroicons/react/24/solid";
 import {
-  Button,
+  Badge,
   Card,
   Col,
-  Grid,
+  Divider,
   Loading,
   Row,
   Spacer,
   Text,
 } from "@nextui-org/react";
 import { Notification } from "@prisma/client";
-import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { formatDistance } from "date-fns";
 import { useNotifications } from "hooks/useNotifications";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import { connectedAccountsElementId } from "pages/profile";
 
@@ -38,63 +37,51 @@ const NotificationsPage: NextPage = () => {
       <Head>
         <title>Lightsats⚡ - Notifications</title>
       </Head>
-      <Text h3>🔔 Notifications</Text>
-      {notifications?.length ? (
-        <Grid.Container gap={1}>
-          {notifications.map((notification) => {
-            const notificationCardProps =
-              getNotificationCardProps(notification);
-            return (
-              <Grid key={notificationCardProps.title} xs={12}>
-                <NextLink href={notificationCardProps.href}>
-                  <a
-                    style={{ width: "100%" }}
-                    onClick={() =>
-                      markNotificationRead(
-                        session.user.id,
-                        notification.id,
-                        mutateNotifications
-                      )
-                    }
-                  >
-                    <Card
-                      css={{
-                        width: "100%",
-                        background: notification.read ? "$accents1" : undefined,
-                        dropShadow: "$sm",
-                      }}
-                    >
-                      <Card.Body>
-                        <Row align="center">
-                          <Button
-                            color={notification.read ? "default" : "error"}
-                            auto
-                            flat
-                            css={{
-                              px: 18,
-                              background: notification.read
-                                ? "$accents2"
-                                : undefined,
-                              color: notification.read
-                                ? "$accents5"
-                                : undefined,
-                            }}
-                            size="xl"
-                          >
-                            <Icon>
-                              <BellIcon />
-                            </Icon>
-                          </Button>
-                          <Spacer />
+      <Row align="center" justify="center">
+        <Text h4>🔔 Notifications</Text>
+      </Row>
+      <Card
+        css={{
+          width: "100%",
+          dropShadow: "$sm",
+          pt: 0,
+        }}
+      >
+        <Card.Body css={{ pt: "$sm" }}>
+          {notifications?.length ? (
+            <>
+              {notifications.map((notification, i) => {
+                const notificationCardProps =
+                  getNotificationCardProps(notification);
+                return (
+                  <>
+                    <Spacer y={0.5} />
+                    <NextLink href={notificationCardProps.href}>
+                      <a
+                        style={{ width: "100%" }}
+                        onClick={() =>
+                          markNotificationRead(
+                            session.user.id,
+                            notification.id,
+                            mutateNotifications
+                          )
+                        }
+                      >
+                        <Row align="flex-start">
+                          <Col span={0.75} css={{ ta: "center" }}>
+                            {!notification.read && (
+                              <Badge variant="dot" color="error" />
+                            )}
+                          </Col>
                           <Col>
-                            <Row>
+                            <Row align="center">
                               <Text b>{notificationCardProps.title}</Text>
                             </Row>
                             <Row>
                               <Text>{notificationCardProps.description}</Text>
                             </Row>
-                            <Row justify="flex-end">
-                              <Text size="small" css={{ mb: -10 }}>
+                            <Row>
+                              <Text color="$gray700" size="small">
                                 {formatDistance(
                                   new Date(),
                                   new Date(notification.created)
@@ -104,21 +91,23 @@ const NotificationsPage: NextPage = () => {
                             </Row>
                           </Col>
                         </Row>
-                      </Card.Body>
-                    </Card>
-                  </a>
-                </NextLink>
-              </Grid>
-            );
-          })}
-        </Grid.Container>
-      ) : (
-        <Text>
-          {
-            "It looks like you don't have any notifications yet. Check back soon!"
-          }
-        </Text>
-      )}
+                      </a>
+                    </NextLink>
+                    <Spacer y={0.5} />
+                    {i < notifications.length - 1 && <Divider />}
+                  </>
+                );
+              })}
+            </>
+          ) : (
+            <Text>
+              {
+                "It looks like you don't have any notifications yet. Check back soon!"
+              }
+            </Text>
+          )}
+        </Card.Body>
+      </Card>
     </>
   );
 };
@@ -128,36 +117,38 @@ export default NotificationsPage;
 function getNotificationCardProps(
   notification: Notification
 ): NotificationCardProps {
+  const { t } = useTranslation("achievement");
+
   switch (notification.type) {
     case "LINK_EMAIL":
       return {
-        title: "Connect an Email address",
-        description: "Get notified when your tips are claimed and withdrawn",
+        title: "Connect an email address",
+        description: "Get notified when your tips are claimed or withdrawn.",
         href: Routes.profile + "#" + connectedAccountsElementId,
       };
     case "COMPLETE_PROFILE":
       return {
         title: "Complete your tipper profile",
-        description: "Improve the authenticity of your tips",
+        description: "Improve the authenticity of your tips.",
         href: Routes.profile,
       };
     case "TIP_CLAIMED":
       return {
-        title: "Your tip was claimed!",
+        title: "Your tip was claimed",
         description:
-          "Good job. Your recipient has started their Bitcoin journey!",
+          "Good job, your recipient has started their Bitcoin journey!",
         href: `${Routes.tips}/${notification.tipId}`,
       };
     case "TIP_WITHDRAWN":
       return {
-        title: "Your tip was withdrawn!",
+        title: "Your tip was withdrawn",
         description: "Nice work on the orange pill 🍊💊",
         href: `${Routes.tips}/${notification.tipId}`,
       };
     case "ACHIEVEMENT_UNLOCKED":
       return {
-        title: "Achievement unlocked!",
-        description: notification.achievementType ?? "Unknown",
+        title: "Achievement unlocked",
+        description: t(`${notification.achievementType}.title`) ?? "Unknown",
         href: Routes.profile,
       };
     default:
