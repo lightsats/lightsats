@@ -12,7 +12,6 @@ import {
   Card,
   Col,
   Collapse,
-  Grid,
   Input,
   Loading,
   Progress,
@@ -24,6 +23,7 @@ import {
 
 import { User } from "@prisma/client";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
+import { Divider } from "components/Divider";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { BecomeATipper } from "components/tippee/BecomeATipper";
@@ -101,12 +101,6 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
     copy(user.id);
     toast.success("User ID Copied to clipboard");
   }, [user.id]);
-  const copyUserWalletPublicKey = React.useCallback(() => {
-    if (user.lnurlPublicKey) {
-      copy(user.lnurlPublicKey);
-      toast.success("Wallet public key Copied to clipboard");
-    }
-  }, [user.lnurlPublicKey]);
   const [connectedAccountsExpanded, setConnectedAccountsExpanded] =
     React.useState(false);
   const [highlightConnectedAccounts, setHighlightConnectedAccounts] =
@@ -157,52 +151,83 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
         title={<Text b>🔗 Connected accounts & more</Text>}
         css={{
           width: "100%",
-          background: highlightConnectedAccounts ? "$red300" : undefined,
+          background: highlightConnectedAccounts ? "$red300" : "$white",
           transition: "background 0.5s",
         }}
         expanded={connectedAccountsExpanded}
       >
         <div id={connectedAccountsElementId} />
-        <Row justify="space-between" align="center">
-          <Text>{"📧 Email: "}</Text>
-          {user.email ? (
-            <>
-              <Text b>{user.email}</Text>
-              <Spacer x={0.25} />
-              <UnlinkButton
-                accountType="email"
-                mutateUser={mutateUser}
-                user={user}
-              />
-            </>
-          ) : (
-            <LinkButton route={Routes.emailSignin} />
-          )}
+        <Row justify="space-between">
+          <Col span={8}>
+            <Text b>{"📧 Email"}</Text>
+            {user.email && <Text>{user.email}</Text>}
+          </Col>
+          <Col span={4} css={{ d: "flex", justifyContent: "flex-end" }}>
+            {user.email ? (
+              <>
+                <UnlinkButton
+                  accountType="email"
+                  mutateUser={mutateUser}
+                  user={user}
+                />
+              </>
+            ) : (
+              <LinkButton route={Routes.emailSignin} />
+            )}
+          </Col>
         </Row>
-        <Spacer />
+        <Divider />
         {user.phoneNumber && (
           <>
-            <Row justify="space-between" align="center">
-              <Text>{"📱 Phone: "}</Text>
-              <Text b>{user.phoneNumber}</Text>
-              <Spacer x={0.25} />
+            <Row justify="space-between">
+              <Col span={8}>
+                <Text b>{"📱 Phone"}</Text>
+                <Text>{user.phoneNumber}</Text>
+              </Col>
+              <Col span={4} css={{ d: "flex", justifyContent: "flex-end" }}>
+                {user.email ? (
+                  <>
+                    <UnlinkButton
+                      accountType="phoneNumber"
+                      mutateUser={mutateUser}
+                      user={user}
+                    />
+                  </>
+                ) : (
+                  <LinkButton route={Routes.emailSignin} />
+                )}
+              </Col>
+            </Row>
+            <Divider />
+          </>
+        )}
+        <Row justify="space-between">
+          <Col span={8}>
+            <Text b>{"⚡ Wallet "}</Text>
+            {user.lnurlPublicKey && (
+              <Text>
+                {user.lnurlPublicKey.slice(0, 10)}...
+                {user.lnurlPublicKey.slice(user.lnurlPublicKey.length - 10)}
+              </Text>
+            )}
+          </Col>
+          <Col span={4} css={{ d: "flex", justifyContent: "flex-end" }}>
+            {user.lnurlPublicKey ? (
               <UnlinkButton
-                accountType="phoneNumber"
+                accountType="lnurlPublicKey"
                 mutateUser={mutateUser}
                 user={user}
               />
-            </Row>
-            <Spacer />
-          </>
-        )}
-        <Row justify="space-between" align="center">
-          <Text>{"⚡ Wallet: "}</Text>
+            ) : (
+              <LinkButton route={Routes.lnurlAuthSignin} />
+            )}
+          </Col>
+        </Row>
+        <Divider />
+
+        {/* <Row justify="space-between" align="center">
           {user.lnurlPublicKey ? (
             <Row css={{ width: "200px" }} align="center" justify="flex-end">
-              <Text b>
-                {user.lnurlPublicKey.slice(0, 6)}...
-                {user.lnurlPublicKey.slice(user.lnurlPublicKey.length - 6)}
-              </Text>
               <Spacer x={0.25} />
               <Button
                 auto
@@ -227,13 +252,13 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
             <LinkButton route={Routes.lnurlAuthSignin} />
           )}
         </Row>
-        <Spacer />
+        <Spacer /> */}
         <Row>
           <Text b>Lightsats User ID</Text>
         </Row>
         <Row align="center">
           <Text>
-            @{user.id.slice(0, 6)}...{user.id.slice(user.id.length - 6)}
+            @{user.id.slice(0, 10)}...{user.id.slice(user.id.length - 10)}
           </Text>
           <Spacer x={0.25} />
           <Button
@@ -337,126 +362,134 @@ function UpdateProfileForm({ mutateUser, user }: ProfileInternalProps) {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-        <Row justify="space-between" align="flex-end">
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                label="Your Name"
-                placeholder="John Galt"
-                id={formFieldIds.name}
-                fullWidth
-                maxLength={MAX_USER_NAME_LENGTH}
-                bordered
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Body>
+          <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
+            <Row justify="space-between" align="flex-end">
+              <Controller
+                name="name"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    label="Your Name"
+                    placeholder="John Galt"
+                    id={formFieldIds.name}
+                    fullWidth
+                    maxLength={MAX_USER_NAME_LENGTH}
+                    bordered
+                  />
+                )}
               />
-            )}
-          />
-          <Spacer />
-          <CustomSelect
-            options={localeSelectOptions}
-            defaultValue={watchedLocale}
-            onChange={setDropdownSelectedLocale}
-            width="100px"
-          />
-        </Row>
-        {user.userType === "tipper" && (
-          <>
-            <Spacer />
-            <Controller
-              name="twitterUsername"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  label="Twitter Username"
-                  placeholder="jack"
-                  contentLeft="@"
-                  fullWidth
-                  bordered
-                  css={{
-                    fontWeight: "bold",
-                    ".nextui-input-content--left": {
-                      pr: 0,
-                    },
-                  }}
-                />
-              )}
-            />
-            <Spacer />
-            <Controller
-              name="avatarURL"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  label="Avatar URL"
-                  placeholder="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
-                  fullWidth
-                  bordered
-                  type="url"
-                  id={formFieldIds.avatarURL}
-                />
-              )}
-            />
-            <Spacer />
-            <Controller
-              name="lightningAddress"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  label="Lightning Address"
-                  placeholder="you@example.com"
-                  fullWidth
-                  bordered
-                  type="email"
-                  id={formFieldIds.lightningAddress}
-                />
-              )}
-            />
-            <Spacer />
-            <Row>
-              <Card variant="bordered">
-                <Card.Body css={{ backgroundColor: "$accents0" }}>
-                  <Row align="center" justify="center">
-                    <Icon>
-                      <EyeIcon />
-                    </Icon>
-                    <Spacer x={0.5} />
-                    <Text weight="medium">
-                      Anonymise my info on scoreboard & public profile
-                    </Text>
-                    <Spacer />
-                    <Controller
-                      name="isAnonymous"
-                      control={control}
-                      render={({ field }) => (
-                        <Switch
-                          {...field}
-                          checked={field.value}
-                          onChange={(e) => field.onChange(e.target.checked)}
-                        />
-                      )}
-                    />
-                  </Row>
-                </Card.Body>
-              </Card>
+              <Spacer />
+              <CustomSelect
+                options={localeSelectOptions}
+                defaultValue={watchedLocale}
+                onChange={setDropdownSelectedLocale}
+                width="100px"
+              />
             </Row>
-          </>
-        )}
+            {user.userType === "tipper" && (
+              <>
+                <Spacer />
+                <Controller
+                  name="twitterUsername"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      label="Twitter Username"
+                      placeholder="jack"
+                      contentLeft="@"
+                      fullWidth
+                      bordered
+                      css={{
+                        fontWeight: "bold",
+                        ".nextui-input-content--left": {
+                          pr: 0,
+                        },
+                      }}
+                    />
+                  )}
+                />
+                <Spacer />
+                <Controller
+                  name="avatarURL"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      label="Avatar URL"
+                      placeholder="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
+                      fullWidth
+                      bordered
+                      type="url"
+                      id={formFieldIds.avatarURL}
+                    />
+                  )}
+                />
+                <Spacer />
+                <Controller
+                  name="lightningAddress"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      label="Lightning Address"
+                      placeholder="you@example.com"
+                      fullWidth
+                      bordered
+                      type="email"
+                      id={formFieldIds.lightningAddress}
+                    />
+                  )}
+                />
+                <Spacer />
+                <Row>
+                  <Card variant="bordered">
+                    <Card.Body css={{ backgroundColor: "$accents0" }}>
+                      <Row align="center" justify="center">
+                        <Icon>
+                          <EyeIcon />
+                        </Icon>
+                        <Spacer x={0.5} />
+                        <Text weight="medium">
+                          Anonymise my info on scoreboard & public profile
+                        </Text>
+                        <Spacer />
+                        <Controller
+                          name="isAnonymous"
+                          control={control}
+                          render={({ field }) => (
+                            <Switch
+                              {...field}
+                              checked={field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                            />
+                          )}
+                        />
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                </Row>
+              </>
+            )}
 
-        <Spacer />
-        <Button type="submit" disabled={isSubmitting} css={{ width: "100%" }}>
-          {isSubmitting ? (
-            <Loading color="currentColor" size="sm" />
-          ) : (
-            <>Update profile</>
-          )}
-        </Button>
-      </form>
+            <Spacer />
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              css={{ width: "100%" }}
+            >
+              {isSubmitting ? (
+                <Loading color="currentColor" size="sm" />
+              ) : (
+                <>Update profile</>
+              )}
+            </Button>
+          </form>
+        </Card.Body>
+      </Card>
     </>
   );
 }
@@ -538,6 +571,7 @@ function UnlinkButton({ user, mutateUser, accountType }: UnlinkButtonProps) {
           <Icon width={16} height={16}>
             <TrashIcon />
           </Icon>
+          Unlink
         </>
       )}
     </Button>
@@ -593,7 +627,7 @@ function CompleteYourProfile({
         completed: !!user?.lnurlPublicKey,
         title: "Wallet",
         description:
-          "Link your lnurl-auth compatible wallet to easily login to Lightsats. You can also use this method to login from the Lightsats PWA without being redirected to your browser!",
+          "Link your lnurl-auth compatible wallet to easily login to Lightsats.",
         fieldId: formFieldIds.email,
         openConnectedAccounts: true,
       },
@@ -609,73 +643,72 @@ function CompleteYourProfile({
   return (
     <>
       {progress < 100 ? (
-        <Card>
-          <Card.Body>
-            <Row justify="space-between" align="center">
-              <Text b>Complete your profile</Text>
-              <Text b size="small">
-                {progress}%
-              </Text>
-            </Row>
-            <Spacer />
-            <Progress
-              value={progress}
-              color="primary"
-              status="primary"
-              size="sm"
-            />
-            <Spacer />
-            <Grid.Container gap={1}>
-              {actions.map((action) => (
-                <Grid xs={12} key={action.title}>
-                  <NextLink href={`#${action.fieldId}`}>
-                    <Card
+        <>
+          <Collapse
+            css={{ width: "100%" }}
+            title={
+              <>
+                <Row justify="space-between" align="center" css={{ pr: 10 }}>
+                  <Text b size="small">
+                    Complete your profile
+                  </Text>
+                  <Text b small>
+                    {progress}%
+                  </Text>
+                </Row>
+                <Progress
+                  value={progress}
+                  color="primary"
+                  status="primary"
+                  size="sm"
+                />
+              </>
+            }
+            shadow
+          >
+            {actions.map((action, i) => (
+              <>
+                <NextLink href={`#${action.fieldId}`}>
+                  <Row
+                    align="center"
+                    justify="space-between"
+                    onClick={
+                      action.openConnectedAccounts
+                        ? openConnectedAccounts
+                        : undefined
+                    }
+                  >
+                    <Col>
+                      <Text b small css={{ m: 0 }}>
+                        {action.title}
+                      </Text>
+                      <Text size="small" css={{ m: 0, lineHeight: 1.2 }}>
+                        {action.description}
+                      </Text>
+                    </Col>
+                    <Spacer />
+                    <Button
+                      flat
+                      auto
                       css={{
-                        background: action.completed ? "$accents1" : undefined,
+                        px: 8,
+                        color: action.completed ? "$success" : "$warning",
+                        background: action.completed
+                          ? "$successLight"
+                          : "$warningLight",
                       }}
-                      isPressable
-                      isHoverable
-                      onClick={
-                        action.openConnectedAccounts
-                          ? openConnectedAccounts
-                          : undefined
-                      }
                     >
-                      <Card.Body>
-                        <Row align="center" justify="space-between">
-                          <Col>
-                            <Text b css={{ m: 0 }}>
-                              {action.title}
-                            </Text>
-                            <Text size="small" css={{ m: 0 }}>
-                              {action.description}
-                            </Text>
-                          </Col>
-                          <Spacer />
-                          <Button
-                            flat
-                            auto
-                            css={{
-                              px: 8,
-                              color: action.completed ? "$success" : "$warning",
-                              background: action.completed
-                                ? "$successLight"
-                                : "$warningLight",
-                            }}
-                          >
-                            <Icon>
-                              {action.completed ? <CheckIcon /> : <XMarkIcon />}
-                            </Icon>
-                          </Button>
-                        </Row>
-                      </Card.Body>
-                    </Card>
-                  </NextLink>
-                </Grid>
-              ))}
-            </Grid.Container>
-          </Card.Body>
-        </Card>
+                      <Icon>
+                        {action.completed ? <CheckIcon /> : <XMarkIcon />}
+                      </Icon>
+                    </Button>
+                  </Row>
+                </NextLink>
+                {i < actions.length - 1 && <Divider />}
+              </>
+            ))}
+          </Collapse>
+        </>
       ) : (
         <Badge color="success">
           Profile completed&nbsp;

@@ -119,7 +119,8 @@ export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
                 </>
               )}
             </Row>
-            <Divider y={2} />
+            <Spacer y={0.5} />
+            <Divider y={1} />
             <Grid.Container gap={2}>
               <Grid xs={6} sm={3}>
                 <Col

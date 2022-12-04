@@ -38,7 +38,7 @@ const NotificationsPage: NextPage = () => {
       <Head>
         <title>Lightsats⚡ - Notifications</title>
       </Head>
-      <h2>Notifications</h2>
+      <Text h3>🔔 Notifications</Text>
       {notifications?.length ? (
         <Grid.Container gap={1}>
           {notifications.map((notification) => {
@@ -61,6 +61,7 @@ const NotificationsPage: NextPage = () => {
                       css={{
                         width: "100%",
                         background: notification.read ? "$accents1" : undefined,
+                        dropShadow: "$sm",
                       }}
                     >
                       <Card.Body>

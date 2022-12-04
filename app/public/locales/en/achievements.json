@@ -1,11 +1,11 @@
 {
   "SELF_CLAIMED": {
     "title": "Claimed",
-    "description": "Congratulations! You claimed your first tip."
+    "description": "You claimed your first tip."
   },
   "BECAME_TIPPER": {
     "title": "Tipper",
-    "description": "Congratulations! You've become a Lightsats tipper."
+    "description": "You've become a Lightsats tipper."
   },
   "LINKED_EMAIL": {
     "title": "Email",
@@ -29,19 +29,19 @@
   },
   "CREATED_TIP": {
     "title": "Tip Created",
-    "description": "Congratulations! You created your first tip."
+    "description": "You created your first tip."
   },
   "FUNDED_TIP": {
     "title": "Tip Funded",
-    "description": "Congratulations! You funded your first tip."
+    "description": "You funded your first tip."
   },
   "TIP_CLAIMED": {
     "title": "Tip Claimed",
-    "description": "Congratulations! Your first tip was claimed."
+    "description": "Your first tip was claimed."
   },
   "TIP_WITHDRAWN": {
     "title": "Tip Withdrawn",
-    "description": "Congratulations! You got someone to withdraw their sats!"
+    "description": "You got someone to withdraw their sats!"
   },
   "WEBLN_WITHDRAWN": {
     "title": "WebLN Withdrawal",
