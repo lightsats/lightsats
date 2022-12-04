@@ -53,12 +53,23 @@ export function ClaimedTipCard({
 
   return (
     <Card
+      isHoverable
+      isPressable
       css={{
         dropShadow: "$sm",
-        background:
-          publicTip.status === "WITHDRAWN"
-            ? `url('/images/confetti.svg'), $gray900`
-            : "$gray900",
+        position: "relative",
+        "&::after": {
+          content: "",
+          background: "url('/images/confetti.svg')",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          position: "absolute",
+          zIndex: -1,
+          opacity: 0.3,
+        },
+        background: "$gray900",
       }}
     >
       <Card.Body>
