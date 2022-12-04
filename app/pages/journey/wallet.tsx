@@ -4,6 +4,7 @@ import { MyBitcoinJourneyContent } from "components/tippee/MyBitcoinJourneyConte
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import { useReceivedTips } from "hooks/useTips";
+import { getStaticProps } from "lib/i18n/i18next";
 import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
@@ -40,8 +41,12 @@ const SelectWalletPage: NextPage = () => {
 
       <MyBitcoinJourneyContent>
         <Text>
+          {"You need to a wallet in order to self custody your bitcoin."}
+        </Text>
+        <Spacer />
+        <Text>
           {
-            "By withdrawing your bitcoin to a wallet, you alone have access to it. This responsibility might be a bit scary at first, but your Bitcoin will be safe from the high long term risk of a third party losing your funds."
+            "Self custody of bitcoin is like keeping your own house keys. Having the keys gives you direct access and control to your property and helps ensure that no one else can enter or access it without your permission."
           }
         </Text>
         <Spacer />
@@ -57,3 +62,5 @@ const SelectWalletPage: NextPage = () => {
 };
 
 export default SelectWalletPage;
+
+export { getStaticProps };
