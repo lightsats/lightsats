@@ -12,10 +12,11 @@ import { Notification } from "@prisma/client";
 import { NextLink } from "components/NextLink";
 import { formatDistance } from "date-fns";
 import { useNotifications } from "hooks/useNotifications";
+import { getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
-import { useTranslation } from "next-i18next";
+import { TFunction, useTranslation } from "next-i18next";
 import Head from "next/head";
 import { connectedAccountsElementId } from "pages/profile";
 
@@ -26,6 +27,7 @@ type NotificationCardProps = {
 };
 
 const NotificationsPage: NextPage = () => {
+  const { t } = useTranslation("achievements");
   const { data: session } = useSession();
   const { data: notifications, mutate: mutateNotifications } =
     useNotifications();
@@ -51,8 +53,10 @@ const NotificationsPage: NextPage = () => {
           {notifications?.length ? (
             <>
               {notifications.map((notification, i) => {
-                const notificationCardProps =
-                  getNotificationCardProps(notification);
+                const notificationCardProps = getNotificationCardProps(
+                  notification,
+                  t
+                );
                 return (
                   <>
                     <Spacer y={0.5} />
@@ -115,10 +119,9 @@ const NotificationsPage: NextPage = () => {
 export default NotificationsPage;
 
 function getNotificationCardProps(
-  notification: Notification
+  notification: Notification,
+  t: TFunction
 ): NotificationCardProps {
-  const { t } = useTranslation("achievement");
-
   switch (notification.type) {
     case "LINK_EMAIL":
       return {
@@ -142,13 +145,15 @@ function getNotificationCardProps(
     case "TIP_WITHDRAWN":
       return {
         title: "Your tip was withdrawn",
-        description: "Nice work on the orange pill 🍊💊",
+        description: "Nice work on the orange pill 🍊💊.",
         href: `${Routes.tips}/${notification.tipId}`,
       };
     case "ACHIEVEMENT_UNLOCKED":
       return {
-        title: "Achievement unlocked",
-        description: t(`${notification.achievementType}.title`) ?? "Unknown",
+        title: `Achievement unlocked: ${t(
+          `${notification.achievementType}.title`
+        )}`,
+        description: t(`${notification.achievementType}.description`),
         href: Routes.profile,
       };
     default:
@@ -173,3 +178,5 @@ async function markNotificationRead(
     mutateNotifications();
   }
 }
+
+export { getStaticProps };

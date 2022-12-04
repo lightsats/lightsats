@@ -41,7 +41,9 @@ const SelectWalletPage: NextPage = () => {
 
       <MyBitcoinJourneyContent>
         <Text>
-          {"You need to a wallet in order to self custody your bitcoin."}
+          {
+            "You need to download a wallet in order to self custody your bitcoin."
+          }
         </Text>
         <Spacer />
         <Text>
