@@ -42,11 +42,16 @@ export default function UserPublicProfile() {
 
   const achievementStatuses = React.useMemo(
     () =>
-      Object.values(AchievementType).map((achievementType) => ({
-        achievementType,
-        unlocked:
-          (publicUser?.achievementTypes.indexOf(achievementType) ?? -1) > -1,
-      })),
+      Object.values(AchievementType)
+        .map((achievementType) => ({
+          achievementType,
+          unlocked:
+            (publicUser?.achievementTypes.indexOf(achievementType) ?? -1) > -1,
+        }))
+        .filter((x) => x.unlocked)
+        .sort((a, b) => {
+          return Number(b.unlocked) - Number(a.unlocked);
+        }),
     [publicUser?.achievementTypes]
   );
 
@@ -58,10 +63,14 @@ export default function UserPublicProfile() {
         <Card.Header>
           <Text h5>🏆 Achievements</Text>
         </Card.Header>
-        <Card.Body css={{ pt: 0 }}>
-          <Grid.Container gap={1}>
+        <Card.Body css={{ pt: 0, pl: 0 }}>
+          <Grid.Container gap={0}>
             {achievementStatuses.map((achievementStatus) => (
-              <Grid key={achievementStatus.achievementType}>
+              <Grid
+                key={achievementStatus.achievementType}
+                xs={4}
+                css={{ display: "flex", justifyContent: "center" }}
+              >
                 <AchievementBadge
                   achievementType={achievementStatus.achievementType}
                   unlocked={achievementStatus.unlocked}
@@ -160,13 +169,14 @@ const AchievementBadge = ({
   const styles: Record<string, React.CSSProperties> = React.useMemo(
     () => ({
       badge: {
-        background: `linear-gradient(to bottom right, #FF0 0%, #990 100%)`,
-        filter: `hue-rotate(${
-          (Object.values(AchievementType).indexOf(achievementType) /
-            Object.values(AchievementType).length) *
-          360
-        }deg);`,
-        opacity: unlocked ? 1 : 0.25,
+        background: `linear-gradient(to bottom right, #2E74ED 0%, #9ac0ff 100%)`,
+        filter:
+          `hue-rotate(${
+            (Object.values(AchievementType).indexOf(achievementType) /
+              Object.values(AchievementType).length) *
+            360
+          }deg)` + (!unlocked ? " grayscale(1)" : ""),
+        opacity: unlocked ? 1 : 0.75,
         position: "relative",
         margin: "1em 2em",
         width: "3em",
@@ -175,9 +185,6 @@ const AchievementBadge = ({
         display: "inline-block",
         top: 0,
         transition: "all 0.2s ease",
-        // "&::hover": {
-        //   top: "-5px",
-        // },
       },
       before: {
         position: "absolute",
@@ -208,7 +215,7 @@ const AchievementBadge = ({
         margin: "auto",
       },
       circle: {
-        color: "#AA0", //achievementBadge.color,
+        color: "#2E74ED",
         filter: "drop-shadow(0px 4px 4px #000)",
         width: "50px",
         height: "50px",
