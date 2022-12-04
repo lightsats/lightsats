@@ -142,35 +142,20 @@ export function ClaimedTipCard({
               color={progressColor}
             />
             <Spacer y={0.5} />
-            <Row justify="space-between" align="center">
-              <Col>
+            <Row justify="space-between" align="flex-start">
+              <div>
                 <Text color="white" size="small" b>
                   Status
                 </Text>
-                <Row align="center">
-                  {publicTip.status === "CLAIMED" ? (
-                    <>
-                      <Text
-                        color="white"
-                        size="small"
-                        weight="thin"
-                        transform="uppercase"
-                      >
-                        Step {journeyStep} of {bitcoinJourneyPages.length}{" "}
-                      </Text>
-                      <Spacer x={0.25} />
-                      {journeyStep > 0 && (
-                        <Text size="small" b css={{ color: "$accents8" }}>
-                          {`${bitcoinJourneyPages[
-                            journeyStep - 1
-                          ].toUpperCase()}`}
-                        </Text>
-                      )}
-                    </>
-                  ) : undefined}
-                </Row>
-              </Col>
-              <Row justify="flex-end">
+                {publicTip.status === "CLAIMED" ? (
+                  <>
+                    <Text color="white" size="small" transform="uppercase">
+                      Step {journeyStep} of {bitcoinJourneyPages.length}{" "}
+                    </Text>
+                  </>
+                ) : undefined}
+              </div>
+              <div>
                 {publicTip.status === "UNCLAIMED" && (
                   <>
                     <Badge
@@ -183,7 +168,21 @@ export function ClaimedTipCard({
                   </>
                 )}
                 <TipStatusBadge status={publicTip.status} />
-              </Row>
+              </div>
+            </Row>
+            <Row>
+              {publicTip.status === "CLAIMED" ? (
+                <>
+                  {journeyStep > 0 && (
+                    <Text small css={{ color: "$accents7" }}>
+                      {`${bitcoinJourneyPages[journeyStep - 1]
+                        .toUpperCase()
+                        .substring(1)
+                        .replaceAll("/", " ➡️ ")}`}
+                    </Text>
+                  )}
+                </>
+              ) : undefined}
             </Row>
           </>
         )}
