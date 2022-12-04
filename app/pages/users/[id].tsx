@@ -32,12 +32,23 @@ import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import Script from "next/script";
+import React from "react";
 
 export default function UserPublicProfile() {
   const { status: sessionStatus } = useSession();
   const router = useRouter();
   const { id } = router.query;
   const { data: publicUser } = usePublicUser(id as string, true);
+
+  const achievementStatuses = React.useMemo(
+    () =>
+      Object.values(AchievementType).map((achievementType) => ({
+        achievementType,
+        unlocked:
+          (publicUser?.achievementTypes.indexOf(achievementType) ?? -1) > -1,
+      })),
+    [publicUser?.achievementTypes]
+  );
 
   return (
     <>
@@ -49,9 +60,12 @@ export default function UserPublicProfile() {
         </Card.Header>
         <Card.Body css={{ pt: 0 }}>
           <Grid.Container gap={1}>
-            {publicUser?.achievementTypes.map((achievementType) => (
-              <Grid key={achievementType} lg={5}>
-                <Badge achievementType={achievementType} />
+            {achievementStatuses.map((achievementStatus) => (
+              <Grid key={achievementStatus.achievementType}>
+                <AchievementBadge
+                  achievementType={achievementStatus.achievementType}
+                  unlocked={achievementStatus.unlocked}
+                />
               </Grid>
             ))}
           </Grid.Container>
@@ -93,139 +107,148 @@ export default function UserPublicProfile() {
 
 export { getStaticProps, getStaticPaths };
 
-type BadgeProps = {
-  achievementType: AchievementType;
-  color: string;
-};
-
-const achievements = {
+const achievementBadges: Record<
+  AchievementType,
+  {
+    icon: React.ReactNode;
+  }
+> = {
   SELF_CLAIMED: {
     icon: <ArrowPathRoundedSquareIcon />,
-    color: "#2E74ED",
   },
   BECAME_TIPPER: {
     icon: <UserIcon />,
-    color: "#2E74ED",
   },
   LINKED_EMAIL: {
     icon: <AtSymbolIcon />,
-    color: "#ffc700",
   },
   LINKED_WALLET: {
     icon: <LinkIcon />,
-    color: "#ffc700",
   },
   SET_NAME: {
     icon: <IdentificationIcon />,
-    color: "#CC69DA",
   },
   SET_AVATAR_URL: {
     icon: <UserCircleIcon />,
-    color: "#CC69DA",
   },
   SET_LIGHTNING_ADDRESS: {
     icon: <BoltIcon />,
-    color: "#FFC560",
   },
   CREATED_TIP: {
     icon: <PlusCircleIcon />,
-    color: "#2E74ED",
   },
-  FUNDED_TIP: { icon: <WalletIcon />, color: "#ffc700" },
-  TIP_CLAIMED: { icon: <UserPlusIcon />, color: "#FF907D" },
-  TIP_WITHDRAWN: { icon: <ArrowsRightLeftIcon />, color: "#F9F871" },
-  WEBLN_WITHDRAWN: { icon: <ArrowsRightLeftIcon />, color: "#F9F871" },
-  MANUAL_WITHDRAWN: { icon: <ArrowsRightLeftIcon />, color: "#F9F871" },
-  LNURL_WITHDRAWN: { icon: <ArrowsRightLeftIcon />, color: "#F9F871" },
+  FUNDED_TIP: { icon: <WalletIcon /> },
+  TIP_CLAIMED: { icon: <UserPlusIcon /> },
+  TIP_WITHDRAWN: { icon: <ArrowsRightLeftIcon /> },
+  WEBLN_WITHDRAWN: { icon: <ArrowsRightLeftIcon /> },
+  MANUAL_WITHDRAWN: { icon: <ArrowsRightLeftIcon /> },
+  LNURL_WITHDRAWN: { icon: <ArrowsRightLeftIcon /> },
 };
 
-const Badge = ({ achievementType }: BadgeProps) => {
-  const { t } = useTranslation("achievements");
-  const achievement = achievements[achievementType];
+type AchievementBadgeProps = {
+  achievementType: AchievementType;
+  unlocked: boolean;
+};
 
-  const styles = {
-    badge: {
-      background: `linear-gradient(to bottom right, ${achievement.color} 0%, #AAAAAAAA 100%)`,
-      position: "relative",
-      margin: "1em 2em",
-      width: "3em",
-      height: "5em",
-      borderRadius: "6px",
-      display: "inline-block",
-      top: 0,
-      transition: "all 0.2s ease",
-      "&::hover": {
-        top: "-5px",
+const AchievementBadge = ({
+  achievementType,
+  unlocked,
+}: AchievementBadgeProps) => {
+  const achievementBadge = achievementBadges[achievementType];
+  const { t } = useTranslation("achievements");
+
+  const styles: Record<string, React.CSSProperties> = React.useMemo(
+    () => ({
+      badge: {
+        background: `linear-gradient(to bottom right, #FF0 0%, #990 100%)`,
+        filter: `hue-rotate(${
+          (Object.values(AchievementType).indexOf(achievementType) /
+            Object.values(AchievementType).length) *
+          360
+        }deg);`,
+        opacity: unlocked ? 1 : 0.25,
+        position: "relative",
+        margin: "1em 2em",
+        width: "3em",
+        height: "5em",
+        borderRadius: "6px",
+        display: "inline-block",
+        top: 0,
+        transition: "all 0.2s ease",
+        // "&::hover": {
+        //   top: "-5px",
+        // },
       },
-    },
-    before: {
-      position: "absolute",
-      width: "inherit",
-      height: "inherit",
-      borderRadius: "inherit",
-      background: "inherit",
-      content: '""',
-      transform: "rotate(60deg)",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      margin: "auto",
-    },
-    after: {
-      position: "absolute",
-      width: "inherit",
-      height: "inherit",
-      borderRadius: "inherit",
-      background: "inherit",
-      content: '""',
-      transform: "rotate(-60deg)",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      margin: "auto",
-    },
-    circle: {
-      color: achievement.color,
-      width: "50px",
-      height: "50px",
-      position: "absolute",
-      paddingTop: "6px",
-      background: "#fff",
-      zIndex: 10,
-      borderRadius: "50%",
-      top: 0,
-      bottom: 0,
-      right: 0,
-      left: 0,
-      margin: "auto",
-      textAlign: "center",
-    },
-    font: {
-      display: "inline-block",
-      marginTop: "1em",
-    },
-    ribbon: {
-      position: "absolute",
-      borderRadius: "4px",
-      padding: "3px 5px",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-      zIndex: 11,
-      fontSize: 11,
-      minWidth: "70px",
-      color: "#fff",
-      bottom: 5,
-      left: "50%",
-      transform: "translateX(-50%)",
-      boxShadow: "0 1px 2px rgba(0, 0, 0, 0.27)",
-      textShadow: "0 2px 2px rgba(0, 0, 0, 0.1)",
-      textTransform: "uppercase",
-      background: "linear-gradient(to bottom right, #555 0%, #333 100%)",
-      cursor: "default",
-    },
-  };
+      before: {
+        position: "absolute",
+        width: "inherit",
+        height: "inherit",
+        borderRadius: "inherit",
+        background: "inherit",
+        content: '""',
+        transform: "rotate(60deg)",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        margin: "auto",
+      },
+      after: {
+        position: "absolute",
+        width: "inherit",
+        height: "inherit",
+        borderRadius: "inherit",
+        background: "inherit",
+        content: '""',
+        transform: "rotate(-60deg)",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        margin: "auto",
+      },
+      circle: {
+        color: "#AA0", //achievementBadge.color,
+        filter: "drop-shadow(0px 4px 4px #000)",
+        width: "50px",
+        height: "50px",
+        position: "absolute",
+        paddingTop: "6px",
+        background: "#fff",
+        zIndex: 10,
+        borderRadius: "50%",
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        margin: "auto",
+        textAlign: "center",
+      },
+      font: {
+        display: "inline-block",
+        marginTop: "1em",
+      },
+      ribbon: {
+        position: "absolute",
+        borderRadius: "4px",
+        padding: "3px 5px",
+        textAlign: "center",
+        zIndex: 11,
+        fontSize: 11,
+        minWidth: "70px",
+        color: "#fff",
+        top: 50,
+        left: "50%",
+        transform: "translateX(-50%)",
+        boxShadow: "0 1px 2px rgba(0, 0, 0, 0.27)",
+        textShadow: "0 2px 2px rgba(0, 0, 0, 0.1)",
+        textTransform: "uppercase",
+        background: "linear-gradient(to bottom right, #555 0%, #333 100%)",
+        cursor: "default",
+      },
+    }),
+    [achievementType, unlocked]
+  );
 
   return (
     <Tooltip
@@ -233,15 +256,19 @@ const Badge = ({ achievementType }: BadgeProps) => {
       css={{ mt: 45 }}
       color="primary"
     >
-      <div style={styles.badge}>
-        <div style={styles.before} />
-        <div style={styles.after} />
-        <div style={styles.circle}>
-          <Icon width={32} height={32}>
-            {achievement.icon}
-          </Icon>
+      <div style={{ width: "100px" }}>
+        <div style={styles.badge}>
+          <div style={styles.before} />
+          <div style={styles.after} />
+          <div style={styles.circle}>
+            <Icon width={32} height={32}>
+              {achievementBadge.icon}
+            </Icon>
+          </div>
+          <div style={styles.ribbon}>
+            {t(`${achievementType}.title`).replace(/[ ]+/g, "\n")}
+          </div>
         </div>
-        <div style={styles.ribbon}>{t(`${achievementType}.title`)}</div>
       </div>
     </Tooltip>
   );
