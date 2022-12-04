@@ -1,5 +1,4 @@
 import { Tip } from "@prisma/client";
-import { add } from "date-fns";
 import { StatusCodes } from "http-status-codes";
 import { createAchievement } from "lib/createAchievement";
 import {
@@ -80,11 +79,7 @@ async function handlePostTip(
     throw new Error("Only tips with positive, whole amounts are allowed");
   }
 
-  const expiry =
-    createTipRequest.expiry ??
-    add(new Date(), {
-      months: 1,
-    });
+  const expiry = createTipRequest.expiry;
   const fee = calculateFee(createTipRequest.amount);
   let tip = await prisma.tip.create({
     data: {
