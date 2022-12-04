@@ -17,12 +17,14 @@ import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { SatsPrice } from "components/SatsPrice";
 import { useExchangeRates } from "hooks/useExchangeRates";
+import { useTips } from "hooks/useTips";
 import {
   appName,
   FEE_PERCENT,
   MAX_TIP_SATS,
   MINIMUM_FEE_SATS,
   MIN_TIP_SATS,
+  USE_PREV_TIP_PROPERTIES,
 } from "lib/constants";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { DEFAULT_LOCALE, locales } from "lib/i18n/locales";
@@ -83,6 +85,13 @@ export function TipForm({
 }: TipFormProps) {
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [inputMethod, setInputMethod] = React.useState<InputMethod>("fiat");
+  const { data: tips } = useTips(
+    USE_PREV_TIP_PROPERTIES ? "tipper" : undefined
+  );
+  const prevTip = React.useMemo(
+    () => (mode === "update" ? tips?.[1] : tips?.[0]),
+    [mode, tips]
+  );
 
   const { data: exchangeRates } = useExchangeRates();
 
@@ -94,6 +103,16 @@ export function TipForm({
   React.useEffect(() => {
     setFocus("amount");
   }, [setFocus]);
+
+  React.useEffect(() => {
+    console.log("prevTip", prevTip);
+    if (prevTip?.currency) {
+      setValue("currency", prevTip.currency);
+    }
+    if (prevTip?.tippeeLocale && mode === "update") {
+      setValue("tippeeLocale", prevTip.tippeeLocale);
+    }
+  }, [mode, prevTip, setValue]);
 
   const watchedAmountString = watch("amountString");
   const watchedAmount = watch("amount");
@@ -205,7 +224,7 @@ export function TipForm({
                   {exchangeRateSelectOptions && (
                     <CustomSelect
                       options={exchangeRateSelectOptions}
-                      defaultValue={watchedCurrency}
+                      value={watchedCurrency}
                       onChange={setDropdownSelectedCurrency}
                       width="70px"
                     />
@@ -244,7 +263,7 @@ export function TipForm({
               <Row justify="space-between" align="flex-end">
                 <CustomSelect
                   options={tippeeLocaleSelectOptions}
-                  defaultValue={watchedTippeeLocale}
+                  value={watchedTippeeLocale}
                   onChange={setDropdownSelectedTippeeLocale}
                   width="100px"
                 />
@@ -253,7 +272,7 @@ export function TipForm({
                 {exchangeRateSelectOptions && (
                   <CustomSelect
                     options={exchangeRateSelectOptions}
-                    defaultValue={watchedCurrency}
+                    value={watchedCurrency}
                     onChange={setDropdownSelectedCurrency}
                     width="100px"
                   />

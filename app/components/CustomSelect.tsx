@@ -4,7 +4,8 @@ export type SelectOption = { label: string; value: string };
 
 type CustomSelectProps = {
   options: SelectOption[];
-  defaultValue: string;
+  defaultValue?: string;
+  value?: string;
   onChange(value: string): void;
   width?: string;
 };
@@ -12,17 +13,27 @@ type CustomSelectProps = {
 export function CustomSelect({
   options,
   defaultValue,
+  value,
   onChange,
   width,
 }: CustomSelectProps) {
   const { theme } = useTheme();
   return (
     <Select
+      value={
+        value
+          ? options.find((option: SelectOption) => option.value === value)
+          : undefined
+      }
       menuPortalTarget={global.document?.body}
       options={options}
-      defaultValue={options.find(
-        (option: SelectOption) => option.value === defaultValue
-      )}
+      defaultValue={
+        defaultValue
+          ? options.find(
+              (option: SelectOption) => option.value === defaultValue
+            )
+          : undefined
+      }
       onChange={(e) => e && onChange(e?.value)}
       styles={{
         input: (baseStyles) => ({
