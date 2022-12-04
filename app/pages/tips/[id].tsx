@@ -157,7 +157,7 @@ const TipPage: NextPage = () => {
           </>
         ) : (
           <>
-            <Text h2>Oh no, this tip has expired 😔</Text>
+            <Text h3>Oh no, this tip has expired 😔</Text>
           </>
         )}
         <Spacer />
