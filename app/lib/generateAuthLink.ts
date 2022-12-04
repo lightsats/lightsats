@@ -7,7 +7,7 @@ import { TwoFactorAuthToken } from "types/TwoFactorAuthToken";
 export function generateAuthLink(
   email: string | undefined,
   phoneNumber: string | undefined,
-  locale: string,
+  locale: string | undefined,
   callbackUrl: string,
   linkUserId?: string
 ) {

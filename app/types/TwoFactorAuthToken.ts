@@ -3,5 +3,5 @@ export type TwoFactorAuthToken = {
   phoneNumber?: string;
   callbackUrl: string;
   linkUserId?: string;
-  locale: string;
+  locale?: string;
 };

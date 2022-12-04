@@ -117,7 +117,7 @@ export const getTipUrl = (tip: Tip | PublicTip, locale: string | undefined) =>
   `${getAppUrl()}${getLocalePath(locale)}${Routes.tips}/${tip.id}`;
 
 export const getClaimUrl = (tip: Tip | PublicTip) =>
-  `${getTipUrl(tip, tip.tippeeLocale)}/claim`;
+  `${getTipUrl(tip, tip.tippeeLocale ?? undefined)}/claim`;
 
 export const switchRouterLocale = (router: NextRouter, nextLocale: string) => {
   const { pathname, asPath, query } = router;

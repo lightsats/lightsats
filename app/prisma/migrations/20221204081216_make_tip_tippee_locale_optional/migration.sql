@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Tip" ALTER COLUMN "tippeeLocale" DROP NOT NULL,
+ALTER COLUMN "tippeeLocale" DROP DEFAULT;

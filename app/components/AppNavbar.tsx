@@ -57,7 +57,9 @@ export function AppNavbar() {
   const hideNavbar = router.pathname.endsWith("/claim"); // || user?.inJourney;
   const { data: notifications } = useNotifications();
   const numNotifications =
-    router.pathname === Routes.notifications
+    router.pathname === Routes.notifications ||
+    router.pathname.startsWith("/journey") ||
+    router.pathname === Routes.withdraw
       ? 0
       : notifications?.filter((notification) => !notification.read).length ?? 0;
 

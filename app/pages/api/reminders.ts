@@ -187,7 +187,7 @@ async function sendReminder(reminder: Reminder) {
   const verifyUrl = generateAuthLink(
     reminder.email ?? undefined,
     reminder.phoneNumber ?? undefined,
-    tip.tippeeLocale,
+    tip.tippeeLocale ?? undefined,
     getClaimUrl(tip)
   );
   if (reminder.email) {

@@ -5,10 +5,10 @@ import useSWR, { SWRConfiguration } from "swr";
 
 const pollTipsConfig: SWRConfiguration = { refreshInterval: 1000 };
 
-export function useTips(flow: "tipper" | "tippee", poll = false) {
+export function useTips(flow: "tipper" | "tippee" | undefined, poll = false) {
   const { data: session } = useSession();
   return useSWR<Tip[]>(
-    session ? `/api/${flow}/tips` : null,
+    flow && session ? `/api/${flow}/tips` : null,
     defaultFetcher,
     poll ? pollTipsConfig : undefined
   );
