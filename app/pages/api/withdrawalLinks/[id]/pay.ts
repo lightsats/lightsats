@@ -74,7 +74,7 @@ async function initiatePayWithdrawalLink(
       withdrawalLink.withdrawalFlow,
       invoice as string,
       withdrawalLink.userId,
-      "invoice"
+      "lnurlw"
     );
     res.json({
       status: "OK",
