@@ -94,7 +94,7 @@ model Tip {
   tippeeId String?
   tippee User? @relation("tipsReceived", fields: [tippeeId], references: [id])
   tippeeName String? // set by tipper when creating tip - tippee does not have an account yet
-  tippeeLocale String @default("en") // set by tipper when creating tip - tippee does not have an account yet
+  tippeeLocale String? // set by tipper when creating tip - tippee does not have an account yet
   invoice String?
   invoiceId String?
   lnbitsWallet LnbitsWallet?

@@ -32,7 +32,7 @@ const EditTip: NextPage = () => {
       currency: tip.currency || DEFAULT_FIAT_CURRENCY,
       expiresIn,
       expiryUnit: "days",
-      tippeeLocale: tip.tippeeLocale,
+      tippeeLocale: tip.tippeeLocale || undefined,
       note: tip.note || undefined,
       tippeeName: tip.tippeeName || undefined,
     };
