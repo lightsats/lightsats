@@ -302,7 +302,7 @@ export function TipForm({
                           // }) causes iOS decimal input bug, resetting field value }
                           min={0}
                           max={MAX_TIP_SATS}
-                          step={inputMethod == "fiat" ? 0.01 : 1}
+                          step={inputMethod === "fiat" ? 0.01 : 1}
                           type="number"
                           inputMode="decimal"
                           aria-label="amount"

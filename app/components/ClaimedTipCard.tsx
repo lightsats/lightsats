@@ -86,7 +86,7 @@ export function ClaimedTipCard({
                 opacity: 0.3,
               }
             : {},
-        background: publicTip.status == "WITHDRAWN" ? "$black" : "$gray900",
+        background: publicTip.status === "WITHDRAWN" ? "$black" : "$gray900",
       }}
     >
       <Card.Body>
