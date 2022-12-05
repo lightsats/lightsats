@@ -71,6 +71,7 @@ export function UserAchievementsGrid({
         flexDirection: "row",
         flexWrap: "wrap",
         gap: "8px",
+        justifyContent: "center",
       }}
     >
       {achievementStatuses.map((achievementStatus) => (
@@ -191,7 +192,7 @@ const AchievementBadge = ({
         width: "50px",
         height: "50px",
         position: "absolute",
-        paddingTop: "6px",
+        paddingTop: small ? "9px" : "6px",
         background: "#fff",
         zIndex: 10,
         borderRadius: "50%",
