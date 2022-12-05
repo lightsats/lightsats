@@ -66,7 +66,7 @@ export default async function handler(
   const numTippers = users.filter((user) => user.tipsSent.length > 0).length;
 
   const scoreboard: Scoreboard = {
-    entries: entries.splice(0, 100),
+    entries: entries,
     numTippers,
     numUsersOnboarded,
     numTipsSent: entries.length

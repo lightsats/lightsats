@@ -17,6 +17,8 @@ import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { formatAmount, getAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
+import React from "react";
+import { useInViewport } from "react-in-viewport";
 import useSWR from "swr";
 import { Scoreboard as ScoreboardType } from "types/Scoreboard";
 import { ScoreboardEntry } from "types/ScoreboardEntry";
@@ -26,7 +28,26 @@ const Scoreboard: NextPage = () => {
     `/api/scoreboard`,
     defaultFetcher
   );
-  if (!scoreboard) {
+  const paginationRef = React.useRef<HTMLDivElement>(null);
+  const { inViewport } = useInViewport(
+    paginationRef,
+    { rootMargin: "500px 0px" },
+    { disconnectOnLeave: false }
+  );
+  const [perPage, setPerPage] = React.useState(10);
+
+  React.useEffect(() => {
+    if (inViewport) {
+      setPerPage(perPage + 10);
+    }
+  }, [inViewport, perPage]);
+
+  // TODO: add serverside paging
+  const visibleScoreboardEntries = React.useMemo(
+    () => scoreboard?.entries.slice(0, perPage),
+    [perPage, scoreboard?.entries]
+  );
+  if (!scoreboard || !visibleScoreboardEntries) {
     return <Loading color="currentColor" size="lg" />;
   }
 
@@ -81,7 +102,7 @@ const Scoreboard: NextPage = () => {
         sm={0}
         css={{ padding: 0 }}
       >
-        {scoreboard.entries.map((scoreboardEntry, i) => {
+        {visibleScoreboardEntries.map((scoreboardEntry, i) => {
           return (
             <Grid key={i} xs={12}>
               <Card css={{ dropShadow: "$sm" }}>
@@ -163,7 +184,7 @@ const Scoreboard: NextPage = () => {
               </Table.Column>
             </Table.Header>
             <Table.Body>
-              {scoreboard.entries.map((scoreboardEntry, i) => {
+              {visibleScoreboardEntries.map((scoreboardEntry, i) => {
                 return (
                   <Table.Row key={i}>
                     <Table.Cell>
@@ -215,6 +236,7 @@ const Scoreboard: NextPage = () => {
           </Table>
         </Grid>
       </Grid.Container>
+      <div ref={paginationRef} />
     </>
   );
 };
