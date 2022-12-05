@@ -206,7 +206,7 @@ export function UserCard({
             </Grid.Container>
           </>
         )}
-        {showAchievements && (
+        {showAchievements && (publicUser?.achievementTypes.length ?? 0 > 0) && (
           <>
             <Divider />
             <NextLink href={`${Routes.users}/${userId}#achievements`} passHref>
