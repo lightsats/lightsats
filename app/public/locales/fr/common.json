@@ -1,12 +1,14 @@
 {
-    "email": "📧 Email",
+    "email": "📧 Courriel",
     "phone": "📱 Téléphone",
     "lightning": "⚡ Lightning",
-    "loginWithLightning": "Connectez-vous avec Lightning",
+    "loginWithLightning": "Se connecter avec Lightning",
     "or": "ou",
     "verifyPhoneMessage": "Connexion Lightsats",
-    "checkEmailTitle": "Vérifiez votre boîte mail",
-    "checkEmailText": "Nous avons envoyé un lien magique 🪄 dans votre boîte mail. Cliquez sur le lien pour confirmer votre adresse e-mail.",
+    "checkEmailTitle": "Vérifiez votre boîte de réception",
+    "checkEmailText": "Nous vous avons envoyé un lien magique 🪄. Cliquez sur le lien pour confirmer votre adresse électronique.",
     "checkSMSTitle": "Vérifiez votre téléphone",
-    "checkSMSText": "Nous avons envoyé un lien magique 🪄 sur votre téléphone. Cliquez sur le lien pour confirmer votre numéro de téléphone."
+    "checkSMSText": "Nous avons envoyé un lien magique 🪄 sur votre téléphone. Cliquez sur le lien pour confirmer votre numéro de téléphone.",
+    "copy": "Copier",
+    "copiedToClipboard": "Copié dans le presse-papier"
 }

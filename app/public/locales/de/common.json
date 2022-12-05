@@ -2,11 +2,13 @@
     "email": "📧 E-Mail",
     "phone": "📱 Handy",
     "lightning": "⚡ Lightning",
-    "loginWithLightning": "Login mit Lightning",
+    "loginWithLightning": "Mit Lightning anmelden",
     "or": "oder",
-    "verifyPhoneMessage": "Lightsats login",
-    "checkEmailTitle": "Check Deine inbox",
-    "checkEmailText": "Dir wurde ein 🪄 magic link via mail geschickt. Bestätige Deine E-Mail Adresse mit einem Klick.",
-    "checkSMSTitle": "Check Dein Handy",
-    "checkSMSText": "Dir wurde ein 🪄 magic link via SMS geschickt. Bestätige Deine Handynummer mit einem Klick."
+    "verifyPhoneMessage": "Lightsats-Anmeldung",
+    "checkEmailTitle": "Prüfe deinen Posteingang",
+    "checkEmailText": "Dir wurde ein magischer Link 🪄 gesendet. Klicke ihn an, um deine E-Mail-Adresse zu bestätigen.",
+    "checkSMSTitle": "Prüfe dein Telefon",
+    "checkSMSText": "Dir wurde ein magischer Link 🪄 wurde gesendet. Klicke ihn an, um deine Telefonnummer zu bestätigen.",
+    "copy": "Kopieren",
+    "copiedToClipboard": "In die Zwischenablage kopiert"
 }
