@@ -2,6 +2,7 @@ import { Grid, Spacer, Text } from "@nextui-org/react";
 import { ClaimedTipCard } from "components/ClaimedTipCard";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
+import { getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
 import { hasTipExpired } from "lib/utils";
@@ -54,3 +55,5 @@ const ClaimedPage: NextPage = () => {
 };
 
 export default ClaimedPage;
+
+export { getStaticProps };
