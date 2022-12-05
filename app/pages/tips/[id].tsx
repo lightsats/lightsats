@@ -157,7 +157,7 @@ const TipPage: NextPage = () => {
           </>
         ) : (
           <>
-            <Text h2>Oh no, this tip has expired 😔</Text>
+            <Text h3>Oh no, this tip has expired 😔</Text>
           </>
         )}
         <Spacer />
@@ -189,18 +189,25 @@ const TipPage: NextPage = () => {
         {tip.status === "WITHDRAWN" && (
           <>
             <ConfettiContainer />
-            <Spacer />
-            <Text blockquote>
+            <Text
+              blockquote
+              css={{
+                background: "$primary",
+                color: "$white",
+                ta: "center",
+                fontStyle: "italic",
+              }}
+            >
               Rumors say - those who gift bitcoin are a very special kind of
               people.
             </Text>
             <Spacer />
             {placing ? (
               <>
-                <Text b>
+                <Text b css={{ ta: "center" }}>
                   {"You're"} now at&nbsp;
                   <Text
-                    color="success"
+                    color="primary"
                     b
                     size="large"
                     style={{ display: "inline" }}
@@ -210,7 +217,7 @@ const TipPage: NextPage = () => {
                   </Text>
                   &nbsp; place on the{" "}
                   <NextLink href={Routes.scoreboard} passHref>
-                    <Link style={{ display: "inline" }}>scoreboard</Link>
+                    <Link style={{ display: "inline" }}>leaderboard</Link>
                   </NextLink>
                   !
                 </Text>

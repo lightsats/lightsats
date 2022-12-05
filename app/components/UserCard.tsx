@@ -18,6 +18,7 @@ import {
 import { Icon } from "components/Icon";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
+import { UserAchievementsGrid } from "components/UserAchievements";
 import copy from "copy-to-clipboard";
 import { format } from "date-fns";
 import { usePublicUser } from "hooks/usePublicUser";
@@ -32,9 +33,15 @@ type Props = {
   userId: string;
   forceAnonymous?: boolean;
   showViewButton?: boolean;
+  showAchievements?: boolean;
 };
 
-export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
+export function UserCard({
+  userId,
+  forceAnonymous,
+  showViewButton,
+  showAchievements,
+}: Props) {
   const { data: publicUser } = usePublicUser(userId, forceAnonymous);
   const publicProfileUrl = getAppUrl() + `${Routes.users}/${userId}`;
 
@@ -197,6 +204,16 @@ export function UserCard({ userId, forceAnonymous, showViewButton }: Props) {
                 </Grid>
               </NextLink>
             </Grid.Container>
+          </>
+        )}
+        {showAchievements && (publicUser?.achievementTypes.length ?? 0 > 0) && (
+          <>
+            <Divider />
+            <NextLink href={`${Routes.users}/${userId}#achievements`} passHref>
+              <a>
+                <UserAchievementsGrid userId={userId} small />
+              </a>
+            </NextLink>
           </>
         )}
       </Card.Body>

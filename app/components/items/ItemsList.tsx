@@ -1,5 +1,6 @@
 import { Collapse, CSS, Spacer, Text } from "@nextui-org/react";
 import { ItemCard } from "components/items/ItemCard";
+import { useDevicePlatform } from "hooks/useDevicePlatform";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import {
   CategoryFilterOptions,
@@ -21,11 +22,17 @@ const collapseGroupCss: CSS = { width: "100%" };
 export function ItemsList({ category, options }: ItemsListProps) {
   const { t } = useTranslation("login");
   const router = useRouter();
+  const devicePlatform = useDevicePlatform();
 
   const recommendedItems = React.useMemo(
     () =>
-      getRecommendedItems(category, router.locale || DEFAULT_LOCALE, options),
-    [category, options, router.locale]
+      getRecommendedItems(
+        category,
+        router.locale || DEFAULT_LOCALE,
+        devicePlatform,
+        options
+      ),
+    [category, devicePlatform, options, router.locale]
   );
   const otherItems = React.useMemo(
     () =>
@@ -33,9 +40,10 @@ export function ItemsList({ category, options }: ItemsListProps) {
         category,
         options,
         recommendedItems,
-        router.locale || DEFAULT_LOCALE
+        router.locale || DEFAULT_LOCALE,
+        devicePlatform
       ),
-    [category, options, recommendedItems, router.locale]
+    [category, devicePlatform, options, recommendedItems, router.locale]
   );
 
   return (

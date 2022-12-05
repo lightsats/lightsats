@@ -130,7 +130,7 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
   return (
     <>
       <Row>
-        <UserCard userId={user.id} showViewButton />
+        <UserCard userId={user.id} showViewButton showAchievements />
       </Row>
       <Spacer />
       {user.userType === "tipper" && (

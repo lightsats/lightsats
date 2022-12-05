@@ -126,3 +126,25 @@ export const switchRouterLocale = (router: NextRouter, nextLocale: string) => {
 
 export const getSymbolFromCurrencyWithFallback = (currency: string) =>
   getSymbolFromCurrency(currency) || "$";
+
+export function isIos() {
+  const toMatch = [/iPhone/i, /iPad/i, /iPod/i];
+
+  return toMatch.some((toMatchItem) => {
+    return navigator.userAgent.match(toMatchItem);
+  });
+}
+export function isAndroid() {
+  const toMatch = [/Android/i];
+
+  return toMatch.some((toMatchItem) => {
+    return navigator.userAgent.match(toMatchItem);
+  });
+}
+
+export function isMobile() {
+  return isIos() || isAndroid();
+}
+
+export const isPWA = () =>
+  isMobile() && window.matchMedia("(display-mode: standalone)").matches;
