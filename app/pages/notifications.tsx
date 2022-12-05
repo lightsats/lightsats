@@ -1,16 +1,15 @@
-import { BellIcon } from "@heroicons/react/24/solid";
 import {
+  Badge,
   Button,
   Card,
   Col,
-  Grid,
+  Divider,
   Loading,
   Row,
   Spacer,
   Text,
 } from "@nextui-org/react";
 import { Notification } from "@prisma/client";
-import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { formatDistance } from "date-fns";
 import { useNotifications } from "hooks/useNotifications";
@@ -29,10 +28,10 @@ type NotificationCardProps = {
 };
 
 const NotificationsPage: NextPage = () => {
+  const { t } = useTranslation("achievements");
   const { data: session } = useSession();
   const { data: notifications, mutate: mutateNotifications } =
     useNotifications();
-  const { t } = useTranslation("achievements");
   if (!session || !notifications) {
     return <Loading />;
   }
@@ -41,88 +40,97 @@ const NotificationsPage: NextPage = () => {
       <Head>
         <title>Lightsats⚡ - Notifications</title>
       </Head>
-      <Text h3>🔔 Notifications</Text>
+      <Row align="center" justify="center">
+        <Text h4>🔔 Notifications</Text>
+      </Row>
+      <Spacer />
+      {notifications.filter((notification) => !notification.read).length >
+        0 && (
+        <>
+          <Button
+            auto
+            color="secondary"
+            onClick={() =>
+              markAllNotificationsRead(session.user.id, mutateNotifications)
+            }
+          >
+            Mark all as read
+          </Button>
+          <Spacer />
+        </>
+      )}
+
       {notifications?.length ? (
-        <Grid.Container gap={1}>
-          {notifications.map((notification) => {
-            const notificationCardProps = getNotificationCardProps(
-              notification,
-              t
-            );
-            return (
-              <Grid key={notificationCardProps.title} xs={12}>
-                <NextLink href={notificationCardProps.href}>
-                  <a
-                    style={{ width: "100%" }}
-                    onClick={() =>
-                      markNotificationRead(
-                        session.user.id,
-                        notification.id,
-                        mutateNotifications
-                      )
-                    }
-                  >
-                    <Card
-                      css={{
-                        width: "100%",
-                        background: notification.read ? "$accents1" : undefined,
-                        dropShadow: "$sm",
-                      }}
+        <Card
+          css={{
+            width: "100%",
+            dropShadow: "$sm",
+            pt: 0,
+          }}
+        >
+          <Card.Body css={{ pt: "$sm" }}>
+            {notifications.map((notification, i) => {
+              const notificationCardProps = getNotificationCardProps(
+                notification,
+                t
+              );
+              return (
+                <>
+                  <Spacer y={0.5} />
+                  <NextLink href={notificationCardProps.href}>
+                    <a
+                      style={{ width: "100%" }}
+                      onClick={() =>
+                        markNotificationRead(
+                          session.user.id,
+                          notification.id,
+                          mutateNotifications
+                        )
+                      }
                     >
-                      <Card.Body>
-                        <Row align="center">
-                          <Button
-                            color={notification.read ? "default" : "error"}
-                            auto
-                            flat
-                            css={{
-                              px: 18,
-                              background: notification.read
-                                ? "$accents2"
-                                : undefined,
-                              color: notification.read
-                                ? "$accents5"
-                                : undefined,
-                            }}
-                            size="xl"
-                          >
-                            <Icon>
-                              <BellIcon />
-                            </Icon>
-                          </Button>
-                          <Spacer />
-                          <Col>
-                            <Row>
-                              <Text b>{notificationCardProps.title}</Text>
-                            </Row>
-                            <Row>
-                              <Text>{notificationCardProps.description}</Text>
-                            </Row>
-                            <Row justify="flex-end">
-                              <Text size="small" css={{ mb: -10 }}>
-                                {formatDistance(
-                                  new Date(),
-                                  new Date(notification.created)
-                                )}{" "}
-                                ago
-                              </Text>
-                            </Row>
-                          </Col>
-                        </Row>
-                      </Card.Body>
-                    </Card>
-                  </a>
-                </NextLink>
-              </Grid>
-            );
-          })}
-        </Grid.Container>
+                      <Row align="flex-start">
+                        <Col span={0.75} css={{ ta: "center" }}>
+                          {!notification.read && (
+                            <Badge variant="dot" color="error" />
+                          )}
+                        </Col>
+                        <Col>
+                          <Row align="center">
+                            <Text b>{notificationCardProps.title}</Text>
+                          </Row>
+                          <Row>
+                            <Text>{notificationCardProps.description}</Text>
+                          </Row>
+                          <Row>
+                            <Text color="$gray700" size="small">
+                              {formatDistance(
+                                new Date(),
+                                new Date(notification.created)
+                              )}{" "}
+                              ago
+                            </Text>
+                          </Row>
+                        </Col>
+                      </Row>
+                    </a>
+                  </NextLink>
+                  <Spacer y={0.5} />
+                  {i < notifications.length - 1 && <Divider />}
+                </>
+              );
+            })}
+          </Card.Body>
+        </Card>
       ) : (
-        <Text>
-          {
-            "It looks like you don't have any notifications yet. Check back soon!"
-          }
-        </Text>
+        <>
+          <Row justify="center">
+            <Text>
+              {
+                "It looks like you don't have any notifications yet. Check back soon!"
+              }
+            </Text>
+          </Row>
+        </>
       )}
     </>
   );
@@ -137,32 +145,32 @@ function getNotificationCardProps(
   switch (notification.type) {
     case "LINK_EMAIL":
       return {
-        title: "Connect an Email address",
-        description: "Get notified when your tips are claimed and withdrawn",
+        title: "Connect an email address",
+        description: "Get notified when your tips are claimed or withdrawn.",
         href: Routes.profile + "#" + connectedAccountsElementId,
       };
     case "COMPLETE_PROFILE":
       return {
         title: "Complete your tipper profile",
-        description: "Improve the authenticity of your tips",
+        description: "Improve the authenticity of your tips.",
         href: Routes.profile,
       };
     case "TIP_CLAIMED":
       return {
-        title: "Your tip was claimed!",
+        title: "Your tip was claimed",
         description:
-          "Good job. Your recipient has started their Bitcoin journey!",
+          "Good job, your recipient has started their Bitcoin journey!",
         href: `${Routes.tips}/${notification.tipId}`,
       };
     case "TIP_WITHDRAWN":
       return {
-        title: "Your tip was withdrawn!",
-        description: "Nice work on the orange pill 🍊💊",
+        title: "Your tip was withdrawn",
+        description: "Nice work on the orange pill 🍊💊.",
         href: `${Routes.tips}/${notification.tipId}`,
       };
     case "ACHIEVEMENT_UNLOCKED":
       return {
-        title: `ACHIEVEMENT UNLOCKED: ${t(
+        title: `Achievement unlocked: ${t(
           `${notification.achievementType}.title`
         )}`,
         description: t(`${notification.achievementType}.description`),
@@ -172,6 +180,21 @@ function getNotificationCardProps(
       throw new Error("Unsupported notification type: " + notification.type);
   }
 }
+async function markAllNotificationsRead(
+  userId: string,
+  mutateNotifications: () => void
+) {
+  const result = await fetch(`/api/users/${userId}/notifications/markRead`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!result.ok) {
+    console.error("Failed to mark notifications as read: " + result.status);
+  } else {
+    mutateNotifications();
+  }
+}
+
 async function markNotificationRead(
   userId: string,
   notificationId: string,
