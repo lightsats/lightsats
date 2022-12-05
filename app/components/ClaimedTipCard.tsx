@@ -55,10 +55,20 @@ export function ClaimedTipCard({
       ? "success"
       : "warning";
 
+  const backgroundImageStyle = {
+    content: "",
+    background: "url('/images/confetti.svg')",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    position: "absolute",
+    zIndex: -1,
+    opacity: 0.5,
+  };
+
   return (
     <Card
-      isHoverable
-      isPressable
       css={{
         dropShadow: "$sm",
         position: "relative",
@@ -76,7 +86,7 @@ export function ClaimedTipCard({
                 opacity: 0.3,
               }
             : {},
-        background: "$gray900",
+        background: publicTip.status == "WITHDRAWN" ? "$black" : "$gray900",
       }}
     >
       <Card.Body>
