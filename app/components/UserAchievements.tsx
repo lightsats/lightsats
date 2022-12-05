@@ -253,12 +253,16 @@ const AchievementBadge = ({
     </div>
   );
 
-  return small ? (
-    badge
-  ) : (
+  return (
     <Tooltip
-      content={t(`${achievementType}.description`)}
-      css={{ mt: 45 }}
+      content={
+        small
+          ? t(`${achievementType}.title`) +
+            ": " +
+            t(`${achievementType}.description`)
+          : t(`${achievementType}.description`)
+      }
+      css={{ mt: small ? 25 : 45 }}
       color="primary"
     >
       {badge}
