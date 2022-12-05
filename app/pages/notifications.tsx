@@ -1,5 +1,6 @@
 import {
   Badge,
+  Button,
   Card,
   Col,
   Divider,
@@ -42,76 +43,95 @@ const NotificationsPage: NextPage = () => {
       <Row align="center" justify="center">
         <Text h4>🔔 Notifications</Text>
       </Row>
-      <Card
-        css={{
-          width: "100%",
-          dropShadow: "$sm",
-          pt: 0,
-        }}
-      >
-        <Card.Body css={{ pt: "$sm" }}>
-          {notifications?.length ? (
-            <>
-              {notifications.map((notification, i) => {
-                const notificationCardProps = getNotificationCardProps(
-                  notification,
-                  t
-                );
-                return (
-                  <>
-                    <Spacer y={0.5} />
-                    <NextLink href={notificationCardProps.href}>
-                      <a
-                        style={{ width: "100%" }}
-                        onClick={() =>
-                          markNotificationRead(
-                            session.user.id,
-                            notification.id,
-                            mutateNotifications
-                          )
-                        }
-                      >
-                        <Row align="flex-start">
-                          <Col span={0.75} css={{ ta: "center" }}>
-                            {!notification.read && (
-                              <Badge variant="dot" color="error" />
-                            )}
-                          </Col>
-                          <Col>
-                            <Row align="center">
-                              <Text b>{notificationCardProps.title}</Text>
-                            </Row>
-                            <Row>
-                              <Text>{notificationCardProps.description}</Text>
-                            </Row>
-                            <Row>
-                              <Text color="$gray700" size="small">
-                                {formatDistance(
-                                  new Date(),
-                                  new Date(notification.created)
-                                )}{" "}
-                                ago
-                              </Text>
-                            </Row>
-                          </Col>
-                        </Row>
-                      </a>
-                    </NextLink>
-                    <Spacer y={0.5} />
-                    {i < notifications.length - 1 && <Divider />}
-                  </>
-                );
-              })}
-            </>
-          ) : (
+      <Spacer />
+      {notifications.filter((notification) => !notification.read).length >
+        0 && (
+        <>
+          <Button
+            auto
+            color="secondary"
+            onClick={() =>
+              markAllNotificationsRead(session.user.id, mutateNotifications)
+            }
+          >
+            Mark all as read
+          </Button>
+          <Spacer />
+        </>
+      )}
+
+      {notifications?.length ? (
+        <Card
+          css={{
+            width: "100%",
+            dropShadow: "$sm",
+            pt: 0,
+          }}
+        >
+          <Card.Body css={{ pt: "$sm" }}>
+            {notifications.map((notification, i) => {
+              const notificationCardProps = getNotificationCardProps(
+                notification,
+                t
+              );
+              return (
+                <>
+                  <Spacer y={0.5} />
+                  <NextLink href={notificationCardProps.href}>
+                    <a
+                      style={{ width: "100%" }}
+                      onClick={() =>
+                        markNotificationRead(
+                          session.user.id,
+                          notification.id,
+                          mutateNotifications
+                        )
+                      }
+                    >
+                      <Row align="flex-start">
+                        <Col span={0.75} css={{ ta: "center" }}>
+                          {!notification.read && (
+                            <Badge variant="dot" color="error" />
+                          )}
+                        </Col>
+                        <Col>
+                          <Row align="center">
+                            <Text b>{notificationCardProps.title}</Text>
+                          </Row>
+                          <Row>
+                            <Text>{notificationCardProps.description}</Text>
+                          </Row>
+                          <Row>
+                            <Text color="$gray700" size="small">
+                              {formatDistance(
+                                new Date(),
+                                new Date(notification.created)
+                              )}{" "}
+                              ago
+                            </Text>
+                          </Row>
+                        </Col>
+                      </Row>
+                    </a>
+                  </NextLink>
+                  <Spacer y={0.5} />
+                  {i < notifications.length - 1 && <Divider />}
+                </>
+              );
+            })}
+          </Card.Body>
+        </Card>
+      ) : (
+        <>
+          <Row justify="center">
             <Text>
               {
                 "It looks like you don't have any notifications yet. Check back soon!"
               }
             </Text>
-          )}
-        </Card.Body>
-      </Card>
+          </Row>
+        </>
+      )}
     </>
   );
 };
@@ -160,6 +180,21 @@ function getNotificationCardProps(
       throw new Error("Unsupported notification type: " + notification.type);
   }
 }
+async function markAllNotificationsRead(
+  userId: string,
+  mutateNotifications: () => void
+) {
+  const result = await fetch(`/api/users/${userId}/notifications/markRead`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!result.ok) {
+    console.error("Failed to mark notifications as read: " + result.status);
+  } else {
+    mutateNotifications();
+  }
+}
+
 async function markNotificationRead(
   userId: string,
   notificationId: string,
