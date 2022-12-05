@@ -16,6 +16,7 @@ import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { formatDistanceStrict } from "date-fns";
+import { useDateFnsLocale } from "hooks/useDateFnsLocale";
 import { useExchangeRates } from "hooks/useExchangeRates";
 import {
   DEFAULT_FIAT_CURRENCY,
@@ -24,6 +25,7 @@ import {
 } from "lib/constants";
 import { bitcoinJourneyPages } from "lib/Routes";
 import { getAvatarUrl, hasTipExpired } from "lib/utils";
+import { useTranslation } from "next-i18next";
 import { PublicTip } from "types/PublicTip";
 
 type ClaimedTipCardProps = {
@@ -38,6 +40,8 @@ export function ClaimedTipCard({
   showContinueButton,
 }: ClaimedTipCardProps) {
   const { data: exchangeRates } = useExchangeRates();
+  const { t } = useTranslation("common");
+  const dateFnsLocale = useDateFnsLocale();
 
   if (!publicTip) {
     return <Loading color="currentColor" size="sm" />;
@@ -58,17 +62,20 @@ export function ClaimedTipCard({
       css={{
         dropShadow: "$sm",
         position: "relative",
-        "&::after": {
-          content: "",
-          background: "url('/images/confetti.svg')",
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          position: "absolute",
-          zIndex: -1,
-          opacity: 0.3,
-        },
+        "&::after":
+          publicTip.status === "WITHDRAWN"
+            ? {
+                content: "",
+                background: "url('/images/confetti.svg')",
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                position: "absolute",
+                zIndex: -1,
+                opacity: 0.3,
+              }
+            : {},
         background: "$gray900",
       }}
     >
@@ -98,12 +105,15 @@ export function ClaimedTipCard({
             </Row>
             <Row css={{ mt: 6 }}>
               <Text color="white" small>
-                created&nbsp;
-                {formatDistanceStrict(
-                  Date.now(),
-                  new Date(publicTip.created)
-                )}{" "}
-                ago
+                {t("createdAgo", {
+                  distance: formatDistanceStrict(
+                    Date.now(),
+                    new Date(publicTip.created),
+                    {
+                      locale: dateFnsLocale,
+                    }
+                  ),
+                })}
               </Text>
             </Row>
           </Col>
@@ -120,7 +130,9 @@ export function ClaimedTipCard({
               </Text>
             </Row>
             <Row justify="flex-end">
-              <Text color="white">{publicTip.amount} sats</Text>
+              <Text color="white">
+                {t("common:amountInSats", { amount: publicTip.amount })}
+              </Text>
             </Row>
           </Col>
         </Row>

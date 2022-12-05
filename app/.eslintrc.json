@@ -12,7 +12,7 @@
     "no-restricted-imports": [
       "error",
       {
-        "patterns": [".*"]
+        "patterns": [".*", "react-i18next"]
       }
     ],
     "eqeqeq": "error",

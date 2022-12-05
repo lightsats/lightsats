@@ -1,8 +1,10 @@
 import * as dateFnsLocales from "date-fns/locale";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
-export function useDateFnsLocale(locale: string | undefined) {
+import { useRouter } from "next/router";
+export function useDateFnsLocale() {
+  const router = useRouter();
   // TODO: this should be a dynamic import
   return (dateFnsLocales as { [key: string]: Locale })[
-    locale || DEFAULT_LOCALE
+    router.locale || DEFAULT_LOCALE
   ];
 }

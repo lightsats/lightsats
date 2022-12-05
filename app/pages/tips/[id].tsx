@@ -18,6 +18,7 @@ import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHead
 import { useScoreboardPosition } from "hooks/useScoreboardPosition";
 import { useTip } from "hooks/useTip";
 import { expirableTipStatuses, refundableTipStatuses } from "lib/constants";
+import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import { hasTipExpired, nth } from "lib/utils";
 import type { NextPage } from "next";
@@ -264,3 +265,5 @@ const TipPage: NextPage = () => {
 };
 
 export default TipPage;
+
+export { getStaticProps, getStaticPaths };
