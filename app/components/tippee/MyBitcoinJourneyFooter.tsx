@@ -37,7 +37,7 @@ export function MyBitcoinJourneyFooter({
       }}
     >
       <FlexBox style={{ width: "100%", maxWidth: "600px" }}>
-        <Container css={{ padding: "$10", pb: "$14" }}>
+        <Container css={{ padding: "$10", pb: "$10" }}>
           <FlexBox
             style={{
               flexDirection: "row",
