@@ -214,10 +214,10 @@ export function TipForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-      {mode === "create" && (
-        <>
-          <Card css={{ dropShadow: "$sm" }}>
-            <Card.Body>
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Body>
+          {mode === "create" && (
+            <>
               <Row justify="space-between" align="center">
                 <Col>Currency</Col>
                 <Col>
@@ -226,18 +226,15 @@ export function TipForm({
                       options={exchangeRateSelectOptions}
                       value={watchedCurrency}
                       onChange={setDropdownSelectedCurrency}
-                      width="70px"
                     />
                   )}
                 </Col>
               </Row>
-            </Card.Body>
-          </Card>
-          <Spacer />
-        </>
-      )}
-      <Card css={{ dropShadow: "$sm" }}>
-        <Card.Body>
+              <Divider />
+              <Spacer />
+            </>
+          )}
+
           {mode === "update" && (
             <>
               <Tooltip
@@ -305,7 +302,7 @@ export function TipForm({
                           // }) causes iOS decimal input bug, resetting field value }
                           min={0}
                           max={MAX_TIP_SATS}
-                          step="0.01"
+                          step={inputMethod == "fiat" ? 0.01 : 1}
                           type="number"
                           inputMode="decimal"
                           aria-label="amount"
@@ -359,15 +356,15 @@ export function TipForm({
                   {watchedExchangeRate ? (
                     <>
                       <Text>
-                        {!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
-                        {" sats"}
-                      </Text>
-                      <Text small css={{ position: "relative", top: "-5px" }}>
                         <FiatPrice
                           sats={!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
                           currency={watchedCurrency}
                           exchangeRate={watchedExchangeRate}
                         />
+                      </Text>
+                      <Text small css={{ position: "relative", top: "-5px" }}>
+                        {!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
+                        {" sats"}
                       </Text>
                     </>
                   ) : (
@@ -424,7 +421,6 @@ export function TipForm({
           )}
           {mode === "update" && (
             <>
-              <Spacer />
               <Controller
                 name="tippeeName"
                 control={control}
