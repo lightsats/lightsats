@@ -40,7 +40,8 @@ export function getRecommendedItems(
   const categoryItems = catalog[category];
   let recommendedItems = categoryItems.filter(
     (item) =>
-      item.languageCodes.indexOf(locale) > -1 && osMatches(item, devicePlatform)
+      item.languageCodes.indexOf(locale) > -1 &&
+      osMatches(item, devicePlatform, false)
   );
   recommendedItems =
     categoryFilterFunctions[category]?.(recommendedItems, options) ??
@@ -119,7 +120,7 @@ function getItemScore(
     score += 2;
   }
 
-  if (osMatches(item, devicePlatform)) {
+  if (osMatches(item, devicePlatform, true)) {
     score += 5;
   }
 
@@ -129,10 +130,15 @@ function getItemScore(
   return score;
 }
 
-function osMatches(item: Item, devicePlatform: DevicePlatform) {
+function osMatches(
+  item: Item,
+  devicePlatform: DevicePlatform,
+  strictDesktopCheck: boolean
+) {
   return (
     item.platforms.indexOf("web") > -1 ||
-    (!devicePlatform.isMobile && item.platforms.indexOf("desktop") > -1) ||
+    (!devicePlatform.isMobile &&
+      (!strictDesktopCheck || item.platforms.indexOf("desktop") > -1)) ||
     (devicePlatform.isMobile && item.platforms.indexOf("mobile") > -1) ||
     (devicePlatform.isIos && item.platforms.indexOf("ios-only") > -1) ||
     (devicePlatform.isAndroid && item.platforms.indexOf("android-only") > -1)
