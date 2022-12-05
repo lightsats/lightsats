@@ -5,6 +5,7 @@ import { NewTipButton } from "components/tipper/NewTipButton";
 import { ReturnedTips } from "components/tipper/ReturnedTips";
 import { UserCard } from "components/UserCard";
 import { useUser } from "hooks/useUser";
+import { getStaticProps } from "lib/i18n/i18next";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
@@ -34,7 +35,7 @@ const Dashboard: NextPage = () => {
             padding: 0,
           }}
         >
-          <UserCard userId={user.id} showViewButton />
+          <UserCard userId={user.id} showViewButton showAchievements />
           <Spacer />
           {user?.userType === "tipper" ? (
             <>
@@ -57,3 +58,5 @@ const Dashboard: NextPage = () => {
 };
 
 export default Dashboard;
+
+export { getStaticProps };

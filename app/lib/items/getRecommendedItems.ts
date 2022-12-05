@@ -1,3 +1,4 @@
+import { DevicePlatform } from "hooks/useDevicePlatform";
 import { validateLanguageCode } from "lib/i18n/iso6391";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { catalog } from "lib/items/catalog";
@@ -30,6 +31,7 @@ const categoryScoringFuncs: Partial<Record<ItemCategory, ScoringFunction>> = {
 export function getRecommendedItems(
   category: ItemCategory,
   locale: string,
+  devicePlatform: DevicePlatform,
   options: CategoryFilterOptions
 ): Item[] {
   if (!validateLanguageCode(locale)) {
@@ -37,13 +39,19 @@ export function getRecommendedItems(
   }
   const categoryItems = catalog[category];
   let recommendedItems = categoryItems.filter(
-    (item) => item.languageCodes.indexOf(locale) > -1
+    (item) =>
+      item.languageCodes.indexOf(locale) > -1 && osMatches(item, devicePlatform)
   );
   recommendedItems =
     categoryFilterFunctions[category]?.(recommendedItems, options) ??
     recommendedItems;
 
-  sortItems(recommendedItems, categoryScoringFuncs[category], locale);
+  sortItems(
+    recommendedItems,
+    categoryScoringFuncs[category],
+    locale,
+    devicePlatform
+  );
   const limit =
     category === "wallets" && !options.lnurlAuthCapable ? 1 : undefined;
   return recommendedItems.slice(0, limit);
@@ -53,7 +61,8 @@ export function getOtherItems(
   category: ItemCategory,
   options: CategoryFilterOptions,
   recommendedItems: Item[],
-  locale: string
+  locale: string,
+  devicePlatform: DevicePlatform
 ) {
   const categoryItems = catalog[category];
   let otherItems = categoryItems.filter(
@@ -63,7 +72,7 @@ export function getOtherItems(
     otherItems =
       categoryFilterFunctions[category]?.(otherItems, options) ?? otherItems;
   }
-  sortItems(otherItems, categoryScoringFuncs[category], locale);
+  sortItems(otherItems, categoryScoringFuncs[category], locale, devicePlatform);
   return otherItems;
 }
 
@@ -84,19 +93,21 @@ export function getRecommendedWallets(
 export function sortItems(
   items: Item[],
   scoringFunc: ScoringFunction | undefined,
-  locale: string
+  locale: string,
+  devicePlatform: DevicePlatform
 ) {
   items.sort(
     (a, b) =>
-      getItemScore(b, scoringFunc, locale) -
-      getItemScore(a, scoringFunc, locale)
+      getItemScore(b, scoringFunc, locale, devicePlatform) -
+      getItemScore(a, scoringFunc, locale, devicePlatform)
   );
 }
 
 function getItemScore(
   item: Item,
   scoringFunc: ScoringFunction | undefined,
-  locale: string
+  locale: string,
+  devicePlatform: DevicePlatform
 ) {
   let score = 0;
   if (item.lightsatsRecommended) {
@@ -108,10 +119,24 @@ function getItemScore(
     score += 2;
   }
 
+  if (osMatches(item, devicePlatform)) {
+    score += 5;
+  }
+
   if (scoringFunc) {
     score += scoringFunc(item);
   }
   return score;
+}
+
+function osMatches(item: Item, devicePlatform: DevicePlatform) {
+  return (
+    item.platforms.indexOf("web") > -1 ||
+    (!devicePlatform.isMobile && item.platforms.indexOf("desktop") > -1) ||
+    (devicePlatform.isMobile && item.platforms.indexOf("mobile") > -1) ||
+    (devicePlatform.isIos && item.platforms.indexOf("ios-only") > -1) ||
+    (devicePlatform.isAndroid && item.platforms.indexOf("android-only") > -1)
+  );
 }
 
 function getWalletScore(item: Item) {

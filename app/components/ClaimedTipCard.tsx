@@ -53,12 +53,23 @@ export function ClaimedTipCard({
 
   return (
     <Card
+      isHoverable
+      isPressable
       css={{
         dropShadow: "$sm",
-        background:
-          publicTip.status === "WITHDRAWN"
-            ? `url('/images/confetti.svg'), $gray900`
-            : "$gray900",
+        position: "relative",
+        "&::after": {
+          content: "",
+          background: "url('/images/confetti.svg')",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          position: "absolute",
+          zIndex: -1,
+          opacity: 0.3,
+        },
+        background: "$gray900",
       }}
     >
       <Card.Body>
@@ -142,35 +153,20 @@ export function ClaimedTipCard({
               color={progressColor}
             />
             <Spacer y={0.5} />
-            <Row justify="space-between" align="center">
-              <Col>
+            <Row justify="space-between" align="flex-start">
+              <div>
                 <Text color="white" size="small" b>
                   Status
                 </Text>
-                <Row align="center">
-                  {publicTip.status === "CLAIMED" ? (
-                    <>
-                      <Text
-                        color="white"
-                        size="small"
-                        weight="thin"
-                        transform="uppercase"
-                      >
-                        Step {journeyStep} of {bitcoinJourneyPages.length}{" "}
-                      </Text>
-                      <Spacer x={0.25} />
-                      {journeyStep > 0 && (
-                        <Text size="small" b css={{ color: "$accents8" }}>
-                          {`${bitcoinJourneyPages[
-                            journeyStep - 1
-                          ].toUpperCase()}`}
-                        </Text>
-                      )}
-                    </>
-                  ) : undefined}
-                </Row>
-              </Col>
-              <Row justify="flex-end">
+                {publicTip.status === "CLAIMED" ? (
+                  <>
+                    <Text color="white" size="small" transform="uppercase">
+                      Step {journeyStep} of {bitcoinJourneyPages.length}{" "}
+                    </Text>
+                  </>
+                ) : undefined}
+              </div>
+              <div>
                 {publicTip.status === "UNCLAIMED" && (
                   <>
                     <Badge
@@ -183,7 +179,21 @@ export function ClaimedTipCard({
                   </>
                 )}
                 <TipStatusBadge status={publicTip.status} />
-              </Row>
+              </div>
+            </Row>
+            <Row>
+              {publicTip.status === "CLAIMED" ? (
+                <>
+                  {journeyStep > 0 && (
+                    <Text small css={{ color: "$accents7" }}>
+                      {`${bitcoinJourneyPages[journeyStep - 1]
+                        .toUpperCase()
+                        .substring(1)
+                        .replaceAll("/", " ➡️ ")}`}
+                    </Text>
+                  )}
+                </>
+              ) : undefined}
             </Row>
           </>
         )}

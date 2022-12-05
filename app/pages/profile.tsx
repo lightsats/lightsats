@@ -7,12 +7,12 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import {
-  Badge,
   Button,
   Card,
   Col,
   Collapse,
   Input,
+  Link,
   Loading,
   Progress,
   Row,
@@ -130,7 +130,7 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
   return (
     <>
       <Row>
-        <UserCard userId={user.id} showViewButton />
+        <UserCard userId={user.id} showViewButton showAchievements />
       </Row>
       <Spacer />
       {user.userType === "tipper" && (
@@ -151,7 +151,7 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
         title={<Text b>🔗 Connected accounts & more</Text>}
         css={{
           width: "100%",
-          background: highlightConnectedAccounts ? "$red300" : "$white",
+          background: highlightConnectedAccounts ? "$primary" : "$white",
           transition: "background 0.5s",
         }}
         expanded={connectedAccountsExpanded}
@@ -224,35 +224,6 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
           </Col>
         </Row>
         <Divider />
-
-        {/* <Row justify="space-between" align="center">
-          {user.lnurlPublicKey ? (
-            <Row css={{ width: "200px" }} align="center" justify="flex-end">
-              <Spacer x={0.25} />
-              <Button
-                auto
-                light
-                color="primary"
-                size="sm"
-                css={{ p: 0 }}
-                onClick={copyUserWalletPublicKey}
-              >
-                <Icon width={16} height={16}>
-                  <ClipboardIcon />
-                </Icon>
-              </Button>
-              <Spacer x={0.25} />
-              <UnlinkButton
-                accountType="lnurlPublicKey"
-                mutateUser={mutateUser}
-                user={user}
-              />
-            </Row>
-          ) : (
-            <LinkButton route={Routes.lnurlAuthSignin} />
-          )}
-        </Row>
-        <Spacer /> */}
         <Row>
           <Text b>Lightsats User ID</Text>
         </Row>
@@ -642,10 +613,10 @@ function CompleteYourProfile({
 
   return (
     <>
-      {progress < 100 ? (
+      {progress < 100 && (
         <>
           <Collapse
-            css={{ width: "100%" }}
+            css={{ width: "100%", border: "none" }}
             title={
               <>
                 <Row justify="space-between" align="center" css={{ pr: 10 }}>
@@ -668,7 +639,10 @@ function CompleteYourProfile({
           >
             {actions.map((action, i) => (
               <>
-                <NextLink href={`#${action.fieldId}`}>
+                <Link
+                  href={`#${action.fieldId}`}
+                  css={{ width: "100%", maxWidth: "none" }}
+                >
                   <Row
                     align="center"
                     justify="space-between"
@@ -703,21 +677,14 @@ function CompleteYourProfile({
                       </Icon>
                     </Button>
                   </Row>
-                </NextLink>
+                </Link>
                 {i < actions.length - 1 && <Divider />}
               </>
             ))}
           </Collapse>
+          <Spacer />
         </>
-      ) : (
-        <Badge color="success">
-          Profile completed&nbsp;
-          <Icon width={12} height={12}>
-            <CheckIcon />
-          </Icon>
-        </Badge>
       )}
-      <Spacer />
     </>
   );
 }
