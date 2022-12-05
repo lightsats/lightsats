@@ -185,7 +185,7 @@ export function ClaimedTipCard({
                     >
                       {publicTip.claimLinkViewed ? "👀 SEEN" : "🙈 UNSEEN"}
                     </Badge>
-                    <Spacer x={0.5} />
+                    &nbsp;
                   </>
                 )}
                 <TipStatusBadge status={publicTip.status} />
