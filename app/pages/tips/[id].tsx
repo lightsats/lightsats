@@ -116,7 +116,7 @@ const TipPage: NextPage = () => {
               </Row>
               <Row justify="center">
                 <NextImage
-                  src="/images/icons/zap.png"
+                  src="/images/icons/personalize.png"
                   width={150}
                   height={150}
                   alt="zap"
@@ -134,7 +134,7 @@ const TipPage: NextPage = () => {
                 <NextLink href={`${Routes.tips}/${tip.id}/edit`} passHref>
                   <a>
                     <Button size="md" color="secondary">
-                      Personalize tip 🪄
+                      Personalize tip
                     </Button>
                   </a>
                 </NextLink>
@@ -142,7 +142,9 @@ const TipPage: NextPage = () => {
               <Spacer />
               <Row justify="center">
                 <Link onClick={() => setSkipPersonalize(true)}>
-                  <Text color="white">Skip for now</Text>
+                  <Text color="white" size="small">
+                    Skip for now
+                  </Text>
                 </Link>
               </Row>
             </Card.Body>
