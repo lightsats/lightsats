@@ -1,5 +1,6 @@
 import {
   ArrowLeftOnRectangleIcon,
+  ArrowPathIcon,
   BellIcon,
   BookOpenIcon,
   ChartBarIcon,
@@ -23,6 +24,7 @@ import { Icon } from "components/Icon";
 import { LanguagePicker } from "components/LanguagePicker";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
+import { useIsPWA } from "hooks/useIsPWA";
 import { useNotifications } from "hooks/useNotifications";
 import { useUser } from "hooks/useUser";
 import { Routes } from "lib/Routes";
@@ -36,6 +38,7 @@ const navbarCollapseToggleId = "app-navbar-collapse-toggle";
 type CollapseItem = {
   name: string;
   href: string;
+  reload?: boolean;
   icon: React.ReactNode;
 };
 
@@ -50,6 +53,8 @@ const closeNavbar = () => {
   }, 500);
 };
 
+const reloadPage = () => window.location.reload();
+
 export function AppNavbar() {
   const { data: session, status: sessionStatus } = useSession();
   const { data: user } = useUser();
@@ -62,6 +67,7 @@ export function AppNavbar() {
     router.pathname === Routes.withdraw
       ? 0
       : notifications?.filter((notification) => !notification.read).length ?? 0;
+  const isPWA = useIsPWA();
 
   const collapseItems: CollapseItem[] = React.useMemo(
     () => [
@@ -85,8 +91,18 @@ export function AppNavbar() {
         href: Routes.guide,
         icon: <LightBulbIcon />,
       },
+      ...(isPWA
+        ? [
+            {
+              name: "Refresh Application",
+              href: Routes.home,
+              reload: true,
+              icon: <ArrowPathIcon />,
+            },
+          ]
+        : []),
     ],
-    [user]
+    [user, isPWA]
   );
 
   const isLoading =
@@ -312,7 +328,7 @@ export function AppNavbar() {
         {collapseItems.map((item) => (
           <Navbar.CollapseItem key={item.name}>
             <NextLink href={item.href} passHref>
-              <Link onClick={closeNavbar}>
+              <Link onClick={item.reload ? reloadPage : closeNavbar}>
                 <Button flat auto css={{ px: 8 }}>
                   <Icon>{item.icon}</Icon>
                 </Button>

@@ -1,5 +1,6 @@
 import { Loading, Text } from "@nextui-org/react";
 import { ItemsList } from "components/items/ItemsList";
+import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { catalog } from "lib/items/catalog";
 import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
 import type { NextPage } from "next";
@@ -48,3 +49,5 @@ const GuideCategoryPage: NextPage = () => {
 };
 
 export default GuideCategoryPage;
+
+export { getStaticProps, getStaticPaths };
