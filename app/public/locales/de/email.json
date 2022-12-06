@@ -1,8 +1,8 @@
 {
     "login": {
-        "subject": "Magic sign-in link für Lightsats",
+        "subject": "Magischer Anmeldelink für Lightsats",
         "title": "Willkommen",
-        "text": "Du hast einen magic link angefordert, um Dich einzuloggen, hier ist er:",
-        "buttonText": "Sign in"
+        "text": "Du hast um einen magischen Link gebeten, um dich anzumelden, und hier ist er:",
+        "buttonText": "Anmelden"
     }
 }
