@@ -60,19 +60,19 @@
     "description": "You were one of the first to successfully tip someone using Lightsats!"
   },
   "SENT_1K": {
-    "title": "1000",
+    "title": "1000 sats",
     "description": "Your recipients have withdrawn over one thousand sats!"
   },
   "SENT_10K": {
-    "title": "10,000",
+    "title": "10,000 sats",
     "description": "Your recipients have withdrawn over ten thousand sats!"
   },
   "SENT_100K": {
-    "title": "100,000",
+    "title": "100,000 sats",
     "description": "Your recipients have withdrawn over one hundred thousand sats!"
   },
   "SENT_1M": {
-    "title": "1,000,000",
+    "title": "1,000,000 sats",
     "description": "Your recipients have withdrawn over one million sats!"
   },
   "TOP_10": {
