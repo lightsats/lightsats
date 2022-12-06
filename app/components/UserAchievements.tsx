@@ -8,9 +8,14 @@ import {
   ArrowsRightLeftIcon,
   AtSymbolIcon,
   BoltIcon,
+  FaceSmileIcon,
+  FireIcon,
+  GiftIcon,
   IdentificationIcon,
   LinkIcon,
   PlusCircleIcon,
+  StarIcon,
+  TrophyIcon,
   UserCircleIcon,
   UserIcon,
   UserPlusIcon,
@@ -122,6 +127,16 @@ const achievementBadges: Record<
   WEBLN_WITHDRAWN: { icon: <ArrowsRightLeftIcon /> },
   MANUAL_WITHDRAWN: { icon: <ArrowsRightLeftIcon /> },
   LNURL_WITHDRAWN: { icon: <ArrowsRightLeftIcon /> },
+
+  EARLY_SUPPORTER: { icon: <FaceSmileIcon /> },
+  MOST_WITHDRAWN_TIPS: { icon: <BoltIcon /> },
+  SENT_1K: { icon: <GiftIcon /> },
+  SENT_10K: { icon: <GiftIcon /> },
+  SENT_100K: { icon: <GiftIcon /> },
+  SENT_1M: { icon: <GiftIcon /> },
+  TOP_1: { icon: <StarIcon /> },
+  TOP_3: { icon: <TrophyIcon /> },
+  TOP_10: { icon: <FireIcon /> },
 };
 
 type AchievementBadgeProps = {

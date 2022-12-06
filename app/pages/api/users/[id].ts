@@ -1,4 +1,10 @@
-import { Achievement, Notification, User } from "@prisma/client";
+import {
+  Achievement,
+  AchievementType,
+  Notification,
+  Tip,
+  User,
+} from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import { createAchievement } from "lib/createAchievement";
 import { createNotification } from "lib/createNotification";
@@ -14,6 +20,7 @@ import { UpdateUserRequest } from "types/UpdateUserRequest";
 type ExtendedUser = User & {
   notifications: Notification[];
   achievements: Achievement[];
+  tipsSent: Tip[];
 };
 
 export default async function handler(
@@ -84,6 +91,7 @@ export default async function handler(
     include: {
       notifications: true,
       achievements: true,
+      tipsSent: true,
     },
   });
   if (!user) {
@@ -176,6 +184,26 @@ async function createUserAchievements(user: ExtendedUser) {
         "SET_LIGHTNING_ADDRESS",
         user.achievements
       );
+    }
+    if (user.tipsSent.some((tip) => tip.status === "WITHDRAWN")) {
+      await createAchievement(user.id, "EARLY_SUPPORTER", user.achievements);
+    }
+    const totalAmountSent = user.tipsSent
+      .map((tip) => tip.amount)
+      .reduce((a, b) => a + b, 0);
+    for (const threshold of [
+      "SENT_1K",
+      "SENT_10K",
+      "SENT_100K",
+      "SENT_1M",
+    ] as AchievementType[]) {
+      const thresholdAmount =
+        parseInt(threshold.split("_")[1].slice(0, -1)) *
+        (threshold[threshold.length - 1] === "K" ? 1000 : 1000000);
+      console.log("Checking threshold", thresholdAmount);
+      if (totalAmountSent >= thresholdAmount) {
+        await createAchievement(user.id, threshold, user.achievements);
+      }
     }
   }
 }

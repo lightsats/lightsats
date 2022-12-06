@@ -17,7 +17,7 @@
   },
   "SET_NAME": {
     "title": "Name",
-    "description": "You're no longer an Anon, but always a Pleb!"
+    "description": "You're no longer an Anon."
   },
   "SET_AVATAR_URL": {
     "title": "Avatar",
@@ -25,7 +25,7 @@
   },
   "SET_LIGHTNING_ADDRESS": {
     "title": "Lightning Address",
-    "description": "You can now be tipped directly by other Lightsats users"
+    "description": "You can now be tipped directly by other Lightsats users."
   },
   "CREATED_TIP": {
     "title": "Tip Created",
@@ -54,5 +54,41 @@
   "LNURL_WITHDRAWN": {
     "title": "LNURL withdrawal",
     "description": "You withdrew to a LNURL-withdraw capable wallet. Nice!"
+  },
+  "EARLY_SUPPORTER": {
+    "title": "Early Supporter",
+    "description": "You were one of the first to successfully tipped someone using Lightsats!"
+  },
+  "SENT_1K": {
+    "title": "1000",
+    "description": "Your recipients have withdrawn over one thousand sats!"
+  },
+  "SENT_10K": {
+    "title": "10,000",
+    "description": "Your recipients have withdrawn over ten thousand sats!"
+  },
+  "SENT_100K": {
+    "title": "100,000",
+    "description": "Your recipients have withdrawn over one hundred thousand sats!"
+  },
+  "SENT_1M": {
+    "title": "1,000,000",
+    "description": "Your recipients have withdrawn over one million sats!"
+  },
+  "TOP_10": {
+    "title": "Leaderboard Top 10",
+    "description": "You achieved a position in the top 10!"
+  },
+  "TOP_3": {
+    "title": "Leaderboard Top 3",
+    "description": "You achieved a position in the top 3!"
+  },
+  "TOP_1": {
+    "title": "Top of the Leaderboard",
+    "description": "You achieved the top position on the leaderboard!"
+  },
+  "MOST_WITHDRAWN_TIPS": {
+    "title": "Champion",
+    "description": "You have created the most successful tips out of any Lightsats tipper."
   }
 }

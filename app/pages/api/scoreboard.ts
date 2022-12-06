@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { StatusCodes } from "http-status-codes";
+import { createAchievement } from "lib/createAchievement";
 import prisma from "lib/prismadb";
 import { getFallbackAvatarId } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -21,6 +22,25 @@ export default async function handler(
       achievements: true,
     },
   });
+
+  let userWithMostWithdrawnSentTips: typeof users[0] | undefined = undefined;
+  let highestNumWithdrawnSentTips = 0;
+  for (const user of users) {
+    const numWithdrawnSentTips = user.tipsSent.filter(
+      (tip) => tip.status === "WITHDRAWN"
+    ).length;
+    if (numWithdrawnSentTips > highestNumWithdrawnSentTips) {
+      highestNumWithdrawnSentTips = numWithdrawnSentTips;
+      userWithMostWithdrawnSentTips = user;
+    }
+  }
+  if (userWithMostWithdrawnSentTips) {
+    await createAchievement(
+      userWithMostWithdrawnSentTips.id,
+      `MOST_WITHDRAWN_TIPS`,
+      userWithMostWithdrawnSentTips.achievements
+    );
+  }
 
   const entries: ScoreboardEntry[] = users
     .filter((user) => user.tipsSent.length > 0)
@@ -58,6 +78,16 @@ export default async function handler(
     });
 
   entries.sort((a, b) => b.satsSent - a.satsSent);
+
+  for (const category of [10, 3, 1] as const) {
+    for (let i = 0; i < category && i < entries.length; i++) {
+      await createAchievement(
+        entries[i].userId,
+        `TOP_${category}`,
+        users.find((user) => user.id === entries[i].userId)?.achievements
+      );
+    }
+  }
 
   const numUsersOnboarded = users.filter((user) =>
     user.tipsReceived.some((tip) => tip.status === "WITHDRAWN")
