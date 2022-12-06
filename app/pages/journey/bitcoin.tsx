@@ -15,52 +15,52 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 const slides: BitcoinSlideProps[] = [
   {
-    image: "/images/guide/bitcoin.png",
+    image: "/images/journey/wallet.png",
     title: "Bitcoin is Digital Cash",
     description:
-      "Bitcoin is a digital currency that does not require any intermediary to send and receive from one person to another, just like buying a newspaper with cash.",
+      "Bitcoin is a digital currency that lets you send money directly to another person without using a bank or other intermediary. It's like using cash to buy a newspaper.",
   },
   {
-    image: "/images/guide/anytime-anywhere.jpg",
+    image: "/images/journey/map.png",
     title: "Anytime, Anywhere",
     description:
       "Bitcoin doesn't close on weekends. All you need is a computer or mobile phone to get started. Bitcoin lets you transact anywhere across the world.",
   },
   {
-    image: "/images/guide/own-bank.png",
+    image: "/images/journey/vault.png",
     title: "Be your Own Bank",
     description:
-      "Take control of your money. No more big bank bailouts. No more fractional reserve banking. No personal questions or forms required.",
+      "Take control of your money with Bitcoin. Say goodbye to big bank bailouts and fractional reserve banking. And forget about personal questions and forms - with Bitcoin, you can transact quickly and easily.",
   },
   {
-    image: "/images/guide/deflationary.png",
+    image: "/images/journey/calculator.png",
     title: "Bitcoin is Deflationary",
     description:
-      "Bitcoin is a peaceful protest against irresponsible monetary policy and theft through the hidden tax of inflation. Bitcoin has a fixed policy since inception.",
+      "Bitcoin lets you take control of your money and protect it from unfair policies and inflation. With a fixed supply, it's a stable alternative to regular currencies.",
   },
   {
-    image: "/images/guide/peace.png",
+    image: "/images/journey/heart.png",
     title: "Bitcoin is Freedom",
     description:
-      "The alternative to Bitcoin is CBDCs. Your government will decide what you can spend your money on, and take it away from you if you don't spend it in time.",
+      "The alternative to Bitcoin is government-controlled digital currencies, or CBDCs. With these, your government can decide how and when you can spend your money, and even take it away from you if you don't use it fast enough.",
   },
   {
-    image: "/images/guide/infinity-over-21.webp",
+    image: "/images/journey/chart.png",
     title: "Absolute Scarcity",
     description:
-      "Bitcoin is the invention of absolute scarcity. We don't know how much gold there is in the universe. Bitcoin's maximum supply is capped at 21 million.",
+      "Bitcoin is the only currency with a fixed, finite supply. Unlike gold, which we don't know how much exists, the maximum amount of Bitcoin is capped at 21 million. This makes it the ultimate scarce asset.",
   },
   {
-    image: "/images/guide/bitcoin-not-crypto.png",
+    image: "/images/journey/crown.png",
     title: 'Bitcoin is not "Crypto"',
     description:
-      "Bitcoin has no marketing team. No premine. No VC fund. No monkey JPGs. Bitcoin's launch was as fair as possible, with no initial value in dollar terms.",
+      "Bitcoin has no marketing team, no premine, and no venture capital backing. It was launched as fairly as possible, with no initial value in dollars. There is no second best.",
   },
   {
-    image: "/images/guide/seed.png",
+    image: "/images/journey/sun.png",
     title: "Pushing Renewable Energy",
     description:
-      "Bitcoin miners use electricity in a race to mine Bitcoin, which also secures the network. Miners that find the cheapest electricity have an advantage.",
+      "Bitcoin miners use electricity to compete and earn new bitcoins, helping to keep the network secure. Cheap, renewable electricity gives miners an advantage and makes the grid more stable.",
   },
 ];
 
@@ -129,8 +129,8 @@ function BitcoinSlide({ title, description, image }: BitcoinSlideProps) {
         <NextImage
           alt={title}
           src={image}
-          width={250}
-          height={250}
+          width={100}
+          height={100}
           objectFit="contain"
         />
       </Row>
