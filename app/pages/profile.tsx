@@ -33,6 +33,7 @@ import copy from "copy-to-clipboard";
 import { useReceivedTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
 import { MAX_USER_NAME_LENGTH } from "lib/constants";
+import { getStaticProps } from "lib/i18n/i18next";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { DEFAULT_LOCALE, locales } from "lib/i18n/locales";
 import { Routes } from "lib/Routes";
@@ -688,3 +689,5 @@ function CompleteYourProfile({
     </>
   );
 }
+
+export { getStaticProps };
