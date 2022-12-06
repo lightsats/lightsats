@@ -1,7 +1,9 @@
 import { Grid, Spacer, Text } from "@nextui-org/react";
 import { ClaimedTipCard } from "components/ClaimedTipCard";
+import { NextImage } from "components/NextImage";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
+import { DEFAULT_NAME } from "lib/constants";
 import { getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -45,6 +47,17 @@ const ClaimedPage: NextPage = () => {
           />
         ))}
       </Grid.Container>
+      <Spacer y={2} />
+      <Text>
+        {`Your tip is ready to be withdrawn into your custody. If you don't withdraw your tip before it expires, it will be returned to ${
+          claimedTips?.[0]?.tipper.name ?? DEFAULT_NAME
+        }.`}
+      </Text>
+      <Spacer y={2} />
+      <Text h5>{"Let's get started on your Bitcoin journey!"}</Text>
+      <NextImage src="/images/journey/rocket.png" width={100} height={100} />
+      <Spacer />
+
       <MyBitcoinJourneyFooter
         href={Routes.journeyBitcoin}
         text={<>Start your journey</>}
