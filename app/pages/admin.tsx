@@ -49,6 +49,9 @@ const AdminPage: NextPage = () => {
   const withdrawnTips = adminDashboard.tips.filter(
     (t) => t.status === "WITHDRAWN"
   );
+  const refundedTips = adminDashboard.tips.filter(
+    (t) => t.status === "REFUNDED"
+  );
 
   const outstandingPaidTips = adminDashboard.tips.filter(
     (t) =>
@@ -157,6 +160,18 @@ const AdminPage: NextPage = () => {
             ).length
           }{" "}
           tipper)
+        </Text>
+      </Row>
+      <Row justify="center" align="center">
+        <Text>
+          {withdrawnTips.map((tip) => tip.amount).reduce((a, b) => a + b, 0)}{" "}
+          sats withdrawn by tippees
+        </Text>
+      </Row>
+      <Row justify="center" align="center">
+        <Text>
+          {refundedTips.map((tip) => tip.amount).reduce((a, b) => a + b, 0)}{" "}
+          sats refunded to tippers
         </Text>
       </Row>
       <Row justify="center" align="center">
