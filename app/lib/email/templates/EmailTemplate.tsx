@@ -58,7 +58,7 @@ export function EmailTemplate({
               width={150}
               href={process.env.APP_URL}
               padding="10px 25px"
-              src={`${process.env.APP_URL}/images/logo.svg`}
+              src={`${process.env.APP_URL}/images/logo512.png`}
               target="_blank"
             ></MjmlImage>
           </MjmlColumn>
