@@ -205,7 +205,6 @@ async function createUserAchievements(user: ExtendedUser, isPWA: boolean) {
       const thresholdAmount =
         parseInt(threshold.split("_")[1].slice(0, -1)) *
         (threshold[threshold.length - 1] === "K" ? 1000 : 1000000);
-      console.log("Checking threshold", thresholdAmount);
       if (totalAmountSent >= thresholdAmount) {
         await createAchievement(user.id, threshold, user.achievements);
       }
