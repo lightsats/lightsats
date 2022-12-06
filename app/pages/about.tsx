@@ -56,6 +56,44 @@ const AboutPage: NextPage = () => {
         </Text>
       </Row>
       <Spacer />
+      <Text h3>Credits</Text>
+      <Row>
+        <Text>
+          - See our{" "}
+          <Link
+            href="https://github.com/lightsats/lightsats"
+            css={{ display: "inline" }}
+          >
+            github contributors
+          </Link>
+        </Text>
+      </Row>
+      <Row>
+        <Text>
+          - Special thanks to Ed from BOLT FUN for guidance and help with
+          design/UX
+        </Text>
+      </Row>
+      <Row>
+        <Text>
+          - Thank you to all our Twitter followers who shared Lightsats
+        </Text>
+      </Row>
+      <Row>
+        <Text>
+          - Thank you to the plebs who are pushing Bitcoin adoption forward and
+          orange pilling their friends, family and local businesses.
+        </Text>
+      </Row>
+      <Row>
+        <Text>
+          - 3d icons by{" "}
+          <Link href="https://vijayverma.co/" css={{ display: "inline" }}>
+            realvjy
+          </Link>
+        </Text>
+      </Row>
+      <Spacer />
       <h3>Links</h3>
       <Grid.Container gap={1} justify="center">
         <Grid>
