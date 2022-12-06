@@ -8,6 +8,7 @@ import {
   ArrowsRightLeftIcon,
   AtSymbolIcon,
   BoltIcon,
+  DevicePhoneMobileIcon,
   FaceSmileIcon,
   FireIcon,
   GiftIcon,
@@ -137,6 +138,12 @@ const achievementBadges: Record<
   TOP_1: { icon: <StarIcon /> },
   TOP_3: { icon: <TrophyIcon /> },
   TOP_10: { icon: <FireIcon /> },
+
+  TIPS_10: { icon: <GiftIcon /> },
+  TIPS_25: { icon: <GiftIcon /> },
+  TIPS_50: { icon: <GiftIcon /> },
+  TIPS_100: { icon: <GiftIcon /> },
+  PWA: { icon: <DevicePhoneMobileIcon /> },
 };
 
 type AchievementBadgeProps = {

@@ -29,7 +29,7 @@ export default async function handler(
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
 
-  const { id, publicProfile, forceAnonymous } = req.query;
+  const { id, publicProfile, forceAnonymous, isPWA } = req.query;
 
   if (session?.user.id !== id || publicProfile === "true") {
     if (req.method === "GET") {
@@ -102,7 +102,7 @@ export default async function handler(
     case "PUT":
       return updateUser(user, req, res);
     case "GET":
-      return getUser(user, req, res);
+      return getUser(user, req, res, isPWA === "true");
     default:
       return res.status(StatusCodes.NOT_FOUND).end();
   }
@@ -133,10 +133,11 @@ async function updateUser(
 async function getUser(
   user: ExtendedUser,
   req: NextApiRequest,
-  res: NextApiResponse<User>
+  res: NextApiResponse<User>,
+  isPWA: boolean
 ) {
   await createUserNotifications(user);
-  await createUserAchievements(user);
+  await createUserAchievements(user, isPWA);
 
   return res.status(StatusCodes.OK).json(user);
 }
@@ -163,9 +164,12 @@ async function createUserNotifications(user: ExtendedUser) {
     }
   }
 }
-async function createUserAchievements(user: ExtendedUser) {
+async function createUserAchievements(user: ExtendedUser, isPWA: boolean) {
   if (user.userType === "tipper") {
     await createAchievement(user.id, "BECAME_TIPPER", user.achievements);
+    if (isPWA) {
+      await createAchievement(user.id, "PWA", user.achievements);
+    }
     if (user.email) {
       await createAchievement(user.id, "LINKED_EMAIL", user.achievements);
     }
@@ -204,6 +208,18 @@ async function createUserAchievements(user: ExtendedUser) {
       console.log("Checking threshold", thresholdAmount);
       if (totalAmountSent >= thresholdAmount) {
         await createAchievement(user.id, threshold, user.achievements);
+      }
+    }
+    for (const withdrawnSentTipsThreshold of [10, 25, 50, 100] as const) {
+      if (
+        user.tipsSent.filter((tip) => tip.status === "WITHDRAWN").length >=
+        withdrawnSentTipsThreshold
+      ) {
+        await createAchievement(
+          user.id,
+          `TIPS_${withdrawnSentTipsThreshold}`,
+          user.achievements
+        );
       }
     }
   }

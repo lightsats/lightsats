@@ -250,6 +250,11 @@ enum AchievementType {
   TOP_3
   TOP_1
   MOST_WITHDRAWN_TIPS
+  PWA
+  TIPS_10
+  TIPS_25
+  TIPS_50
+  TIPS_100
 }
 
 enum NotificationType {
