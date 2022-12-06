@@ -189,6 +189,7 @@ async function createUserAchievements(user: ExtendedUser) {
       await createAchievement(user.id, "EARLY_SUPPORTER", user.achievements);
     }
     const totalAmountSent = user.tipsSent
+      .filter((tip) => tip.status === "WITHDRAWN")
       .map((tip) => tip.amount)
       .reduce((a, b) => a + b, 0);
     for (const threshold of [
