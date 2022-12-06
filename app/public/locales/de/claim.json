@@ -3,9 +3,9 @@
     "tipperHasGiftedYou": "{{tipperName}} will Dir eine Spende zukommen lassen",
     "youHaveBeenGifted": "Du bist beschenkt worden",
     "expired": "Diese Spende ist abgelaufen.",
-    "instructions.phone": "Bitte gebe Deine Handynummer ein und klick den Button um Deine Spende zu erhalten.",
-    "instructions.email": "Bitte gebe Deine E-Mail Adresse ein und klick den Button um Deine Spende zu erhalten.",
-    "instructions.lightning": "Login mit Lightning",
+    "instructions.phone": "Gib unten deine Telefonnummer ein und klicke auf die Schaltfläche, um dein Geld anzufordern.",
+    "instructions.email": "Gib unten deine E-Mail-Adresse ein und klicke auf die Schaltfläche, um dein Geld anzufordern.",
+    "instructions.lightning": "Mit Lightning anmelden",
     "expiresIn": "Läuft ab am {{expiry}}",
     "claim": "Spende in Empfang nehmen"
 }
