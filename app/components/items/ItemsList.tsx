@@ -20,7 +20,7 @@ type ItemsListProps = {
 const collapseGroupCss: CSS = { width: "100%" };
 
 export function ItemsList({ category, options }: ItemsListProps) {
-  const { t } = useTranslation("login");
+  const { t } = useTranslation("items");
   const router = useRouter();
   const devicePlatform = useDevicePlatform();
 

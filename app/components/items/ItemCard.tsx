@@ -10,7 +10,7 @@ import { placeholderDataUrl as defaultPlaceholderDataUrl } from "lib/constants";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { getItemImageLocation } from "lib/utils";
-import { useTranslation } from "next-i18next";
+import { TFunction, useTranslation } from "next-i18next";
 import NextImage from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
@@ -23,7 +23,11 @@ type ItemCardProps = {
   expanded?: boolean;
 };
 
-function getItemFeatures(item: Item, locale: string): ItemFeatureBadgeProps[] {
+function getItemFeatures(
+  item: Item,
+  locale: string,
+  t: TFunction
+): ItemFeatureBadgeProps[] {
   const hasLanguage = item.languageCodes.indexOf(locale) > -1;
   const hasDefaultLanguage = item.languageCodes.indexOf(DEFAULT_LOCALE) > -1;
   const itemFeatures: ItemFeatureBadgeProps[] = [
@@ -38,7 +42,9 @@ function getItemFeatures(item: Item, locale: string): ItemFeatureBadgeProps[] {
   ];
   if (((item as Wallet).minBalance || 0) > 0) {
     itemFeatures.push({
-      name: `${(item as Wallet).minBalance}⚡ min balance`,
+      name: t("minBalance", {
+        minBalance: (item as Wallet).minBalance,
+      }),
       variant: "warning",
     });
   }
@@ -46,7 +52,7 @@ function getItemFeatures(item: Item, locale: string): ItemFeatureBadgeProps[] {
     item.platforms.indexOf("mobile") > -1 || item.platforms.indexOf("web") > -1;
   for (const platform of item.platforms) {
     itemFeatures.push({
-      name: platform,
+      name: t(`platforms.${platform}`),
       variant: hasSafePlatform ? "success" : "warning",
     });
   }
@@ -54,13 +60,13 @@ function getItemFeatures(item: Item, locale: string): ItemFeatureBadgeProps[] {
     const nonCustodial =
       (item as Wallet).features?.indexOf("non-custodial") > -1;
     itemFeatures.push({
-      name: nonCustodial ? "non-custodial" : "custodial",
+      name: nonCustodial ? t("nonCustodial") : t("custodial"),
       variant: nonCustodial ? "success" : "warning",
     });
   }
   if ((item as Wallet).features?.indexOf("non-custodial") > -1) {
     itemFeatures.push({
-      name: `Scan to login`,
+      name: t("scanToLogin"),
       // variant: "success",
     });
   }
@@ -79,11 +85,11 @@ function getItemFeatures(item: Item, locale: string): ItemFeatureBadgeProps[] {
 }
 
 export function ItemCard({ item, expanded }: ItemCardProps) {
-  const { t } = useTranslation("login");
+  const { t } = useTranslation("items");
   const router = useRouter();
   const features: ItemFeatureBadgeProps[] = React.useMemo(
-    () => getItemFeatures(item, router.locale || DEFAULT_LOCALE),
-    [item, router.locale]
+    () => getItemFeatures(item, router.locale || DEFAULT_LOCALE, t),
+    [item, router.locale, t]
   );
 
   return (
@@ -109,7 +115,7 @@ export function ItemCard({ item, expanded }: ItemCardProps) {
       <Text color="$gray">{item.slogan}</Text>
       <Spacer y={0.5} />
       <Text color="$gray" size={10} b transform="uppercase">
-        Features
+        {t("features")}
       </Text>
       <Row justify="flex-start" align="flex-start" style={{ flexWrap: "wrap" }}>
         {features.map((feature) => (

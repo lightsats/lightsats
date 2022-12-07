@@ -1,0 +1,19 @@
+{
+  "install": "Install",
+  "open": "Open",
+  "compatibleWallets": "Compatible Wallets",
+  "recommendedWallet": "Recommended wallet",
+  "otherWallets": "Other wallets",
+  "minBalance": "{{minBalance}}⚡ min balance",
+  "nonCustodial": "non-custodial",
+  "custodial": "custodial",
+  "scanToLogin": "Scan to login",
+  "platforms": {
+    "mobile": "Mobile",
+    "desktop": "Desktop",
+    "web": "Web",
+    "android-only": "Android",
+    "ios-only": "iOS"
+  },
+  "features": "Features"
+}

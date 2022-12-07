@@ -4,11 +4,6 @@
   "generatingQrCode": "Gerando QrCode...",
   "scanQrCode": "Escaneie este QrCode ou copie + cole em tua carteira. Ou clique para logar com tua carteira do navegador.",
   "clickToConnect": "Clique para conectar",
-  "compatibleWallets": "Carteiras compatíveis",
-  "recommendedWallet": "Carteira recomendada",
-  "otherWallets": "Outras carteiras",
-  "install": "Instalar",
-  "open": "Abrir",
   "use": "Use",
   "instead": ""
 }

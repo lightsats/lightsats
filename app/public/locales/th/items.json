@@ -1,0 +1,19 @@
+{
+  "install": "ติดตั้ง",
+  "open": "เปิด",
+  "compatibleWallets": "กระเป๋าเข้ากันได้",
+  "recommendedWallet": "กระเป๋าแนะนำ",
+  "otherWallets": "กระเป๋าอื่นๆ",
+  "minBalance": "{{minBalance}}⚡ min balance",
+  "nonCustodial": "ไม่ถูกคุมขัง",
+  "custodial": "ถูกคุมขัง",
+  "scanToLogin": "สแกนเพื่อเข้าสู่ระบบ",
+  "platforms": {
+    "mobile": "มือถือ",
+    "desktop": "เดสก์ทอป",
+    "web": "เว็บ",
+    "android-only": "แอนดรอยด์",
+    "ios-only": "ไอโฟน"
+  },
+  "features": "คุณสมบัติ"
+}

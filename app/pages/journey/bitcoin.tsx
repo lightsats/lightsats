@@ -77,8 +77,8 @@ const WhatIsBitcoinPage: NextPage = () => {
       </MyBitcoinJourneyContent>
       <MyBitcoinJourneyFooter
         href={Routes.journeySelectWallet}
-        text={<>Continue</>}
-        nextUp="Download a wallet"
+        text={t("bitcoin.footer.text")}
+        nextUp={t("bitcoin.footer.cta")}
       />
     </>
   );

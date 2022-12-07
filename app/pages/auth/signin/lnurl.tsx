@@ -150,7 +150,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
       <Card variant="flat">
         <Card.Body css={{ p: 0 }}>
           <Collapse.Group>
-            <Collapse title={<Text b>{t("login:compatibleWallets")}</Text>}>
+            <Collapse title={<Text b>{t("items:compatibleWallets")}</Text>}>
               <ItemsList category="wallets" options={categoryFilterOptions} />
             </Collapse>
           </Collapse.Group>

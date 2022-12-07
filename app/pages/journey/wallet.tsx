@@ -8,6 +8,7 @@ import { getStaticProps } from "lib/i18n/i18next";
 import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import React from "react";
 
@@ -32,6 +33,8 @@ const SelectWalletPage: NextPage = () => {
     [receivedTips]
   );
 
+  const { t } = useTranslation("journey");
+
   return (
     <>
       <Head>
@@ -40,24 +43,16 @@ const SelectWalletPage: NextPage = () => {
       <MyBitcoinJourneyHeader />
 
       <MyBitcoinJourneyContent>
-        <Text>
-          {
-            "You need to download a wallet in order to self custody your bitcoin."
-          }
-        </Text>
+        <Text>{t("wallet.needAWallet")}</Text>
         <Spacer />
-        <Text>
-          {
-            "Self custody of bitcoin is like keeping your own house keys. Having the keys gives you direct access and control to your property and helps ensure that no one else can enter or access it without your permission."
-          }
-        </Text>
+        <Text>{t("wallet.selfCustody")}</Text>
         <Spacer />
         <ItemsList category="wallets" options={categoryFilterOptions} />
       </MyBitcoinJourneyContent>
       <MyBitcoinJourneyFooter
         href={Routes.withdraw}
-        text={"Continue"}
-        nextUp="Withdraw"
+        text={t("wallet.footer.text")}
+        nextUp={t("wallet.footer.cta")}
       />
     </>
   );
