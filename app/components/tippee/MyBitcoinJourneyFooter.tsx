@@ -1,6 +1,7 @@
 import { Button, Container, Text } from "@nextui-org/react";
 import { FlexBox } from "components/FlexBox";
 import { NextLink } from "components/NextLink";
+import { useTranslation } from "next-i18next";
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -16,6 +17,7 @@ export function MyBitcoinJourneyFooter({
   nextUp,
 }: MyBitcoinJourneyFooterProps) {
   const [visible, setVisible] = React.useState(false);
+  const { t } = useTranslation("journey");
   React.useEffect(() => {
     setVisible(true);
   }, []);
@@ -52,7 +54,7 @@ export function MyBitcoinJourneyFooter({
                 <FlexBox style={{ flex: 1 }}>
                   <FlexBox style={{ flexDirection: "column" }}>
                     <Text b small transform="uppercase">
-                      Next up
+                      {t("footer.nextUp")}
                     </Text>
                     <Text>{nextUp}</Text>
                   </FlexBox>

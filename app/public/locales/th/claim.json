@@ -1,11 +1,11 @@
 {
-    "hello": "ยินดีด้วย {{tippeeName}}!",
-    "tipperHasGiftedYou": "คุณได้รับของขวัญจาก {{tipperName}}",
-    "youHaveBeenGifted": "คุณได้รับของขวัญ",
-    "expired": "ขออภัยคุณไม่ได้รับของขวัญในเวลาที่กำหนด",
-    "instructions.phone": "ใส่เบอร์โทรศัพท์ของคุณด้านล่างและกดปุ่มเพื่อรับของขวัญของคุณ",
-    "instructions.email": "ใส่อีเมลของคุณด้านล่างและกดปุ่มเพื่อรับของขวัญของคุณ",
-    "instructions.lightning": "เข้าสู่ระบบด้วย Lightning",
-    "expiresIn": "ของขวัญนี้สามารถรับได้อีก {{expiry}} เท่านั้น",
-    "claim": "รับของขวัญ"
+  "hello": "ยินดีด้วย {{tippeeName}}!",
+  "tipperHasGiftedYou": "คุณได้รับทิปจาก {{tipperName}}",
+  "youHaveBeenGifted": "คุณได้รับทิป",
+  "expired": "ขออภัยคุณไม่ได้รับทิปในเวลาที่กำหนด",
+  "instructions.phone": "ใส่เบอร์โทรศัพท์ของคุณด้านล่างและกดปุ่มเพื่อรับทิปของคุณ",
+  "instructions.email": "ใส่อีเมลของคุณด้านล่างและกดปุ่มเพื่อรับทิปของคุณ",
+  "instructions.lightning": "เข้าสู่ระบบด้วย Lightning",
+  "expiresIn": "ทิปนี้สามารถรับได้อีก {{expiry}} เท่านั้น",
+  "claim": "รับทิป"
 }

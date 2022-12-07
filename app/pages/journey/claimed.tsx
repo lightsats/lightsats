@@ -10,6 +10,7 @@ import { defaultFetcher } from "lib/swr";
 import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import React from "react";
 import useSWR from "swr";
@@ -29,14 +30,15 @@ const ClaimedPage: NextPage = () => {
       ),
     [publicTips]
   );
+  const { t } = useTranslation("journey");
   return (
     <>
       <Head>
         <title>Lightsats⚡ - Bitcoin</title>
       </Head>
       <MyBitcoinJourneyHeader />
-      <Text h3>Nice work 👍</Text>
-      <Text h5>{"You've successfully claimed your tip"}</Text>
+      <Text h3>{t("claimed.title")}</Text>
+      <Text h5>{t("claimed.subtitle")}</Text>
       <Spacer />
       <Grid.Container gap={2}>
         {claimedTips?.map((publicTip) => (
@@ -49,19 +51,20 @@ const ClaimedPage: NextPage = () => {
       </Grid.Container>
       <Spacer y={2} />
       <Text>
-        {`Your tip is ready to be withdrawn into your custody. If you don't withdraw your tip before it expires, it will be returned to ${
-          claimedTips?.[0]?.tipper.name ?? DEFAULT_NAME
-        }.`}
+        {t("claimed.description", {
+          tipperName: claimedTips?.[0]?.tipper.name ?? DEFAULT_NAME,
+        })}
       </Text>
+
       <Spacer y={2} />
-      <Text h5>{"Let's get started on your Bitcoin journey!"}</Text>
+      <Text h5>{t("claimed.getStarted")}</Text>
       <NextImage src="/images/journey/rocket.png" width={100} height={100} />
       <Spacer />
 
       <MyBitcoinJourneyFooter
         href={Routes.journeyBitcoin}
-        text={<>Start your journey</>}
-        nextUp="What is bitcoin?"
+        text={t("claimed.footer.text")}
+        nextUp={t("claimed.footer.cta")}
       />
     </>
   );
