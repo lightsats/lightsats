@@ -3,6 +3,7 @@ import { Button, Card, Col, Loading, Row, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
+import { useTranslation } from "next-i18next";
 import React from "react";
 import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
@@ -13,6 +14,7 @@ type PayTipInvoiceProps = {
 };
 
 export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
+  const { t } = useTranslation(["common"]);
   React.useEffect(() => {
     if (invoice) {
       (async () => {
@@ -73,7 +75,7 @@ export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
                   <Icon>
                     <WalletIcon />
                   </Icon>
-                  &nbsp;Open in wallet
+                  &nbsp;{t("common:openInWallet")}
                 </Button>
               </a>
             </NextLink>

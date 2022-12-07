@@ -19,9 +19,11 @@ import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader
 import copy from "copy-to-clipboard";
 import { isBefore } from "date-fns";
 import { useTips } from "hooks/useTips";
+import { getStaticProps } from "lib/i18n/i18next";
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
@@ -35,6 +37,7 @@ const Withdraw: NextPage = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const flow = (router.query["flow"] as WithdrawalFlow) ?? "tippee";
+  const { t } = useTranslation(["common", "withdraw"]);
 
   // poll to get updated statuses after withdrawing
   const { data: tips } = useTips(flow, true);
@@ -205,15 +208,12 @@ const Withdraw: NextPage = () => {
       ) : (
         <div style={{ maxWidth: "100%" }}>
           <Text h3>
-            {isSubmitting ? "Withdrawing..." : "Ready to withdraw?"}
+            {isSubmitting ? t("withdraw:withdrawing") : t("withdraw:title")}
           </Text>
 
           {withdrawalLinkLnurl && !isSubmitting ? (
             <>
-              <Text>
-                Scan, tap or copy the below link into your bitcoin wallet to
-                withdraw them.
-              </Text>
+              <Text>{t("withdraw:lnurlInstructions")}</Text>
               <Spacer />
               <FlexBox>
                 <Card
@@ -225,8 +225,9 @@ const Withdraw: NextPage = () => {
                   <Card.Header>
                     <Row justify="center">
                       <Text>
-                        Withdraw <strong>{availableBalance} sats</strong> to
-                        your wallet
+                        {t("withdraw:withdrawAvailableBalance", {
+                          availableBalance,
+                        })}
                       </Text>
                     </Row>
                   </Card.Header>
@@ -251,7 +252,7 @@ const Withdraw: NextPage = () => {
                         <Icon>
                           <ClipboardDocumentIcon />
                         </Icon>
-                        Copy
+                        {t("common:copy")}
                       </Button>
                       <NextLink href={`lightning:${withdrawalLinkLnurl}`}>
                         <a>
@@ -259,7 +260,7 @@ const Withdraw: NextPage = () => {
                             <Icon>
                               <WalletIcon />
                             </Icon>
-                            &nbsp; Open in wallet
+                            &nbsp;{t("common:openInWallet")}
                           </Button>
                         </a>
                       </NextLink>
@@ -320,32 +321,4 @@ const Withdraw: NextPage = () => {
 
 export default Withdraw;
 
-/*// this is inefficient as it does 1 call per tipper, but most users will probably only have one tipper
-function ContactTipper({ tipId: tipperId }: { tipId: string }) {
-  const { data: publicTip } = useSWR<PublicTip>(
-    `/api/tippee/tips/${tipperId}`,
-    defaultFetcher
-  );
-  if (!publicTip) {
-    return <Loading color="currentColor" size="sm" />;
-  }
-  return (
-    <Row justify="center" align="center">
-      <Text>
-        Tipped {publicTip.amount} satoshis⚡ by{" "}
-        {publicTip.tipper.name ?? DEFAULT_NAME}
-      </Text>
-      {publicTip.tipper.twitterUsername && (
-        <>
-          <Spacer />
-          <NextLink
-            href={`https://twitter.com/${publicTip.tipper.twitterUsername}`}
-            passHref
-          >
-            <Link target="_blank">Contact via Twitter</Link>
-          </NextLink>
-        </>
-      )}
-    </Row>
-  );
-}*/
+export { getStaticProps };

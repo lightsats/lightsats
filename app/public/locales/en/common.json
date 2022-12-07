@@ -12,5 +12,6 @@
   "checkSMSTitle": "Check your phone",
   "checkSMSText": "A magic link 🪄 has been sent to your phone. Click it to confirm your phone number.",
   "createdAgo": "created {{distance}} ago",
-  "amountInSats": "{{amount}} sats"
+  "amountInSats": "{{amount}} sats",
+  "openInWallet": "Open in wallet"
 }

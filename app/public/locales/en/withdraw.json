@@ -1,0 +1,6 @@
+{
+  "title": "Ready to withdraw?",
+  "withdrawing": "Withdrawing...",
+  "lnurlInstructions": "Scan, tap or copy the below link into your bitcoin wallet to withdraw.",
+  "withdrawAvailableBalance": "Withdraw {{availableBalance}} sats to your wallet"
+}
