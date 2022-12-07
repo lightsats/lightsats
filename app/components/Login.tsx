@@ -1,4 +1,4 @@
-import { Link, Row, Spacer, Text } from "@nextui-org/react";
+import { Button, Row, Spacer, Text } from "@nextui-org/react";
 import { useTranslation } from "next-i18next";
 import EmailSignIn from "pages/auth/signin/email";
 import LnurlAuthSignIn from "pages/auth/signin/lnurl";
@@ -57,9 +57,15 @@ export function Login({
           .map((method, i) => {
             return (
               <>
-                <Link onClick={() => setLoginMethod(method)}>
+                <Button
+                  light
+                  auto
+                  css={{ px: "$5" }}
+                  color="primary"
+                  onClick={() => setLoginMethod(method)}
+                >
                   {t(`common:${method}`)}
-                </Link>
+                </Button>
                 {i === 0 && <Text>&nbsp;{t("common:or")}&nbsp;</Text>}
               </>
             );
