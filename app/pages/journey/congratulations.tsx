@@ -3,12 +3,15 @@ import { ConfettiContainer } from "components/ConfettiContainer";
 import { MyBitcoinJourneyContent } from "components/tippee/MyBitcoinJourneyContent";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
+import { getStaticProps } from "lib/i18n/i18next";
 
 import { Routes } from "lib/Routes";
 import type { NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import Head from "next/head";
 
 const CongratulationsPage: NextPage = () => {
+  const { t } = useTranslation("journey");
   return (
     <>
       <Head>
@@ -17,21 +20,20 @@ const CongratulationsPage: NextPage = () => {
       <MyBitcoinJourneyHeader />
       <ConfettiContainer />
       <MyBitcoinJourneyContent>
-        <h2>You did it! 🎉</h2>
+        <h2>{t("congratulations.title")}</h2>
         <Spacer />
-        <Text>You are a proud new owner of a fraction of a bitcoin.</Text>
-        <Text blockquote>
-          Rumors say - those who are gifted bitcoin are a very special kind of
-          people.
-        </Text>
+        <Text>{t("congratulations.subtitle")}</Text>
+        <Text blockquote>{t("congratulations.quote")}</Text>
       </MyBitcoinJourneyContent>
       <MyBitcoinJourneyFooter
         href={Routes.guide}
-        text={"Continue"}
-        nextUp="Use bitcoin"
+        text={t("congratulations.footer.text")}
+        nextUp={t("congratulations.footer.cta")}
       />
     </>
   );
 };
 
 export default CongratulationsPage;
+
+export { getStaticProps };

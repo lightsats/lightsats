@@ -61,5 +61,14 @@
       "text": "Continue",
       "cta": "Withdraw"
     }
+  },
+  "congratulations": {
+    "title": "You did it! 🎉",
+    "subtitle": "You are a proud new owner of a fraction of a bitcoin.",
+    "quote": "Rumors say - those who are gifted bitcoin are a very special kind of people.",
+    "footer": {
+      "text": "Continue",
+      "cta": "Use Bitcoin"
+    }
   }
 }
