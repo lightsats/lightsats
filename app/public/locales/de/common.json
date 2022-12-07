@@ -10,5 +10,7 @@
     "checkSMSTitle": "Prüfe dein Telefon",
     "checkSMSText": "Dir wurde ein magischer Link 🪄 wurde gesendet. Klicke ihn an, um deine Telefonnummer zu bestätigen.",
     "copy": "Kopieren",
-    "copiedToClipboard": "In die Zwischenablage kopiert"
+    "copiedToClipboard": "In die Zwischenablage kopiert",
+    "createdAgo": "erstellt vor {{distance}}",
+    "amountInSats": "{{amount}} sats"
 }
