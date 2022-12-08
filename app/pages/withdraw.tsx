@@ -184,7 +184,7 @@ const Withdraw: NextPage = () => {
   }, [withdrawalLinkLnurl]);
 
   if (!session || !tips) {
-    return <Text>{"Loading balance..."}</Text>;
+    return <Loading />;
   }
 
   return (
