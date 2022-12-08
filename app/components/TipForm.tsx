@@ -105,8 +105,7 @@ export function TipForm({
   }, [setFocus]);
 
   React.useEffect(() => {
-    console.log("prevTip", prevTip);
-    if (prevTip?.currency) {
+    if (prevTip?.currency && mode === "create") {
       setValue("currency", prevTip.currency);
     }
     if (prevTip?.tippeeLocale && mode === "update") {
