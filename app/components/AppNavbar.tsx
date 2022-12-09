@@ -7,6 +7,7 @@ import {
   HomeIcon,
   InformationCircleIcon,
   LightBulbIcon,
+  UserCircleIcon,
   UserIcon,
 } from "@heroicons/react/24/solid";
 import {
@@ -27,6 +28,7 @@ import { NextLink } from "components/NextLink";
 import { useIsPWA } from "hooks/useIsPWA";
 import { useNotifications } from "hooks/useNotifications";
 import { useUser } from "hooks/useUser";
+import { useUserRoles } from "hooks/useUserRoles";
 import { Routes } from "lib/Routes";
 import { getUserAvatarUrl } from "lib/utils";
 import { useSession } from "next-auth/react";
@@ -68,6 +70,7 @@ export function AppNavbar() {
       ? 0
       : notifications?.filter((notification) => !notification.read).length ?? 0;
   const isPWA = useIsPWA();
+  const { data: userRoles } = useUserRoles();
 
   const collapseItems: CollapseItem[] = React.useMemo(
     () => [
@@ -101,8 +104,17 @@ export function AppNavbar() {
             },
           ]
         : []),
+      ...(userRoles?.some((role) => role.roleType === "SUPERADMIN")
+        ? [
+            {
+              name: "Admin Dashboard",
+              href: Routes.admin,
+              icon: <UserCircleIcon />,
+            },
+          ]
+        : []),
     ],
-    [user, isPWA]
+    [user, isPWA, userRoles]
   );
 
   const isLoading =
