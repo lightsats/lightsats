@@ -1,0 +1,3 @@
+# Block all crawlers for /tips
+User-agent: *
+Disallow: /tips
