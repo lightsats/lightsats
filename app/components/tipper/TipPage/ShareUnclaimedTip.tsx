@@ -3,11 +3,20 @@ import {
   ClipboardDocumentIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
-import { Button, Card, Row, Spacer, Text, Tooltip } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Spacer,
+  Text,
+  Tooltip,
+} from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
+import { Routes } from "lib/Routes";
 import { getClaimUrl } from "lib/utils";
 import React from "react";
 import toast from "react-hot-toast";
@@ -31,26 +40,37 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
     <>
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Header>
-          <Row justify="center" align="center">
-            <Text size={18} b>
-              👇 Let them scan this QR code
-            </Text>
-            &nbsp;
-            <Tooltip
-              content="Ask the tippee to scan the below code using their camera app or a QR
+          <Col>
+            <Row justify="center" align="center">
+              <Text size={18} b>
+                👇 Let them scan this QR code
+              </Text>
+              &nbsp;
+              <Tooltip
+                content="Ask the tippee to scan the below code using their camera app or a QR
             code scanner app. You can also copy the URL to send via a message or
             email."
-              color="primary"
-              css={{ minWidth: "50%" }}
-              placement="left"
-            >
-              <Text color="primary">
-                <Icon>
-                  <InformationCircleIcon />
-                </Icon>
-              </Text>
-            </Tooltip>
-          </Row>
+                color="primary"
+                css={{ minWidth: "50%" }}
+                placement="left"
+              >
+                <Text color="primary">
+                  <Icon>
+                    <InformationCircleIcon />
+                  </Icon>
+                </Text>
+              </Tooltip>
+            </Row>
+            <Row justify="center">
+              <NextLink href={`${Routes.tips}/${tip.id}/qr`}>
+                <a>
+                  <Button size="sm" bordered>
+                    Open in fullscreen
+                  </Button>
+                </a>
+              </NextLink>
+            </Row>
+          </Col>
         </Card.Header>
         <Card.Divider />
         <Card.Body>

@@ -35,6 +35,7 @@ export default function Layout({
           ...(router.pathname !== Routes.scoreboard &&
           router.pathname !== Routes.admin &&
           router.pathname !== Routes.about &&
+          !router.pathname.endsWith("/qr") &&
           router.pathname !== Routes.home
             ? { maxWidth: "600px" }
             : { maxWidth: "1400px" }),
