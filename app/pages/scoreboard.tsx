@@ -19,14 +19,17 @@ import { formatAmount, getAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import React from "react";
 import { useInViewport } from "react-in-viewport";
-import useSWR from "swr";
+import useSWR, { SWRConfiguration } from "swr";
 import { Scoreboard as ScoreboardType } from "types/Scoreboard";
 import { ScoreboardEntry } from "types/ScoreboardEntry";
+
+const pollScoreboardConfig: SWRConfiguration = { refreshInterval: 15000 };
 
 const Scoreboard: NextPage = () => {
   const { data: scoreboard } = useSWR<ScoreboardType>(
     `/api/scoreboard`,
-    defaultFetcher
+    defaultFetcher,
+    pollScoreboardConfig
   );
   const paginationRef = React.useRef<HTMLDivElement>(null);
   const { inViewport } = useInViewport(

@@ -1,48 +1,31 @@
 import { hoursToSeconds } from "date-fns";
+import { cacheRequest } from "lib/cacheRequest";
 import { NextApiRequest, NextApiResponse } from "next";
-import NodeCache from "node-cache";
 import { ExchangeRates } from "types/ExchangeRates";
-
-const exchangeRatesCacheKey = "exchangeRates";
-
-declare global {
-  // eslint-disable-next-line no-var
-  var exchangeRatesCache: NodeCache | undefined;
-}
-
-const exchangeRatesCache = globalThis.exchangeRatesCache || new NodeCache();
-if (process.env.NODE_ENV !== "production")
-  globalThis.exchangeRatesCache = exchangeRatesCache;
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ExchangeRates>
 ) {
-  let exchangeRates = exchangeRatesCache.get<ExchangeRates>(
-    exchangeRatesCacheKey
+  const exchangeRates = await cacheRequest(
+    "exchangeRates",
+    getExchangeRates,
+    hoursToSeconds(24)
   );
-  if (!exchangeRates) {
-    const btcUsdPrice = await getBtcUsdPrice();
-    // console.log("BTCUSD", btcUsdPrice);
-    const fiatExchangeRates = await getFiatExchangeRates();
-    // console.log("fiatExchangeRates", fiatExchangeRates);
-
-    exchangeRates = {};
-    for (const fiatExchangeRate of Object.entries(fiatExchangeRates)) {
-      exchangeRates[fiatExchangeRate[0]] = btcUsdPrice * fiatExchangeRate[1];
-    }
-    // console.log("exchangeRates", exchangeRates);
-
-    exchangeRatesCache.set(
-      exchangeRatesCacheKey,
-      exchangeRates,
-      hoursToSeconds(24)
-    );
-  } else {
-    // console.log("Exchange rates are cached");
-  }
-
   return res.json(exchangeRates);
+}
+
+async function getExchangeRates() {
+  const btcUsdPrice = await getBtcUsdPrice();
+  // console.log("BTCUSD", btcUsdPrice);
+  const fiatExchangeRates = await getFiatExchangeRates();
+  // console.log("fiatExchangeRates", fiatExchangeRates);
+
+  const exchangeRates: ExchangeRates = {};
+  for (const fiatExchangeRate of Object.entries(fiatExchangeRates)) {
+    exchangeRates[fiatExchangeRate[0]] = btcUsdPrice * fiatExchangeRate[1];
+  }
+  return exchangeRates;
 }
 
 async function getBtcUsdPrice() {

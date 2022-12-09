@@ -1,11 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { StatusCodes } from "http-status-codes";
+import { cacheRequest } from "lib/cacheRequest";
 import { createAchievement } from "lib/createAchievement";
 import prisma from "lib/prismadb";
 import { getFallbackAvatarId } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
 import { Scoreboard } from "types/Scoreboard";
 import { ScoreboardEntry } from "types/ScoreboardEntry";
 
@@ -13,7 +12,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Scoreboard>
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const scoreboard = await cacheRequest("scoreboard", getScoreboard, 15);
+  return res.status(StatusCodes.OK).json(scoreboard);
+}
+
+async function getScoreboard() {
   // TODO: cache scoreboard
   const users = await prisma.user.findMany({
     include: {
@@ -50,7 +53,6 @@ export default async function handler(
       );
       return {
         userId: user.id,
-        isMe: !!session && user.id === session.user.id,
         numTipsWithdrawn: withdrawnTips.length,
         satsSent: withdrawnTips.length
           ? withdrawnTips.map((tip) => tip.amount).reduce((a, b) => a + b)
@@ -107,5 +109,5 @@ export default async function handler(
       : 0,
   };
 
-  return res.status(StatusCodes.OK).json(scoreboard);
+  return scoreboard;
 }

@@ -2,7 +2,6 @@ import { AchievementType } from "@prisma/client";
 
 export type ScoreboardEntry = {
   userId: string;
-  isMe: boolean;
   name: string | undefined;
   avatarURL: string | undefined;
   fallbackAvatarId: string | undefined;
