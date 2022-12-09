@@ -57,6 +57,8 @@ const Scoreboard: NextPage = () => {
   return (
     <>
       <Text h2>Leaderboard</Text>
+      <Text size="small">Updates every 15 seconds</Text>
+      <Spacer />
       <Grid.Container gap={1} css={{ width: "100%", margin: 0, padding: 0 }}>
         <Grid xs={4}>
           <Card css={{ dropShadow: "$xs" }}>
