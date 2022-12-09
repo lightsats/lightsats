@@ -1,5 +1,6 @@
 import {
   Badge,
+  Button,
   Card,
   Col,
   Grid,
@@ -10,8 +11,10 @@ import {
   Text,
   User as NextUIUser,
 } from "@nextui-org/react";
+import { Leaderboard } from "@prisma/client";
 import { NextLink } from "components/NextLink";
 import { TwitterButton } from "components/TwitterButton";
+import { useUserRoles } from "hooks/useUserRoles";
 import { DEFAULT_NAME } from "lib/constants";
 import { Routes } from "lib/Routes";
 import { defaultFetcher } from "lib/swr";
@@ -38,12 +41,18 @@ const Scoreboard: NextPage = () => {
     { disconnectOnLeave: false }
   );
   const [perPage, setPerPage] = React.useState(10);
+  const { data: leaderboards } = useSWR<Leaderboard[]>(
+    `/api/leaderboards`,
+    defaultFetcher
+  );
 
   React.useEffect(() => {
     if (inViewport) {
       setPerPage(perPage + 10);
     }
   }, [inViewport, perPage]);
+
+  const { data: userRoles } = useUserRoles();
 
   // TODO: add serverside paging
   const visibleScoreboardEntries = React.useMemo(
@@ -59,6 +68,7 @@ const Scoreboard: NextPage = () => {
       <Text h2>Leaderboard</Text>
       <Text size="small">Updates every 15 seconds</Text>
       <Spacer />
+
       <Grid.Container gap={1} css={{ width: "100%", margin: 0, padding: 0 }}>
         <Grid xs={4}>
           <Card css={{ dropShadow: "$xs" }}>
@@ -100,6 +110,53 @@ const Scoreboard: NextPage = () => {
         </Grid>
       </Grid.Container>
       <Spacer />
+      {(leaderboards?.length ||
+        userRoles?.some((role) => role.roleType === "SUPERADMIN")) && (
+        <>
+          <Card variant="bordered">
+            <Card.Body>
+              <Row>
+                <Text b>Featured Leaderboards</Text>
+              </Row>
+              <Spacer />
+              {leaderboards && (
+                <Grid.Container>
+                  {leaderboards.map((leaderboard) => (
+                    <NextLink
+                      href={`${Routes.leaderboards}/${leaderboard.id}`}
+                      key={leaderboard.id}
+                    >
+                      <Grid as="a">
+                        <Card css={{ minWidth: "300px" }}>
+                          <Card.Body>
+                            <Text b>{leaderboard.title}</Text>
+                          </Card.Body>
+                        </Card>
+                      </Grid>
+                    </NextLink>
+                  ))}
+                </Grid.Container>
+              )}
+
+              {userRoles?.some((role) => role.roleType === "SUPERADMIN") && (
+                <>
+                  <Spacer />
+                  <Row justify="center">
+                    {" "}
+                    <NextLink href={Routes.newLeaderboard}>
+                      <a>
+                        <Button size="sm">Create Leaderboard</Button>
+                      </a>
+                    </NextLink>
+                  </Row>
+                </>
+              )}
+            </Card.Body>
+          </Card>
+          <Spacer />
+        </>
+      )}
+
       <Grid.Container
         gap={1}
         justify="center"

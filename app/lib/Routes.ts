@@ -39,6 +39,8 @@ export enum Routes {
   features = "/features",
   users = "/users",
   notifications = "/notifications",
+  leaderboards = "/leaderboards",
+  newLeaderboard = "/leaderboards/new",
 }
 
 export const bitcoinJourneyPages = [
