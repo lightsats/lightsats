@@ -12,6 +12,15 @@ const nextConfig = {
     hideSourceMaps: false,
     autoInstrumentServerFunctions: true,
   },
+  redirects: async () => {
+    return [
+      {
+        source: "/scoreboard",
+        destination: "/leaderboard",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 const sentryWebpackPluginOptions = {
