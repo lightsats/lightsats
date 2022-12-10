@@ -8,7 +8,7 @@ import {
   SATS_TO_BTC,
 } from "lib/constants";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { NextRouter } from "next/router";
 import { MouseEventHandler } from "react";
 import { Item } from "types/Item";
@@ -114,7 +114,7 @@ export const formatAmount = (amount: number, decimals = 2) => {
 };
 
 export const getTipUrl = (tip: Tip | PublicTip, locale: string | undefined) =>
-  `${getAppUrl()}${getLocalePath(locale)}${Routes.tips}/${tip.id}`;
+  `${getAppUrl()}${getLocalePath(locale)}${PageRoutes.tips}/${tip.id}`;
 
 export const getClaimUrl = (tip: Tip | PublicTip) =>
   `${getTipUrl(tip, tip.tippeeLocale ?? undefined)}/claim`;

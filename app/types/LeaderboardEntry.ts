@@ -1,6 +1,6 @@
 import { AchievementType } from "@prisma/client";
 
-export type ScoreboardEntry = {
+export type LeaderboardEntry = {
   userId: string;
   name: string | undefined;
   avatarURL: string | undefined;

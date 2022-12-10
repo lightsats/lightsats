@@ -16,7 +16,7 @@ import copy from "copy-to-clipboard";
 import { getStaticProps } from "lib/i18n/i18next";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
 import { signIn } from "next-auth/react";
 import { useTranslation } from "next-i18next";
@@ -40,7 +40,9 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const { t } = useTranslation(["common", "login"]);
   const linkExistingAccount = router.query["link"] === "true";
   const callbackUrlWithFallback =
-    callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
+    callbackUrl ||
+    (router.query["callbackUrl"] as string) ||
+    PageRoutes.dashboard;
   // only retrieve the qr code once
   const { data: qr } = useSWRImmutable<LnurlAuthLoginInfo>(
     `/api/auth/lnurl/generate-secret?linkExistingAccount=${linkExistingAccount}`,

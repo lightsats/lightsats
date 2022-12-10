@@ -3,7 +3,7 @@ import { ClaimedTipCard } from "components/ClaimedTipCard";
 import { DashboardButton } from "components/HomeButton";
 import { Login } from "components/Login";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
 import { getCurrentUrl, hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
@@ -31,7 +31,7 @@ const ClaimTipPage: NextPage = () => {
 
   const [isClaiming, setClaiming] = React.useState(false);
 
-  const destinationRoute = Routes.journeyClaimed;
+  const destinationRoute = PageRoutes.journeyClaimed;
 
   React.useEffect(() => {
     if (

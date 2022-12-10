@@ -21,10 +21,10 @@ import { NextLink } from "components/NextLink";
 import { UserAchievementsGrid } from "components/UserAchievements";
 import copy from "copy-to-clipboard";
 import { format } from "date-fns";
+import { useLeaderboardPosition } from "hooks/useLeaderboardPosition";
 import { usePublicUser } from "hooks/usePublicUser";
-import { useScoreboardPosition } from "hooks/useScoreboardPosition";
 import { DEFAULT_NAME } from "lib/constants";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { getAppUrl, getUserAvatarUrl } from "lib/utils";
 import React from "react";
 import toast from "react-hot-toast";
@@ -43,7 +43,7 @@ export function UserCard({
   showAchievements,
 }: Props) {
   const { data: publicUser } = usePublicUser(userId, forceAnonymous);
-  const publicProfileUrl = getAppUrl() + `${Routes.users}/${userId}`;
+  const publicProfileUrl = getAppUrl() + `${PageRoutes.users}/${userId}`;
 
   const shareProfile = React.useCallback(() => {
     (async () => {
@@ -59,7 +59,7 @@ export function UserCard({
     })();
   }, [publicProfileUrl, publicUser?.name]);
 
-  const placing = useScoreboardPosition(
+  const placing = useLeaderboardPosition(
     publicUser?.userType === "tipper" ? userId : undefined
   );
 
@@ -153,7 +153,7 @@ export function UserCard({
                   <Text b>{publicUser.numTipsReceived} tips</Text>
                 </Col>
               </Grid>
-              <NextLink href={Routes.leaderboard} passHref>
+              <NextLink href={PageRoutes.leaderboard} passHref>
                 <Grid xs={6} sm={3} as="a">
                   <Col
                     css={{
@@ -180,7 +180,7 @@ export function UserCard({
                 </Grid>
               </NextLink>
               <NextLink
-                href={`${Routes.users}/${userId}#achievements`}
+                href={`${PageRoutes.users}/${userId}#achievements`}
                 passHref
               >
                 <Grid xs={6} sm={3} as="a">
@@ -209,7 +209,10 @@ export function UserCard({
         {showAchievements && (publicUser?.achievementTypes.length ?? 0 > 0) && (
           <>
             <Divider />
-            <NextLink href={`${Routes.users}/${userId}#achievements`} passHref>
+            <NextLink
+              href={`${PageRoutes.users}/${userId}#achievements`}
+              passHref
+            >
               <a>
                 <UserAchievementsGrid userId={userId} small />
               </a>

@@ -6,10 +6,12 @@ declare global {
 }
 
 export async function cacheRequest<T>(
-  key: "exchangeRates" | "scoreboard",
+  entityType: "exchangeRates" | "leaderboardContents",
+  entityId: string | undefined,
   requestFunc: () => Promise<T>,
   ageSeconds: number
 ) {
+  const key = !entityId ? entityType : entityType + "/" + entityId;
   const requestCache = globalThis.cache?.[key] || new NodeCache();
   globalThis.cache = globalThis.cache || {};
   globalThis.cache[key] = requestCache;

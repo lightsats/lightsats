@@ -13,6 +13,8 @@ export const TIP_NUM_SMS_TOKENS = 3;
 export const LOGIN_LINK_EXPIRATION_DAYS = 30;
 export const DEFAULT_PAGE_SIZE = 10;
 export const USE_PREV_TIP_PROPERTIES = true;
+export const DEFAULT_LEADERBOARD_ID = "default";
+export const LIGHTSATS_INCEPTION = new Date("2022-10-01");
 
 export const refundableTipStatuses: TipStatus[] = [
   "UNCLAIMED",

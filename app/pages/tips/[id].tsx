@@ -15,11 +15,11 @@ import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTra
 import { PayTipInvoice } from "components/tipper/TipPage/PayTipInvoice";
 import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
-import { useScoreboardPosition } from "hooks/useScoreboardPosition";
+import { useLeaderboardPosition } from "hooks/useLeaderboardPosition";
 import { useTip } from "hooks/useTip";
 import { expirableTipStatuses, refundableTipStatuses } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { hasTipExpired, nth } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
@@ -51,7 +51,7 @@ const TipPage: NextPage = () => {
     // TODO: support claiming and managing tip on the same page
     // TODO: add redirect or fallback from the old claim page to this one
     if (sessionStatus === "unauthenticated") {
-      router.push(`${Routes.tips}/${id}/claim`);
+      router.push(`${PageRoutes.tips}/${id}/claim`);
     }
   }, [id, router, sessionStatus]);
 
@@ -66,11 +66,11 @@ const TipPage: NextPage = () => {
 
   const hasExpired = tip && hasTipExpired(tip);
 
-  const placing = useScoreboardPosition(session?.user.id);
+  const placing = useLeaderboardPosition(session?.user.id);
 
   const deleteTip = React.useCallback(() => {
     (async () => {
-      router.push(Routes.dashboard);
+      router.push(PageRoutes.dashboard);
       const result = await fetch(`/api/tipper/tips/${id}`, {
         method: "DELETE",
       });
@@ -84,7 +84,7 @@ const TipPage: NextPage = () => {
 
   const reclaimTip = React.useCallback(() => {
     (async () => {
-      router.push(Routes.dashboard);
+      router.push(PageRoutes.dashboard);
       const result = await fetch(`/api/tipper/tips/${id}/reclaim`, {
         method: "POST",
       });
@@ -131,7 +131,7 @@ const TipPage: NextPage = () => {
               </Row>
               <Spacer />
               <Row justify="center">
-                <NextLink href={`${Routes.tips}/${tip.id}/edit`} passHref>
+                <NextLink href={`${PageRoutes.tips}/${tip.id}/edit`} passHref>
                   <a>
                     <Button size="md" color="secondary">
                       Personalize tip
@@ -180,7 +180,7 @@ const TipPage: NextPage = () => {
 
         {expirableTipStatuses.indexOf(tip.status) > -1 && (
           <>
-            <NextLink href={`${Routes.tips}/${tip.id}/edit`} passHref>
+            <NextLink href={`${PageRoutes.tips}/${tip.id}/edit`} passHref>
               <a>
                 <Button>Edit Tip</Button>
               </a>
@@ -219,7 +219,7 @@ const TipPage: NextPage = () => {
                     {nth(placing)}
                   </Text>
                   &nbsp; place on the{" "}
-                  <NextLink href={Routes.leaderboard} passHref>
+                  <NextLink href={PageRoutes.leaderboard} passHref>
                     <Link style={{ display: "inline" }}>leaderboard</Link>
                   </NextLink>
                   !
@@ -230,7 +230,7 @@ const TipPage: NextPage = () => {
               <Loading color="currentColor" size="sm" />
             )}
             <Spacer />
-            <NextLink href={Routes.newTip} passHref>
+            <NextLink href={PageRoutes.newTip} passHref>
               <a>
                 <Button>Create another tip</Button>
               </a>

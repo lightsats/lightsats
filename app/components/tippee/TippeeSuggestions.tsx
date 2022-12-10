@@ -3,7 +3,7 @@ import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { WithdrawSuggestion } from "components/tippee/WithdrawSuggestion";
 import { useReceivedTips } from "hooks/useTips";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { hasTipExpired } from "lib/utils";
 import { guides } from "pages/guide";
 import "swiper/css";
@@ -26,7 +26,7 @@ export function TippeeSuggestions() {
         <Text css={{ m: 0 }} h5>
           Suggestions
         </Text>
-        <NextLink href={Routes.guide} passHref>
+        <NextLink href={PageRoutes.guide} passHref>
           <Link>See all</Link>
         </NextLink>
       </Row>

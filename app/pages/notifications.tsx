@@ -14,7 +14,7 @@ import { NextLink } from "components/NextLink";
 import { formatDistance } from "date-fns";
 import { useNotifications } from "hooks/useNotifications";
 import { getStaticProps } from "lib/i18n/i18next";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { TFunction, useTranslation } from "next-i18next";
@@ -147,26 +147,26 @@ function getNotificationCardProps(
       return {
         title: "Connect an email address",
         description: "Get notified when your tips are claimed or withdrawn.",
-        href: Routes.profile + "#" + connectedAccountsElementId,
+        href: PageRoutes.profile + "#" + connectedAccountsElementId,
       };
     case "COMPLETE_PROFILE":
       return {
         title: "Complete your tipper profile",
         description: "Improve the authenticity of your tips.",
-        href: Routes.profile,
+        href: PageRoutes.profile,
       };
     case "TIP_CLAIMED":
       return {
         title: "Your tip was claimed",
         description:
           "Good job, your recipient has started their Bitcoin journey!",
-        href: `${Routes.tips}/${notification.tipId}`,
+        href: `${PageRoutes.tips}/${notification.tipId}`,
       };
     case "TIP_WITHDRAWN":
       return {
         title: "Your tip was withdrawn",
         description: "Nice work on the orange pill 🍊💊.",
-        href: `${Routes.tips}/${notification.tipId}`,
+        href: `${PageRoutes.tips}/${notification.tipId}`,
       };
     case "ACHIEVEMENT_UNLOCKED":
       return {
@@ -174,7 +174,7 @@ function getNotificationCardProps(
           `${notification.achievementType}.title`
         )}`,
         description: t(`${notification.achievementType}.description`),
-        href: Routes.profile,
+        href: PageRoutes.profile,
       };
     default:
       throw new Error("Unsupported notification type: " + notification.type);

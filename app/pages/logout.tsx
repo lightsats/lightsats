@@ -1,5 +1,5 @@
 import { Loading } from "@nextui-org/react";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { signOut } from "next-auth/react";
 import Head from "next/head";
@@ -12,7 +12,7 @@ const Logout: NextPage = () => {
     signOut({
       redirect: false,
     });
-    router.push(Routes.home);
+    router.push(PageRoutes.home);
   }, [router]);
 
   return (

@@ -5,7 +5,7 @@ import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import { getStaticProps } from "lib/i18n/i18next";
 
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import Head from "next/head";
@@ -26,7 +26,7 @@ const CongratulationsPage: NextPage = () => {
         <Text blockquote>{t("congratulations.quote")}</Text>
       </MyBitcoinJourneyContent>
       <MyBitcoinJourneyFooter
-        href={Routes.guide}
+        href={PageRoutes.guide}
         text={t("congratulations.footer.text")}
         nextUp={t("congratulations.footer.cta")}
       />

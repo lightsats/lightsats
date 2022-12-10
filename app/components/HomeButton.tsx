@@ -1,10 +1,10 @@
 import { Button } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 
 export function DashboardButton() {
   return (
-    <NextLink href={Routes.dashboard}>
+    <NextLink href={PageRoutes.dashboard}>
       <a>
         <Button bordered>Take me home</Button>
       </a>

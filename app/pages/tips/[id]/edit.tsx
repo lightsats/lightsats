@@ -4,7 +4,7 @@ import { TipForm, TipFormData, TipFormSubmitData } from "components/TipForm";
 import { add, differenceInHours } from "date-fns";
 import { useTip } from "hooks/useTip";
 import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -60,7 +60,7 @@ const EditTip: NextPage = () => {
           toast.success("Tip updated");
           const updatedTip = (await result.json()) as Tip;
           mutate(updatedTip);
-          router.push(`${Routes.tips}/${updatedTip.id}`);
+          router.push(`${PageRoutes.tips}/${updatedTip.id}`);
         } else {
           toast.error("Failed to update tip: " + result.statusText);
         }

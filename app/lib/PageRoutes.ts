@@ -1,4 +1,4 @@
-export enum Routes {
+export enum PageRoutes {
   home = "/",
   dashboard = "/dashboard",
   tips = "/tips",
@@ -44,9 +44,9 @@ export enum Routes {
 }
 
 export const bitcoinJourneyPages = [
-  Routes.journeyClaimed,
-  Routes.journeyBitcoin,
-  Routes.journeySelectWallet,
-  Routes.withdraw,
-  Routes.journeyCongratulations,
+  PageRoutes.journeyClaimed,
+  PageRoutes.journeyBitcoin,
+  PageRoutes.journeySelectWallet,
+  PageRoutes.withdraw,
+  PageRoutes.journeyCongratulations,
 ];

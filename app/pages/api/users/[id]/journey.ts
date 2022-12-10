@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
+import { bitcoinJourneyPages } from "lib/PageRoutes";
 import prisma from "lib/prismadb";
-import { bitcoinJourneyPages } from "lib/Routes";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";

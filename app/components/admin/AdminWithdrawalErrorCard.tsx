@@ -2,7 +2,7 @@ import { Card, Col, Row, Text } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
 import { NextUIUser } from "components/NextUIUser";
 import { DEFAULT_NAME } from "lib/constants";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { getUserAvatarUrl } from "lib/utils";
 import { AdminExtendedWithdrawalError } from "types/Admin";
 
@@ -15,7 +15,7 @@ export function AdminWithdrawalErrorCard({
 }: AdminWithdrawalErrorCardProps) {
   return (
     <NextLink
-      href={`${Routes.adminWithdrawalErrors}/${withdrawalError.id}`}
+      href={`${PageRoutes.adminWithdrawalErrors}/${withdrawalError.id}`}
       passHref
     >
       <a style={{ width: "100%" }}>

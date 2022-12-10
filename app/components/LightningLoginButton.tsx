@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { useTranslation } from "next-i18next";
 
 type LightningLoginButtonProps = {
@@ -14,8 +14,8 @@ export function LightningLoginButton({
 
   return (
     <NextLink
-      href={`${Routes.lnurlAuthSignin}?callbackUrl=${encodeURIComponent(
-        callbackUrl ?? Routes.dashboard
+      href={`${PageRoutes.lnurlAuthSignin}?callbackUrl=${encodeURIComponent(
+        callbackUrl ?? PageRoutes.dashboard
       )}`}
     >
       <a style={{ width: "100%" }}>

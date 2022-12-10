@@ -12,7 +12,7 @@ import {
 import { StatusCodes } from "http-status-codes";
 import { getStaticProps } from "lib/i18n/i18next";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -58,7 +58,9 @@ export default function PhoneSignIn({
   const [isSubmitting, setSubmitting] = React.useState(false);
   const router = useRouter();
   const callbackUrlWithFallback =
-    callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
+    callbackUrl ||
+    (router.query["callbackUrl"] as string) ||
+    PageRoutes.dashboard;
 
   // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
 
@@ -102,7 +104,7 @@ export default function PhoneSignIn({
               toast.error("Something went wrong. Please try again.");
             }
           } else {
-            router.push(Routes.checkPhone);
+            router.push(PageRoutes.checkPhone);
           }
         } catch (error) {
           console.error(error);

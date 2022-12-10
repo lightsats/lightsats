@@ -4,7 +4,7 @@ import {
   LeaderboardForm,
   LeaderboardFormSubmitData,
 } from "components/LeaderboardForm";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -28,7 +28,7 @@ const NewLeaderboard: NextPage = () => {
         if (result.ok) {
           toast.success("Leaderboard created");
           const leaderboard = (await result.json()) as Leaderboard;
-          router.push(`${Routes.leaderboards}/${leaderboard.id}`);
+          router.push(`${PageRoutes.leaderboards}/${leaderboard.id}`);
         } else {
           toast.error("Failed to create leaderboard: " + result.statusText);
         }

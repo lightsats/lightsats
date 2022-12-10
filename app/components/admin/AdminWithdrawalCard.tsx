@@ -2,7 +2,7 @@ import { Card, Row, Spacer, Text } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
 import { NextUIUser } from "components/NextUIUser";
 import { DEFAULT_NAME } from "lib/constants";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { getUserAvatarUrl } from "lib/utils";
 import { AdminExtendedWithdrawal } from "types/Admin";
 
@@ -19,7 +19,7 @@ export function AdminWithdrawalCard({ withdrawal }: AdminWithdrawalCardProps) {
     ? withdrawal.tips.map((tip) => tip.fee).reduce((a, b) => a + b)
     : 0;
   return (
-    <NextLink href={`${Routes.adminWithdrawals}/${withdrawal.id}`} passHref>
+    <NextLink href={`${PageRoutes.adminWithdrawals}/${withdrawal.id}`} passHref>
       <a style={{ width: "100%" }}>
         <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
           <Card.Body>

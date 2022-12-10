@@ -3,7 +3,7 @@ import { Tip, TipStatus } from "@prisma/client";
 import { AdminTipCardContents } from "components/admin/AdminTipCardContents";
 import { NextLink } from "components/NextLink";
 import { Paginated, PaginatedPageProps } from "components/Paginated";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { hasTipExpired } from "lib/utils";
 import React from "react";
 import create from "zustand";
@@ -101,7 +101,7 @@ function AdminTipsListPage({ pageItems }: PaginatedPageProps<Tip>) {
     <Grid.Container justify="center" gap={1}>
       {pageItems.map((tip) => (
         <Grid key={tip.id} xs={12}>
-          <NextLink href={`${Routes.adminTips}/${tip.id}`} passHref>
+          <NextLink href={`${PageRoutes.adminTips}/${tip.id}`} passHref>
             <a style={{ width: "100%" }}>
               <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
                 <Card.Body>

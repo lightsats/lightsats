@@ -29,7 +29,7 @@ import { useIsPWA } from "hooks/useIsPWA";
 import { useNotifications } from "hooks/useNotifications";
 import { useUser } from "hooks/useUser";
 import { useUserRoles } from "hooks/useUserRoles";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { getUserAvatarUrl } from "lib/utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -64,9 +64,9 @@ export function AppNavbar() {
   const hideNavbar = router.pathname.endsWith("/claim"); // || user?.inJourney;
   const { data: notifications } = useNotifications();
   const numNotifications =
-    router.pathname === Routes.notifications ||
+    router.pathname === PageRoutes.notifications ||
     router.pathname.startsWith("/journey") ||
-    router.pathname === Routes.withdraw
+    router.pathname === PageRoutes.withdraw
       ? 0
       : notifications?.filter((notification) => !notification.read).length ?? 0;
   const isPWA = useIsPWA();
@@ -76,29 +76,29 @@ export function AppNavbar() {
     () => [
       {
         name: "Home",
-        href: !user ? Routes.home : Routes.dashboard,
+        href: !user ? PageRoutes.home : PageRoutes.dashboard,
         icon: <HomeIcon />,
       },
       {
         name: "Leaderboard",
-        href: Routes.leaderboard,
+        href: PageRoutes.leaderboard,
         icon: <ChartBarIcon />,
       },
       {
         name: "About",
-        href: Routes.about,
+        href: PageRoutes.about,
         icon: <InformationCircleIcon />,
       },
       {
         name: "Bitcoin Guide",
-        href: Routes.guide,
+        href: PageRoutes.guide,
         icon: <LightBulbIcon />,
       },
       ...(isPWA
         ? [
             {
               name: "Refresh Application",
-              href: Routes.home,
+              href: PageRoutes.home,
               reload: true,
               icon: <ArrowPathIcon />,
             },
@@ -108,7 +108,7 @@ export function AppNavbar() {
         ? [
             {
               name: "Admin Dashboard",
-              href: Routes.admin,
+              href: PageRoutes.admin,
               icon: <UserCircleIcon />,
             },
           ]
@@ -120,7 +120,7 @@ export function AppNavbar() {
   const isLoading =
     sessionStatus === "loading" ||
     (session && !user) ||
-    router.pathname.startsWith(Routes.verifySignin);
+    router.pathname.startsWith(PageRoutes.verifySignin);
 
   const userAvatar = (
     <Avatar
@@ -149,7 +149,7 @@ export function AppNavbar() {
           />
         )}
         <Navbar.Brand>
-          <NextLink href={!user ? Routes.home : Routes.dashboard}>
+          <NextLink href={!user ? PageRoutes.home : PageRoutes.dashboard}>
             <a
               onClick={
                 hideNavbar
@@ -170,7 +170,7 @@ export function AppNavbar() {
         </Navbar.Brand>
         {!user && !hideNavbar && (
           <>
-            <Navbar.Link href={Routes.about} hideIn="xs">
+            <Navbar.Link href={PageRoutes.about} hideIn="xs">
               About
             </Navbar.Link>
           </>
@@ -179,8 +179,8 @@ export function AppNavbar() {
           <>
             <Navbar.Link
               hideIn="xs"
-              href={Routes.guide}
-              isActive={router.route.startsWith(Routes.guide)}
+              href={PageRoutes.guide}
+              isActive={router.route.startsWith(PageRoutes.guide)}
             >
               <Icon>
                 <BookOpenIcon />
@@ -189,8 +189,8 @@ export function AppNavbar() {
             </Navbar.Link>
             <Navbar.Link
               hideIn="xs"
-              href={Routes.leaderboard}
-              isActive={router.route === Routes.leaderboard}
+              href={PageRoutes.leaderboard}
+              isActive={router.route === PageRoutes.leaderboard}
             >
               <Icon>
                 <ChartBarIcon></ChartBarIcon>
@@ -247,7 +247,7 @@ export function AppNavbar() {
                     </Badge>
                   }
                 >
-                  <NextLink href={Routes.notifications} passHref>
+                  <NextLink href={PageRoutes.notifications} passHref>
                     <a>
                       <Row justify="space-between">
                         <Text
@@ -272,7 +272,7 @@ export function AppNavbar() {
                     </Badge>
                   }
                 >
-                  <NextLink href={Routes.profile} passHref>
+                  <NextLink href={PageRoutes.profile} passHref>
                     <a>
                       <Text color="primary">Profile</Text>
                     </a>
@@ -289,7 +289,7 @@ export function AppNavbar() {
                     </Badge>
                   }
                 >
-                  <NextLink href={Routes.logout} passHref>
+                  <NextLink href={PageRoutes.logout} passHref>
                     <a>
                       <Text color="default">Log out</Text>
                     </a>
@@ -302,9 +302,9 @@ export function AppNavbar() {
       )}
       {!user && (
         <Navbar.Content>
-          {!hideNavbar && !router.pathname.startsWith(Routes.login) && (
+          {!hideNavbar && !router.pathname.startsWith(PageRoutes.login) && (
             <Navbar.Item hideIn="xs">
-              <NextLink href={Routes.login} passHref>
+              <NextLink href={PageRoutes.login} passHref>
                 <a>
                   <Button auto>Get started</Button>
                 </a>

@@ -1,6 +1,7 @@
-import { Loading, Spacer, Text } from "@nextui-org/react";
+import { Loading, Spacer } from "@nextui-org/react";
+import { LeaderboardTable } from "components/LeaderboardTable";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -9,9 +10,10 @@ import useSWR from "swr";
 const LeaderboardPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
+  const leaderboardId = id as string;
 
   const { data: leaderboard } = useSWR(
-    `/api/${Routes.leaderboards}/${id}`,
+    `/api/${PageRoutes.leaderboards}/${id}`,
     defaultFetcher
   );
 
@@ -25,7 +27,7 @@ const LeaderboardPage: NextPage = () => {
       </>
     );
   }
-  return <Text>TODO!</Text>;
+  return <LeaderboardTable leaderboardId={leaderboardId} />;
 };
 
 export default LeaderboardPage;

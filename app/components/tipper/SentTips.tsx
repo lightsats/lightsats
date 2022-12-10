@@ -16,7 +16,7 @@ import { formatDistance } from "date-fns";
 import { useExchangeRates } from "hooks/useExchangeRates";
 import { useSentTips } from "hooks/useTips";
 import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { hasTipExpired } from "lib/utils";
 import { useSession } from "next-auth/react";
 import { CSSProperties } from "react";
@@ -41,7 +41,7 @@ export function SentTips() {
 
             return (
               <Grid xs={12} key={tip.id} justify="center">
-                <NextLink href={`${Routes.tips}/${tip.id}`}>
+                <NextLink href={`${PageRoutes.tips}/${tip.id}`}>
                   <a style={cardLinkStyle}>
                     <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
                       <Card.Body>

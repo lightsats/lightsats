@@ -16,7 +16,7 @@ import { NextLink } from "components/NextLink";
 import { NextUIUser } from "components/NextUIUser";
 import { differenceInHours } from "date-fns";
 import { DEFAULT_NAME } from "lib/constants";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
@@ -249,25 +249,25 @@ const AdminPage: NextPage = () => {
       <Divider />
       <Spacer />
       <Row justify="center" align="center">
-        <NextLink href={Routes.adminUsers}>
+        <NextLink href={PageRoutes.adminUsers}>
           <a>
             <Button css={{ bg: "$cyan700" }}>Users</Button>
           </a>
         </NextLink>
         <Spacer />
-        <NextLink href={Routes.adminTips}>
+        <NextLink href={PageRoutes.adminTips}>
           <a>
             <Button css={{ bg: "$purple700" }}>Tips</Button>
           </a>
         </NextLink>
         <Spacer />
-        <NextLink href={Routes.adminWithdrawals}>
+        <NextLink href={PageRoutes.adminWithdrawals}>
           <a>
             <Button css={{ bg: "$green700" }}>Withdrawals</Button>
           </a>
         </NextLink>
         <Spacer />
-        <NextLink href={Routes.adminWithdrawalErrors}>
+        <NextLink href={PageRoutes.adminWithdrawalErrors}>
           <a>
             <Button css={{ bg: "$red700" }}>Withdrawal Errors</Button>
           </a>

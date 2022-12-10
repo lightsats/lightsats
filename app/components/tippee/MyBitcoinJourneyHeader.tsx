@@ -1,6 +1,6 @@
 import { Progress, Spacer, Text } from "@nextui-org/react";
 import { useUser } from "hooks/useUser";
-import { bitcoinJourneyPages } from "lib/Routes";
+import { bitcoinJourneyPages } from "lib/PageRoutes";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";

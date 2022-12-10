@@ -5,7 +5,7 @@ import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import { DEFAULT_NAME } from "lib/constants";
 import { getStaticProps } from "lib/i18n/i18next";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
 import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
@@ -62,7 +62,7 @@ const ClaimedPage: NextPage = () => {
       <Spacer />
 
       <MyBitcoinJourneyFooter
-        href={Routes.journeyBitcoin}
+        href={PageRoutes.journeyBitcoin}
         text={t("claimed.footer.text")}
         nextUp={t("claimed.footer.cta")}
       />

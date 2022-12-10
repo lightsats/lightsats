@@ -4,7 +4,7 @@ import { UserAchievements } from "components/UserAchievements";
 import { UserCard } from "components/UserCard";
 import { usePublicUser } from "hooks/usePublicUser";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { getUserAvatarUrl } from "lib/utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -43,7 +43,7 @@ export default function UserPublicProfile() {
             <Text h3>Want to join the tipping battle?</Text>
           </Row>
           <Row justify="center">
-            <NextLink href={Routes.login}>
+            <NextLink href={PageRoutes.login}>
               <a>
                 <Button auto>Create your account</Button>
               </a>

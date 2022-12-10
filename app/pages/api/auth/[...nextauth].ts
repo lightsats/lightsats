@@ -2,8 +2,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { User } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { getAuthKey } from "lib/lnurl/getAuthKey";
+import { PageRoutes } from "lib/PageRoutes";
 import prisma from "lib/prismadb";
-import { Routes } from "lib/Routes";
 import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -193,7 +193,7 @@ export const authOptions: NextAuthOptions = {
   },
   debug: false,
   pages: {
-    signIn: Routes.dashboard,
+    signIn: PageRoutes.dashboard,
   },
   session: { strategy: "jwt" },
 };

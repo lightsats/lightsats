@@ -4,7 +4,7 @@ import { NextLink } from "components/NextLink";
 import { BecomeATipper } from "components/tippee/BecomeATipper";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { useUser } from "hooks/useUser";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
 import { hasTipExpired } from "lib/utils";
 import { useSession } from "next-auth/react";
@@ -53,7 +53,7 @@ export function ReceivedTips() {
         return (
           <Grid xs={12} key={tip.id} justify="center">
             {isWithdrawable ? (
-              <NextLink href={Routes.journeyClaimed}>
+              <NextLink href={PageRoutes.journeyClaimed}>
                 <a style={cardLinkStyle}>{component}</a>
               </NextLink>
             ) : (
