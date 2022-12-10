@@ -63,7 +63,6 @@ export function LeaderboardTable({
   return (
     <>
       <Text h2>{title}</Text>
-      <Text size="small">Updates every 15 seconds</Text>
       <Spacer />
       {leaderboardId && (
         <>
