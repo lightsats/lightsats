@@ -10,5 +10,8 @@
     "checkSMSTitle": "Vérifiez votre téléphone",
     "checkSMSText": "Nous avons envoyé un lien magique 🪄 sur votre téléphone. Cliquez sur le lien pour confirmer votre numéro de téléphone.",
     "copy": "Copier",
-    "copiedToClipboard": "Copié dans le presse-papier"
+    "copiedToClipboard": "Copié dans le presse-papier",
+    "openInWallet": "Ouvrez le portefeuille",
+    "createdAgo": "créé il y a {{distance}}",
+    "amountInSats": "{{amount}} sats"
 }
