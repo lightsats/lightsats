@@ -11,26 +11,26 @@ import {
   Text,
   User as NextUIUser,
 } from "@nextui-org/react";
-import { Leaderboard } from "@prisma/client";
+import { FeaturedLeaderboards } from "components/leaderboard/FeaturedLeaderboards";
 import { NextLink } from "components/NextLink";
 import { TwitterButton } from "components/TwitterButton";
-import { format } from "date-fns";
 import { useLeaderboardContents } from "hooks/useLeaderboardContents";
-import { useUserRoles } from "hooks/useUserRoles";
 import { DEFAULT_NAME } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
-import { defaultFetcher } from "lib/swr";
 import { formatAmount, getAvatarUrl } from "lib/utils";
 import React from "react";
 import { useInViewport } from "react-in-viewport";
-import useSWR from "swr";
 import { LeaderboardEntry } from "types/LeaderboardEntry";
 
 type LeaderboardTableProps = {
   leaderboardId?: string;
+  title: string;
 };
 
-export function LeaderboardTable({ leaderboardId }: LeaderboardTableProps) {
+export function LeaderboardTable({
+  leaderboardId,
+  title,
+}: LeaderboardTableProps) {
   const { data: leaderboardContents } = useLeaderboardContents(leaderboardId);
   const paginationRef = React.useRef<HTMLDivElement>(null);
   const { inViewport } = useInViewport(
@@ -39,18 +39,14 @@ export function LeaderboardTable({ leaderboardId }: LeaderboardTableProps) {
     { disconnectOnLeave: false }
   );
   const [perPage, setPerPage] = React.useState(10);
-  const { data: leaderboards } = useSWR<Leaderboard[]>(
-    `/api/leaderboards`,
-    defaultFetcher
-  );
+
+  const numEntries = leaderboardContents?.entries.length ?? 0;
 
   React.useEffect(() => {
-    if (inViewport) {
+    if (inViewport && perPage < numEntries) {
       setPerPage(perPage + 10);
     }
-  }, [inViewport, perPage]);
-
-  const { data: userRoles } = useUserRoles();
+  }, [inViewport, perPage, numEntries]);
 
   // TODO: add serverside paging
   const visibleScoreboardEntries = React.useMemo(
@@ -63,9 +59,19 @@ export function LeaderboardTable({ leaderboardId }: LeaderboardTableProps) {
 
   return (
     <>
-      <Text h2>Leaderboard</Text>
+      <Text h2>{title}</Text>
       <Text size="small">Updates every 15 seconds</Text>
       <Spacer />
+      {leaderboardId && (
+        <>
+          <NextLink href={PageRoutes.leaderboard}>
+            <a>
+              <Button color="secondary">Back to global leaderboard</Button>
+            </a>
+          </NextLink>
+          <Spacer />
+        </>
+      )}
 
       <Grid.Container gap={1} css={{ width: "100%", margin: 0, padding: 0 }}>
         <Grid xs={4}>
@@ -108,72 +114,7 @@ export function LeaderboardTable({ leaderboardId }: LeaderboardTableProps) {
         </Grid>
       </Grid.Container>
       <Spacer />
-      {(leaderboards?.length ||
-        userRoles?.some((role) => role.roleType === "SUPERADMIN")) && (
-        <>
-          <Card variant="bordered">
-            <Card.Body>
-              <Row>
-                <Text b>Featured Leaderboards</Text>
-              </Row>
-              <Spacer />
-              {leaderboards && (
-                <Grid.Container>
-                  {leaderboards.map((leaderboard) => (
-                    <NextLink
-                      href={`${PageRoutes.leaderboards}/${leaderboard.id}`}
-                      key={leaderboard.id}
-                    >
-                      <a>
-                        <Grid>
-                          <Card css={{ minWidth: "300px" }}>
-                            <Card.Body>
-                              <Row>
-                                <Text b>{leaderboard.title}</Text>
-                              </Row>
-                              <Row>
-                                <Text>
-                                  {format(
-                                    new Date(leaderboard.start),
-                                    "d MMMM yyyy"
-                                  )}{" "}
-                                  -{" "}
-                                  {leaderboard.end
-                                    ? format(
-                                        new Date(leaderboard.end),
-                                        "d MMMM yyyy"
-                                      )
-                                    : "∞"}
-                                </Text>
-                              </Row>
-                            </Card.Body>
-                          </Card>
-                        </Grid>
-                      </a>
-                    </NextLink>
-                  ))}
-                </Grid.Container>
-              )}
-
-              {userRoles?.some((role) => role.roleType === "SUPERADMIN") && (
-                <>
-                  <Spacer />
-                  <Row justify="center">
-                    {" "}
-                    <NextLink href={PageRoutes.newLeaderboard}>
-                      <a>
-                        <Button size="sm">Create Leaderboard</Button>
-                      </a>
-                    </NextLink>
-                  </Row>
-                </>
-              )}
-            </Card.Body>
-          </Card>
-          <Spacer />
-        </>
-      )}
-
+      {!leaderboardId && <FeaturedLeaderboards />}
       <Grid.Container
         gap={1}
         justify="center"

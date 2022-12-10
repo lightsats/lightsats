@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 const LeaderboardPage: NextPage = () => {
   return (
     <>
-      <LeaderboardTable />
+      <LeaderboardTable title={"Leaderboard"} />
     </>
   );
 };

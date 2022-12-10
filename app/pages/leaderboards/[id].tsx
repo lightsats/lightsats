@@ -7,7 +7,7 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 
-const LeaderboardPage: NextPage = () => {
+const CustomLeaderboardPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const leaderboardId = id as string;
@@ -27,9 +27,28 @@ const LeaderboardPage: NextPage = () => {
       </>
     );
   }
-  return <LeaderboardTable leaderboardId={leaderboardId} />;
+  return (
+    <>
+      <LeaderboardTable
+        leaderboardId={leaderboardId}
+        title={leaderboard.title}
+      />
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          background: "url(/leaderboards/christmas/background.png)",
+          opacity: 0.05,
+          zIndex: -1,
+        }}
+      />
+    </>
+  );
 };
 
-export default LeaderboardPage;
+export default CustomLeaderboardPage;
 
 export { getStaticProps, getStaticPaths };
