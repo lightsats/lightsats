@@ -153,7 +153,7 @@ export function UserCard({
                   <Text b>{publicUser.numTipsReceived} tips</Text>
                 </Col>
               </Grid>
-              <NextLink href={Routes.scoreboard} passHref>
+              <NextLink href={Routes.leaderboard} passHref>
                 <Grid xs={6} sm={3} as="a">
                   <Col
                     css={{

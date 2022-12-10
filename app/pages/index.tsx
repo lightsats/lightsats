@@ -269,7 +269,7 @@ function Homepage() {
           Roland
         </a>{" "}
         &{" "}
-        <NextLink href={Routes.scoreboard}>
+        <NextLink href={Routes.leaderboard}>
           <a>{scoreboard.numTippers - 3} others</a>
         </NextLink>{" "}
         to 🍊💊 the world around you.

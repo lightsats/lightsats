@@ -81,7 +81,7 @@ export function AppNavbar() {
       },
       {
         name: "Leaderboard",
-        href: Routes.scoreboard,
+        href: Routes.leaderboard,
         icon: <ChartBarIcon />,
       },
       {
@@ -189,8 +189,8 @@ export function AppNavbar() {
             </Navbar.Link>
             <Navbar.Link
               hideIn="xs"
-              href={Routes.scoreboard}
-              isActive={router.route === Routes.scoreboard}
+              href={Routes.leaderboard}
+              isActive={router.route === Routes.leaderboard}
             >
               <Icon>
                 <ChartBarIcon></ChartBarIcon>

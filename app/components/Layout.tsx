@@ -32,7 +32,7 @@ export default function Layout({
         css={{
           margin: "0px auto",
           flex: 1,
-          ...(router.pathname !== Routes.scoreboard &&
+          ...(router.pathname !== Routes.leaderboard &&
           router.pathname !== Routes.admin &&
           router.pathname !== Routes.about &&
           !router.pathname.endsWith("/qr") &&

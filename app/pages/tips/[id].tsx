@@ -219,7 +219,7 @@ const TipPage: NextPage = () => {
                     {nth(placing)}
                   </Text>
                   &nbsp; place on the{" "}
-                  <NextLink href={Routes.scoreboard} passHref>
+                  <NextLink href={Routes.leaderboard} passHref>
                     <Link style={{ display: "inline" }}>leaderboard</Link>
                   </NextLink>
                   !
