@@ -81,6 +81,10 @@ async function updateLeaderboard(
     },
     data: {
       title: updateLeaderboardRequest.title,
+      start: new Date(updateLeaderboardRequest.startDate),
+      end: updateLeaderboardRequest.endDate
+        ? new Date(updateLeaderboardRequest.endDate)
+        : null,
     },
   });
 

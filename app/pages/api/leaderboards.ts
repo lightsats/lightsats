@@ -58,7 +58,10 @@ async function handlePostLeaderboard(
     data: {
       global: true,
       title: createLeaderboardRequest.title,
-      start: new Date(),
+      start: new Date(createLeaderboardRequest.startDate),
+      end: createLeaderboardRequest.endDate
+        ? new Date(createLeaderboardRequest.endDate)
+        : null,
       creatorId: session.user.id as string,
     },
   });

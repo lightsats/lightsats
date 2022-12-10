@@ -1,9 +1,12 @@
 import { Button, Card, Input, Loading, Row, Spacer } from "@nextui-org/react";
+import { format } from "date-fns";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export type LeaderboardFormData = {
   title: string;
+  startDate: string;
+  endDate: string;
 };
 
 export type LeaderboardFormSubmitData = LeaderboardFormData;
@@ -25,6 +28,7 @@ export function LeaderboardForm({
   onSubmit: onSubmitProp,
   defaultValues = {
     title: "",
+    startDate: format(new Date(), "yyyy-MM-dd"),
   },
   mode,
 }: LeaderboardFormProps) {
@@ -62,6 +66,43 @@ export function LeaderboardForm({
                   {...field}
                   label="Leaderboard Title"
                   placeholder="Legends of Lightning"
+                  maxLength={255}
+                  fullWidth
+                  bordered
+                />
+              )}
+            />
+          </Row>
+        </Card.Body>
+      </Card>
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Body>
+          <Row>
+            <Controller
+              name="startDate"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  label="Start Date"
+                  type="date"
+                  maxLength={255}
+                  fullWidth
+                  bordered
+                />
+              )}
+            />
+          </Row>
+          <Spacer />
+          <Row>
+            <Controller
+              name="endDate"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  label="End Date"
+                  type="date"
                   maxLength={255}
                   fullWidth
                   bordered

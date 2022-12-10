@@ -5,6 +5,7 @@ import {
   LeaderboardFormData,
   LeaderboardFormSubmitData,
 } from "components/LeaderboardForm";
+import { format } from "date-fns";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -18,7 +19,7 @@ import { UpdateLeaderboardRequest } from "types/LeaderboardRequest";
 const EditLeaderboard: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: leaderboard } = useSWRImmutable(
+  const { data: leaderboard } = useSWRImmutable<Leaderboard>(
     `/api/${PageRoutes.leaderboards}/${id}`,
     defaultFetcher
   );
@@ -30,6 +31,10 @@ const EditLeaderboard: NextPage = () => {
 
     const defaultValues: Partial<LeaderboardFormData> = {
       title: leaderboard.title,
+      startDate: format(new Date(leaderboard.start), "yyyy-MM-dd"),
+      endDate: leaderboard.end
+        ? format(new Date(leaderboard.end), "yyyy-MM-dd")
+        : "",
     };
     return defaultValues;
   }, [leaderboard]);
@@ -37,9 +42,7 @@ const EditLeaderboard: NextPage = () => {
   const onSubmit = React.useCallback(
     async (data: LeaderboardFormSubmitData) => {
       try {
-        const updateLeaderboardRequest: UpdateLeaderboardRequest = {
-          title: data.title,
-        };
+        const updateLeaderboardRequest: UpdateLeaderboardRequest = data;
         const result = await fetch(`/api/leaderboards/${id}`, {
           method: "PUT",
           body: JSON.stringify(updateLeaderboardRequest),

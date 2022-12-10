@@ -24,7 +24,7 @@ export function FeaturedLeaderboards() {
           </Row>
           <Spacer />
           {leaderboards && (
-            <Grid.Container>
+            <Grid.Container gap={1}>
               {leaderboards.map((leaderboard) => (
                 <NextLink
                   href={`${PageRoutes.leaderboards}/${leaderboard.id}`}

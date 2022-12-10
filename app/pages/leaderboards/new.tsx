@@ -17,9 +17,7 @@ const NewLeaderboard: NextPage = () => {
   const onSubmit = React.useCallback(
     async (data: LeaderboardFormSubmitData) => {
       try {
-        const createLeaderboardRequest: CreateLeaderboardRequest = {
-          title: data.title,
-        };
+        const createLeaderboardRequest: CreateLeaderboardRequest = data;
         const result = await fetch("/api/leaderboards", {
           method: "POST",
           body: JSON.stringify(createLeaderboardRequest),
