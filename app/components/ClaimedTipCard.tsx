@@ -183,7 +183,7 @@ export function ClaimedTipCard({
                       variant="flat"
                       color={publicTip.claimLinkViewed ? "success" : "warning"}
                     >
-                      {publicTip.claimLinkViewed ? "👀 SEEN" : "🙈 UNSEEN"}
+                      {publicTip.claimLinkViewed ? "👀 Seen" : "🙈 Unseen"}
                     </Badge>
                     &nbsp;
                   </>
