@@ -47,7 +47,7 @@ async function getLeaderboardContents(
 
   const startDate = leaderboard?.start ?? LIGHTSATS_INCEPTION;
   const endDate = leaderboard?.end ?? new Date();
-  const isGlobal = leaderboard?.global ?? true;
+  // const isGlobal = leaderboard?.global ?? true;
 
   // TODO: for non-global scoreboards, find users matching leaderboard
   const users = await prisma.user.findMany({

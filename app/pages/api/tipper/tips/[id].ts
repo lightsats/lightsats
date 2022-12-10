@@ -44,7 +44,7 @@ export default async function handler(
 async function deleteTip(
   tip: Tip,
   req: NextApiRequest,
-  res: NextApiResponse<Tip>
+  res: NextApiResponse<never>
 ) {
   if (!process.env.LNBITS_API_KEY) {
     throw new Error("No LNBITS_API_KEY provided");

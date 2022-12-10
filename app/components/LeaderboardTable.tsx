@@ -25,11 +25,13 @@ import { LeaderboardEntry } from "types/LeaderboardEntry";
 type LeaderboardTableProps = {
   leaderboardId?: string;
   title: string;
+  canEdit?: boolean;
 };
 
 export function LeaderboardTable({
   leaderboardId,
   title,
+  canEdit,
 }: LeaderboardTableProps) {
   const { data: leaderboardContents } = useLeaderboardContents(leaderboardId);
   const paginationRef = React.useRef<HTMLDivElement>(null);
@@ -64,15 +66,30 @@ export function LeaderboardTable({
       <Spacer />
       {leaderboardId && (
         <>
-          <NextLink href={PageRoutes.leaderboard}>
-            <a>
-              <Button color="secondary">Back to global leaderboard</Button>
-            </a>
-          </NextLink>
+          <Row justify="center">
+            <NextLink href={PageRoutes.leaderboard}>
+              <a>
+                <Button color="secondary">Back to global leaderboard</Button>
+              </a>
+            </NextLink>
+            {canEdit && (
+              <>
+                <Spacer />
+                <NextLink
+                  href={`${PageRoutes.leaderboards}/${leaderboardId}/edit`}
+                >
+                  <a>
+                    <Button auto color="secondary">
+                      Edit
+                    </Button>
+                  </a>
+                </NextLink>
+              </>
+            )}
+          </Row>
           <Spacer />
         </>
       )}
-
       <Grid.Container gap={1} css={{ width: "100%", margin: 0, padding: 0 }}>
         <Grid xs={4}>
           <Card css={{ dropShadow: "$xs" }}>
@@ -115,6 +132,30 @@ export function LeaderboardTable({
       </Grid.Container>
       <Spacer />
       {!leaderboardId && <FeaturedLeaderboards />}
+      {leaderboardContents.entries.length ? (
+        <LeaderboardTableContents
+          visibleScoreboardEntries={visibleScoreboardEntries}
+        />
+      ) : (
+        <>
+          <Text blockquote>
+            {"This leaderboard is empty. Send a successful tip to appear here."}
+          </Text>
+        </>
+      )}
+      <div ref={paginationRef} />
+    </>
+  );
+}
+type LeaderboardTableContentsProps = {
+  visibleScoreboardEntries: LeaderboardEntry[];
+};
+
+function LeaderboardTableContents({
+  visibleScoreboardEntries,
+}: LeaderboardTableContentsProps) {
+  return (
+    <>
       <Grid.Container
         gap={1}
         justify="center"
@@ -256,7 +297,6 @@ export function LeaderboardTable({
           </Table>
         </Grid>
       </Grid.Container>
-      <div ref={paginationRef} />
     </>
   );
 }

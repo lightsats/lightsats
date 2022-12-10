@@ -1,5 +1,6 @@
 import { Loading, Spacer } from "@nextui-org/react";
 import { LeaderboardTable } from "components/LeaderboardTable";
+import { useUserRoles } from "hooks/useUserRoles";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
@@ -11,6 +12,7 @@ const CustomLeaderboardPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const leaderboardId = id as string;
+  const { data: userRoles } = useUserRoles();
 
   const { data: leaderboard } = useSWR(
     `/api/${PageRoutes.leaderboards}/${id}`,
@@ -30,6 +32,7 @@ const CustomLeaderboardPage: NextPage = () => {
   return (
     <>
       <LeaderboardTable
+        canEdit={userRoles?.some((role) => role.roleType === "SUPERADMIN")}
         leaderboardId={leaderboardId}
         title={leaderboard.title}
       />
