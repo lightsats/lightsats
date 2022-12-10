@@ -99,6 +99,12 @@ const AboutPage: NextPage = () => {
           <a href="https://pngtree.com"> Pngtree.com</a>
         </Text>
       </Row>
+      <Row>
+        <Text>
+          -{" "}
+          <a href="https://pngtree.com/so/santa">santa png from pngtree.com/</a>
+        </Text>
+      </Row>
       <Spacer />
       <h3>Links</h3>
       <Grid.Container gap={1} justify="center">

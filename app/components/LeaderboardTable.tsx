@@ -12,6 +12,7 @@ import {
   User as NextUIUser,
 } from "@nextui-org/react";
 import { FeaturedLeaderboards } from "components/leaderboard/FeaturedLeaderboards";
+import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { TwitterButton } from "components/TwitterButton";
 import { useLeaderboardContents } from "hooks/useLeaderboardContents";
@@ -135,6 +136,7 @@ export function LeaderboardTable({
       {leaderboardContents.entries.length ? (
         <LeaderboardTableContents
           visibleScoreboardEntries={visibleScoreboardEntries}
+          hasTheme={!!leaderboardId}
         />
       ) : (
         <>
@@ -149,10 +151,12 @@ export function LeaderboardTable({
 }
 type LeaderboardTableContentsProps = {
   visibleScoreboardEntries: LeaderboardEntry[];
+  hasTheme: boolean;
 };
 
 function LeaderboardTableContents({
   visibleScoreboardEntries,
+  hasTheme,
 }: LeaderboardTableContentsProps) {
   return (
     <>
@@ -184,7 +188,10 @@ function LeaderboardTableContents({
                       {i + 1}
                     </Badge>
                     <Col>
-                      <LeaderboardUser leaderboardEntry={scoreboardEntry} />
+                      <LeaderboardUser
+                        hasTheme={hasTheme}
+                        leaderboardEntry={scoreboardEntry}
+                      />
                     </Col>
                     <Col>
                       {scoreboardEntry.twitterUsername && (
@@ -264,9 +271,12 @@ function LeaderboardTableContents({
                         {i + 1}
                       </Badge>
                     </Table.Cell>
-                    <Table.Cell>
+                    <Table.Cell css={{ overflow: "visible" }}>
                       <Row align="center">
-                        <LeaderboardUser leaderboardEntry={scoreboardEntry} />
+                        <LeaderboardUser
+                          hasTheme={hasTheme}
+                          leaderboardEntry={scoreboardEntry}
+                        />
                         {scoreboardEntry.twitterUsername && (
                           <TwitterButton
                             username={scoreboardEntry.twitterUsername}
@@ -303,13 +313,26 @@ function LeaderboardTableContents({
 
 type LeaderboardUserProps = {
   leaderboardEntry: LeaderboardEntry;
+  hasTheme: boolean;
 };
 function LeaderboardUser({
   leaderboardEntry: scoreboardEntry,
+  hasTheme,
 }: LeaderboardUserProps) {
   return (
     <NextLink href={`${PageRoutes.users}/${scoreboardEntry.userId}`} passHref>
-      <a style={{ display: "flex" }}>
+      <a style={{ display: "flex", position: "relative", overflow: "visible" }}>
+        {hasTheme && (
+          <div
+            style={{ position: "absolute", top: -25, left: 3, zIndex: 10000 }}
+          >
+            <NextImage
+              src="/leaderboards/christmas/hat.png"
+              width={55}
+              height={55}
+            />
+          </div>
+        )}
         <NextUIUser
           name={scoreboardEntry.name ?? DEFAULT_NAME}
           src={getAvatarUrl(
