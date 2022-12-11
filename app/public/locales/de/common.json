@@ -12,5 +12,6 @@
     "copy": "Kopieren",
     "copiedToClipboard": "In die Zwischenablage kopiert",
     "createdAgo": "erstellt vor {{distance}}",
-    "amountInSats": "{{amount}} sats"
+    "amountInSats": "{{amount}} sats",
+    "openInWallet": "In wallet öffnen"
 }
