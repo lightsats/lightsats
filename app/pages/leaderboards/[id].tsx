@@ -36,18 +36,9 @@ const CustomLeaderboardPage: NextPage = () => {
         leaderboardId={leaderboardId}
         title={leaderboard.title}
       />
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          background: "url(/leaderboards/christmas/background.png)",
-          opacity: 0.05,
-          zIndex: -1,
-        }}
-      />
+      <LeaderboardBackground />
+      <LeaderboardBackgroundTop />
+      <LeaderboardBackgroundBottom />
     </>
   );
 };
@@ -55,3 +46,71 @@ const CustomLeaderboardPage: NextPage = () => {
 export default CustomLeaderboardPage;
 
 export { getStaticProps, getStaticPaths };
+
+export function LeaderboardBackground() {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        background: "url(/leaderboards/christmas/background.png)",
+        backgroundSize: "25%",
+        backgroundRepeat: "repeat",
+        opacity: 0.05,
+        zIndex: -1,
+      }}
+    />
+  );
+}
+
+type LeaderboardBackgroundTopProps = {
+  variant?: "card" | "page";
+};
+
+export function LeaderboardBackgroundTop({
+  variant = "page",
+}: LeaderboardBackgroundTopProps) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: variant === "card" ? "-10%" : "76px",
+        left: 0,
+        width: variant === "card" ? "200%" : "100vw",
+        height: variant === "card" ? "300%" : "min(50vw, calc(100vh - 76px))",
+        background: "url(/leaderboards/christmas/bg-top.png)",
+        backgroundSize: "contain",
+        backgroundPositionX: "140%",
+        opacity: 0.5,
+        zIndex: -1,
+      }}
+    />
+  );
+}
+
+type LeaderboardBackgroundBottomProps = {
+  variant?: "card" | "page";
+};
+
+export function LeaderboardBackgroundBottom({
+  variant = "page",
+}: LeaderboardBackgroundBottomProps) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        width: variant === "card" ? "100%" : "100vw",
+        height: variant === "card" ? "100%" : "50vw",
+        background: "url(/leaderboards/christmas/bg-bottom.png)",
+        backgroundSize: "contain",
+        opacity: 0.5,
+        zIndex: -1,
+      }}
+    />
+  );
+}

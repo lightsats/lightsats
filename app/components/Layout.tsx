@@ -16,7 +16,7 @@ export default function Layout({
   useUserLocale();
   const router = useRouter();
   return (
-    <FlexBox style={{ minHeight: "100%" }}>
+    <FlexBox style={{ minHeight: "100vh" }}>
       {process.env.NEXT_PUBLIC_SHOW_PRODUCTION_LINK === "true" && (
         <ProductionLinkBanner />
       )}

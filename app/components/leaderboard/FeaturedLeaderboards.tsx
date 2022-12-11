@@ -5,6 +5,11 @@ import { format } from "date-fns";
 import { useUserRoles } from "hooks/useUserRoles";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
+import {
+  LeaderboardBackground,
+  LeaderboardBackgroundBottom,
+  LeaderboardBackgroundTop,
+} from "pages/leaderboards/[id]";
 import useSWR from "swr";
 
 export function FeaturedLeaderboards() {
@@ -33,13 +38,17 @@ export function FeaturedLeaderboards() {
                 >
                   <a>
                     <Grid>
-                      <Card css={{ minWidth: "300px" }}>
+                      <Card css={{ minWidth: "min(400px, 80vw)" }}>
+                        <LeaderboardBackground />
+                        <LeaderboardBackgroundTop variant="card" />
+                        <LeaderboardBackgroundBottom variant="card" />
                         <Card.Body>
                           <Row>
                             <Text b>{leaderboard.title}</Text>
                           </Row>
+                          <Spacer />
                           <Row>
-                            <Text>
+                            <Text size="small">
                               {format(
                                 new Date(leaderboard.start),
                                 "d MMMM yyyy"
@@ -50,7 +59,7 @@ export function FeaturedLeaderboards() {
                                     new Date(leaderboard.end),
                                     "d MMMM yyyy"
                                   )
-                                : "∞"}
+                                : ""}
                             </Text>
                           </Row>
                         </Card.Body>
