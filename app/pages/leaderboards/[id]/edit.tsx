@@ -32,6 +32,7 @@ const EditLeaderboard: NextPage = () => {
     const defaultValues: Partial<LeaderboardFormData> = {
       title: leaderboard.title,
       startDate: format(new Date(leaderboard.start), "yyyy-MM-dd"),
+      startTime: format(new Date(leaderboard.start), "HH:mm"),
       endDate: leaderboard.end
         ? format(new Date(leaderboard.end), "yyyy-MM-dd")
         : "",

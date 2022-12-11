@@ -7,6 +7,7 @@ export type LeaderboardFormData = {
   title: string;
   startDate: string;
   endDate: string;
+  startTime: string;
 };
 
 export type LeaderboardFormSubmitData = LeaderboardFormData;
@@ -46,7 +47,10 @@ export function LeaderboardForm({
     (data: LeaderboardFormData) => {
       setSubmitting(true);
       (async () => {
-        await onSubmitProp({ ...data });
+        await onSubmitProp({
+          ...data,
+          startDate: data.startDate + " " + data.startTime,
+        });
         setSubmitting(false);
       })();
     },
@@ -86,10 +90,17 @@ export function LeaderboardForm({
                   {...field}
                   label="Start Date"
                   type="date"
-                  maxLength={255}
                   fullWidth
                   bordered
                 />
+              )}
+            />
+            <Spacer />
+            <Controller
+              name="startTime"
+              control={control}
+              render={({ field }) => (
+                <Input {...field} label="Time" type="time" fullWidth bordered />
               )}
             />
           </Row>
@@ -103,7 +114,6 @@ export function LeaderboardForm({
                   {...field}
                   label="End Date"
                   type="date"
-                  maxLength={255}
                   fullWidth
                   bordered
                 />
