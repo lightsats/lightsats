@@ -21,6 +21,7 @@ import { DEFAULT_NAME } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
 import { formatAmount, getAvatarUrl } from "lib/utils";
 import React from "react";
+import Countdown from "react-countdown";
 import { useInViewport } from "react-in-viewport";
 import { LeaderboardEntry } from "types/LeaderboardEntry";
 
@@ -29,6 +30,7 @@ type LeaderboardTableProps = {
   title: string;
   canEdit?: boolean;
   creatorId?: string;
+  startDate?: Date;
 };
 
 export function LeaderboardTable({
@@ -36,6 +38,7 @@ export function LeaderboardTable({
   title,
   canEdit,
   creatorId,
+  startDate,
 }: LeaderboardTableProps) {
   const { data: leaderboardContents } = useLeaderboardContents(leaderboardId);
   const paginationRef = React.useRef<HTMLDivElement>(null);
@@ -64,6 +67,8 @@ export function LeaderboardTable({
   if (!leaderboardContents || !visibleScoreboardEntries) {
     return <Loading color="currentColor" size="lg" />;
   }
+
+  const hasStarted = !startDate || startDate.getTime() < Date.now();
 
   return (
     <>
@@ -114,61 +119,85 @@ export function LeaderboardTable({
           <Spacer />
         </>
       )}
-      <Grid.Container gap={1} css={{ width: "100%", margin: 0, padding: 0 }}>
-        <Grid xs={4}>
-          <Card css={{ dropShadow: "$xs" }}>
-            <Card.Header>
-              <Col>
-                <Text size={12} weight="bold" transform="uppercase">
-                  # Total tips sent
-                </Text>
-                <Text h3>{leaderboardContents.numTipsSent}</Text>
-              </Col>
-            </Card.Header>
-          </Card>
-        </Grid>
-        <Grid xs={4}>
-          <Card css={{ dropShadow: "$xs" }}>
-            <Card.Header>
-              <Col>
-                <Text size={12} weight="bold" transform="uppercase">
-                  # 🍊💊 people
-                </Text>
-                <Text h3>{leaderboardContents.numUsersOnboarded}</Text>
-              </Col>
-            </Card.Header>
-          </Card>
-        </Grid>
-        <Grid xs={4}>
-          <Card css={{ dropShadow: "$xs" }}>
-            <Card.Header>
-              <Col>
-                <Text size={12} weight="bold">
-                  TOTAL TIP VALUE (sats)
-                </Text>
-                <Text h3 css={{ whiteSpace: "nowrap" }}>
-                  {formatAmount(leaderboardContents.totalSatsSent, 1)}
-                </Text>
-              </Col>
-            </Card.Header>
-          </Card>
-        </Grid>
-      </Grid.Container>
-      <Spacer />
+      {hasStarted && (
+        <>
+          <Grid.Container
+            gap={1}
+            css={{ width: "100%", margin: 0, padding: 0 }}
+          >
+            <Grid xs={4}>
+              <Card css={{ dropShadow: "$xs" }}>
+                <Card.Header>
+                  <Col>
+                    <Text size={12} weight="bold" transform="uppercase">
+                      # Total tips sent
+                    </Text>
+                    <Text h3>{leaderboardContents.numTipsSent}</Text>
+                  </Col>
+                </Card.Header>
+              </Card>
+            </Grid>
+            <Grid xs={4}>
+              <Card css={{ dropShadow: "$xs" }}>
+                <Card.Header>
+                  <Col>
+                    <Text size={12} weight="bold" transform="uppercase">
+                      # 🍊💊 people
+                    </Text>
+                    <Text h3>{leaderboardContents.numUsersOnboarded}</Text>
+                  </Col>
+                </Card.Header>
+              </Card>
+            </Grid>
+            <Grid xs={4}>
+              <Card css={{ dropShadow: "$xs" }}>
+                <Card.Header>
+                  <Col>
+                    <Text size={12} weight="bold">
+                      TOTAL TIP VALUE (sats)
+                    </Text>
+                    <Text h3 css={{ whiteSpace: "nowrap" }}>
+                      {formatAmount(leaderboardContents.totalSatsSent, 1)}
+                    </Text>
+                  </Col>
+                </Card.Header>
+              </Card>
+            </Grid>
+          </Grid.Container>
+          <Spacer />
+        </>
+      )}
       {!leaderboardId && <FeaturedLeaderboards />}
-      {leaderboardContents.entries.length ? (
-        <LeaderboardTableContents
-          visibleScoreboardEntries={visibleScoreboardEntries}
-          hasTheme={!!leaderboardId}
-        />
+
+      {hasStarted ? (
+        <>
+          {leaderboardContents.entries.length ? (
+            <>
+              <LeaderboardTableContents
+                visibleScoreboardEntries={visibleScoreboardEntries}
+                hasTheme={!!leaderboardId}
+              />
+              <div ref={paginationRef} />
+            </>
+          ) : (
+            <>
+              <Text blockquote>
+                {
+                  "This leaderboard is empty. Send a successful tip to appear here."
+                }
+              </Text>
+            </>
+          )}
+        </>
       ) : (
         <>
-          <Text blockquote>
-            {"This leaderboard is empty. Send a successful tip to appear here."}
+          <Spacer y={2} />
+          <Text h4>STARTS IN</Text>
+          <Text h1>
+            <Countdown date={startDate} />
           </Text>
         </>
       )}
-      <div ref={paginationRef} />
     </>
   );
 }

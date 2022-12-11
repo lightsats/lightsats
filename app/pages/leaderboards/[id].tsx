@@ -37,6 +37,7 @@ const CustomLeaderboardPage: NextPage = () => {
         leaderboardId={leaderboardId}
         title={leaderboard.title}
         creatorId={leaderboard.creatorId}
+        startDate={new Date(leaderboard.start)}
       />
       <LeaderboardBackground />
       <LeaderboardBackgroundTop />
