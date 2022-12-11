@@ -6,7 +6,7 @@ import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader
 import { useReceivedTips } from "hooks/useTips";
 import { getStaticProps } from "lib/i18n/i18next";
 import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import Head from "next/head";
@@ -50,7 +50,7 @@ const SelectWalletPage: NextPage = () => {
         <ItemsList category="wallets" options={categoryFilterOptions} />
       </MyBitcoinJourneyContent>
       <MyBitcoinJourneyFooter
-        href={Routes.withdraw}
+        href={PageRoutes.withdraw}
         text={t("wallet.footer.text")}
         nextUp={t("wallet.footer.cta")}
       />

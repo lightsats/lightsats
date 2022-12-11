@@ -19,7 +19,6 @@ export default async function handler(
 
   if (!isAdmin(session.user.id)) {
     return res.status(StatusCodes.FORBIDDEN).end();
-    return;
   }
 
   switch (req.method) {

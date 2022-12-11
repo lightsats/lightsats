@@ -2,7 +2,7 @@ import { Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { TipForm, TipFormSubmitData } from "components/TipForm";
 import { add } from "date-fns";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -33,7 +33,7 @@ const NewTip: NextPage = () => {
           const tip = (await result.json()) as Tip;
           // add tip to cache so it's immediately available
           mutate(`/api/tipper/tips/${tip.id}`, tip);
-          router.push(`${Routes.tips}/${tip.id}`);
+          router.push(`${PageRoutes.tips}/${tip.id}`);
         } else {
           toast.error("Failed to create tip: " + result.statusText);
         }

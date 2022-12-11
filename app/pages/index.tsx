@@ -9,16 +9,14 @@ import {
 } from "@nextui-org/react";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
-import { Routes } from "lib/Routes";
-import { defaultFetcher } from "lib/swr";
+import { useLeaderboardContents } from "hooks/useLeaderboardContents";
+import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import React, { useRef } from "react";
 import { useInViewport } from "react-in-viewport";
 import { Tweet } from "react-twitter-widgets";
-import useSWR from "swr";
-import { Scoreboard as ScoreboardType } from "types/Scoreboard";
 import { CountUp } from "use-count-up";
 
 const Home: NextPage = () => {
@@ -38,7 +36,11 @@ function HomepageCTA() {
   const { status: sessionStatus } = useSession();
   return (
     <NextLink
-      href={sessionStatus === "authenticated" ? Routes.dashboard : Routes.login}
+      href={
+        sessionStatus === "authenticated"
+          ? PageRoutes.dashboard
+          : PageRoutes.login
+      }
       passHref
     >
       <a>
@@ -57,10 +59,7 @@ function HomepageCTA() {
 }
 
 function Homepage() {
-  const { data: scoreboard } = useSWR<ScoreboardType>(
-    `/api/scoreboard`,
-    defaultFetcher
-  );
+  const { data: leaderboardContents } = useLeaderboardContents();
   const [pageLoaded, setPageLoaded] = React.useState(false);
 
   React.useEffect(() => {
@@ -76,7 +75,7 @@ function Homepage() {
     }
   }, []);
 
-  if (!scoreboard) {
+  if (!leaderboardContents) {
     return <Loading color="currentColor" size="lg" />;
   }
 
@@ -185,7 +184,7 @@ function Homepage() {
         </Card>
       </Grid.Container>
       <Spacer y={5} />
-      <TipCounter totalSatsSent={scoreboard.totalSatsSent} />
+      <TipCounter totalSatsSent={leaderboardContents.totalSatsSent} />
       <Spacer y={5} />
       <Text h3 style={{ textAlign: "center" }}>
         🧡 What others have to say about us
@@ -222,7 +221,7 @@ function Homepage() {
         Join the tipping battle
       </Text>
       <Spacer />
-      <Avatar.Group count={scoreboard.numTippers - 3}>
+      <Avatar.Group count={leaderboardContents.numTippers - 3}>
         <Avatar
           size="xl"
           text="name"
@@ -269,8 +268,8 @@ function Homepage() {
           Roland
         </a>{" "}
         &{" "}
-        <NextLink href={Routes.scoreboard}>
-          <a>{scoreboard.numTippers - 3} others</a>
+        <NextLink href={PageRoutes.leaderboard}>
+          <a>{leaderboardContents.numTippers - 3} others</a>
         </NextLink>{" "}
         to 🍊💊 the world around you.
       </Text>
@@ -289,7 +288,7 @@ function Homepage() {
         it.
       </Text>
       <Spacer />
-      <NextLink href={Routes.about} passHref>
+      <NextLink href={PageRoutes.about} passHref>
         <a>
           <Button color="primary" size="lg">
             About

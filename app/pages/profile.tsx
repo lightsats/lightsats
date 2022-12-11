@@ -36,7 +36,7 @@ import { MAX_USER_NAME_LENGTH } from "lib/constants";
 import { getStaticProps } from "lib/i18n/i18next";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { DEFAULT_LOCALE, locales } from "lib/i18n/locales";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
@@ -173,7 +173,7 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
                 />
               </>
             ) : (
-              <LinkButton route={Routes.emailSignin} />
+              <LinkButton route={PageRoutes.emailSignin} />
             )}
           </Col>
         </Row>
@@ -195,7 +195,7 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
                     />
                   </>
                 ) : (
-                  <LinkButton route={Routes.emailSignin} />
+                  <LinkButton route={PageRoutes.emailSignin} />
                 )}
               </Col>
             </Row>
@@ -220,7 +220,7 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
                 user={user}
               />
             ) : (
-              <LinkButton route={Routes.lnurlAuthSignin} />
+              <LinkButton route={PageRoutes.lnurlAuthSignin} />
             )}
           </Col>
         </Row>
@@ -468,7 +468,7 @@ function UpdateProfileForm({ mutateUser, user }: ProfileInternalProps) {
 
 export default Profile;
 
-type LinkButtonProps = { route: Routes };
+type LinkButtonProps = { route: PageRoutes };
 
 function LinkButton({ route }: LinkButtonProps) {
   return (

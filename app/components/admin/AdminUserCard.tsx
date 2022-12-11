@@ -3,7 +3,7 @@ import { User } from "@prisma/client";
 import { NextLink } from "components/NextLink";
 import { NextUIUser } from "components/NextUIUser";
 import { DEFAULT_NAME } from "lib/constants";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { getUserAvatarUrl } from "lib/utils";
 
 type AdminUserCardProps = {
@@ -12,7 +12,7 @@ type AdminUserCardProps = {
 
 export function AdminUserCard({ user }: AdminUserCardProps) {
   return (
-    <NextLink href={`${Routes.adminUsers}/${user.id}`} passHref>
+    <NextLink href={`${PageRoutes.adminUsers}/${user.id}`} passHref>
       <a style={{ width: "100%" }}>
         <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
           <Card.Body>

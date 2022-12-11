@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { LOGIN_LINK_EXPIRATION_DAYS } from "lib/constants";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { getLocalePath } from "lib/utils";
 import { TwoFactorAuthToken } from "types/TwoFactorAuthToken";
 
@@ -27,6 +27,6 @@ export function generateAuthLink(
   });
 
   return `${process.env.APP_URL}${getLocalePath(locale)}${
-    Routes.verifySignin
+    PageRoutes.verifySignin
   }/${token}`;
 }

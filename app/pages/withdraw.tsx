@@ -20,7 +20,7 @@ import copy from "copy-to-clipboard";
 import { isBefore } from "date-fns";
 import { useTips } from "hooks/useTips";
 import { getStaticProps } from "lib/i18n/i18next";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
@@ -129,7 +129,7 @@ const Withdraw: NextPage = () => {
   const hasWithdrawnTip = tips?.some((tip) => tip.status === "WITHDRAWN");
   React.useEffect(() => {
     if (availableBalance === 0 && flow === "tippee" && hasWithdrawnTip) {
-      router.push(Routes.journeyCongratulations);
+      router.push(PageRoutes.journeyCongratulations);
     }
   }, [availableBalance, flow, router, hasWithdrawnTip]);
 
@@ -201,7 +201,7 @@ const Withdraw: NextPage = () => {
             } funds to withdraw right now.`}
           </Text>
           <Spacer />
-          <NextLink href={Routes.dashboard} passHref>
+          <NextLink href={PageRoutes.dashboard} passHref>
             <Link>Home</Link>
           </NextLink>
         </>

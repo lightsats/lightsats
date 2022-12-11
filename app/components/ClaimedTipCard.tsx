@@ -23,7 +23,7 @@ import {
   DEFAULT_NAME,
   expirableTipStatuses,
 } from "lib/constants";
-import { bitcoinJourneyPages } from "lib/Routes";
+import { bitcoinJourneyPages } from "lib/PageRoutes";
 import { getAvatarUrl, hasTipExpired } from "lib/utils";
 import { useTranslation } from "next-i18next";
 import { PublicTip } from "types/PublicTip";

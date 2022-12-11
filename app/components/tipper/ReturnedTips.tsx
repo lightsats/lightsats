@@ -13,7 +13,7 @@ import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { useSentTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { useSession } from "next-auth/react";
 
 export function ReturnedTips() {
@@ -80,7 +80,7 @@ export function ReturnedTips() {
               </Row>
               <Spacer />
               <Row justify="center">
-                <NextLink href={Routes.tipperWithdraw}>
+                <NextLink href={PageRoutes.tipperWithdraw}>
                   <a>
                     <Button auto color="secondary">
                       <Icon>

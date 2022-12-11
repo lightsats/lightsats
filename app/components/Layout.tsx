@@ -3,7 +3,7 @@ import { AppNavbar } from "components/AppNavbar";
 import { ProductionLinkBanner } from "components/dev/ProductionLinkBanner";
 import { FlexBox } from "components/FlexBox";
 import { useUserLocale } from "hooks/useUserLocale";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -16,7 +16,7 @@ export default function Layout({
   useUserLocale();
   const router = useRouter();
   return (
-    <FlexBox style={{ minHeight: "100%" }}>
+    <FlexBox style={{ minHeight: "100vh" }}>
       {process.env.NEXT_PUBLIC_SHOW_PRODUCTION_LINK === "true" && (
         <ProductionLinkBanner />
       )}
@@ -32,11 +32,15 @@ export default function Layout({
         css={{
           margin: "0px auto",
           flex: 1,
-          ...(router.pathname !== Routes.scoreboard &&
-          router.pathname !== Routes.admin &&
-          router.pathname !== Routes.about &&
+          ...(!(
+            router.pathname.startsWith(PageRoutes.leaderboard) &&
+            !router.pathname.endsWith("new") &&
+            !router.pathname.endsWith("edit")
+          ) &&
+          router.pathname !== PageRoutes.admin &&
+          router.pathname !== PageRoutes.about &&
           !router.pathname.endsWith("/qr") &&
-          router.pathname !== Routes.home
+          router.pathname !== PageRoutes.home
             ? { maxWidth: "600px" }
             : { maxWidth: "1400px" }),
         }}

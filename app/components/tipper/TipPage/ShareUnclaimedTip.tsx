@@ -16,7 +16,7 @@ import { Tip } from "@prisma/client";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { getClaimUrl } from "lib/utils";
 import React from "react";
 import toast from "react-hot-toast";
@@ -62,7 +62,7 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
               </Tooltip>
             </Row>
             <Row justify="center">
-              <NextLink href={`${Routes.tips}/${tip.id}/qr`}>
+              <NextLink href={`${PageRoutes.tips}/${tip.id}/qr`}>
                 <a>
                   <Button size="sm" bordered>
                     Open in fullscreen

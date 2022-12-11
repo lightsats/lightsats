@@ -83,6 +83,7 @@ model User {
   lastWithdrawal DateTime?
   notifications Notification[]
   achievements Achievement[]
+  leaderboardsCreated Leaderboard[] @relation("leaderboardsCreated")
 }
 
 model Tip {
@@ -213,6 +214,25 @@ model Notification {
   updated DateTime @default(now()) @updatedAt
   read Boolean @default(false)
 }
+
+model Leaderboard {
+  id String @id @default(cuid())
+  title String
+  global Boolean // if false, requires a join link. Joined users will be added as LeaderboardUsers (TODO)
+  created DateTime @default(now())
+  updated DateTime @default(now()) @updatedAt
+  start DateTime
+  end DateTime?
+  creator User @relation("leaderboardsCreated", fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId String
+  // TODO: password
+  // TODO: goalAmount
+  // TODO: theme/themeUrl/leaderboard customisation
+}
+
+//model LeaderboardUser {
+
+//}
 
 model Achievement {
   type AchievementType

@@ -31,10 +31,10 @@ export default async function handler(
   }
 
   switch (req.method) {
-    case "DELETE":
-      return deleteTip(tip, req, res);
     case "GET":
       return getTip(tip, req, res);
+    case "DELETE":
+      return deleteTip(tip, req, res);
     case "PUT":
       return updateTip(tip, req, res);
     default:
@@ -44,7 +44,7 @@ export default async function handler(
 async function deleteTip(
   tip: Tip,
   req: NextApiRequest,
-  res: NextApiResponse<Tip>
+  res: NextApiResponse<never>
 ) {
   if (!process.env.LNBITS_API_KEY) {
     throw new Error("No LNBITS_API_KEY provided");

@@ -8,3 +8,8 @@
 input {
   font-weight: 500;
 }
+
+html,
+body {
+  background-color: transparent;
+}

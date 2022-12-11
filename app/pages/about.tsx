@@ -93,6 +93,34 @@ const AboutPage: NextPage = () => {
           </Link>
         </Text>
       </Row>
+      <Row>
+        <Text>
+          - christmas PNG Designed By Kerfin7 from{" "}
+          <a href="https://pngtree.com"> Pngtree.com</a>
+        </Text>
+      </Row>
+      <Row>
+        <Text>
+          -{" "}
+          <a href="https://pngtree.com/so/santa">santa png from pngtree.com/</a>
+        </Text>
+      </Row>
+      <Row>
+        <Text>
+          -{" "}
+          <a href="https://pngtree.com/so/Christmas">
+            Christmas holly png from pngtree.com/
+          </a>
+        </Text>
+      </Row>
+      <Row>
+        <Text>
+          -{" "}
+          <a href="https://pngtree.com/so/gold">
+            Christmas gold png from pngtree.com/
+          </a>
+        </Text>
+      </Row>
       <Spacer />
       <h3>Links</h3>
       <Grid.Container gap={1} justify="center">

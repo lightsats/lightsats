@@ -1,7 +1,7 @@
 import { Button } from "@nextui-org/react";
 import { Alert } from "components/Alert";
 import { NextLink } from "components/NextLink";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 
 export function WithdrawSuggestion() {
   return (
@@ -9,7 +9,7 @@ export function WithdrawSuggestion() {
       <Alert>
         {"You've got some tips. Make sure to withdraw them before they expire."}
         &nbsp;&nbsp;
-        <NextLink href={Routes.journeyClaimed} passHref>
+        <NextLink href={PageRoutes.journeyClaimed} passHref>
           <a>
             <Button auto color="success">
               Withdraw

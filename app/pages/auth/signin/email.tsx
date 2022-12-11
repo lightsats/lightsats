@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/react";
 import { getStaticProps } from "lib/i18n/i18next";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
-import { Routes } from "lib/Routes";
+import { PageRoutes } from "lib/PageRoutes";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -48,7 +48,9 @@ export default function EmailSignIn({
   const [isSubmitting, setSubmitting] = React.useState(false);
   const router = useRouter();
   const callbackUrlWithFallback =
-    callbackUrl || (router.query["callbackUrl"] as string) || Routes.dashboard;
+    callbackUrl ||
+    (router.query["callbackUrl"] as string) ||
+    PageRoutes.dashboard;
   const linkExistingAccount = router.query["link"] === "true";
 
   // console.log("callbackUrlWithFallback", callbackUrlWithFallback);
@@ -87,7 +89,7 @@ export default function EmailSignIn({
             );
             toast.error("Something went wrong. Please try again.");
           } else {
-            router.push(Routes.checkEmail);
+            router.push(PageRoutes.checkEmail);
           }
         } catch (error) {
           console.error(error);

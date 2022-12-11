@@ -9,6 +9,7 @@ export default async function handler(
 ) {
   const exchangeRates = await cacheRequest(
     "exchangeRates",
+    undefined,
     getExchangeRates,
     hoursToSeconds(24)
   );
