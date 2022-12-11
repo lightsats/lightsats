@@ -12,21 +12,17 @@ export default async function handler(
   res: NextApiResponse<Leaderboard | Leaderboard[]>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) {
-    return res.status(StatusCodes.UNAUTHORIZED).end();
-  }
 
   switch (req.method) {
     case "POST":
       return handlePostLeaderboard(session, req, res);
     case "GET":
-      return getLeaderboards(session, req, res);
+      return getLeaderboards(req, res);
     default:
       return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 async function getLeaderboards(
-  session: Session,
   req: NextApiRequest,
   res: NextApiResponse<Leaderboard[]>
 ) {
@@ -43,12 +39,12 @@ async function getLeaderboards(
 }
 
 async function handlePostLeaderboard(
-  session: Session,
+  session: Session | null,
   req: NextApiRequest,
   res: NextApiResponse<Leaderboard>
 ) {
   // TODO: allow non-global leaderboards to be created by users
-  if (!isAdmin(session.user.id)) {
+  if (!session || !isAdmin(session.user.id)) {
     return res.status(StatusCodes.FORBIDDEN).end();
   }
 
