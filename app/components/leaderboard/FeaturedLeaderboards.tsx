@@ -22,70 +22,64 @@ export function FeaturedLeaderboards() {
   return leaderboards?.length ||
     userRoles?.some((role) => role.roleType === "SUPERADMIN") ? (
     <>
-      <Card variant="bordered">
-        <Card.Body>
-          <Row>
-            <Text b>Featured Leaderboards</Text>
-          </Row>
-          <Spacer />
-          {leaderboards && (
-            <Grid.Container gap={1}>
-              {leaderboards.map((leaderboard) => (
-                <NextLink
-                  href={`${PageRoutes.leaderboards}/${leaderboard.id}`}
-                  key={leaderboard.id}
-                  passHref
-                >
-                  <a>
-                    <Grid>
-                      <Card css={{ minWidth: "min(400px, 80vw)" }}>
-                        <LeaderboardBackground />
-                        <LeaderboardBackgroundTop variant="card" />
-                        <LeaderboardBackgroundBottom variant="card" />
-                        <Card.Body>
-                          <Row>
-                            <Text b>{leaderboard.title}</Text>
-                          </Row>
-                          <Spacer />
-                          <Row>
-                            <Text size="small">
-                              {format(
-                                new Date(leaderboard.start),
-                                "d MMMM yyyy"
-                              )}{" "}
-                              -{" "}
-                              {leaderboard.end
-                                ? format(
-                                    new Date(leaderboard.end),
-                                    "d MMMM yyyy"
-                                  )
-                                : ""}
-                            </Text>
-                          </Row>
-                        </Card.Body>
-                      </Card>
-                    </Grid>
-                  </a>
-                </NextLink>
-              ))}
-            </Grid.Container>
-          )}
+      <Spacer />
+      <Row>
+        <Text b>⭐ Featured leaderboards</Text>
+      </Row>
+      <Spacer y={0.5} />
+      {leaderboards && (
+        <Grid.Container gap={1}>
+          {leaderboards.map((leaderboard) => (
+            <NextLink
+              href={`${PageRoutes.leaderboards}/${leaderboard.id}`}
+              key={leaderboard.id}
+              passHref
+            >
+              <a>
+                <Grid>
+                  <Card
+                    css={{ minWidth: "min(400px, 80vw)", dropShadow: "$sm" }}
+                    isHoverable
+                    isPressable
+                  >
+                    <LeaderboardBackground />
+                    <LeaderboardBackgroundTop variant="card" />
+                    <LeaderboardBackgroundBottom variant="card" />
+                    <Card.Body>
+                      <Row>
+                        <Text b>{leaderboard.title}</Text>
+                      </Row>
+                      <Spacer />
+                      <Row>
+                        <Text size="small" color="$gray700">
+                          {format(new Date(leaderboard.start), "d MMMM yyyy")} -{" "}
+                          {leaderboard.end
+                            ? format(new Date(leaderboard.end), "d MMMM yyyy")
+                            : "∞"}
+                        </Text>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                </Grid>
+              </a>
+            </NextLink>
+          ))}
+        </Grid.Container>
+      )}
 
-          {userRoles?.some((role) => role.roleType === "SUPERADMIN") && (
-            <>
-              <Spacer />
-              <Row justify="center">
-                {" "}
-                <NextLink href={PageRoutes.newLeaderboard}>
-                  <a>
-                    <Button size="sm">Create Leaderboard</Button>
-                  </a>
-                </NextLink>
-              </Row>
-            </>
-          )}
-        </Card.Body>
-      </Card>
+      {userRoles?.some((role) => role.roleType === "SUPERADMIN") && (
+        <>
+          <Spacer />
+          <Row justify="center">
+            {" "}
+            <NextLink href={PageRoutes.newLeaderboard}>
+              <a>
+                <Button size="sm">Create Leaderboard</Button>
+              </a>
+            </NextLink>
+          </Row>
+        </>
+      )}
       <Spacer />
     </>
   ) : null;
