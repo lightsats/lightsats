@@ -1,4 +1,5 @@
 import { Loading, Spacer } from "@nextui-org/react";
+import { Leaderboard } from "@prisma/client";
 import { LeaderboardTable } from "components/LeaderboardTable";
 import { useUserRoles } from "hooks/useUserRoles";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
@@ -14,7 +15,7 @@ const CustomLeaderboardPage: NextPage = () => {
   const leaderboardId = id as string;
   const { data: userRoles } = useUserRoles();
 
-  const { data: leaderboard } = useSWR(
+  const { data: leaderboard } = useSWR<Leaderboard>(
     `/api/${PageRoutes.leaderboards}/${id}`,
     defaultFetcher
   );
@@ -35,6 +36,7 @@ const CustomLeaderboardPage: NextPage = () => {
         canEdit={userRoles?.some((role) => role.roleType === "SUPERADMIN")}
         leaderboardId={leaderboardId}
         title={leaderboard.title}
+        creatorId={leaderboard.creatorId}
       />
       <LeaderboardBackground />
       <LeaderboardBackgroundTop />

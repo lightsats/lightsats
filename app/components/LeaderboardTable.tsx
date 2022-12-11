@@ -16,6 +16,7 @@ import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { TwitterButton } from "components/TwitterButton";
 import { useLeaderboardContents } from "hooks/useLeaderboardContents";
+import { usePublicUser } from "hooks/usePublicUser";
 import { DEFAULT_NAME } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
 import { formatAmount, getAvatarUrl } from "lib/utils";
@@ -27,12 +28,14 @@ type LeaderboardTableProps = {
   leaderboardId?: string;
   title: string;
   canEdit?: boolean;
+  creatorId?: string;
 };
 
 export function LeaderboardTable({
   leaderboardId,
   title,
   canEdit,
+  creatorId,
 }: LeaderboardTableProps) {
   const { data: leaderboardContents } = useLeaderboardContents(leaderboardId);
   const paginationRef = React.useRef<HTMLDivElement>(null);
@@ -42,6 +45,8 @@ export function LeaderboardTable({
     { disconnectOnLeave: false }
   );
   const [perPage, setPerPage] = React.useState(10);
+
+  const { data: creator } = usePublicUser(creatorId, true);
 
   const numEntries = leaderboardContents?.entries.length ?? 0;
 
@@ -63,6 +68,25 @@ export function LeaderboardTable({
   return (
     <>
       <Text h2>{title}</Text>
+      {creator && (
+        <>
+          <Spacer />
+          <Row justify="center" align="center">
+            <Text>Created by</Text>
+            <Spacer x={0.25} />
+            <LeaderboardUser
+              user={{
+                userId: creator.id,
+                name: creator.name ?? undefined,
+                avatarURL: creator.avatarURL ?? undefined,
+                fallbackAvatarId: creator.fallbackAvatarId,
+              }}
+              hasTheme
+            />
+          </Row>
+          <Spacer />
+        </>
+      )}
       <Spacer />
       {leaderboardId && (
         <>
@@ -189,7 +213,7 @@ function LeaderboardTableContents({
                     <Col>
                       <LeaderboardUser
                         hasTheme={hasTheme}
-                        leaderboardEntry={scoreboardEntry}
+                        user={scoreboardEntry}
                       />
                     </Col>
                     <Col>
@@ -274,7 +298,7 @@ function LeaderboardTableContents({
                       <Row align="center">
                         <LeaderboardUser
                           hasTheme={hasTheme}
-                          leaderboardEntry={scoreboardEntry}
+                          user={scoreboardEntry}
                         />
                         {scoreboardEntry.twitterUsername && (
                           <TwitterButton
@@ -311,33 +335,32 @@ function LeaderboardTableContents({
 }
 
 type LeaderboardUserProps = {
-  leaderboardEntry: LeaderboardEntry;
+  user: {
+    userId: string;
+    name: string | undefined;
+    avatarURL: string | undefined;
+    fallbackAvatarId: string | undefined;
+  };
   hasTheme: boolean;
 };
-function LeaderboardUser({
-  leaderboardEntry: scoreboardEntry,
-  hasTheme,
-}: LeaderboardUserProps) {
+function LeaderboardUser({ user, hasTheme }: LeaderboardUserProps) {
   return (
-    <NextLink href={`${PageRoutes.users}/${scoreboardEntry.userId}`} passHref>
+    <NextLink href={`${PageRoutes.users}/${user.userId}`} passHref>
       <a style={{ display: "flex", position: "relative", overflow: "visible" }}>
         {hasTheme && (
           <div
-            style={{ position: "absolute", top: -25, left: 3, zIndex: 10000 }}
+            style={{ position: "absolute", top: -21, left: 1, zIndex: 10000 }}
           >
             <NextImage
               src="/leaderboards/christmas/hat.png"
-              width={55}
-              height={55}
+              width={60}
+              height={60}
             />
           </div>
         )}
         <NextUIUser
-          name={scoreboardEntry.name ?? DEFAULT_NAME}
-          src={getAvatarUrl(
-            scoreboardEntry.avatarURL,
-            scoreboardEntry.fallbackAvatarId
-          )}
+          name={user.name ?? DEFAULT_NAME}
+          src={getAvatarUrl(user.avatarURL, user.fallbackAvatarId)}
         />
       </a>
     </NextLink>
