@@ -9,11 +9,11 @@ import {
   Spacer,
   Table,
   Text,
-  User as NextUIUser,
 } from "@nextui-org/react";
 import { FeaturedLeaderboards } from "components/leaderboard/FeaturedLeaderboards";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
+import { NextUIUser } from "components/NextUIUser";
 import { TwitterButton } from "components/TwitterButton";
 import { useLeaderboardContents } from "hooks/useLeaderboardContents";
 import { usePublicUser } from "hooks/usePublicUser";
