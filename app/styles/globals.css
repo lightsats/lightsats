@@ -13,3 +13,9 @@ html,
 body {
   background-color: transparent;
 }
+
+@media print {
+  @page {
+    size: 3508px 2480px;
+  }
+}

@@ -69,6 +69,14 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
                   </Button>
                 </a>
               </NextLink>
+              <Spacer />
+              <NextLink href={`${PageRoutes.tips}/${tip.id}/print`}>
+                <a>
+                  <Button size="sm" bordered>
+                    Print card
+                  </Button>
+                </a>
+              </NextLink>
             </Row>
           </Col>
         </Card.Header>
