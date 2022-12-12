@@ -1,12 +1,12 @@
 import { ClipboardDocumentIcon, WalletIcon } from "@heroicons/react/24/solid";
 import { Button, Card, Col, Loading, Row, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
+import { LightsatsQRCode } from "components/LightsatsQRCode";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import toast from "react-hot-toast";
-import QRCode from "react-qr-code";
 import { requestProvider } from "webln";
 
 type PayTipInvoiceProps = {
@@ -55,7 +55,7 @@ export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
           <Row justify="center">
             <NextLink href={`lightning:${invoice}`}>
               <a>
-                <QRCode value={invoice} />
+                <LightsatsQRCode value={invoice} />
               </a>
             </NextLink>
           </Row>

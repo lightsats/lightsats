@@ -11,6 +11,7 @@ import {
 } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { ItemsList } from "components/items/ItemsList";
+import { LightsatsQRCode } from "components/LightsatsQRCode";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
 import { getStaticProps } from "lib/i18n/i18next";
@@ -23,7 +24,6 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
-import QRCode from "react-qr-code";
 import useSWR, { SWRConfiguration } from "swr";
 import useSWRImmutable from "swr/immutable";
 import { LnurlAuthLoginInfo } from "types/LnurlAuthLoginInfo";
@@ -110,7 +110,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
               <>
                 <NextLink href={`lightning:${qr.encoded}`}>
                   <a>
-                    <QRCode value={qr.encoded} />
+                    <LightsatsQRCode value={qr.encoded} />
                   </a>
                 </NextLink>
               </>

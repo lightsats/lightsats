@@ -14,6 +14,7 @@ import { WithdrawalFlow } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
+import { LightsatsQRCode } from "components/LightsatsQRCode";
 import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import copy from "copy-to-clipboard";
@@ -28,7 +29,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
-import QRCode from "react-qr-code";
 import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
 import { requestProvider } from "webln";
@@ -236,7 +236,7 @@ const Withdraw: NextPage = () => {
                     <FlexBox style={{ alignItems: "center" }}>
                       <NextLink href={`lightning:${withdrawalLinkLnurl}`}>
                         <a>
-                          <QRCode value={withdrawalLinkLnurl} />
+                          <LightsatsQRCode value={withdrawalLinkLnurl} />
                         </a>
                       </NextLink>
                     </FlexBox>

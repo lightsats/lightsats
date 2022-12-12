@@ -141,11 +141,11 @@ const TipPage: NextPage = () => {
               </Row>
               <Spacer />
               <Row justify="center">
-                <Link onClick={() => setSkipPersonalize(true)}>
+                <Button light onClick={() => setSkipPersonalize(true)}>
                   <Text color="white" size="small">
                     Skip for now
                   </Text>
-                </Link>
+                </Button>
               </Row>
             </Card.Body>
           </Card>
