@@ -48,7 +48,11 @@ export function ItemsList({ category, options }: ItemsListProps) {
 
   return (
     <>
-      {otherItems.length > 0 && <h4>{t("recommendedWallet")}</h4>}
+      {recommendedItems.length > 0 && otherItems.length > 0 && (
+        <h4>
+          {t(category === "wallets" ? "recommendedWallet" : "recommendedItems")}
+        </h4>
+      )}
 
       <Collapse.Group shadow={options.shadow ?? true} css={collapseGroupCss}>
         {recommendedItems.map((item) => (
@@ -60,12 +64,12 @@ export function ItemsList({ category, options }: ItemsListProps) {
         ))}
       </Collapse.Group>
 
-      {otherItems.length > 0 && (
+      {recommendedItems.length > 0 && otherItems.length > 0 && (
         <>
           <Spacer />
 
           <Text small b h4 transform="uppercase">
-            {t("otherWallets")}
+            {t(category === "wallets" ? "otherWallets" : "otherItems")}
           </Text>
           <Collapse.Group
             shadow={options.shadow ?? true}

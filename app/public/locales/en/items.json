@@ -4,6 +4,8 @@
   "compatibleWallets": "Compatible Wallets",
   "recommendedWallet": "Recommended wallet",
   "otherWallets": "Other wallets",
+  "recommendedItems": "Recommended",
+  "otherItems": "More",
   "minBalance": "{{minBalance}}⚡ min balance",
   "nonCustodial": "non-custodial",
   "custodial": "custodial",
