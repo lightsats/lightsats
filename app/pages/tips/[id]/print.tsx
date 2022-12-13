@@ -1,6 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/display-name */
-import { Button, Card, Loading, Row, Text } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Collapse,
+  Loading,
+  Row,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FlexBox } from "components/FlexBox";
 import { LightsatsQRCode } from "components/LightsatsQRCode";
@@ -36,15 +44,54 @@ const PrintTipCardPage: NextPage = () => {
 
   return (
     <>
-      <Button size="sm" bordered onClick={printInside}>
-        Print inside page
-      </Button>
-      <Text>
-        Flip your printed page over and re-insert it back into the printer.
-      </Text>
-      <Button size="sm" bordered onClick={printOutside}>
-        Print outside page
-      </Button>
+      <h3>DIY Bitcoin Vouchers</h3>
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Image
+          src="/tips/printed-cards/christmas/preview.png"
+          objectFit="cover"
+          width="100%"
+          height={340}
+          alt="Card image background"
+        />
+      </Card>
+      <Spacer />
+      <Collapse
+        shadow
+        title={<Text b>What you will need 👇</Text>}
+        css={{ width: "100%", background: "$white", border: "none" }}
+      >
+        <ul>
+          <li>🖨️ A printer</li>
+          <li>📄 1 sheet of paper (use thicker paper for some sturdiness)</li>
+          <li>✂️ Scissor (a box cutter is even better)</li>
+        </ul>
+      </Collapse>
+      <Spacer />
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Body>
+          <Text h4>🪜 Step by step</Text>
+          <Text>
+            1) Insert the sheet into your printer and print the inside of your
+            card.
+          </Text>
+          <Spacer />
+          <Row justify="center">
+            <Button onClick={printInside}>Print inside page</Button>
+          </Row>
+          <Spacer y={2} />
+          <Text>
+            {`2) Flip your printed page over and re-insert it back into the
+            printer. We're going to print the outside of the page now:`}
+          </Text>
+          <Spacer />
+          <Row justify="center">
+            <Button onClick={printOutside}>Print outside page</Button>
+          </Row>
+          <Spacer y={2} />
+          <Text>3) Cut out the card along the lines on the front</Text>
+        </Card.Body>
+      </Card>
+      <Spacer />
 
       <div
         style={{
@@ -125,14 +172,18 @@ const InsidePage = ({ tip }: InsidePageProps) => {
           <FlexBox
             style={{
               //background: "yellow",
-              padding: "0px 200px",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
             <Text
               b
-              css={{ fontSize: "56px", textAlign: "center", width: "700px" }}
+              css={{
+                fontSize: "48px",
+                textAlign: "center",
+                width: "700px",
+                lineHeight: "1.25em",
+              }}
             >
               Scan this code to claim your bitcoin 👇
             </Text>
@@ -142,7 +193,7 @@ const InsidePage = ({ tip }: InsidePageProps) => {
                 height: "600px",
                 filter: "drop-shadow(0px 0px 16px rgba(0, 0, 0, 0.25))",
                 padding: "50px",
-                marginTop: "100px",
+                marginTop: "50px",
                 background: "white",
                 borderRadius: "32px",
               }}
@@ -152,11 +203,12 @@ const InsidePage = ({ tip }: InsidePageProps) => {
 
             <Text
               css={{
-                fontSize: "32px",
-                mt: "100px",
+                fontSize: "36px",
+                mt: "40px",
                 width: "500px",
                 textAlign: "center",
                 color: "$gray600",
+                lineHeight: "1.25em",
               }}
             >
               Make sure to claim your gift before it expires on{" "}
@@ -164,64 +216,75 @@ const InsidePage = ({ tip }: InsidePageProps) => {
             </Text>
           </FlexBox>
           <FlexBox
-            style={{
-              //background: "cyan",
-              padding: "0px 100px",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            style={
+              {
+                //background: "cyan",
+              }
+            }
           >
-            <Text h1 css={{ fontSize: "96px" }}>
-              Hi, {tip.tippeeName ?? DEFAULT_NAME}! 👋
-            </Text>
-            <Text b css={{ fontSize: "56px", marginTop: "100px" }}>
-              You were gifted
-            </Text>
-            <Text
-              css={{
-                fontSize: "56px",
-                fontWeight: "$extrabold",
+            <FlexBox
+              style={{
+                padding: 150,
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              {tip.amount} sats
-            </Text>
-            <Card
-              css={{
-                background: "$gray900",
-                mt: "100px",
-                p: "30px",
-                borderRadius: "32px",
-              }}
-            >
-              <Card.Body>
-                <Row justify="center" css={{ mb: "30px" }}>
-                  <NextUIUser
-                    css={{ zoom: 3 }}
-                    name={
-                      <Text b color="white">
-                        {user.name ?? DEFAULT_NAME}
-                      </Text>
-                    }
-                    src={getUserAvatarUrl(user)}
-                  />
-                </Row>
+              <Text h1 css={{ fontSize: "96px" }}>
+                Hi, {tip.tippeeName ?? DEFAULT_NAME}! 👋
+              </Text>
+              <Text b css={{ fontSize: "56px", marginTop: "100px" }}>
+                You were gifted
+              </Text>
+              <Text
+                css={{
+                  fontSize: "56px",
+                  fontWeight: "$bold",
+                }}
+              >
+                {tip.amount} sats
+              </Text>
+              <Card
+                css={{
+                  background: "$gray900",
+                  mt: "100px",
+                  p: "30px",
+                  borderRadius: "32px",
+                }}
+              >
+                <Card.Body>
+                  <Row justify="center" css={{ mb: "30px" }}>
+                    <NextUIUser
+                      css={{ zoom: 3 }}
+                      name={
+                        <Text b color="white">
+                          {user.name ?? DEFAULT_NAME}
+                        </Text>
+                      }
+                      src={getUserAvatarUrl(user)}
+                    />
+                  </Row>
 
-                <Card css={{ background: "$black", borderRadius: 0 }}>
-                  <Card.Body css={{ p: "30px" }}>
-                    <Text
-                      color="white"
-                      css={{ fontSize: "56px", textAlign: "center" }}
-                    >
-                      {tip.note
-                        ? tip.note.length > defaultNote.length
-                          ? tip.note.slice(0, defaultNote.length - 3) + "..."
-                          : tip.note
-                        : defaultNote}
-                    </Text>
-                  </Card.Body>
-                </Card>
-              </Card.Body>
-            </Card>
+                  <Card css={{ background: "$black", borderRadius: 0 }}>
+                    <Card.Body css={{ p: "30px" }}>
+                      <Text
+                        color="white"
+                        css={{
+                          fontSize: "46px",
+                          lineHeight: "1.25em",
+                          textAlign: "center",
+                        }}
+                      >
+                        {tip.note
+                          ? tip.note.length > defaultNote.length
+                            ? tip.note.slice(0, defaultNote.length - 3) + "..."
+                            : tip.note
+                          : defaultNote}
+                      </Text>
+                    </Card.Body>
+                  </Card>
+                </Card.Body>
+              </Card>
+            </FlexBox>
           </FlexBox>
         </FlexBox>
       </div>
