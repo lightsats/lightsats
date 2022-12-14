@@ -1,4 +1,4 @@
-import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import { ForwardIcon, InformationCircleIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
@@ -7,6 +7,7 @@ import {
   Loading,
   Row,
   Spacer,
+  Switch,
   Text,
   Textarea,
   Tooltip,
@@ -53,6 +54,7 @@ export type TipFormData = {
   expiryUnit: ExpiryUnit;
   tippeeName: string | undefined;
   tippeeLocale: string;
+  skipOnboarding: boolean;
 };
 
 export type TipFormSubmitData = TipFormData & { satsAmount: number };
@@ -117,6 +119,7 @@ export function TipForm({
   const watchedAmount = watch("amount");
   const watchedCurrency = watch("currency");
   const watchedTippeeLocale = watch("tippeeLocale");
+  const watchedSkipOnboarding = watch("skipOnboarding");
   const watchedExchangeRate = exchangeRates?.[watchedCurrency];
   const watchedAmountFee = watchedExchangeRate
     ? calculateFee(
@@ -490,6 +493,61 @@ export function TipForm({
                 )}
               />
             </Col>
+          </Row>
+          <Spacer />
+          <Row
+            align="center"
+            justify="center"
+            css={{
+              background: watchedSkipOnboarding ? "$warning" : undefined,
+              p: "$10",
+              borderRadius: "$lg",
+            }}
+          >
+            <Icon>
+              <ForwardIcon />
+            </Icon>
+            <Spacer x={0.5} />
+            <Text weight="medium">Skip Onboarding</Text>
+            <Spacer x={0.5} />
+            <Tooltip
+              placement="top"
+              content={
+                <Col>
+                  <Row justify="center">
+                    <Text>
+                      Check this if your recipient already knows about Bitcoin
+                      and already has a wallet.
+                    </Text>
+                  </Row>
+                  <Row justify="center">
+                    <Text>
+                      They will be linked directly to the withdrawal page
+                      without needing to authenticate first.
+                    </Text>
+                  </Row>
+                </Col>
+              }
+            >
+              <Text color="primary">
+                <Icon width={16} height={16}>
+                  <InformationCircleIcon />
+                </Icon>
+              </Text>
+            </Tooltip>
+
+            <Spacer />
+            <Controller
+              name="skipOnboarding"
+              control={control}
+              render={({ field }) => (
+                <Switch
+                  {...field}
+                  checked={field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                />
+              )}
+            />
           </Row>
         </Card.Body>
       </Card>

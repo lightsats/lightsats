@@ -12,17 +12,17 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
-import { mutate } from "swr";
 import useSWRImmutable from "swr/immutable";
 import { UpdateLeaderboardRequest } from "types/LeaderboardRequest";
 
 const EditLeaderboard: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: leaderboard } = useSWRImmutable<Leaderboard>(
-    `/api/${PageRoutes.leaderboards}/${id}`,
-    defaultFetcher
-  );
+  const { data: leaderboard, mutate: mutateLeaderboard } =
+    useSWRImmutable<Leaderboard>(
+      `/api/${PageRoutes.leaderboards}/${id}`,
+      defaultFetcher
+    );
 
   const leaderboardFormDefaultValues = React.useMemo(() => {
     if (!leaderboard) {
@@ -52,7 +52,7 @@ const EditLeaderboard: NextPage = () => {
         if (result.ok) {
           toast.success("Leaderboard updated");
           const updatedLeaderboard = (await result.json()) as Leaderboard;
-          mutate(updatedLeaderboard);
+          mutateLeaderboard(updatedLeaderboard);
           router.push(`${PageRoutes.leaderboards}/${updatedLeaderboard.id}`);
         } else {
           toast.error("Failed to update leaderboard: " + result.statusText);
@@ -62,7 +62,7 @@ const EditLeaderboard: NextPage = () => {
         toast.error("Leaderboard update failed. Please try again.");
       }
     },
-    [id, router]
+    [id, mutateLeaderboard, router]
   );
   const deleteLeaderboard = React.useCallback(async () => {
     try {

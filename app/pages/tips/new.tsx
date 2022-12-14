@@ -22,6 +22,7 @@ const NewTip: NextPage = () => {
           expiry: add(new Date(), {
             [data.expiryUnit]: data.expiresIn,
           }),
+          skipOnboarding: data.skipOnboarding,
         };
         const result = await fetch("/api/tipper/tips", {
           method: "POST",

@@ -35,5 +35,6 @@ export function mapTipToPublicTip(
     tippeeName: tip.tippeeName,
     claimLinkViewed: tip.claimLinkViewed,
     tippeeLocale: tip.tippeeLocale,
+    skipOnboarding: tip.skipOnboarding,
   };
 }

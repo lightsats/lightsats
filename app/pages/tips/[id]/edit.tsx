@@ -9,14 +9,17 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
-import { mutate } from "swr";
 import useSWRImmutable from "swr/immutable";
 import { UpdateTipRequest } from "types/TipRequest";
 
 const EditTip: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: tip } = useTip(id as string, false, useSWRImmutable);
+  const { data: tip, mutate: mutateTip } = useTip(
+    id as string,
+    false,
+    useSWRImmutable
+  );
 
   const tipFormDefaultValues = React.useMemo(() => {
     if (!tip) {
@@ -35,6 +38,7 @@ const EditTip: NextPage = () => {
       tippeeLocale: tip.tippeeLocale || undefined,
       note: tip.note || undefined,
       tippeeName: tip.tippeeName || undefined,
+      skipOnboarding: tip.skipOnboarding,
     };
     return defaultValues;
   }, [tip]);
@@ -50,6 +54,7 @@ const EditTip: NextPage = () => {
           }),
           tippeeName: data.tippeeName?.length ? data.tippeeName : undefined,
           tippeeLocale: data.tippeeLocale,
+          skipOnboarding: data.skipOnboarding,
         };
         const result = await fetch(`/api/tipper/tips/${id}`, {
           method: "PUT",
@@ -59,7 +64,7 @@ const EditTip: NextPage = () => {
         if (result.ok) {
           toast.success("Tip updated");
           const updatedTip = (await result.json()) as Tip;
-          mutate(updatedTip);
+          mutateTip(updatedTip);
           router.push(`${PageRoutes.tips}/${updatedTip.id}`);
         } else {
           toast.error("Failed to update tip: " + result.statusText);
@@ -69,7 +74,7 @@ const EditTip: NextPage = () => {
         toast.error("Tip update failed. Please try again.");
       }
     },
-    [id, router]
+    [id, mutateTip, router]
   );
 
   if (!tip) {

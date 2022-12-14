@@ -113,6 +113,7 @@ model Tip {
   claimLinkViewed Boolean @default(false)
   numSmsTokens Int @default(0) // to allow new user signups using SMS
   sentReminders SentReminder[]
+  skipOnboarding Boolean @default(false)
 }
 
 model LnbitsWallet {

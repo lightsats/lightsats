@@ -1,4 +1,8 @@
-export type TipRequestBase = { currency: string; expiry: Date };
+export type TipRequestBase = {
+  currency: string;
+  expiry: Date;
+  skipOnboarding: boolean;
+};
 
 export type CreateTipRequest = TipRequestBase & { amount: number };
 export type UpdateTipRequest = TipRequestBase & {
