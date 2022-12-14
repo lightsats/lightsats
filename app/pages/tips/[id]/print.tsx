@@ -47,25 +47,26 @@ const PrintTipCardPage: NextPage = () => {
       <h3>DIY Bitcoin Vouchers</h3>
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Image
-          src="/tips/printed-cards/christmas/preview.png"
+          src="/tips/printed-cards/christmas/preview2.jpg"
           objectFit="cover"
           width="100%"
           height={340}
           alt="Card image background"
         />
+        <Collapse
+          shadow
+          title={<Text b>What you will need 👇</Text>}
+          css={{ width: "100%", background: "$white", border: "none" }}
+        >
+          <ul>
+            <li>🖨️ A printer</li>
+            <li>📄 1 sheet of paper (use thicker paper for some sturdiness)</li>
+            <li>✂️ Scissor (a box cutter is even better)</li>
+          </ul>
+        </Collapse>
       </Card>
       <Spacer />
-      <Collapse
-        shadow
-        title={<Text b>What you will need 👇</Text>}
-        css={{ width: "100%", background: "$white", border: "none" }}
-      >
-        <ul>
-          <li>🖨️ A printer</li>
-          <li>📄 1 sheet of paper (use thicker paper for some sturdiness)</li>
-          <li>✂️ Scissor (a box cutter is even better)</li>
-        </ul>
-      </Collapse>
+
       <Spacer />
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
@@ -88,7 +89,11 @@ const PrintTipCardPage: NextPage = () => {
             <Button onClick={printOutside}>Print outside page</Button>
           </Row>
           <Spacer y={2} />
-          <Text>3) Cut out the card along the lines on the front</Text>
+          <Text>3) Cut out the card along the lines on the front.</Text>
+          <Text>
+            4) Enjoy your beautiful cards, you are ready to gift bitcoin with
+            style! 🥳
+          </Text>
         </Card.Body>
       </Card>
       <Spacer />

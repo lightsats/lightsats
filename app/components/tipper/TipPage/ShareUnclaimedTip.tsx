@@ -109,7 +109,7 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
       <Spacer />
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Image
-          src="/tips/printed-cards/christmas/preview.png"
+          src="/tips/printed-cards/christmas/preview.jpg"
           objectFit="cover"
           width="100%"
           height={340}
