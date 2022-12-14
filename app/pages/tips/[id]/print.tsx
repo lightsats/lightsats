@@ -138,8 +138,6 @@ const InsidePage = ({ tip }: InsidePageProps) => {
             </Text>
             <div
               style={{
-                width: "600px",
-                height: "600px",
                 filter: "drop-shadow(0px 0px 16px rgba(0, 0, 0, 0.25))",
                 padding: "50px",
                 marginTop: "100px",
@@ -147,7 +145,11 @@ const InsidePage = ({ tip }: InsidePageProps) => {
                 borderRadius: "32px",
               }}
             >
-              <LightsatsQRCode value={getClaimUrl(tip)} />
+              <LightsatsQRCode
+                width={500}
+                height={500}
+                value={getClaimUrl(tip)}
+              />
             </div>
 
             <Text
