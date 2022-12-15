@@ -118,7 +118,7 @@ async function updateTip(
     data: {
       expiry: updateTipRequest.expiry,
       currency: updateTipRequest.currency,
-      note: updateTipRequest.note,
+      note: updateTipRequest.note || null,
       tippeeName: updateTipRequest.tippeeName,
       tippeeLocale: updateTipRequest.tippeeLocale,
     },

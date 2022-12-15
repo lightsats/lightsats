@@ -69,6 +69,7 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
                   </Button>
                 </a>
               </NextLink>
+              <Spacer />
             </Row>
           </Col>
         </Card.Header>
@@ -106,6 +107,42 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
         </Card.Footer>
       </Card>
       <Spacer />
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Image
+          src="/tips/printed-cards/christmas/preview.jpg"
+          objectFit="cover"
+          width="100%"
+          height={340}
+          alt="Card image background"
+        />
+        <Card.Footer
+          css={{
+            position: "absolute",
+            color: "$white",
+            bottom: 0,
+            width: "100%",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Text b color="white"></Text>
+        </Card.Footer>
+        <Card.Footer isBlurred css={{ justifyItems: "flex-start" }}>
+          <Col>
+            <Row wrap="wrap" justify="space-between">
+              <Text b>⌛ Need a last minute chrismas gift?</Text>
+            </Row>
+            <Spacer />
+            <Row justify="center">
+              <NextLink href={`${PageRoutes.tips}/${tip.id}/print`}>
+                <a>
+                  <Button>🖨️ Print card</Button>
+                </a>
+              </NextLink>
+            </Row>
+          </Col>
+        </Card.Footer>
+      </Card>
+      <Spacer y={3} />
     </>
   );
 }
