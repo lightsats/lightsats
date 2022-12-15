@@ -1,1 +1,85 @@
-{}
+{
+    "SELF_CLAIMED": {
+        "title": "Reclamado",
+        "description": "Reclamaste tu primera propina."
+    },
+    "BECAME_TIPPER": {
+        "title": "Propinador",
+        "description": "Te has convertido en un propinador de Lightsats."
+    },
+    "LINKED_EMAIL": {
+        "description": "Ahora puedes iniciar sesión y recibir notificaciones por correo electrónico.",
+        "title": "Correo electrónico"
+    },
+    "LINKED_WALLET": {
+        "title": "Monedero",
+        "description": "Ahora puedes iniciar sesión a través de tu monedero de lightning."
+    },
+    "SET_NAME": {
+        "title": "Nombre",
+        "description": "Ya no eres un Anónimo."
+    },
+    "SET_AVATAR_URL": {
+        "title": "Avatar",
+        "description": "Le has puesto una cara a tu nombre. ¡Genial!"
+    },
+    "SET_LIGHTNING_ADDRESS": {
+        "title": "Dirección de lightning",
+        "description": "Ahora puedes recibir propinas directamente de otros usuarios de Lightsats."
+    },
+    "CREATED_TIP": {
+        "title": "Propina creada",
+        "description": "Creaste tu primera propina."
+    },
+    "FUNDED_TIP": {
+        "title": "Propina financiada",
+        "description": "Financiaste tu primera propina."
+    },
+    "TIP_CLAIMED": {
+        "title": "Propina reclamada",
+        "description": "Tu primera propina fue reclamada."
+    },
+    "TIP_WITHDRAWN": {
+        "description": "¡Conseguiste que alguien retirara sus sats!",
+        "title": "Propina retirada"
+    },
+    "WEBLN_WITHDRAWN": {
+        "title": "Retiro WebLN",
+        "description": "¡WebLN ahorra muchos clics!"
+    },
+    "MANUAL_WITHDRAWN": {
+        "title": "Retiro manual",
+        "description": "Hay mejores métodos que este, ¡pero es bueno saber cómo hacer retiros manuales!"
+    },
+    "LNURL_WITHDRAWN": {
+        "title": "Retiro LNURL",
+        "description": "Retiraste a una billetera compatible con retiros LNURL. ¡Bien!"
+    },
+    "EARLY_SUPPORTER": {
+        "description": "¡Eres uno de los primeros en lograr exitosamente propinar a alguien usando Lightsats!"
+    },
+    "SENT_1K": {
+        "title": "1000 sats",
+        "description": "¡Tus destinatarios han retirado más de mil sats!"
+    },
+    "SENT_10K": {
+        "title": "10,000 sats",
+        "description": "¡Tus destinatarios han retirado más de diez mil sats!"
+    },
+    "SENT_100K": {
+        "title": "100,000 sats",
+        "description": "¡Tus destinatarios han retirado más de cien mil sats!"
+    },
+    "SENT_1M": {
+        "title": "1,000,000 sats",
+        "description": "¡Tus destinatarios han retirado más de un millón de sats!"
+    },
+    "TOP_10": {
+        "title": "Top 10 de la tabla de líderes",
+        "description": "¡Has logrado un lugar en el top 10!"
+    },
+    "TOP_3": {
+        "title": "Top 3 de la tabla de líderes",
+        "description": "¡Has logrado un lugar en el top 3!"
+    }
+}
