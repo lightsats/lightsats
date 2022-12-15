@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { Withdraw } from "pages/withdraw";
 import React from "react";
 import toast from "react-hot-toast";
 import useSWR from "swr";
@@ -56,6 +57,7 @@ const ClaimTipPage: NextPage = () => {
 
   const canClaim =
     publicTip &&
+    !publicTip.skipOnboarding &&
     publicTip.status === "UNCLAIMED" &&
     session &&
     !isTipper &&
@@ -184,7 +186,9 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
       )}
       <ClaimedTipCard publicTip={publicTip} viewing="tipper" />
       <Spacer y={3} />
-      {
+      {publicTip.skipOnboarding ? (
+        <Withdraw flow="anonymous" />
+      ) : (
         <>
           <Login
             instructionsText={(loginMethod) =>
@@ -196,7 +200,7 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
             defaultLoginMethod="phone"
           />
         </>
-      }
+      )}
       <Spacer />
     </>
   );

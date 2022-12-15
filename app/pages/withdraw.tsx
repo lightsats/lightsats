@@ -33,11 +33,14 @@ import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
 import { requestProvider } from "webln";
 
-const Withdraw: NextPage = () => {
+type WithdrawProps = {
+  flow: WithdrawalFlow;
+};
+// TODO: move to separate file
+export function Withdraw({ flow }: WithdrawProps) {
+  const { t } = useTranslation(["common", "withdraw"]);
   const { data: session } = useSession();
   const router = useRouter();
-  const flow = (router.query["flow"] as WithdrawalFlow) ?? "tippee";
-  const { t } = useTranslation(["common", "withdraw"]);
 
   // poll to get updated statuses after withdrawing
   const { data: tips } = useTips(flow, true);
@@ -112,7 +115,7 @@ const Withdraw: NextPage = () => {
   //       )
   //   )?.expiry;
 
-  const tipIds = React.useMemo(
+  /*const tipIds = React.useMemo(
     () =>
       flow === "tippee"
         ? tips
@@ -120,7 +123,7 @@ const Withdraw: NextPage = () => {
             .map((tip) => tip.id)
         : [],
     [session, flow, tips]
-  );
+  );*/
 
   const availableBalance = withdrawableTips?.length
     ? withdrawableTips.map((tip) => tip.amount).reduce((a, b) => a + b)
@@ -189,10 +192,6 @@ const Withdraw: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Lightsats⚡ - Withdraw</title>
-      </Head>
-      {flow === "tippee" && <MyBitcoinJourneyHeader />}
       {!availableBalance ? (
         <>
           <Text>
@@ -314,11 +313,25 @@ const Withdraw: NextPage = () => {
           )}
         </div>
       )}
-      {tipIds && <Spacer />}
+    </>
+  );
+}
+
+const WithdrawPage: NextPage = () => {
+  const router = useRouter();
+  const flow = (router.query["flow"] as WithdrawalFlow) ?? "tippee";
+
+  return (
+    <>
+      <Head>
+        <title>Lightsats⚡ - Withdraw</title>
+      </Head>
+      {flow === "tippee" && <MyBitcoinJourneyHeader />}
+      <Withdraw flow={flow} />
     </>
   );
 };
 
-export default Withdraw;
+export default WithdrawPage;
 
 export { getStaticProps };

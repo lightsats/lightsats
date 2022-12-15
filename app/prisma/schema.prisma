@@ -306,6 +306,7 @@ enum TipStatus {
 enum WithdrawalFlow {
   tipper
   tippee
+  anonymous
 }
 
 enum WithdrawalMethod {
