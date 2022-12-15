@@ -127,14 +127,19 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
           <Text b color="white"></Text>
         </Card.Footer>
         <Card.Footer isBlurred css={{ justifyItems: "flex-start" }}>
-          <Row wrap="wrap" justify="space-between" align="center">
-            <Text b>⌛ Need a last minute chrismas gift?</Text>
-            <NextLink href={`${PageRoutes.tips}/${tip.id}/print`}>
-              <a>
-                <Button>Print card</Button>
-              </a>
-            </NextLink>
-          </Row>
+          <Col>
+            <Row wrap="wrap" justify="space-between">
+              <Text b>⌛ Need a last minute chrismas gift?</Text>
+            </Row>
+            <Spacer />
+            <Row justify="center">
+              <NextLink href={`${PageRoutes.tips}/${tip.id}/print`}>
+                <a>
+                  <Button>🖨️ Print card</Button>
+                </a>
+              </NextLink>
+            </Row>
+          </Col>
         </Card.Footer>
       </Card>
       <Spacer y={3} />

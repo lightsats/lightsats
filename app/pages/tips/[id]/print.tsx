@@ -60,8 +60,11 @@ const PrintTipCardPage: NextPage = () => {
         >
           <ul>
             <li>🖨️ A printer</li>
-            <li>📄 1 sheet of paper (use thicker paper for some sturdiness)</li>
-            <li>✂️ Scissor (a box cutter is even better)</li>
+            <li>
+              📄 1 sheet of paper, A4 or letter size (use thicker paper for some
+              sturdiness)
+            </li>
+            <li>✂️ Scissors (a box cutter is even better)</li>
           </ul>
         </Collapse>
       </Card>
@@ -73,11 +76,11 @@ const PrintTipCardPage: NextPage = () => {
           <Text h4>🪜 Step by step</Text>
           <Text>
             1) Insert the sheet into your printer and print the inside of your
-            card.
+            card, using A4 or Letter size.
           </Text>
           <Spacer />
           <Row justify="center">
-            <Button onClick={printInside}>Print inside page</Button>
+            <Button onClick={printInside}>🖨️ Print inside page</Button>
           </Row>
           <Spacer y={2} />
           <Text>
@@ -86,10 +89,11 @@ const PrintTipCardPage: NextPage = () => {
           </Text>
           <Spacer />
           <Row justify="center">
-            <Button onClick={printOutside}>Print outside page</Button>
+            <Button onClick={printOutside}>🖨️ Print outside page</Button>
           </Row>
           <Spacer y={2} />
           <Text>3) Cut out the card along the lines on the front.</Text>
+          <Spacer />
           <Text>
             4) Enjoy your beautiful cards, you are ready to gift bitcoin with
             style! 🥳
