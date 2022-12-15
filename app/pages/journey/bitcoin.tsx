@@ -5,6 +5,7 @@ import { NextImage } from "components/NextImage";
 import { MyBitcoinJourneyContent } from "components/tippee/MyBitcoinJourneyContent";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
+import { useUser } from "hooks/useUser";
 import { getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
@@ -38,6 +39,7 @@ const WhatIsBitcoinPage: NextPage = () => {
       })),
     [t]
   );
+  const { data: user } = useUser();
 
   return (
     <>
@@ -76,9 +78,17 @@ const WhatIsBitcoinPage: NextPage = () => {
         </Card>
       </MyBitcoinJourneyContent>
       <MyBitcoinJourneyFooter
-        href={PageRoutes.journeySelectWallet}
-        text={t("bitcoin.footer.text")}
-        nextUp={t("bitcoin.footer.cta")}
+        href={
+          user?.lnurlPublicKey
+            ? PageRoutes.withdraw
+            : PageRoutes.journeySelectWallet
+        }
+        text={t(
+          user?.lnurlPublicKey ? "wallet.footer.text" : "bitcoin.footer.text"
+        )}
+        nextUp={t(
+          user?.lnurlPublicKey ? "wallet.footer.cta" : "bitcoin.footer.cta"
+        )}
       />
     </>
   );

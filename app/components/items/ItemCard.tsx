@@ -64,7 +64,7 @@ function getItemFeatures(
       variant: nonCustodial ? "success" : "warning",
     });
   }
-  if ((item as Wallet).features?.indexOf("non-custodial") > -1) {
+  if ((item as Wallet).features?.indexOf("lnurl-auth") > -1) {
     itemFeatures.push({
       name: t("scanToLogin"),
       // variant: "success",

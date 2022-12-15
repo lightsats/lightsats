@@ -12,13 +12,10 @@ export default async function handler(
   res: NextApiResponse<Leaderboard | Leaderboard[]>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) {
-    return res.status(StatusCodes.UNAUTHORIZED).end();
-  }
 
   switch (req.method) {
     case "GET":
-      return getLeaderboard(session, req, res);
+      return getLeaderboard(req, res);
     case "DELETE":
       return deleteLeaderboard(session, req, res);
     case "PUT":
@@ -29,7 +26,6 @@ export default async function handler(
 }
 
 async function getLeaderboard(
-  session: Session,
   req: NextApiRequest,
   res: NextApiResponse<Leaderboard>
 ) {
@@ -48,12 +44,12 @@ async function getLeaderboard(
 }
 
 async function deleteLeaderboard(
-  session: Session,
+  session: Session | null,
   req: NextApiRequest,
   res: NextApiResponse<never>
 ) {
   const { id } = req.query;
-  if (!isAdmin(session.user.id)) {
+  if (!session || !isAdmin(session.user.id)) {
     return res.status(StatusCodes.FORBIDDEN).end();
   }
   await prisma.leaderboard.delete({
@@ -66,13 +62,13 @@ async function deleteLeaderboard(
 }
 
 async function updateLeaderboard(
-  session: Session,
+  session: Session | null,
   req: NextApiRequest,
   res: NextApiResponse<Leaderboard>
 ) {
   const { id } = req.query;
   const updateLeaderboardRequest = req.body as UpdateLeaderboardRequest;
-  if (!isAdmin(session.user.id)) {
+  if (!session || !isAdmin(session.user.id)) {
     return res.status(StatusCodes.FORBIDDEN).end();
   }
   const updatedLeaderboard = await prisma.leaderboard.update({
