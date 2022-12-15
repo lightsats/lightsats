@@ -1,28 +1,46 @@
-import { NextImage } from "components/NextImage";
 import React from "react";
 import QRCode, { QRCodeProps } from "react-qr-code";
 
 type LightsatsQRCodeProps = QRCodeProps;
 
+function calculateLogoSize(
+  value: string,
+  height: string | number | undefined
+): number {
+  const isLargeUrl = value.startsWith("lnurl");
+  return (
+    (((typeof height === "string"
+      ? height.indexOf("%") < 0
+        ? parseInt(height)
+        : 0
+      : height) ?? 0) /
+      (isLargeUrl ? 64 : 32)) *
+    (isLargeUrl ? 7.8 : 4.78)
+  );
+}
+
 export function LightsatsQRCode(props: LightsatsQRCodeProps) {
-  const [logoSize, setLogoSize] = React.useState(0);
-  const isLargeUrl = props.value.startsWith("lnurl");
+  const [logoSize, setLogoSize] = React.useState(
+    calculateLogoSize(props.value, props.height)
+  );
 
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
-    setLogoSize(
-      ((wrapperRef.current?.offsetHeight ?? 0) / (isLargeUrl ? 64 : 32)) *
-        (isLargeUrl ? 7.8 : 6.8)
-    );
-  }, [isLargeUrl]);
+    if (!props.height && wrapperRef.current?.offsetHeight) {
+      setLogoSize(
+        calculateLogoSize(props.value, wrapperRef.current?.offsetHeight)
+      );
+    }
+  }, [props.height, props.value]);
+
   return (
     <div
       style={{
         flex: 1,
         display: "flex",
         flexDirection: "column",
-        width: "100%",
-        height: "100%",
+        width: props.height ?? "100%",
+        height: props.height ?? "100%",
         position: "relative",
         justifyContent: "center",
         alignItems: "center",
@@ -35,17 +53,18 @@ export function LightsatsQRCode(props: LightsatsQRCodeProps) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginTop: -logoSize * (isLargeUrl ? 0.0 : 0),
-          marginLeft: -logoSize * (isLargeUrl ? 0.0 : 0),
+          width: "100%",
+          height: "100%",
         }}
       >
-        <NextImage
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/icons/icon-192x192.png"
+          alt=""
           width={logoSize}
           height={logoSize}
-          objectFit="contain"
           style={{
-            position: "absolute",
+            objectFit: "contain",
             zIndex: 1,
           }}
         />
