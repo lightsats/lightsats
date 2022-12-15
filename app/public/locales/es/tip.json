@@ -1,1 +1,10 @@
-{}
+{
+    "tippee": {
+        "willExpire": "Esta propina caducará. ¡Más vale que te apures!✌️",
+        "expired": "No retiraste esta propina a tiempo😭"
+    },
+    "tipper": {
+        "expired": "Tu destinatario no retiró su propina a tiempo. Esta propina caducó hace {{distance}} días 😭",
+        "willExpire": "Tu destinatario recibirá recordatorios ocasionales para reclamar y retirar su propina antes de que caduque ✌️"
+    }
+}
