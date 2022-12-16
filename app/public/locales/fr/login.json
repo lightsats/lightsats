@@ -1,1 +1,9 @@
-{}
+{
+    "instead": "à la place",
+    "clickToConnect": "Cliquez pour vous connecter",
+    "chooseSignIn": "Veuillez choisir votre méthode préférée pour vous connecter.",
+    "scanQrCode": "Scannez ce code ou copiez et collez-le dans votre portefeuille Lightning. Ou cliquez pour vous connecter avec le portefeuille de votre navigateur.",
+    "use": "Utiliser",
+    "welcome": "Bienvenue",
+    "generatingQrCode": "Génération du code QR…"
+}
