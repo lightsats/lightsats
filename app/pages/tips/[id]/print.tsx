@@ -236,6 +236,7 @@ const InsidePage = ({ tip }: InsidePageProps) => {
             <FlexBox
               style={{
                 padding: 150,
+                paddingTop: 0,
                 justifyContent: "center",
                 alignItems: "center",
               }}
