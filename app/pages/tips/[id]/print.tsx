@@ -59,6 +59,7 @@ const PrintTipCardPage: NextPage = () => {
           css={{ width: "100%", background: "$white", border: "none" }}
         >
           <ul>
+            <li>🖥️ A computer</li>
             <li>🖨️ A printer</li>
             <li>
               📄 1 sheet of paper, A4 or letter size (use thicker paper for some
