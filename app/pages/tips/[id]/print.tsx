@@ -80,7 +80,14 @@ const PrintTipCardPage: NextPage = () => {
           </Text>
           <Spacer />
           <Row justify="center">
-            <Button onClick={printInside}>🖨️ Print inside page</Button>
+            <Button
+              onClick={() => {
+                document.title = "inside.pdf";
+                printInside();
+              }}
+            >
+              🖨️ Print inside page
+            </Button>
           </Row>
           <Spacer y={2} />
           <Text>
@@ -89,7 +96,14 @@ const PrintTipCardPage: NextPage = () => {
           </Text>
           <Spacer />
           <Row justify="center">
-            <Button onClick={printOutside}>🖨️ Print outside page</Button>
+            <Button
+              onClick={() => {
+                document.title = "outside.pdf";
+                printOutside();
+              }}
+            >
+              🖨️ Print outside page
+            </Button>
           </Row>
           <Spacer y={2} />
           <Text>3) Cut out the card along the lines on the front.</Text>
