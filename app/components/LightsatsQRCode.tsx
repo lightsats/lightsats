@@ -15,7 +15,7 @@ function calculateLogoSize(
         : 0
       : height) ?? 0) /
       (isLargeUrl ? 64 : 32)) *
-    (isLargeUrl ? 7.8 : 4.78)
+    (isLargeUrl ? 7.04 : 4.78)
   );
 }
 

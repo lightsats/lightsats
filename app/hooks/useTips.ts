@@ -12,7 +12,7 @@ export function useTips(
 ) {
   const { data: session } = useSession();
   return useSWR<Tip[]>(
-    flow && session
+    flow && (session || flow === "anonymous")
       ? `/api/${flow}/tips${tipId ? `?tipId=${tipId}` : ""}`
       : null,
     defaultFetcher,

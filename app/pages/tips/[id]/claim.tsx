@@ -103,7 +103,10 @@ const ClaimTipPage: NextPage = () => {
   }, [canClaim, destinationRoute, isClaiming, id, mutatePublicTip, router]);
 
   const isLoading =
-    !publicTip || sessionStatus === "loading" || canClaim || isClaiming;
+    !publicTip ||
+    sessionStatus === "loading" ||
+    (session && canClaim) ||
+    isClaiming;
 
   return (
     <>
