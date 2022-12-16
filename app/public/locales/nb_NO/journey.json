@@ -1,0 +1,41 @@
+{
+    "header": {
+        "progress": "Steg {{page}} av {{numPages}}"
+    },
+    "footer": {
+        "nextUp": "Neste"
+    },
+    "claimed": {
+        "title": "Godt jobbet 👍",
+        "subtitle": "Du har gjort krav på tipsbeløpet ditt",
+        "footer": {
+            "text": "Start din reise",
+            "cta": "Hva er Bitcoin?"
+        },
+        "description": "Tipspengene dine er klare til å bli overtrukket til ditt eie. Hvis du ikke henter tipspengene før de utløper vil de bli returnert til {{tipperName}}."
+    },
+    "bitcoin": {
+        "footer": {
+            "text": "Fortsett",
+            "cta": "Installer en lommebok"
+        },
+        "digitalCash": {
+            "title": "Bitcoin er digitale kontanter"
+        },
+        "anytimeAnywhere": {
+            "title": "Når som helst, hvor som helst"
+        },
+        "beYourOwnBank": {
+            "title": "Vær din egen bank"
+        },
+        "freedom": {
+            "title": "Bitcoin er frihet"
+        }
+    },
+    "congratulations": {
+        "footer": {
+            "text": "Fortsett",
+            "cta": "Bruk Bitcoin"
+        }
+    }
+}
