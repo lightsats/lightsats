@@ -499,7 +499,7 @@ export function TipForm({
             align="center"
             justify="center"
             css={{
-              background: watchedSkipOnboarding ? "$warning" : undefined,
+              background: watchedSkipOnboarding ? "$warningShadow" : undefined,
               p: "$10",
               borderRadius: "$lg",
             }}
@@ -530,7 +530,11 @@ export function TipForm({
               }
             >
               <Text color="primary">
-                <Icon width={16} height={16}>
+                <Icon
+                  width={16}
+                  height={16}
+                  color={watchedSkipOnboarding ? "white" : undefined}
+                >
                   <InformationCircleIcon />
                 </Icon>
               </Text>
@@ -544,6 +548,7 @@ export function TipForm({
                 <Switch
                   {...field}
                   checked={field.value}
+                  color={watchedSkipOnboarding ? "warning" : undefined}
                   onChange={(e) => field.onChange(e.target.checked)}
                 />
               )}
