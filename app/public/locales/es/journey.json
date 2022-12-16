@@ -1,0 +1,74 @@
+{
+    "footer": {
+        "nextUp": "Siguiente"
+    },
+    "claimed": {
+        "subtitle": "Has reclamado con éxito tu propina",
+        "getStarted": "¡Empecemos tu viaje en el mundo de Bitcoin!",
+        "footer": {
+            "cta": "¿Qué es Bitcoin?",
+            "text": "Comienza a explorar"
+        },
+        "title": "Felicitaciones 👍",
+        "description": "Tu propina está lista para ser retirada a tu custodia. Si no retiras tu propina antes de que caduque, se devolverá a {{tipperName}}."
+    },
+    "bitcoin": {
+        "needAWallet": "Para retirar tus bitcoin, primero necesitarás un monedero de bitcoin. Descubre más en el siguiente paso.",
+        "footer": {
+            "cta": "Instala un monedero",
+            "text": "Continuar"
+        },
+        "digitalCash": {
+            "title": "Bitcoin es efectivo digital",
+            "description": "Bitcoin es una moneda digital que te permite enviar dinero directamente a otra persona sin usar un banco u otro intermediario. Es como pagar con dinero en efectivo en un quiosco de periódicos."
+        },
+        "anytimeAnywhere": {
+            "title": "En cualquier momento, en cualquier lugar",
+            "description": "Bitcoin no cierra los fines de semana. Todo lo que necesitas es una computadora o un teléfono móvil para comenzar. Bitcoin te permite transaccionar en cualquier lugar del mundo."
+        },
+        "beYourOwnBank": {
+            "title": "Sé tu propio banco",
+            "description": "Toma el control de tu dinero con Bitcoin. Dile adiós a los rescates bancarios y a la banca de reserva fraccional. Y olvídate de las preguntas y formularios personales: con Bitcoin, puedes transaccionar rápida y fácilmente."
+        },
+        "deflationary": {
+            "description": "Bitcoin te permite tomar el control de tu dinero y protegerlo de políticas injustas e inflación. Con una oferta fija, es una alternativa estable a las monedas regulares.",
+            "title": "Bitcoin es deflacionario"
+        },
+        "freedom": {
+            "title": "Bitcoin es libertad",
+            "description": "La alternativa a Bitcoin son las monedas digitales controladas por el gobierno, o CBDC. Con estas, tu gobierno puede decidir cómo y cuándo puedes gastar tu dinero, e incluso quitártelo si no lo usas lo suficientemente rápido."
+        },
+        "absoluteScarcity": {
+            "title": "Escasez absoluta",
+            "description": "Bitcoin es la única moneda con una oferta fija y finita. A diferencia del oro, del que no sabemos cuánto existe, la cantidad máxima de Bitcoin está limitada a 21 millones. Esto lo convierte en el activo más escaso de todos."
+        },
+        "bitcoinNotCrypto": {
+            "title": "Bitcoin no es \"cripto\"",
+            "description": "Bitcoin no tiene equipo de marketing, no tiene premine y no tiene apoyo de capital de riesgo. Fue lanzado lo más justamente posible, sin valor inicial en dólares. No hay segunda opción."
+        },
+        "renewableEnergy": {
+            "title": "Impulsando la energía renovable",
+            "description": "Los mineros de Bitcoin usan electricidad para competir y ganar nuevos bitcoins, lo que ayuda a mantener la red segura. La electricidad barata y renovable da a los mineros una ventaja y hace que la red sea más estable."
+        }
+    },
+    "wallet": {
+        "needAWallet": "Necesitas descargar un monedero para tener custodia de tu bitcoin.",
+        "footer": {
+            "text": "Continuar",
+            "cta": "Retirar"
+        },
+        "selfCustody": "La custodia propia de bitcoin es como tener tus propias llaves de casa. Tener las llaves te da acceso directo y control sobre tu propiedad y ayuda a asegurar que nadie más pueda entrar o acceder a ella sin tu permiso."
+    },
+    "congratulations": {
+        "title": "¡Lo lograste! 🎉",
+        "subtitle": "Eres un orgulloso nuevo propietario de una fracción de un bitcoin.",
+        "footer": {
+            "text": "Continuar",
+            "cta": "Usar Bitcoin"
+        },
+        "quote": "Dicen los rumores que las personas a las que se les regala bitcoin son un tipo muy especial de gente."
+    },
+    "header": {
+        "progress": "Paso {{page}} de {{numPages}}"
+    }
+}
