@@ -14,12 +14,14 @@ import { WithdrawalFlow } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
+import { ItemsList } from "components/items/ItemsList";
 import { LightsatsQRCode } from "components/LightsatsQRCode";
 import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import copy from "copy-to-clipboard";
 import { useTips } from "hooks/useTips";
 import { getStaticProps } from "lib/i18n/i18next";
+import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
 import { PageRoutes } from "lib/PageRoutes";
 import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
@@ -176,6 +178,16 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
     }
   }, [withdrawalLinkLnurl]);
 
+  const walletCategoryFilterOptions: CategoryFilterOptions = React.useMemo(
+    () => ({
+      checkTippeeBalance: true,
+      tippeeBalance: availableBalance,
+      recommendedLimit: 1,
+      shadow: false,
+    }),
+    [availableBalance]
+  );
+
   if ((!session && flow !== "anonymous") || !tips) {
     return <Loading />;
   }
@@ -299,6 +311,17 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
                   )}
                 </Button>
               </Collapse>
+              {flow === "anonymous" && (
+                <>
+                  <Spacer />
+                  <Collapse shadow title={<Text b>Need a wallet?</Text>}>
+                    <ItemsList
+                      category="wallets"
+                      options={walletCategoryFilterOptions}
+                    />
+                  </Collapse>
+                </>
+              )}
             </>
           )}
         </div>
