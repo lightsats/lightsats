@@ -263,9 +263,9 @@ const InsidePage = ({ tip }: InsidePageProps) => {
                 }}
               >
                 <Card.Body>
-                  <Row justify="center" css={{ mb: "30px" }}>
+                  <Row justify="center" css={{ mb: "40px" }}>
                     <NextUIUser
-                      css={{ zoom: 3 }}
+                      css={{ transform: "scale(2,2)" }}
                       name={
                         <Text b color="white">
                           {user.name ?? DEFAULT_NAME}
