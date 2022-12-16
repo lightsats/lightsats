@@ -81,5 +81,33 @@
     "TOP_3": {
         "title": "Top 3 de la tabla de líderes",
         "description": "¡Has logrado un lugar en el top 3!"
+    },
+    "TOP_1": {
+        "description": "¡Has logrado la primera posición en la tabla de clasificación!",
+        "title": "Líder de la tabla de clasificación"
+    },
+    "MOST_WITHDRAWN_TIPS": {
+        "title": "Campeón",
+        "description": "Has creado las mejores propinas de cualquier tipper de Lightsats."
+    },
+    "PWA": {
+        "title": "Añadido a la pantalla de inicio",
+        "description": "Has añadido la PWA de Lightsats a la pantalla de inicio de tu móvil. ¡Usa LNURL auth para iniciar sesión!"
+    },
+    "TIPS_10": {
+        "description": "Has enviado 10 propinas que fueron retiradas con éxito por su destinatario.",
+        "title": "Envió 10 propinas"
+    },
+    "TIPS_25": {
+        "title": "Envió 25 propinas",
+        "description": "Has enviado 25 propinas que fueron retiradas con éxito por su destinatario."
+    },
+    "TIPS_50": {
+        "title": "Envió 50 propinas",
+        "description": "Has enviado 50 propinas que fueron retiradas con éxito por su destinatario."
+    },
+    "TIPS_100": {
+        "title": "Envió 100 propinas",
+        "description": "Has enviado 100 propinas que fueron retiradas con éxito por su destinatario."
     }
 }
