@@ -46,7 +46,10 @@ export const smsForSatsAccountProvider: SMSProvider = {
           updatedOrder,
           `(attempt ${i})`
         );
-        if (updatedOrder.smsStatus === "sent") {
+        if (
+          updatedOrder.smsStatus === "sent" ||
+          updatedOrder.smsStatus === "delivered"
+        ) {
           console.log(
             smsForSatsAccountProvider.name +
               ": order updated to sent status in " +

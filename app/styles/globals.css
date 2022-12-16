@@ -17,5 +17,11 @@ body {
 @media print {
   @page {
     size: 3508px 2480px;
+    color-adjust: exact;
+  }
+}
+@media print {
+  body {
+    print-color-adjust: exact;
   }
 }

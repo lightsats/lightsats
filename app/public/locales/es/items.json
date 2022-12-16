@@ -1,0 +1,21 @@
+{
+    "open": "Abrir",
+    "recommendedWallet": "Monedero recomendado",
+    "otherWallets": "Otros monederos",
+    "recommendedItems": "Recomendado",
+    "minBalance": "{{minBalance}}⚡ saldo mínimo",
+    "nonCustodial": "Sin custodia",
+    "custodial": "con custodia",
+    "scanToLogin": "Escanear para iniciar sesión",
+    "platforms": {
+        "mobile": "Móvil",
+        "desktop": "Computadora",
+        "web": "Web",
+        "android-only": "Android",
+        "ios-only": "iOS"
+    },
+    "features": "Características",
+    "install": "Instalar",
+    "compatibleWallets": "Monederos compatibles",
+    "otherItems": "Más"
+}

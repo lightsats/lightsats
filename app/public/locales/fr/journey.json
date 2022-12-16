@@ -1,0 +1,63 @@
+{
+    "claimed": {
+        "getStarted": "Commençons votre voyage Bitcoin !",
+        "title": "Beau travail 👍",
+        "subtitle": "Vous avez réclamé votre pourboire avec succès",
+        "description": "Votre pourboire est prêt à être retiré. Si vous ne retirez pas votre pourboire avant son expiration, il sera renvoyé à {{tipperName}}.",
+        "footer": {
+            "text": "Commencez votre voyage",
+            "cta": "Qu’est-ce que le bitcoin ?"
+        }
+    },
+    "header": {
+        "progress": "Étape {{page}} sur {{numPages}}"
+    },
+    "footer": {
+        "nextUp": "Suivante"
+    },
+    "bitcoin": {
+        "footer": {
+            "text": "Continuer",
+            "cta": "Installer un portefeuille"
+        },
+        "bitcoinNotCrypto": {
+            "title": "Le bitcoin n’est pas « crypto »"
+        },
+        "renewableEnergy": {
+            "title": "Promouvoir les énergies renouvelables"
+        },
+        "needAWallet": "Pour retirer votre bitcoin, vous aurez d’abord besoin d’un portefeuille bitcoin. Pour en savoir plus, consultez l’étape suivante.",
+        "digitalCash": {
+            "title": "Le bitcoin est de l’argent numérique",
+            "description": "Le bitcoin est une monnaie numérique qui vous permet d’envoyer de l’argent directement à une autre personne sans utiliser une banque ou un autre intermédiaire. C’est comme payer avec du papier-monnaie à un kiosque à journaux."
+        },
+        "anytimeAnywhere": {
+            "title": "N’importe quand, n’importe où",
+            "description": "Le bitcoin ne ferme pas le weekend. Tout ce dont vous avez besoin est un ordinateur ou un téléphone portable pour commencer. Le bitcoin vous permet d’effectuer des transactions partout dans le monde."
+        },
+        "beYourOwnBank": {
+            "title": "Soyez votre propre banque",
+            "description": "Prenez le contrôle de votre argent avec Bitcoin. Dites adieu aux renflouements des grandes banques et aux banques à réserves fractionnaires. Et oubliez les questions personnelles et les formulaires – avec Bitcoin, vous pouvez effectuer des transactions rapidement et facilement."
+        },
+        "freedom": {
+            "title": "Le bitcoin, c’est la liberté"
+        },
+        "deflationary": {
+            "title": "Le bitcoin est déflationniste"
+        }
+    },
+    "wallet": {
+        "needAWallet": "Vous devez télécharger un portefeuille afin d’auto-garder vos bitcoins.",
+        "footer": {
+            "cta": "Retirer"
+        }
+    },
+    "congratulations": {
+        "title": "Vous avez réussi ! 🎉",
+        "subtitle": "Vous êtes nouvellement propriétaire d’une fraction de bitcoin.",
+        "footer": {
+            "text": "Continuer",
+            "cta": "Utiliser le bitcoin"
+        }
+    }
+}

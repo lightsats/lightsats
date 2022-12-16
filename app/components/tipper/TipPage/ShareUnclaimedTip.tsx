@@ -126,7 +126,7 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
         >
           <Text b color="white"></Text>
         </Card.Footer>
-        <Card.Footer isBlurred css={{ justifyItems: "flex-start" }}>
+        <Card.Footer css={{ justifyItems: "flex-start" }}>
           <Col>
             <Row wrap="wrap" justify="space-between">
               <Text b>⌛ Need a last minute chrismas gift?</Text>
