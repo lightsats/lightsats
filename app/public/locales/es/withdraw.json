@@ -1,0 +1,6 @@
+{
+    "withdrawing": "Retirando...",
+    "withdrawAvailableBalance": "Retirar {{availableBalance}} sats a tu monedero",
+    "title": "¿Listo para retirar?",
+    "lnurlInstructions": "Escanee, toque o copie el siguiente enlace en su monedero de bitcoin para retirar."
+}
