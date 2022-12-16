@@ -159,13 +159,24 @@ const AdminPage: NextPage = () => {
               (w) => w.withdrawalFlow === "tipper"
             ).length
           }{" "}
-          tipper)
+          tipper,{" "}
+          {
+            adminDashboard.withdrawals.filter(
+              (w) => w.withdrawalFlow === "anonymous"
+            ).length
+          }{" "}
+          anonymous)
         </Text>
       </Row>
       <Row justify="center" align="center">
         <Text>
           {withdrawnTips.map((tip) => tip.amount).reduce((a, b) => a + b, 0)}{" "}
-          sats withdrawn by tippees
+          sats withdrawn by tippees (
+          {withdrawnTips
+            .filter((tip) => !tip.tippeeId)
+            .map((tip) => tip.amount)
+            .reduce((a, b) => a + b, 0)}{" "}
+          sats anonymous)
         </Text>
       </Row>
       <Row justify="center" align="center">
