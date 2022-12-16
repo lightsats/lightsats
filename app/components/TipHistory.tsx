@@ -50,6 +50,15 @@ export function TipHistory() {
       {selectedTab === "sent" &&
         (user?.userType === "tipper" ? <SentTips /> : <BecomeATipper />)}
       {selectedTab === "received" && <ReceivedTips />}
+      {selectedTab === "received" && user?.userType === "tipper" && (
+        <>
+          <Spacer />
+          <Text>
+            Looking for other received tips? Bitcoiner Tips (no onboarding) will
+            not be shown here.
+          </Text>
+        </>
+      )}
     </>
   );
 }

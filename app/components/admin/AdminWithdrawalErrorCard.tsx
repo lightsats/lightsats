@@ -30,9 +30,12 @@ export function AdminWithdrawalErrorCard({
                 </Text>
               </Col>
               <NextUIUser
-                name={withdrawalError.user.name ?? DEFAULT_NAME}
-                src={getUserAvatarUrl(withdrawalError.user)}
+                name={withdrawalError.user?.name ?? DEFAULT_NAME}
+                src={getUserAvatarUrl(withdrawalError.user ?? undefined)}
               />
+              {withdrawalError.tipId && (
+                <Text>Tip ID: {withdrawalError.tipId}</Text>
+              )}
             </Row>
           </Card.Body>
         </Card>

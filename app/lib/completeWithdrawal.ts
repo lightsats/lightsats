@@ -15,8 +15,10 @@ import prisma from "lib/prismadb";
 import { getTipUrl } from "lib/utils";
 
 export async function completeWithdrawal(
-  userId: string,
-  userWallet: LnbitsWallet,
+  userId: string | undefined,
+  tipId: string | undefined,
+  withdrawalFlow: WithdrawalFlow,
+  lnbitsWallet: LnbitsWallet,
   possiblyNegativeOutboundFeeMsats: number,
   withdrawalInvoiceId: string,
   withdrawalInvoice: string,
@@ -28,7 +30,7 @@ export async function completeWithdrawal(
 ) {
   if (deleteUsedWithdrawalLinks) {
     try {
-      await deleteUnusedWithdrawalLinks(userId, false);
+      await deleteUnusedWithdrawalLinks(userId, tipId, false);
     } catch (error) {
       console.error("Failed to delete unused withdrawal links", error);
     }
@@ -41,15 +43,16 @@ export async function completeWithdrawal(
   if (!process.env.LNBITS_API_KEY) {
     throw new Error("No LNBITS_API_KEY provided");
   }
-  if (!userWallet.userId) {
-    throw new Error("User wallet has no user ID: " + userWallet.id);
+  if (userId && !lnbitsWallet.userId) {
+    throw new Error("User wallet has no user ID: " + lnbitsWallet.id);
+  }
+  if (tipId && !lnbitsWallet.tipId) {
+    throw new Error("Tip wallet has no tip ID: " + lnbitsWallet.id);
   }
 
   if (!tips.length) {
     throw new Error("Cannot complete withdrawal without any tips");
   }
-  const withdrawalFlow: WithdrawalFlow =
-    tips[0].status === "CLAIMED" ? "tippee" : "tipper";
 
   try {
     await prisma.tip.updateMany({
@@ -59,14 +62,17 @@ export async function completeWithdrawal(
         },
       },
       data: {
-        status: withdrawalFlow === "tippee" ? "WITHDRAWN" : "REFUNDED",
+        status:
+          withdrawalFlow === "tippee" || withdrawalFlow === "anonymous"
+            ? "WITHDRAWN"
+            : "REFUNDED",
       },
     });
 
     await prisma.withdrawal.create({
       data: {
         routingFee: paidRoutingFeeSats,
-        userId: userId,
+        userId,
         withdrawalInvoiceId,
         withdrawalInvoice,
         withdrawalFlow,
@@ -83,7 +89,8 @@ export async function completeWithdrawal(
         message:
           "Failed to complete withdrawal " +
           JSON.stringify(error, Object.getOwnPropertyNames(error)),
-        userId: userId,
+        userId,
+        tipId,
         withdrawalFlow,
         withdrawalMethod,
         withdrawalInvoice,
@@ -95,9 +102,6 @@ export async function completeWithdrawal(
   }
 
   try {
-    if (!process.env.LNBITS_API_KEY) {
-      throw new Error("No LNBITS_API_KEY provided");
-    }
     const tipFees = tips.map((tip) => tip.fee).reduce((a, b) => a + b);
     const remainingBalance = tipFees - paidRoutingFeeSats;
     console.log(
@@ -118,7 +122,7 @@ export async function completeWithdrawal(
       );
       const { payInvoiceResponse, payInvoiceResponseBody } = await payInvoice(
         invoice,
-        userWallet.adminKey
+        lnbitsWallet.adminKey
       );
       if (!payInvoiceResponse.ok) {
         throw new Error(
@@ -143,27 +147,30 @@ export async function completeWithdrawal(
     await prisma.withdrawalError.create({
       data: {
         message:
-          "Failed to withdraw remaining balance from user " +
+          "Failed to withdraw remaining balance from user/tip " +
           JSON.stringify(error, Object.getOwnPropertyNames(error)),
-        userId: userId,
+        userId,
+        tipId,
         withdrawalFlow,
         withdrawalMethod,
       },
     });
   }
-  switch (withdrawalMethod) {
-    case "invoice":
-      await createAchievement(userId, "MANUAL_WITHDRAWN");
-      break;
-    case "lnurlw":
-      await createAchievement(userId, "LNURL_WITHDRAWN");
-      break;
-    case "webln":
-      await createAchievement(userId, "WEBLN_WITHDRAWN");
-      break;
+  if (userId) {
+    switch (withdrawalMethod) {
+      case "invoice":
+        await createAchievement(userId, "MANUAL_WITHDRAWN");
+        break;
+      case "lnurlw":
+        await createAchievement(userId, "LNURL_WITHDRAWN");
+        break;
+      case "webln":
+        await createAchievement(userId, "WEBLN_WITHDRAWN");
+        break;
+    }
   }
 
-  if (withdrawalFlow === "tippee") {
+  if (withdrawalFlow === "tippee" || withdrawalFlow === "anonymous") {
     for (const tip of tips) {
       await createNotification(tip.tipperId, "TIP_WITHDRAWN", tip.id);
       await createAchievement(tip.tipperId, "TIP_WITHDRAWN");

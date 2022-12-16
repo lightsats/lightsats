@@ -187,7 +187,7 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
       <ClaimedTipCard publicTip={publicTip} viewing="tipper" />
       <Spacer y={3} />
       {publicTip.skipOnboarding ? (
-        <Withdraw flow="anonymous" />
+        <Withdraw flow="anonymous" tipId={publicTip.id} />
       ) : (
         <>
           <Login

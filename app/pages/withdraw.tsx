@@ -18,10 +18,10 @@ import { LightsatsQRCode } from "components/LightsatsQRCode";
 import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import copy from "copy-to-clipboard";
-import { isBefore } from "date-fns";
 import { useTips } from "hooks/useTips";
 import { getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
+import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
@@ -35,15 +35,16 @@ import { requestProvider } from "webln";
 
 type WithdrawProps = {
   flow: WithdrawalFlow;
+  tipId?: string;
 };
 // TODO: move to separate file
-export function Withdraw({ flow }: WithdrawProps) {
+export function Withdraw({ flow, tipId }: WithdrawProps) {
   const { t } = useTranslation(["common", "withdraw"]);
   const { data: session } = useSession();
   const router = useRouter();
 
   // poll to get updated statuses after withdrawing
-  const { data: tips } = useTips(flow, true);
+  const { data: tips } = useTips(flow, true, tipId);
 
   const [invoiceFieldValue, setInvoiceFieldValue] = React.useState("");
   const [withdrawalLinkLnurl, setWithdrawalLinkLnurl] = React.useState("");
@@ -59,7 +60,11 @@ export function Withdraw({ flow }: WithdrawProps) {
 
       (async () => {
         try {
-          const withdrawalRequest: InvoiceWithdrawalRequest = { invoice, flow };
+          const withdrawalRequest: InvoiceWithdrawalRequest = {
+            invoice,
+            flow,
+            tipId,
+          };
           const result = await fetch(`/api/invoices?isWebln=${isWebln}`, {
             method: "POST",
             body: JSON.stringify(withdrawalRequest),
@@ -84,7 +89,7 @@ export function Withdraw({ flow }: WithdrawProps) {
         setSubmitting(false);
       })();
     },
-    [isSubmitting, flow]
+    [isSubmitting, flow, tipId]
   );
 
   const submitForm = React.useCallback(() => {
@@ -100,30 +105,14 @@ export function Withdraw({ flow }: WithdrawProps) {
         (tip) =>
           (flow === "tippee" &&
             tip.status === "CLAIMED" &&
-            isBefore(new Date(), new Date(tip.expiry))) ||
-          (flow === "tipper" && tip.status === "RECLAIMED")
+            !hasTipExpired(tip)) ||
+          (flow === "tipper" && tip.status === "RECLAIMED") ||
+          (flow === "anonymous" &&
+            tip.status === "UNCLAIMED" &&
+            !hasTipExpired(tip))
       ),
     [flow, tips]
   );
-
-  // const nextExpiry =
-  //   flow === "tippee" &&
-  //   withdrawableTips?.find(
-  //     (tip) =>
-  //       !withdrawableTips.some((other) =>
-  //         isBefore(new Date(other.expiry), new Date(tip.expiry))
-  //       )
-  //   )?.expiry;
-
-  /*const tipIds = React.useMemo(
-    () =>
-      flow === "tippee"
-        ? tips
-            ?.filter((tip) => tip.tippeeId === session?.user.id)
-            .map((tip) => tip.id)
-        : [],
-    [session, flow, tips]
-  );*/
 
   const availableBalance = withdrawableTips?.length
     ? withdrawableTips.map((tip) => tip.amount).reduce((a, b) => a + b)
@@ -142,6 +131,7 @@ export function Withdraw({ flow }: WithdrawProps) {
         const withdrawalRequest: LnurlWithdrawalRequest = {
           amount: availableBalance,
           flow,
+          tipId,
         };
         const result = await fetch("/api/withdrawalLinks", {
           method: "POST",
@@ -158,7 +148,7 @@ export function Withdraw({ flow }: WithdrawProps) {
         }
       })();
     }
-  }, [availableBalance, flow]);
+  }, [availableBalance, flow, tipId]);
   React.useEffect(() => {
     if (availableBalance > 0) {
       (async () => {
@@ -186,7 +176,7 @@ export function Withdraw({ flow }: WithdrawProps) {
     }
   }, [withdrawalLinkLnurl]);
 
-  if (!session || !tips) {
+  if ((!session && flow !== "anonymous") || !tips) {
     return <Loading />;
   }
 

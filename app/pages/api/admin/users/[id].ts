@@ -61,6 +61,7 @@ async function handleGetUser(
       withdrawalErrors: {
         include: {
           user: true,
+          tip: true,
         },
         orderBy: {
           created: "desc",

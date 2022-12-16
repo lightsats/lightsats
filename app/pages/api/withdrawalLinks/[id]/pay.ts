@@ -73,7 +73,8 @@ async function initiatePayWithdrawalLink(
     await payWithdrawalInvoice(
       withdrawalLink.withdrawalFlow,
       invoice as string,
-      withdrawalLink.userId,
+      withdrawalLink.userId ?? undefined,
+      withdrawalLink.tipId ?? undefined,
       "lnurlw"
     );
     res.json({

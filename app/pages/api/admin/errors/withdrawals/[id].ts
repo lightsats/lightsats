@@ -38,6 +38,7 @@ async function handleGetWithdrawalError(
     },
     include: {
       user: true,
+      tip: true,
     },
   });
 

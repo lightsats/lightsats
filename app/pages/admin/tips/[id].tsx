@@ -12,6 +12,7 @@ import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
 import { AdminTipCardContents } from "components/admin/AdminTipCardContents";
 import { AdminUserCard } from "components/admin/AdminUserCard";
 import { AdminWithdrawalCard } from "components/admin/AdminWithdrawalCard";
+import { AdminWithdrawalErrorsList } from "components/admin/AdminWithdrawalErrorsList";
 import { formatDistance } from "date-fns";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
@@ -101,6 +102,9 @@ const AdminTipPage: NextPage = () => {
       <AdminTipUser title="tipper" user={tip.tipper} />
       <Spacer />
       <AdminTipUser title="tippee" user={tip.tippee} />
+      <Spacer />
+      <h2>Withdrawal Errors</h2>
+      <AdminWithdrawalErrorsList withdrawalErrors={tip.withdrawalErrors} />
       <Spacer />
       <AdminJSONDumpCard entity={tip} />
     </>

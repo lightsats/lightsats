@@ -28,13 +28,14 @@ export function AdminWithdrawalCard({ withdrawal }: AdminWithdrawalCardProps) {
               <Text>{withdrawal.tips.length} tips</Text>
 
               <NextUIUser
-                name={withdrawal.user.name ?? DEFAULT_NAME}
-                src={getUserAvatarUrl(withdrawal.user)}
+                name={withdrawal.user?.name ?? DEFAULT_NAME}
+                src={getUserAvatarUrl(withdrawal.user ?? undefined)}
               />
             </Row>
             <Spacer />
             <Row justify="space-between">
               <Text>Method: {withdrawal.withdrawalMethod}</Text>
+              <Text>Flow: {withdrawal.withdrawalFlow}</Text>
               <Text>Amount: {amount} sats</Text>
               <Text>Fees: {tipFees} sats</Text>
             </Row>

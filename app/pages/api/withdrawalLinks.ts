@@ -6,7 +6,7 @@ import prisma from "lib/prismadb";
 import { checkWithdrawalFlow, getWithdrawableTipsQuery } from "lib/withdrawal";
 import * as lnurl from "lnurl";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
+import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
 import { v4 as uuidv4 } from "uuid";
@@ -15,29 +15,26 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) {
-    return res.status(StatusCodes.UNAUTHORIZED).end();
-  }
-
   switch (req.method) {
     case "POST":
-      return postWithdrawLink(session, req, res);
+      return postWithdrawLink(req, res);
     default:
       return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 
-async function postWithdrawLink(
-  session: Session,
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function postWithdrawLink(req: NextApiRequest, res: NextApiResponse) {
   const withdrawalRequest = req.body as LnurlWithdrawalRequest;
   checkWithdrawalFlow(withdrawalRequest.flow);
 
+  const session = await unstable_getServerSession(req, res, authOptions);
+
   const tips = await prisma.tip.findMany({
-    where: getWithdrawableTipsQuery(session.user.id, withdrawalRequest.flow),
+    where: getWithdrawableTipsQuery(
+      withdrawalRequest.flow,
+      session?.user.id,
+      withdrawalRequest.tipId
+    ),
   });
 
   if (!tips.length) {
@@ -52,20 +49,40 @@ async function postWithdrawLink(
     return res.status(StatusCodes.CONFLICT).end();
   }
 
-  const userWallet = await prisma.lnbitsWallet.findUnique({
-    where: {
-      userId: session.user.id,
-    },
-  });
-  if (!userWallet) {
-    throw new Error("User " + session.user.id + " has no staging wallet");
-  }
+  const userId =
+    withdrawalRequest.flow === "anonymous" ? undefined : session?.user.id;
 
-  await deleteUnusedWithdrawalLinks(session.user.id, true);
+  if (withdrawalRequest.flow === "anonymous") {
+    const tipWallet = await prisma.lnbitsWallet.findUnique({
+      where: {
+        tipId: withdrawalRequest.tipId,
+      },
+    });
+    if (!tipWallet) {
+      throw new Error(
+        "Tip " + withdrawalRequest.tipId + " has no staging wallet"
+      );
+    }
+    await deleteUnusedWithdrawalLinks(undefined, withdrawalRequest.tipId, true);
+  } else {
+    if (!session) {
+      throw new Error("User is not logged in");
+    }
+    const userWallet = await prisma.lnbitsWallet.findUnique({
+      where: {
+        userId: session.user.id,
+      },
+    });
+    if (!userWallet) {
+      throw new Error("User " + session.user.id + " has no staging wallet");
+    }
+    await deleteUnusedWithdrawalLinks(userId, withdrawalRequest.tipId, true);
+  }
 
   const existingWithdrawLink = await prisma.withdrawalLink.findFirst({
     where: {
-      userId: session.user.id,
+      userId,
+      tipId: withdrawalRequest.tipId,
       used: false,
       withdrawalFlow: withdrawalRequest.flow,
       amount,
@@ -88,7 +105,8 @@ async function postWithdrawLink(
     data: {
       id: withdrawalLinkId,
       lnurl: lnurlValue,
-      userId: session.user.id,
+      userId,
+      tipId: withdrawalRequest.tipId,
       amount,
       withdrawalFlow: withdrawalRequest.flow,
       fee,

@@ -55,7 +55,11 @@ const AdminWithdrawalPage: NextPage = () => {
       </Row>
       <Spacer />
       <Text h2>Withdrawn By</Text>
-      <AdminUserCard user={withdrawal.user} />
+      {withdrawal.user ? (
+        <AdminUserCard user={withdrawal.user} />
+      ) : (
+        <Text>Anonymous withdrawal</Text>
+      )}
       <Spacer />
       <Text h2>Tips</Text>
       <AdminTipsList tips={withdrawal.tips} />

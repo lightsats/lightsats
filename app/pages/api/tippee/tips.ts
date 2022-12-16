@@ -9,7 +9,7 @@ import { PublicTip } from "types/PublicTip";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Tip | Tip[] | PublicTip[]>
+  res: NextApiResponse<Tip[] | PublicTip[]>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {

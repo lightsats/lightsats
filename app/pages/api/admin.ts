@@ -77,6 +77,7 @@ async function handleGetAdminDashboard(
     withdrawalErrors: await prisma.withdrawalError.findMany({
       include: {
         user: true,
+        tip: true,
       },
       orderBy: {
         created: "desc",
