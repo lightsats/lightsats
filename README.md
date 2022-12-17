@@ -10,7 +10,7 @@ Project on Bolt fun: https://makers.bolt.fun/project/Lightsats
 
 ## Contributing
 
-Join our discord channel to stay up to date! https://lgt.st/community
+Join our discord channel to stay up to date! https://discord.com/invite/P7WvS5xW
 
 We would love any contributions, especially translations in your native language!
 
