@@ -1,7 +1,10 @@
-import { Collapse, Loading, Spacer, Text } from "@nextui-org/react";
+import { Card, Collapse, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { ClaimedTipCard } from "components/ClaimedTipCard";
 import { DashboardButton } from "components/HomeButton";
 import { Login } from "components/Login";
+import { BecomeATipper } from "components/tippee/BecomeATipper";
+import { ClaimTipsFaster } from "components/tippee/ClaimTipsFaster";
+import { NewTipButton } from "components/tipper/NewTipButton";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
@@ -11,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { Withdraw } from "pages/withdraw";
 import React from "react";
 import toast from "react-hot-toast";
 import useSWR from "swr";
@@ -56,6 +60,7 @@ const ClaimTipPage: NextPage = () => {
 
   const canClaim =
     publicTip &&
+    !publicTip.skipOnboarding &&
     publicTip.status === "UNCLAIMED" &&
     session &&
     !isTipper &&
@@ -101,7 +106,10 @@ const ClaimTipPage: NextPage = () => {
   }, [canClaim, destinationRoute, isClaiming, id, mutatePublicTip, router]);
 
   const isLoading =
-    !publicTip || sessionStatus === "loading" || canClaim || isClaiming;
+    !publicTip ||
+    sessionStatus === "loading" ||
+    (session && canClaim) ||
+    isClaiming;
 
   return (
     <>
@@ -117,6 +125,34 @@ const ClaimTipPage: NextPage = () => {
           (session && session.user.id !== publicTip.tippeeId)) ? (
         <>
           <Text>This tip is no longer available.</Text>
+          {!session && !publicTip.skipOnboarding ? (
+            <>
+              <Spacer />
+              <ClaimTipsFaster />
+            </>
+          ) : session?.user.userType !== "tipper" ? (
+            <>
+              <Spacer />
+              <BecomeATipper />
+            </>
+          ) : (
+            <>
+              <Spacer />
+              <Card css={{ dropShadow: "$sm" }}>
+                <Card.Body css={{ textAlign: "center" }}>
+                  <Text h3>Send a tip instead</Text>
+                  <Text>
+                    Lightsats makes it easy for you to send tips and onboard
+                    people to bitcoin.
+                  </Text>
+                  <Spacer />
+                  <Row justify="center">
+                    <NewTipButton />
+                  </Row>
+                </Card.Body>
+              </Card>
+            </>
+          )}
           <Spacer />
           <DashboardButton />
         </>
@@ -184,7 +220,9 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
       )}
       <ClaimedTipCard publicTip={publicTip} viewing="tipper" />
       <Spacer y={3} />
-      {
+      {publicTip.skipOnboarding ? (
+        <Withdraw flow="anonymous" tipId={publicTip.id} />
+      ) : (
         <>
           <Login
             instructionsText={(loginMethod) =>
@@ -196,7 +234,7 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
             defaultLoginMethod="phone"
           />
         </>
-      }
+      )}
       <Spacer />
     </>
   );

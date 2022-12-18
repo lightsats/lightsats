@@ -1,5 +1,7 @@
 import { Button, Card, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { useUser } from "hooks/useUser";
+import { PageRoutes } from "lib/PageRoutes";
+import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
 import { TransitionUserRequest } from "types/TransitionUserRequest";
@@ -7,9 +9,11 @@ import { TransitionUserRequest } from "types/TransitionUserRequest";
 export function BecomeATipper() {
   const [isSubmitting, setSubmitting] = React.useState(false);
   const { data: user, mutate: mutateUser } = useUser();
+  const router = useRouter();
 
   const becomeTipper = React.useCallback(() => {
     if (!user?.id) {
+      router.push(PageRoutes.login);
       return;
     }
     if (isSubmitting) {
@@ -33,7 +37,7 @@ export function BecomeATipper() {
       }
       setSubmitting(false);
     })();
-  }, [isSubmitting, mutateUser, user?.id]);
+  }, [isSubmitting, mutateUser, router, user?.id]);
 
   return (
     <Card css={{ dropShadow: "$sm" }}>

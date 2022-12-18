@@ -113,6 +113,10 @@ model Tip {
   claimLinkViewed Boolean @default(false)
   numSmsTokens Int @default(0) // to allow new user signups using SMS
   sentReminders SentReminder[]
+  skipOnboarding Boolean @default(false)
+  withdrawalLinks WithdrawalLink[]
+  withdrawalErrors WithdrawalError[]
+  lastWithdrawal DateTime?
 }
 
 model LnbitsWallet {
@@ -135,8 +139,11 @@ model LnurlAuthKey {
 
 model WithdrawalLink {
   id String @id
-  user User @relation(fields: [userId], references: [id])
-  userId String
+  user User? @relation(fields: [userId], references: [id])
+  userId String?
+  tip Tip? @relation(fields: [tipId], references: [id])
+  tipId String?
+
   withdrawalFlow WithdrawalFlow
   linkTips WithdrawalLinkTip[]
   used Boolean @default(false)
@@ -158,8 +165,8 @@ model WithdrawalLinkTip {
 
 model Withdrawal {
   id String @id @default(cuid())
-  user User @relation(fields: [userId], references: [id])
-  userId String
+  user User? @relation(fields: [userId], references: [id])
+  userId String?
   tips Tip[]
   routingFee Int
   withdrawalInvoiceId String
@@ -171,8 +178,11 @@ model Withdrawal {
 
 model WithdrawalError {
   id String @id @default(cuid())
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+  tip Tip? @relation(fields: [tipId], references: [id])
+  tipId String?
+
   message String
   created DateTime @default(now())
 
@@ -305,6 +315,7 @@ enum TipStatus {
 enum WithdrawalFlow {
   tipper
   tippee
+  anonymous
 }
 
 enum WithdrawalMethod {

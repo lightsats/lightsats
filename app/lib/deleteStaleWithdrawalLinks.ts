@@ -2,12 +2,20 @@ import { sub } from "date-fns";
 import prisma from "lib/prismadb";
 
 export async function deleteUnusedWithdrawalLinks(
-  userId: string,
+  userId: string | undefined,
+  tipId: string | undefined,
   staleOnly: boolean
 ) {
+  if (!userId && !tipId) {
+    throw new Error(
+      "Delete unusued withdrawal links: either userId or tipId must be provided"
+    );
+  }
+
   const staleWithdrawalLinks = await prisma.withdrawalLink.findMany({
     where: {
       userId,
+      tipId,
       used: false,
       ...(staleOnly
         ? {

@@ -1,5 +1,6 @@
 import { Loading, Spacer, Text } from "@nextui-org/react";
 import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
+import { AdminTipCard } from "components/admin/AdminTipCard";
 import { AdminUserCard } from "components/admin/AdminUserCard";
 import { AdminWithdrawalErrorCard } from "components/admin/AdminWithdrawalErrorCard";
 import { defaultFetcher } from "lib/swr";
@@ -28,8 +29,18 @@ const AdminWithdrawalErrorPage: NextPage = () => {
       <h1>Admin/Withdrawals</h1>
       <AdminWithdrawalErrorCard withdrawalError={withdrawalError} />
       <Spacer />
-      <Text h2>User</Text>
-      <AdminUserCard user={withdrawalError.user} />
+      {withdrawalError.user && (
+        <>
+          <Text h2>User</Text>
+          <AdminUserCard user={withdrawalError.user} />
+        </>
+      )}
+      {withdrawalError.tip && (
+        <>
+          <Text h2>Tip</Text>
+          <AdminTipCard tip={withdrawalError.tip} />
+        </>
+      )}
       <Spacer />
       <AdminJSONDumpCard entity={withdrawalError} />
     </>

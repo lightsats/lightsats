@@ -47,6 +47,12 @@ async function handleGetTip(
           tips: true,
         },
       },
+      withdrawalErrors: {
+        include: {
+          tip: true,
+          user: true,
+        },
+      },
       lnbitsWallet: true,
     },
   });

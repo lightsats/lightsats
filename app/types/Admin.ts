@@ -33,10 +33,17 @@ export type AdminExtendedTip = Tip & {
   tippee: User | null;
   sentReminders: SentReminder[];
   withdrawal: AdminExtendedWithdrawal | null;
+  withdrawalErrors: AdminExtendedWithdrawalError[];
   lnbitsWallet: LnbitsWallet | null;
   lnbitsWalletUrl: string | undefined;
   walletBalance: number;
 };
 
-export type AdminExtendedWithdrawal = Withdrawal & { tips: Tip[]; user: User };
-export type AdminExtendedWithdrawalError = WithdrawalError & { user: User };
+export type AdminExtendedWithdrawal = Withdrawal & {
+  tips: Tip[];
+  user: User | null;
+};
+export type AdminExtendedWithdrawalError = WithdrawalError & {
+  user: User | null;
+  tip: Tip | null;
+};

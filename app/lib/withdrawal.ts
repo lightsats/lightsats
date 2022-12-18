@@ -1,16 +1,24 @@
 import { Prisma, WithdrawalFlow } from "@prisma/client";
 
 export function checkWithdrawalFlow(flow: WithdrawalFlow) {
-  if (flow !== "tippee" && flow !== "tipper") {
+  if (flow !== "tippee" && flow !== "tipper" && flow !== "anonymous") {
     throw new Error("Unsupported withdrawal flow: " + flow);
   }
 }
 
 export function getWithdrawalInitialTipStatus(flow: WithdrawalFlow) {
-  return flow === "tippee" ? "CLAIMED" : "RECLAIMED";
+  return flow === "tippee"
+    ? "CLAIMED"
+    : flow === "tipper"
+    ? "RECLAIMED"
+    : "UNCLAIMED";
 }
 
-export function getWithdrawableTipsQuery(userId: string, flow: WithdrawalFlow) {
+export function getWithdrawableTipsQuery(
+  flow: WithdrawalFlow,
+  userId: string | undefined,
+  tipId: string | undefined
+) {
   const initialStatus = getWithdrawalInitialTipStatus(flow);
   // TODO: consider running the below code in a transaction
   const whereQuery: Prisma.TipWhereInput = {
@@ -26,9 +34,16 @@ export function getWithdrawableTipsQuery(userId: string, flow: WithdrawalFlow) {
             gt: new Date(), // cannot withdraw expired tips
           },
         }
-      : {
+      : flow === "tipper"
+      ? {
           tipperId: {
             equals: userId,
+          },
+        }
+      : {
+          skipOnboarding: true,
+          id: {
+            equals: tipId,
           },
         }),
   };

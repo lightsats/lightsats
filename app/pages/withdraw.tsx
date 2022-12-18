@@ -14,14 +14,16 @@ import { WithdrawalFlow } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
+import { ItemsList } from "components/items/ItemsList";
 import { LightsatsQRCode } from "components/LightsatsQRCode";
 import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import copy from "copy-to-clipboard";
-import { isBefore } from "date-fns";
 import { useTips } from "hooks/useTips";
 import { getStaticProps } from "lib/i18n/i18next";
+import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
 import { PageRoutes } from "lib/PageRoutes";
+import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
@@ -33,14 +35,18 @@ import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
 import { requestProvider } from "webln";
 
-const Withdraw: NextPage = () => {
+type WithdrawProps = {
+  flow: WithdrawalFlow;
+  tipId?: string;
+};
+// TODO: move to separate file
+export function Withdraw({ flow, tipId }: WithdrawProps) {
+  const { t } = useTranslation(["common", "withdraw"]);
   const { data: session } = useSession();
   const router = useRouter();
-  const flow = (router.query["flow"] as WithdrawalFlow) ?? "tippee";
-  const { t } = useTranslation(["common", "withdraw"]);
 
   // poll to get updated statuses after withdrawing
-  const { data: tips } = useTips(flow, true);
+  const { data: tips } = useTips(flow, true, tipId);
 
   const [invoiceFieldValue, setInvoiceFieldValue] = React.useState("");
   const [withdrawalLinkLnurl, setWithdrawalLinkLnurl] = React.useState("");
@@ -56,7 +62,11 @@ const Withdraw: NextPage = () => {
 
       (async () => {
         try {
-          const withdrawalRequest: InvoiceWithdrawalRequest = { invoice, flow };
+          const withdrawalRequest: InvoiceWithdrawalRequest = {
+            invoice,
+            flow,
+            tipId,
+          };
           const result = await fetch(`/api/invoices?isWebln=${isWebln}`, {
             method: "POST",
             body: JSON.stringify(withdrawalRequest),
@@ -81,7 +91,7 @@ const Withdraw: NextPage = () => {
         setSubmitting(false);
       })();
     },
-    [isSubmitting, flow]
+    [isSubmitting, flow, tipId]
   );
 
   const submitForm = React.useCallback(() => {
@@ -97,29 +107,13 @@ const Withdraw: NextPage = () => {
         (tip) =>
           (flow === "tippee" &&
             tip.status === "CLAIMED" &&
-            isBefore(new Date(), new Date(tip.expiry))) ||
-          (flow === "tipper" && tip.status === "RECLAIMED")
+            !hasTipExpired(tip)) ||
+          (flow === "tipper" && tip.status === "RECLAIMED") ||
+          (flow === "anonymous" &&
+            tip.status === "UNCLAIMED" &&
+            !hasTipExpired(tip))
       ),
     [flow, tips]
-  );
-
-  // const nextExpiry =
-  //   flow === "tippee" &&
-  //   withdrawableTips?.find(
-  //     (tip) =>
-  //       !withdrawableTips.some((other) =>
-  //         isBefore(new Date(other.expiry), new Date(tip.expiry))
-  //       )
-  //   )?.expiry;
-
-  const tipIds = React.useMemo(
-    () =>
-      flow === "tippee"
-        ? tips
-            ?.filter((tip) => tip.tippeeId === session?.user.id)
-            .map((tip) => tip.id)
-        : [],
-    [session, flow, tips]
   );
 
   const availableBalance = withdrawableTips?.length
@@ -139,6 +133,7 @@ const Withdraw: NextPage = () => {
         const withdrawalRequest: LnurlWithdrawalRequest = {
           amount: availableBalance,
           flow,
+          tipId,
         };
         const result = await fetch("/api/withdrawalLinks", {
           method: "POST",
@@ -155,7 +150,7 @@ const Withdraw: NextPage = () => {
         }
       })();
     }
-  }, [availableBalance, flow]);
+  }, [availableBalance, flow, tipId]);
   React.useEffect(() => {
     if (availableBalance > 0) {
       (async () => {
@@ -183,16 +178,22 @@ const Withdraw: NextPage = () => {
     }
   }, [withdrawalLinkLnurl]);
 
-  if (!session || !tips) {
+  const walletCategoryFilterOptions: CategoryFilterOptions = React.useMemo(
+    () => ({
+      checkTippeeBalance: true,
+      tippeeBalance: availableBalance,
+      recommendedLimit: 1,
+      shadow: false,
+    }),
+    [availableBalance]
+  );
+
+  if ((!session && flow !== "anonymous") || !tips) {
     return <Loading />;
   }
 
   return (
     <>
-      <Head>
-        <title>Lightsats⚡ - Withdraw</title>
-      </Head>
-      {flow === "tippee" && <MyBitcoinJourneyHeader />}
       {!availableBalance ? (
         <>
           <Text>
@@ -310,15 +311,40 @@ const Withdraw: NextPage = () => {
                   )}
                 </Button>
               </Collapse>
+              {flow === "anonymous" && (
+                <>
+                  <Spacer />
+                  <Collapse shadow title={<Text b>Need a wallet?</Text>}>
+                    <ItemsList
+                      category="wallets"
+                      options={walletCategoryFilterOptions}
+                    />
+                  </Collapse>
+                </>
+              )}
             </>
           )}
         </div>
       )}
-      {tipIds && <Spacer />}
+    </>
+  );
+}
+
+const WithdrawPage: NextPage = () => {
+  const router = useRouter();
+  const flow = (router.query["flow"] as WithdrawalFlow) ?? "tippee";
+
+  return (
+    <>
+      <Head>
+        <title>Lightsats⚡ - Withdraw</title>
+      </Head>
+      {flow === "tippee" && <MyBitcoinJourneyHeader />}
+      <Withdraw flow={flow} />
     </>
   );
 };
 
-export default Withdraw;
+export default WithdrawPage;
 
 export { getStaticProps };

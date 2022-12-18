@@ -121,6 +121,7 @@ async function updateTip(
       note: updateTipRequest.note || null,
       tippeeName: updateTipRequest.tippeeName,
       tippeeLocale: updateTipRequest.tippeeLocale,
+      skipOnboarding: updateTipRequest.skipOnboarding,
     },
   });
 

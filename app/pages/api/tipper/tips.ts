@@ -89,6 +89,7 @@ async function handlePostTip(
       status: "UNFUNDED",
       expiry,
       currency: createTipRequest.currency,
+      skipOnboarding: createTipRequest.skipOnboarding,
       version: 1 /* 0=all tips in same bucket, 1=one wallet per tip */,
     },
   });

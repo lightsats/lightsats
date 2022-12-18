@@ -9,13 +9,25 @@ import { getWithdrawableTipsQuery } from "lib/withdrawal";
 export async function payWithdrawalInvoice(
   withdrawalFlow: WithdrawalFlow,
   invoice: string,
-  userId: string,
+  userId: string | undefined,
+  tipId: string | undefined,
   withdrawalMethod: WithdrawalMethod
 ) {
-  const preliminaryLastWithdrawalResult = await prisma.user.findUniqueOrThrow({
-    where: { id: userId },
+  if (!userId && !tipId) {
+    throw new Error("Either userId or tipId must be provided");
+  }
+  if (userId && tipId) {
+    throw new Error("Only userId or tipId must be provided");
+  }
+
+  const lastWithdrawalQuery = {
+    where: { id: tipId ?? userId },
     select: { lastWithdrawal: true },
-  });
+  };
+
+  const preliminaryLastWithdrawalResult = await (userId
+    ? prisma.user.findUniqueOrThrow(lastWithdrawalQuery)
+    : prisma.tip.findUniqueOrThrow(lastWithdrawalQuery));
 
   // first do a preliminary check outside of a transaction to see if the user last withdrew less than a minute ago
   if (
@@ -30,6 +42,7 @@ export async function payWithdrawalInvoice(
       data: {
         message: errorMessage,
         userId,
+        tipId,
         withdrawalFlow,
         withdrawalMethod,
         withdrawalInvoice: invoice,
@@ -41,21 +54,31 @@ export async function payWithdrawalInvoice(
   // update last withdrawal in a transaction to force withdrawals to be more than one minute apart.
   // This check will reset the last withdrawal time even if it was less than 60 seconds ago
   // (the preliminary check above is just to make the process more user friendly)
-  const [lastWithdrawalResult] = await prisma.$transaction(
-    [
-      prisma.user.findUniqueOrThrow({
-        where: { id: userId },
-        select: { lastWithdrawal: true },
-      }),
-      prisma.user.update({
-        where: { id: userId },
-        data: { lastWithdrawal: new Date() },
-      }),
-    ],
-    {
-      isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-    }
-  );
+
+  const updateLastWithdrawalQuery = {
+    where: { id: userId ?? tipId },
+    data: { lastWithdrawal: new Date() },
+  };
+  const updateWithdrawalTransactionSettings: Parameters<
+    typeof prisma.$transaction
+  >[1] = {
+    isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+  };
+  const [lastWithdrawalResult] = await (userId
+    ? prisma.$transaction(
+        [
+          prisma.user.findUniqueOrThrow(lastWithdrawalQuery),
+          prisma.user.update(updateLastWithdrawalQuery),
+        ],
+        updateWithdrawalTransactionSettings
+      )
+    : prisma.$transaction(
+        [
+          prisma.tip.findUniqueOrThrow(lastWithdrawalQuery),
+          prisma.tip.update(updateLastWithdrawalQuery),
+        ],
+        updateWithdrawalTransactionSettings
+      ));
 
   if (
     lastWithdrawalResult.lastWithdrawal &&
@@ -68,6 +91,7 @@ export async function payWithdrawalInvoice(
       data: {
         message: errorMessage,
         userId,
+        tipId,
         withdrawalFlow,
         withdrawalMethod,
         withdrawalInvoice: invoice,
@@ -85,7 +109,7 @@ export async function payWithdrawalInvoice(
 
   // FIXME: this needs to be in a transaction / only use the ids of tips originally retrieved, not the same query
   const tips = await prisma.tip.findMany({
-    where: getWithdrawableTipsQuery(userId, withdrawalFlow),
+    where: getWithdrawableTipsQuery(withdrawalFlow, userId, tipId),
     include: {
       tipper: true,
     },
@@ -97,7 +121,8 @@ export async function payWithdrawalInvoice(
     await prisma.withdrawalError.create({
       data: {
         message: errorMessage,
-        userId: userId,
+        userId,
+        tipId,
         withdrawalFlow,
         withdrawalMethod,
         withdrawalInvoice: invoice,
@@ -110,11 +135,12 @@ export async function payWithdrawalInvoice(
   const amount = tips.map((tip) => tip.amount).reduce((a, b) => a + b);
 
   if (withdrawalInvoicePriceInSats !== amount) {
-    const errorMessage = "Withdrawal request does not match user balance";
+    const errorMessage = "Withdrawal request does not match user/tip balance";
     await prisma.withdrawalError.create({
       data: {
         message: errorMessage,
-        userId: userId,
+        userId,
+        tipId,
         withdrawalFlow,
         withdrawalMethod,
         withdrawalInvoice: invoice,
@@ -124,18 +150,21 @@ export async function payWithdrawalInvoice(
     throw new Error(errorMessage);
   }
 
-  const userWallet = await prisma.lnbitsWallet.findUnique({
+  const lnbitsWallet = await prisma.lnbitsWallet.findUnique({
     where: {
       userId: userId,
+      tipId: tipId,
     },
   });
-  if (!userWallet) {
-    throw new Error("User " + userId + " has no staging wallet");
+  if (!lnbitsWallet) {
+    throw new Error(
+      "User " + userId + " Tip " + tipId + " has no staging wallet"
+    );
   }
 
   const { payInvoiceResponse, payInvoiceResponseBody } = await payInvoice(
     invoice,
-    userWallet.adminKey
+    lnbitsWallet.adminKey
   );
 
   if (!payInvoiceResponse.ok || !payInvoiceResponseBody) {
@@ -147,20 +176,20 @@ export async function payWithdrawalInvoice(
           payInvoiceResponse.statusText +
           " " +
           (JSON.stringify(payInvoiceResponseBody) ?? "Unknown error"),
-        userId: userId,
+        userId,
+        tipId,
       },
     });
 
     const errorMessage =
-      "Failed to withdraw funds for user " +
-      userId +
-      ": " +
-      withdrawalError.message;
+      "Failed to withdraw funds for user " + userId + " tipId " + tipId;
+    ": " + withdrawalError.message;
 
     await prisma.withdrawalError.create({
       data: {
         message: errorMessage,
-        userId: userId,
+        userId,
+        tipId,
         withdrawalMethod,
         withdrawalFlow,
         withdrawalInvoice: invoice,
@@ -170,7 +199,7 @@ export async function payWithdrawalInvoice(
     throw new Error(errorMessage);
   } else {
     const payment = await getPayment(
-      userWallet.adminKey,
+      lnbitsWallet.adminKey,
       payInvoiceResponseBody.checking_id
     );
     if (!payment.paid) {
@@ -180,7 +209,8 @@ export async function payWithdrawalInvoice(
       await prisma.withdrawalError.create({
         data: {
           message: errorMessage,
-          userId: userId,
+          userId,
+          tipId,
           withdrawalFlow,
           withdrawalMethod,
           withdrawalInvoice: invoice,
@@ -197,7 +227,9 @@ export async function payWithdrawalInvoice(
     );
     await completeWithdrawal(
       userId,
-      userWallet,
+      tipId,
+      withdrawalFlow,
+      lnbitsWallet,
       payment.details.fee,
       payment.details.checking_id,
       payment.details.bolt11,

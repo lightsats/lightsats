@@ -1,14 +1,20 @@
-import { Tip } from "@prisma/client";
+import { Tip, WithdrawalFlow } from "@prisma/client";
 import { defaultFetcher } from "lib/swr";
 import { useSession } from "next-auth/react";
 import useSWR, { SWRConfiguration } from "swr";
 
 const pollTipsConfig: SWRConfiguration = { refreshInterval: 1000 };
 
-export function useTips(flow: "tipper" | "tippee" | undefined, poll = false) {
+export function useTips(
+  flow: WithdrawalFlow | undefined,
+  poll = false,
+  tipId?: string
+) {
   const { data: session } = useSession();
   return useSWR<Tip[]>(
-    flow && session ? `/api/${flow}/tips` : null,
+    flow && (session || flow === "anonymous")
+      ? `/api/${flow}/tips${tipId ? `?tipId=${tipId}` : ""}`
+      : null,
     defaultFetcher,
     poll ? pollTipsConfig : undefined
   );

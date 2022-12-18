@@ -15,6 +15,7 @@ export type PublicTip = Pick<
   | "claimLinkViewed"
   | "created"
   | "tippeeLocale"
+  | "skipOnboarding"
 > & {
   hasClaimed: boolean;
   tipper: Pick<User, "name" | "twitterUsername" | "avatarURL"> & {
