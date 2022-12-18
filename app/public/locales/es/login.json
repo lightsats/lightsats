@@ -1,1 +1,9 @@
-{}
+{
+    "welcome": "Bienvenidos",
+    "chooseSignIn": "Por favor, elija su forma preferida de iniciar sesión.",
+    "generatingQrCode": "Generando código QR...",
+    "scanQrCode": "\"Escanea este código o copia y pega en tu monedero de Lightning. O haz clic para iniciar sesión con el monedero del navegador.",
+    "clickToConnect": "Haz clic para conectarte",
+    "use": "Usar",
+    "instead": "en cambio"
+}
