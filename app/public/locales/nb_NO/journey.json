@@ -12,7 +12,8 @@
             "text": "Start din reise",
             "cta": "Hva er Bitcoin?"
         },
-        "description": "Tipspengene dine er klare til å bli overtrukket til ditt eie. Hvis du ikke henter tipspengene før de utløper vil de bli returnert til {{tipperName}}."
+        "description": "Tipspengene dine er klare til å bli overtrukket til ditt eie. Hvis du ikke henter tipspengene før de utløper vil de bli returnert til {{tipperName}}.",
+        "getStarted": "Begynn din Bitcoin-reise."
     },
     "bitcoin": {
         "footer": {

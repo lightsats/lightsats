@@ -13,7 +13,7 @@
         "description": "Tu propina está lista para ser retirada a tu custodia. Si no retiras tu propina antes de que caduque, se devolverá a {{tipperName}}."
     },
     "bitcoin": {
-        "needAWallet": "Para retirar tus bitcoin, primero necesitarás un monedero de bitcoin. Descubre más en el siguiente paso.",
+        "needAWallet": "Para retirar tu Bitcoin, primero necesitarás un monedero de Bitcoin. Obtén más información en el siguiente paso.",
         "footer": {
             "cta": "Instala un monedero",
             "text": "Continuar"
