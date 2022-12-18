@@ -47,7 +47,7 @@ export function SentTips() {
                       <Card.Body>
                         <Row justify="space-between">
                           <Text color="#F8AF43">
-                            <TipStatusBadge status={tip.status} />
+                            <TipStatusBadge tip={tip} />
                             {!hasExpired &&
                               expirableTipStatuses.indexOf(tip.status) >= 0 && (
                                 <Tooltip

@@ -15,7 +15,7 @@ export function AdminTipCardContents({ tip }: AdminTipCardContentsProps) {
       <Row justify="space-between">
         <Text b>{tip.id}</Text>
 
-        <TipStatusBadge status={tip.status} />
+        <TipStatusBadge tip={tip} />
       </Row>
       <Row justify="space-between">
         <Text>{formatDistance(new Date(), new Date(tip.created))} ago</Text>

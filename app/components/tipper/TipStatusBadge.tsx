@@ -1,13 +1,20 @@
 import { Badge } from "@nextui-org/react";
-import { TipStatus } from "@prisma/client";
+import { Tip } from "@prisma/client";
+import { PublicTip } from "types/PublicTip";
 
-export function TipStatusBadge({ status }: { status: TipStatus }) {
+type TipStatusBadgeProps = {
+  tip: Tip | PublicTip;
+};
+
+export function TipStatusBadge({ tip }: TipStatusBadgeProps) {
+  const status = tip.status;
   const color =
     status === "UNFUNDED"
       ? "error"
-      : status === "UNCLAIMED" || status === "RECLAIMED"
+      : (status === "UNCLAIMED" && !tip.claimLinkViewed) ||
+        status === "RECLAIMED"
       ? "warning"
-      : status === "CLAIMED"
+      : status === "CLAIMED" || (status === "UNCLAIMED" && tip.claimLinkViewed)
       ? "primary"
       : status === "WITHDRAWN"
       ? "success"
@@ -22,7 +29,11 @@ export function TipStatusBadge({ status }: { status: TipStatus }) {
         textTransform: "capitalize",
       }}
     >
-      {status.toLowerCase()}
+      {status !== "UNCLAIMED"
+        ? status.toLowerCase()
+        : tip.claimLinkViewed
+        ? "👀 Seen"
+        : "🙈 Unseen"}
     </Badge>
   );
 }

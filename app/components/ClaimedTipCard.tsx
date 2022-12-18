@@ -1,7 +1,6 @@
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
-  Badge,
   Button,
   Card,
   Col,
@@ -98,7 +97,7 @@ export function ClaimedTipCard({
               {expirableTipStatuses.indexOf(publicTip.status) > -1 ? (
                 <ExpiryBadge tip={publicTip} viewing={viewing} />
               ) : (
-                <TipStatusBadge status={publicTip.status} />
+                <TipStatusBadge tip={publicTip} />
               )}
             </Row>
             <Row css={{ mt: 6 }}>
@@ -177,18 +176,7 @@ export function ClaimedTipCard({
                 ) : undefined}
               </div>
               <div>
-                {publicTip.status === "UNCLAIMED" && (
-                  <>
-                    <Badge
-                      variant="flat"
-                      color={publicTip.claimLinkViewed ? "success" : "warning"}
-                    >
-                      {publicTip.claimLinkViewed ? "👀 Seen" : "🙈 Unseen"}
-                    </Badge>
-                    &nbsp;
-                  </>
-                )}
-                <TipStatusBadge status={publicTip.status} />
+                <TipStatusBadge tip={publicTip} />
               </div>
             </Row>
             <Row>
