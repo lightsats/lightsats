@@ -1,0 +1,49 @@
+# Replace this with your app's name
+app = "metabase"
+
+kill_signal = "SIGTERM"
+kill_timeout = 5
+
+[build]
+  # You might want to pin this version to a specific
+  # tag in order to avoid surprising updates.
+  image = "metabase/metabase:latest"
+
+# Mounts the Fly volume to the Metabase Docker image
+[mounts]
+  source = "metabase_data"
+  destination = "/metabase-data"
+
+[env]
+  # Tells Metabse to store the H2 database on
+  # the mounted volume.
+  MB_DB_FILE = "/metabase-data/metabase.db"
+
+[[services]]
+  internal_port = 3000
+  processes = ["app"]
+  protocol = "tcp"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "30s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
+
+  [[services.http_checks]]
+    grace_period = "30s"
+    interval = "15s"
+    method = "get"
+    path = "/api/health"
+    protocol = "http"
+    restart_limit = 3
+
