@@ -14,19 +14,23 @@ export async function checkTipHasBeenFunded(tip: Tip) {
     },
   });
   if (wallet && tip.invoiceId) {
-    const invoiceStatus = await getPayment(wallet.adminKey, tip.invoiceId);
-    if (invoiceStatus.paid) {
-      tip = await prisma.tip.update({
-        data: {
-          status: "UNCLAIMED",
-          numSmsTokens: TIP_NUM_SMS_TOKENS,
-        },
-        where: {
-          id: tip.id,
-        },
-      });
-      await createAchievement(tip.tipperId, "FUNDED_TIP");
-      // console.log("Tip has been funded: ", tip.id);
+    try {
+      const invoiceStatus = await getPayment(wallet.adminKey, tip.invoiceId);
+      if (invoiceStatus.paid) {
+        tip = await prisma.tip.update({
+          data: {
+            status: "UNCLAIMED",
+            numSmsTokens: TIP_NUM_SMS_TOKENS,
+          },
+          where: {
+            id: tip.id,
+          },
+        });
+        await createAchievement(tip.tipperId, "FUNDED_TIP");
+        // console.log("Tip has been funded: ", tip.id);
+      }
+    } catch (error) {
+      console.error("Failed to get tip invoice status", error);
     }
   }
   return tip;
