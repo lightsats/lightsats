@@ -4,6 +4,7 @@ import {
   BellIcon,
   BookOpenIcon,
   ChartBarIcon,
+  ChevronLeftIcon,
   HomeIcon,
   InformationCircleIcon,
   LightBulbIcon,
@@ -142,6 +143,13 @@ export function AppNavbar() {
       }}
     >
       <Navbar.Content activeColor="primary">
+        {router.pathname !== PageRoutes.dashboard && isPWA && (
+          <Button auto light onClick={() => router.back()} css={{ px: 0 }}>
+            <Icon>
+              <ChevronLeftIcon />
+            </Icon>
+          </Button>
+        )}
         {!hideNavbar && (
           <Navbar.Toggle
             aria-label="toggle navigation"
