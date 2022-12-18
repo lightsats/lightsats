@@ -1,7 +1,10 @@
-import { Collapse, Loading, Spacer, Text } from "@nextui-org/react";
+import { Card, Collapse, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { ClaimedTipCard } from "components/ClaimedTipCard";
 import { DashboardButton } from "components/HomeButton";
 import { Login } from "components/Login";
+import { BecomeATipper } from "components/tippee/BecomeATipper";
+import { ClaimTipsFaster } from "components/tippee/ClaimTipsFaster";
+import { NewTipButton } from "components/tipper/NewTipButton";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
@@ -122,6 +125,34 @@ const ClaimTipPage: NextPage = () => {
           (session && session.user.id !== publicTip.tippeeId)) ? (
         <>
           <Text>This tip is no longer available.</Text>
+          {!session && !publicTip.skipOnboarding ? (
+            <>
+              <Spacer />
+              <ClaimTipsFaster />
+            </>
+          ) : session?.user.userType !== "tipper" ? (
+            <>
+              <Spacer />
+              <BecomeATipper />
+            </>
+          ) : (
+            <>
+              <Spacer />
+              <Card css={{ dropShadow: "$sm" }}>
+                <Card.Body css={{ textAlign: "center" }}>
+                  <Text h3>Send a tip instead</Text>
+                  <Text>
+                    Lightsats makes it easy for you to send tips and onboard
+                    people to bitcoin.
+                  </Text>
+                  <Spacer />
+                  <Row justify="center">
+                    <NewTipButton />
+                  </Row>
+                </Card.Body>
+              </Card>
+            </>
+          )}
           <Spacer />
           <DashboardButton />
         </>
