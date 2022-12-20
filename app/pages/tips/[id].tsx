@@ -174,6 +174,17 @@ const TipPage: NextPage = () => {
                 <Spacer />
               </>
             )}
+            {tip.status === "UNFUNDED" && tip.groupId && (
+              <>
+                <Text blockquote>
+                  {"This tip is part of a group which hasn't been funded yet."}
+                  <Link href={`${PageRoutes.tipGroups}/${tip.groupId}`}>
+                    Go to the group
+                  </Link>
+                </Text>
+                <Spacer />
+              </>
+            )}
             {tip.status === "UNCLAIMED" && <ShareUnclaimedTip tip={tip} />}
           </>
         )}

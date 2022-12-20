@@ -41,6 +41,7 @@ export enum PageRoutes {
   notifications = "/notifications",
   leaderboards = "/leaderboards",
   newLeaderboard = "/leaderboards/new",
+  tipGroups = "/tip-groups",
 }
 
 export const bitcoinJourneyPages = [

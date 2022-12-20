@@ -1,5 +1,6 @@
 import { ForwardIcon, InformationCircleIcon } from "@heroicons/react/24/solid";
 import {
+  Badge,
   Button,
   Card,
   Col,
@@ -16,12 +17,12 @@ import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Divider } from "components/Divider";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
-import { SatsPrice } from "components/SatsPrice";
 import { useExchangeRates } from "hooks/useExchangeRates";
 import { useTips } from "hooks/useTips";
 import {
   appName,
   FEE_PERCENT,
+  MAX_TIP_GROUP_QUANTITY,
   MAX_TIP_SATS,
   MINIMUM_FEE_SATS,
   MIN_TIP_SATS,
@@ -47,6 +48,7 @@ const tippeeLocaleSelectOptions: SelectOption[] = locales.map((locale) => ({
 
 export type TipFormData = {
   amount: number;
+  quantity: number;
   amountString: string;
   currency: string;
   note: string | undefined;
@@ -77,6 +79,7 @@ type TipFormProps = {
 export function TipForm({
   onSubmit: onSubmitProp,
   defaultValues = {
+    quantity: 1,
     amountString: "1",
     currency: "USD",
     expiresIn: 21,
@@ -117,6 +120,7 @@ export function TipForm({
 
   const watchedAmountString = watch("amountString");
   const watchedAmount = watch("amount");
+  const watchedQuantity = watch("quantity");
   const watchedCurrency = watch("currency");
   const watchedTippeeLocale = watch("tippeeLocale");
   const watchedSkipOnboarding = watch("skipOnboarding");
@@ -337,6 +341,48 @@ export function TipForm({
                   </Row>
                 </Col>
               </Row>
+              <Spacer />
+              <Row align="center">
+                <Row align="center">
+                  <Tooltip
+                    placement="right"
+                    content={`Create and print tips in bulk!`}
+                  >
+                    <Text>Quantity</Text>
+                  </Tooltip>
+                  <Spacer x={0.125} />
+                  <Badge size="sm" color="warning">
+                    NEW
+                  </Badge>
+                </Row>
+                <Col>
+                  <Row justify="flex-end">
+                    <Controller
+                      name="quantity"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          {...register("quantity", {
+                            valueAsNumber: true,
+                          })}
+                          min={1}
+                          max={MAX_TIP_GROUP_QUANTITY}
+                          step={1}
+                          type="number"
+                          inputMode="numeric"
+                          aria-label="quantity"
+                          css={{ width: "100px" }}
+                          size="lg"
+                          fullWidth
+                          bordered
+                          autoFocus
+                        />
+                      )}
+                    />
+                  </Row>
+                </Col>
+              </Row>
               <Divider />
               <Row>
                 <Col>
@@ -359,13 +405,19 @@ export function TipForm({
                     <>
                       <Text>
                         <FiatPrice
-                          sats={!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
+                          sats={
+                            !isNaN(watchedAmountFee)
+                              ? watchedAmountFee * watchedQuantity
+                              : 0
+                          }
                           currency={watchedCurrency}
                           exchangeRate={watchedExchangeRate}
                         />
                       </Text>
                       <Text small css={{ position: "relative", top: "-5px" }}>
-                        {!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
+                        {!isNaN(watchedAmountFee)
+                          ? watchedAmountFee * watchedQuantity
+                          : 0}
                         {" sats"}
                       </Text>
                     </>
@@ -387,34 +439,25 @@ export function TipForm({
                         exchangeRate={exchangeRates[watchedCurrency]}
                         sats={
                           !isNaN(watchedAmount)
-                            ? (inputMethod === "fiat"
+                            ? ((inputMethod === "fiat"
                                 ? getSatsAmount(
                                     watchedAmount,
                                     watchedExchangeRate
                                   )
-                                : watchedAmount) + watchedAmountFee
+                                : watchedAmount) +
+                                watchedAmountFee) *
+                              watchedQuantity
                             : 0
                         }
                       />
                     </Text>
                     <Text small css={{ position: "relative", top: "-5px" }}>
-                      <SatsPrice
-                        exchangeRate={exchangeRates[watchedCurrency]}
-                        fiat={
-                          !isNaN(watchedAmount)
-                            ? inputMethod === "sats"
-                              ? getFiatAmount(
-                                  watchedAmount + watchedAmountFee,
-                                  watchedExchangeRate
-                                )
-                              : watchedAmount +
-                                getFiatAmount(
-                                  watchedAmountFee,
-                                  watchedExchangeRate
-                                )
-                            : 0
-                        }
-                      />
+                      {((inputMethod === "sats"
+                        ? watchedAmount
+                        : getSatsAmount(watchedAmount, watchedExchangeRate)) +
+                        watchedAmountFee) *
+                        watchedQuantity}{" "}
+                      sats
                     </Text>
                   </Col>
                 </Row>
