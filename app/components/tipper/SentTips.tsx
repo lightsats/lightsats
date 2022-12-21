@@ -1,12 +1,13 @@
 import { Grid, Loading, Spacer, Text } from "@nextui-org/react";
 import { NewTipButton } from "components/tipper/NewTipButton";
 import { SentTipCard } from "components/tipper/SentTipCard";
-import { useSentTips } from "hooks/useTips";
+import { SentTipGroupCard } from "components/tipper/SentTipGroupCard";
+import { useSentTipsWithGroups } from "hooks/useTips";
 import { useSession } from "next-auth/react";
 
 export function SentTips() {
   const { data: session } = useSession();
-  const { data: tips } = useSentTips();
+  const { data: tips } = useSentTipsWithGroups();
 
   if (session && !tips) {
     return <Loading color="currentColor" size="sm" />;
@@ -16,9 +17,13 @@ export function SentTips() {
     <>
       {tips && tips.length > 0 && (
         <Grid.Container justify="center" gap={1}>
-          {tips.map((tip) => (
-            <SentTipCard tip={tip} key={tip.id} />
-          ))}
+          {tips.map((tip) =>
+            tip.group ? (
+              <SentTipGroupCard tipGroup={tip.group} key={tip.id} />
+            ) : (
+              <SentTipCard tip={tip} key={tip.id} />
+            )
+          )}
         </Grid.Container>
       )}
       {!tips ||

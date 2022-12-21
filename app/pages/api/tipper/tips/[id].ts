@@ -95,11 +95,13 @@ async function getTip(
   req: NextApiRequest,
   res: NextApiResponse<Tip>
 ) {
-  // FIXME: this should be in a separate endpoint (GET should be idempotent)
-  // currently used to check if the tip has been funded yet (polled on the tip page)
-  tip = await checkTipHasBeenFunded(tip);
+  if (!tip.groupId) {
+    // FIXME: this should be in a separate endpoint (GET should be idempotent)
+    // currently used to check if the tip has been funded yet (polled on the tip page)
+    tip = await checkTipHasBeenFunded(tip);
 
-  tip = await regenerateExpiredTipInvoice(tip);
+    tip = await regenerateExpiredTipInvoice(tip);
+  }
 
   return res.status(StatusCodes.OK).json(tip);
 }

@@ -36,6 +36,7 @@ export function SentTipCard({ tip }: SentTipCardProps) {
             <Card.Body>
               <Row justify="space-between">
                 <Text color="#F8AF43">
+                  {tip.groupId && <Badge>Part of a group</Badge>}
                   <TipStatusBadge tip={tip} />
                   {!hasExpired &&
                     expirableTipStatuses.indexOf(tip.status) >= 0 && (

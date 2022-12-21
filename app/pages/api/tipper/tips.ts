@@ -15,10 +15,11 @@ import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 import { CreateTipRequest } from "types/TipRequest";
+import { TipWithGroup } from "types/TipWithGroup";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Tip | Tip[] | TipGroupWithTips>
+  res: NextApiResponse<Tip | Tip[] | TipGroupWithTips | TipWithGroup[]>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
@@ -37,17 +38,44 @@ export default async function handler(
 async function getTips(
   session: Session,
   req: NextApiRequest,
-  res: NextApiResponse<Tip[]>
+  res: NextApiResponse<Tip[] | TipWithGroup[]>
 ) {
+  const { withGroups } = req.query;
+
   const tips = await prisma.tip.findMany({
     where: {
       tipperId: {
         equals: session.user.id,
       },
+      ...(withGroups
+        ? {
+            OR: [
+              {
+                groupTipIndex: {
+                  equals: 1,
+                },
+              },
+              {
+                groupTipIndex: {
+                  equals: null,
+                },
+              },
+            ],
+          }
+        : {}),
     },
     orderBy: {
       created: "desc",
     },
+    include: withGroups
+      ? {
+          group: {
+            include: {
+              tips: true,
+            },
+          },
+        }
+      : undefined,
   });
 
   return res.status(StatusCodes.OK).json(tips);

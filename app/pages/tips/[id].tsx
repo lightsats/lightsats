@@ -105,6 +105,7 @@ const TipPage: NextPage = () => {
     ) {
       return (
         <>
+          {tip.groupId && <TipGroupLink groupId={tip.groupId} />}
           <ClaimProgressTracker tipId={tip.id} />
           <Spacer />
           <Card css={{ dropShadow: "$sm", background: "$primary" }}>
@@ -154,6 +155,7 @@ const TipPage: NextPage = () => {
     }
     return (
       <>
+        {tip.groupId && <TipGroupLink groupId={tip.groupId} />}
         {!hasExpired ? (
           <>
             <TipPageStatusHeader status={tip.status} />
@@ -178,9 +180,6 @@ const TipPage: NextPage = () => {
               <>
                 <Text blockquote>
                   {"This tip is part of a group which hasn't been funded yet."}
-                  <Link href={`${PageRoutes.tipGroups}/${tip.groupId}`}>
-                    Go to the group
-                  </Link>
                 </Text>
                 <Spacer />
               </>
@@ -280,3 +279,12 @@ const TipPage: NextPage = () => {
 export default TipPage;
 
 export { getStaticProps, getStaticPaths };
+
+function TipGroupLink({ groupId }: { groupId: string }) {
+  return (
+    <Text blockquote>
+      {"This tip is part of a group"}
+      <Link href={`${PageRoutes.tipGroups}/${groupId}`}>Go to the group</Link>
+    </Text>
+  );
+}
