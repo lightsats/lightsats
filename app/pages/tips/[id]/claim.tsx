@@ -80,6 +80,18 @@ const ClaimTipPage: NextPage = () => {
     }
   }, [destinationRoute, isClaiming, publicTip, router, session, hasExpired]);
 
+  // tip was already withdrawn by the current user (open old link)
+  React.useEffect(() => {
+    if (
+      session &&
+      publicTip &&
+      publicTip.status === "WITHDRAWN" &&
+      publicTip.tippeeId === session.user.id
+    ) {
+      router.push(PageRoutes.home);
+    }
+  }, [publicTip, router, session]);
+
   // autoclaim after login
   React.useEffect(() => {
     if (canClaim && !isClaiming) {
