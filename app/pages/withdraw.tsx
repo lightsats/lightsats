@@ -74,6 +74,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
           });
           if (result.ok) {
             toast.success("Funds withdrawn!", { duration: 5000 });
+            router.push(PageRoutes.dashboard);
           } else {
             const body = await result.text();
             toast.error(
@@ -91,7 +92,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
         setSubmitting(false);
       })();
     },
-    [isSubmitting, flow, tipId]
+    [isSubmitting, flow, tipId, router]
   );
 
   const submitForm = React.useCallback(() => {
