@@ -114,6 +114,8 @@ model Tip {
   tippeeLocale String? // set by tipper when creating tip - tippee does not have an account yet
   invoice String?
   invoiceId String?
+  preparationInvoice String? // payment from tip group wallet
+  preparationInvoiceId String? // payment from tip group wallet
   lnbitsWallet LnbitsWallet?
   status TipStatus
   created DateTime @default(now())

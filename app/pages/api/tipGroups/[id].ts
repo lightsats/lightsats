@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { checkTipGroupHasBeenFunded } from "lib/checkTipGroupHasBeenFunded";
+import { prepareTipGroupTips } from "lib/prepareTipGroupTips";
 import prisma from "lib/prismadb";
 import { regenerateExpiredTipGroupInvoice } from "lib/regenerateExpiredTipGroupInvoice";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -49,6 +50,7 @@ async function getTipGroup(
 
   tipGroup = await checkTipGroupHasBeenFunded(tipGroup);
   tipGroup = await regenerateExpiredTipGroupInvoice(tipGroup);
+  tipGroup = await prepareTipGroupTips(tipGroup);
 
   return res.status(StatusCodes.OK).json(tipGroup);
 }

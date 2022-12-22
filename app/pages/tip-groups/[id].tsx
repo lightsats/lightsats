@@ -15,7 +15,6 @@ import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import React from "react";
 import useSWR, { SWRConfiguration } from "swr";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 
@@ -31,46 +30,19 @@ const TipGroupPage: NextPage = () => {
     pollTipGroupConfig
   );
 
-  const unfundedTips = tipGroup?.tips.filter(
-    (tip) => tip.status === "UNFUNDED"
-  );
-  const fundedProgress =
-    tipGroup && unfundedTips
-      ? (1 - unfundedTips?.length / tipGroup?.tips.length) * 100
-      : 0;
-  const firstUnfundedTipId = unfundedTips?.[0]?.id;
-
-  React.useEffect(() => {
-    if (firstUnfundedTipId) {
-      (async () => {
-        const result = await fetch(
-          `${ApiRoutes.tipGroups}/${id}/tips/${firstUnfundedTipId}/prepare`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        // TODO: if result is ok, mutate the current tip group for faster processing
-        if (!result.ok) {
-          console.error(
-            "Failed to prepare group tip",
-            firstUnfundedTipId,
-            result.statusText
-          );
-        }
-      })();
-    }
-  }, [firstUnfundedTipId, id]);
-
-  // const hasExpired = tipGroup && hasTipExpired(tipGroup.tips[0]); // FIXME: individual tips could have different expiry
-
   if (tipGroup) {
+    const unfundedTips = tipGroup.tips.filter(
+      (tip) => tip.status === "UNFUNDED"
+    );
+    const fundedProgress =
+      tipGroup && unfundedTips
+        ? (1 - unfundedTips.length / tipGroup.tips.length) * 100
+        : 0;
     if (tipGroup.status === "FUNDED" && fundedProgress < 100) {
       return (
         <>
           <Text>Preparing tips...</Text>
           <Progress value={fundedProgress} />
-          <Text size="small">Please stay on this page</Text>
         </>
       );
     }
