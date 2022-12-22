@@ -1,8 +1,17 @@
-import { Grid, Loading, Progress, Spacer, Text } from "@nextui-org/react";
+import {
+  Button,
+  Grid,
+  Loading,
+  Progress,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
+import { NextLink } from "components/NextLink";
 import { SentTipCard } from "components/tipper/SentTipCard";
 import { PayInvoice } from "components/tipper/TipPage/PayInvoice";
 import { ApiRoutes } from "lib/ApiRoutes";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
+import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -81,7 +90,19 @@ const TipGroupPage: NextPage = () => {
             <Spacer />
           </>
         )}
+
         <Text h6>Manage Tips</Text>
+        <>
+          <NextLink
+            href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
+            passHref
+          >
+            <a>
+              <Button>Bulk Edit</Button>
+            </a>
+          </NextLink>
+          <Spacer />
+        </>
         <Grid.Container justify="center" gap={1}>
           {tipGroup.tips.map((tip) => (
             <SentTipCard tip={tip} key={tip.id} />

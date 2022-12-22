@@ -74,6 +74,7 @@ type TipFormProps = {
   onSubmit(formData: TipFormSubmitData): Promise<void>;
   defaultValues?: Partial<TipFormData>;
   mode: "create" | "update";
+  quantity?: number;
 };
 
 export function TipForm({
@@ -87,6 +88,7 @@ export function TipForm({
     tippeeLocale: DEFAULT_LOCALE,
   },
   mode,
+  quantity = 1,
 }: TipFormProps) {
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [inputMethod, setInputMethod] = React.useState<InputMethod>("fiat");
@@ -120,7 +122,10 @@ export function TipForm({
 
   const watchedAmountString = watch("amountString");
   const watchedAmount = watch("amount");
-  const watchedQuantity = watch("quantity");
+  let watchedQuantity = watch("quantity");
+  if (isNaN(watchedQuantity)) {
+    watchedQuantity = 1;
+  }
   const watchedCurrency = watch("currency");
   const watchedTippeeLocale = watch("tippeeLocale");
   const watchedSkipOnboarding = watch("skipOnboarding");
@@ -352,7 +357,7 @@ export function TipForm({
                   </Tooltip>
                   <Spacer x={0.125} />
                   <Badge size="sm" color="warning">
-                    NEW
+                    BETA
                   </Badge>
                 </Row>
                 <Col>
@@ -469,16 +474,28 @@ export function TipForm({
               <Controller
                 name="tippeeName"
                 control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    label="Recipient name"
-                    placeholder="Hal Finney"
-                    maxLength={255}
-                    fullWidth
-                    bordered
-                  />
-                )}
+                render={({ field }) =>
+                  quantity > 1 ? (
+                    <Textarea
+                      {...field}
+                      label={"Recipient names (one per line)"}
+                      placeholder={`Hal Finney
+Micheal Saylor`}
+                      fullWidth
+                      bordered
+                      rows={quantity}
+                    />
+                  ) : (
+                    <Input
+                      {...field}
+                      label="Recipient name"
+                      placeholder="Hal Finney"
+                      maxLength={255}
+                      fullWidth
+                      bordered
+                    />
+                  )
+                }
               />
               <Spacer />
               <Controller
@@ -487,8 +504,14 @@ export function TipForm({
                 render={({ field }) => (
                   <Textarea
                     {...field}
-                    label="Note to recipient"
-                    placeholder="Thank you for your amazing service!"
+                    label={
+                      quantity > 1 ? "Note to recipients" : "Note to recipient"
+                    }
+                    placeholder={
+                      quantity > 1
+                        ? "Thank you {{name}} for your amazing service!"
+                        : "Thank you for your amazing service!"
+                    }
                     maxLength={255}
                     fullWidth
                     bordered
@@ -604,7 +627,15 @@ export function TipForm({
         {isSubmitting ? (
           <Loading color="currentColor" size="sm" />
         ) : (
-          <>{mode === "create" ? "Create tip" : "Update tip"}</>
+          <>
+            {quantity > 1 || watchedQuantity > 1
+              ? mode === "create"
+                ? "Create tips"
+                : "Update tips"
+              : mode === "create"
+              ? "Create tip"
+              : "Update tip"}
+          </>
         )}
       </Button>
     </form>

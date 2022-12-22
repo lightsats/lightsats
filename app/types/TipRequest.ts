@@ -13,3 +13,9 @@ export type UpdateTipRequest = TipRequestBase & {
   tippeeLocale: string;
   note?: string;
 };
+
+export type UpdateTipsRequest = TipRequestBase & {
+  tippeeLocale: string;
+  tippeeNames?: string[];
+  note?: string;
+};
