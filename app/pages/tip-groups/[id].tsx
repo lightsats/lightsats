@@ -1,8 +1,10 @@
 import {
   Button,
+  Card,
   Grid,
   Loading,
   Progress,
+  Row,
   Spacer,
   Text,
 } from "@nextui-org/react";
@@ -13,8 +15,10 @@ import { ApiRoutes } from "lib/ApiRoutes";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
+import { getClaimUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import React from "react";
 import useSWR, { SWRConfiguration } from "swr";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 
@@ -23,6 +27,7 @@ const pollTipGroupConfig: SWRConfiguration = { refreshInterval: 1000 };
 const TipGroupPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
+  const [showClaimUrls, setShowClaimUrls] = React.useState(false);
 
   const { data: tipGroup } = useSWR<TipGroupWithTips>(
     `${ApiRoutes.tipGroups}/${id}`,
@@ -75,6 +80,25 @@ const TipGroupPage: NextPage = () => {
           </NextLink>
           <Spacer />
         </>
+        <Button onClick={() => setShowClaimUrls((current) => !current)}>
+          Show/Hide claim URLs
+        </Button>
+        <Spacer />
+        {showClaimUrls && (
+          <>
+            <Card>
+              <Card.Body>
+                {tipGroup.tips.map((tip) => (
+                  <Row key={tip.id}>
+                    <Text>{getClaimUrl(tip)}</Text>
+                  </Row>
+                ))}
+              </Card.Body>
+            </Card>
+            <Spacer />
+          </>
+        )}
+
         <Grid.Container justify="center" gap={1}>
           {tipGroup.tips.map((tip) => (
             <SentTipCard tip={tip} key={tip.id} />

@@ -14,6 +14,10 @@ export function AdminTipGroupCardContents({
       <Row justify="space-between">
         <Text b>{tipGroup.id}</Text>
         <Text>{tipGroup.status}</Text>
+        {tipGroup.status === "FUNDED" &&
+          tipGroup.tips.some((tip) => tip.status === "UNCLAIMED") && (
+            <Text>Not ready yet</Text>
+          )}
       </Row>
       <Row justify="space-between">
         <Text>
