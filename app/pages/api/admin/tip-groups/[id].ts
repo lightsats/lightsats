@@ -5,11 +5,11 @@ import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
-import { AdminExtendedUser } from "types/Admin";
+import { AdminExtendedTipGroup } from "types/Admin";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<AdminExtendedUser>
+  res: NextApiResponse<AdminExtendedTipGroup>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
@@ -22,78 +22,48 @@ export default async function handler(
 
   switch (req.method) {
     case "GET":
-      return handleGetUser(req, res);
+      return handleGetTipGroup(req, res);
     default:
       return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 
-async function handleGetUser(
+async function handleGetTipGroup(
   req: NextApiRequest,
-  res: NextApiResponse<AdminExtendedUser>
+  res: NextApiResponse<AdminExtendedTipGroup>
 ) {
   const { id } = req.query;
-  const user = await prisma.user.findFirst({
+  const tipGroup = await prisma.tipGroup.findUnique({
     where: {
       id: id as string,
     },
     include: {
-      tipsReceived: {
-        orderBy: {
-          created: "desc",
-        },
-      },
-      tipsSent: {
-        orderBy: {
-          created: "desc",
-        },
-      },
-      tipGroups: {
-        include: {
-          tips: true,
-        },
-      },
+      tips: true,
+      tipper: true,
       lnbitsWallet: true,
-      withdrawals: {
-        include: {
-          tips: true,
-          user: true,
-        },
-        orderBy: {
-          created: "desc",
-        },
-      },
-      withdrawalErrors: {
-        include: {
-          user: true,
-          tip: true,
-        },
-        orderBy: {
-          created: "desc",
-        },
-      },
     },
   });
 
-  if (!user) {
+  if (!tipGroup) {
     return res.status(StatusCodes.NOT_FOUND).end();
   }
 
   let walletBalance = 0;
-  if (user.lnbitsWallet) {
+  if (tipGroup.lnbitsWallet) {
     try {
-      walletBalance = await getWalletBalance(user.lnbitsWallet.adminKey);
+      walletBalance = await getWalletBalance(tipGroup.lnbitsWallet.adminKey);
     } catch (error) {
       console.error(
-        "Admin user: Failed to retrieve wallet balance for user " + user.id
+        "Admin tip: Failed to retrieve wallet balance for tip group " +
+          tipGroup.id
       );
     }
   }
 
   return res.json({
-    ...user,
-    lnbitsWalletUrl: user.lnbitsWallet
-      ? `${process.env.LNBITS_URL}/wallet?usr=${user.lnbitsWallet.lnbitsUserId}`
+    ...tipGroup,
+    lnbitsWalletUrl: tipGroup.lnbitsWallet
+      ? `${process.env.LNBITS_URL}/wallet?usr=${tipGroup.lnbitsWallet.lnbitsUserId}`
       : undefined,
     walletBalance,
   });

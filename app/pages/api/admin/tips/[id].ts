@@ -41,6 +41,11 @@ async function handleGetTip(
       tippee: true,
       tipper: true,
       sentReminders: true,
+      group: {
+        include: {
+          tips: true,
+        },
+      },
       withdrawal: {
         include: {
           user: true,

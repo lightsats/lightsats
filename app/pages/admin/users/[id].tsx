@@ -1,6 +1,7 @@
 import { Link, Loading, Row, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
+import { AdminTipGroupsList } from "components/admin/AdminTipGroupsList";
 import { AdminTipsList } from "components/admin/AdminTipsList";
 import { AdminWithdrawalErrorsList } from "components/admin/AdminWithdrawalErrorsList";
 import { AdminWithdrawalsList } from "components/admin/AdminWithdrawalsList";
@@ -56,6 +57,10 @@ const AdminUserPage: NextPage = () => {
       <Spacer />
       <AdminUserTips title="Tips Received" tips={user.tipsReceived} />
       <Spacer />
+      <h2>Tip Groups</h2>
+      <AdminTipGroupsList tipGroups={user.tipGroups} />
+      <Spacer />
+
       <h2>Withdrawals</h2>
       <AdminWithdrawalsList withdrawals={user.withdrawals} />
       <Spacer />

@@ -84,7 +84,6 @@ async function prepareTipGroupTip(tipGroup: TipGroupWithTips, tip: Tip) {
     return;
   }
 
-  // TODO: store preparation invoice in Tip
   let invoice = tip.preparationInvoice;
   if (!invoice) {
     const createInvoiceResult = await createInvoice(

@@ -16,6 +16,7 @@ export function AdminTipCardContents({ tip }: AdminTipCardContentsProps) {
         <Text b>{tip.id}</Text>
 
         <TipStatusBadge tip={tip} />
+        {tip.groupId && <Text>In a group</Text>}
       </Row>
       <Row justify="space-between">
         <Text>{formatDistance(new Date(), new Date(tip.created))} ago</Text>
