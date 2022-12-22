@@ -49,6 +49,9 @@ async function deleteTip(
   if (!process.env.LNBITS_API_KEY) {
     throw new Error("No LNBITS_API_KEY provided");
   }
+  if (tip.groupId) {
+    throw new Error("Tips in groups cannot be individually deleted");
+  }
 
   if (tip.status === TipStatus.UNFUNDED) {
     const lnbitsWallet = await prisma.lnbitsWallet.findUnique({
