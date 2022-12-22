@@ -4,7 +4,6 @@ import {
   Card,
   Collapse,
   Input,
-  Link,
   Loading,
   Row,
   Spacer,
@@ -13,6 +12,7 @@ import {
 import { WithdrawalFlow } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { FlexBox } from "components/FlexBox";
+import { HomeButton } from "components/HomeButton";
 import { Icon } from "components/Icon";
 import { ItemsList } from "components/items/ItemsList";
 import { LightsatsQRCode } from "components/LightsatsQRCode";
@@ -249,9 +249,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
             } funds to withdraw right now.`}
           </Text>
           <Spacer />
-          <NextLink href={PageRoutes.dashboard} passHref>
-            <Link>Home</Link>
-          </NextLink>
+          <HomeButton />
         </>
       ) : (
         <div style={{ maxWidth: "100%" }}>
