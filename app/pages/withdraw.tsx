@@ -121,27 +121,53 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
   const [prevAvailableBalance, setPrevAvailableBalance] =
     React.useState(availableBalance);
   const [hasWithdrawn, setWithdrawn] = React.useState(false);
+  const tippeeWithdrawnTipsCount = tips?.filter(
+    (tip) => tip.status === "WITHDRAWN"
+  ).length;
+  const [initialTippeeWithdrawnTipsCount, setInitialTippeeWithdrawnTipsCount] =
+    React.useState<number | undefined>(tippeeWithdrawnTipsCount);
+  React.useEffect(() => {
+    if (initialTippeeWithdrawnTipsCount === undefined) {
+      setInitialTippeeWithdrawnTipsCount(tippeeWithdrawnTipsCount);
+    }
+  }, [initialTippeeWithdrawnTipsCount, tippeeWithdrawnTipsCount]);
+
   React.useEffect(() => {
     if (prevAvailableBalance > 0 && availableBalance === 0) {
-      if (flow === "tipper" || flow === "tippee") {
+      // Available balance dropped to 0, so most likely a successful withdrawal.
+
+      // For the anonymous flow we cannot know if this person or someone else withdrew the tip.
+      // In that case the claim page will be updated to provide the user with options of what to do next
+      // (e.g. create an account or send a tip).
+
+      // For a tippee, there is a chance the tipper could have reclaimed the tip before it was withdrawn
+      // (also decreasing the tippee's available balance)
+      // so there is also a check to make sure the tippee's number of withdrawn tips has increased.
+      if (
+        flow === "tipper" ||
+        (flow === "tippee" &&
+          initialTippeeWithdrawnTipsCount !== undefined &&
+          tippeeWithdrawnTipsCount &&
+          tippeeWithdrawnTipsCount > initialTippeeWithdrawnTipsCount)
+      ) {
         setWithdrawn(true);
-      }
-      toast.success("Funds withdrawn!", { duration: 5000 });
-      switch (flow) {
-        case "tipper":
+        toast.success("Funds withdrawn!", { duration: 5000 });
+        if (flow === "tipper") {
           router.push(PageRoutes.dashboard);
-          break;
-        case "tippee":
+        } else {
           router.push(PageRoutes.journeyCongratulations);
-          break;
-        case "anonymous":
-          // We cannot know if this person or someone else withdrew the tip.
-          // The page will be updated to provide the user with options of what to do next (e.g. create an account or send a tip)
-          break;
+        }
       }
     }
     setPrevAvailableBalance(availableBalance);
-  }, [availableBalance, flow, prevAvailableBalance, router]);
+  }, [
+    availableBalance,
+    flow,
+    initialTippeeWithdrawnTipsCount,
+    prevAvailableBalance,
+    router,
+    tippeeWithdrawnTipsCount,
+  ]);
 
   React.useEffect(() => {
     if (availableBalance > 0) {
