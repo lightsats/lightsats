@@ -1,16 +1,16 @@
 {
     "email": "البريد الإلكتروني",
-    "phone": "",
-    "lightning": "",
-    "loginWithLightning": "",
-    "or": "",
-    "copy": "",
-    "copiedToClipboard": "",
-    "verifyPhoneMessage": "",
-    "checkEmailTitle": "",
-    "checkEmailText": "",
-    "checkSMSTitle": "",
-    "checkSMSText": "",
+    "phone": "الهاتف",
+    "lightning": "برق⚡",
+    "loginWithLightning": "تسجيل الدخول باستخدام Lightning",
+    "or": "أو",
+    "copy": "ينسخ",
+    "copiedToClipboard": "نسخ إلى الحافظة",
+    "verifyPhoneMessage": "تسجيل الدخول إلى Lightsats",
+    "checkEmailTitle": "تحقق من بريدك الوارد",
+    "checkEmailText": "تم إرسال رابط سحري 🪄 إلى صندوق الوارد الخاص بك. انقر فوقه لتأكيد عنوان البريد الإلكتروني الخاص بك.",
+    "checkSMSTitle": "افحص هاتفك",
+    "checkSMSText": "رابط سحري 🪄 تم ارساله لهاتفك. انقر فوقه لتأكيد رقم هاتفك.",
     "createdAgo": "",
     "amountInSats": "",
     "openInWallet": ""
