@@ -9,11 +9,12 @@ import React from "react";
 import toast from "react-hot-toast";
 import { requestProvider } from "webln";
 
-type PayTipInvoiceProps = {
+type PayInvoiceProps = {
   invoice: string;
+  variant: "tip" | "tipGroup";
 };
 
-export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
+export function PayInvoice({ variant, invoice }: PayInvoiceProps) {
   const { t } = useTranslation(["common"]);
   React.useEffect(() => {
     if (invoice) {
@@ -41,7 +42,9 @@ export function PayTipInvoice({ invoice }: PayTipInvoiceProps) {
           <Row>
             <Col span={10}>
               <Text size={20} b>
-                💸 Fund this tip
+                {variant === "tip"
+                  ? "💸 Fund this tip"
+                  : "💸 Fund this tip group"}
               </Text>
             </Col>
 

@@ -1,5 +1,7 @@
 import { StatusCodes } from "http-status-codes";
+import { checkTipGroupHasBeenFunded } from "lib/checkTipGroupHasBeenFunded";
 import prisma from "lib/prismadb";
+import { regenerateExpiredTipGroupInvoice } from "lib/regenerateExpiredTipGroupInvoice";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -32,12 +34,12 @@ export default async function handler(
 
   switch (req.method) {
     case "GET":
-      return getTip(tipGroup, req, res);
+      return getTipGroup(tipGroup, req, res);
     default:
       return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
-async function getTip(
+async function getTipGroup(
   tipGroup: TipGroupWithTips,
   req: NextApiRequest,
   res: NextApiResponse<TipGroupWithTips>
@@ -45,9 +47,8 @@ async function getTip(
   // FIXME: this should be in a separate endpoint (GET should be idempotent)
   // currently used to check if the tip has been funded yet (polled on the tip page)
 
-  // TODO: implement
-  //tipGroup = await checkTipHasBeenFunded(tipGroup);
-  //tipGroup = await regenerateExpiredTipInvoice(tipGroup);
+  tipGroup = await checkTipGroupHasBeenFunded(tipGroup);
+  tipGroup = await regenerateExpiredTipGroupInvoice(tipGroup);
 
   return res.status(StatusCodes.OK).json(tipGroup);
 }

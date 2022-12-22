@@ -12,7 +12,7 @@ import { ConfettiContainer } from "components/ConfettiContainer";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTracker";
-import { PayTipInvoice } from "components/tipper/TipPage/PayTipInvoice";
+import { PayInvoice } from "components/tipper/TipPage/PayInvoice";
 import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
 import { useLeaderboardPosition } from "hooks/useLeaderboardPosition";
@@ -172,7 +172,7 @@ const TipPage: NextPage = () => {
           <>
             {tip.status === "UNFUNDED" && tip.invoice && (
               <>
-                <PayTipInvoice invoice={tip.invoice} />
+                <PayInvoice invoice={tip.invoice} variant="tip" />
                 <Spacer />
               </>
             )}
