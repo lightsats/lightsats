@@ -1,10 +1,8 @@
-import { Card, Collapse, Loading, Row, Spacer, Text } from "@nextui-org/react";
+import { Collapse, Loading, Spacer, Text } from "@nextui-org/react";
 import { ClaimedTipCard } from "components/ClaimedTipCard";
-import { DashboardButton } from "components/HomeButton";
+import { HomeButton } from "components/HomeButton";
 import { Login } from "components/Login";
-import { BecomeATipper } from "components/tippee/BecomeATipper";
-import { ClaimTipsFaster } from "components/tippee/ClaimTipsFaster";
-import { NewTipButton } from "components/tipper/NewTipButton";
+import { UnavailableTipActions } from "components/UnavailableTipActions";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
@@ -80,6 +78,18 @@ const ClaimTipPage: NextPage = () => {
     }
   }, [destinationRoute, isClaiming, publicTip, router, session, hasExpired]);
 
+  // tip was already withdrawn by the current user (open old link)
+  React.useEffect(() => {
+    if (
+      session &&
+      publicTip &&
+      publicTip.status === "WITHDRAWN" &&
+      publicTip.tippeeId === session.user.id
+    ) {
+      router.push(PageRoutes.dashboard);
+    }
+  }, [publicTip, router, session]);
+
   // autoclaim after login
   React.useEffect(() => {
     if (canClaim && !isClaiming) {
@@ -125,36 +135,10 @@ const ClaimTipPage: NextPage = () => {
           (session && session.user.id !== publicTip.tippeeId)) ? (
         <>
           <Text>This tip is no longer available.</Text>
-          {!session && !publicTip.skipOnboarding ? (
-            <>
-              <Spacer />
-              <ClaimTipsFaster />
-            </>
-          ) : session?.user.userType !== "tipper" ? (
-            <>
-              <Spacer />
-              <BecomeATipper />
-            </>
-          ) : (
-            <>
-              <Spacer />
-              <Card css={{ dropShadow: "$sm" }}>
-                <Card.Body css={{ textAlign: "center" }}>
-                  <Text h3>Send a tip instead</Text>
-                  <Text>
-                    Lightsats makes it easy for you to send tips and onboard
-                    people to bitcoin.
-                  </Text>
-                  <Spacer />
-                  <Row justify="center">
-                    <NewTipButton />
-                  </Row>
-                </Card.Body>
-              </Card>
-            </>
-          )}
+          <UnavailableTipActions skipOnboarding={publicTip.skipOnboarding} />
+
           <Spacer />
-          <DashboardButton />
+          <HomeButton />
         </>
       ) : publicTip.status === "CLAIMED" && !session ? (
         <>
@@ -177,7 +161,7 @@ const ClaimTipPage: NextPage = () => {
           <Spacer />
           <Text>Not yours?</Text>
           <Spacer />
-          <DashboardButton />
+          <HomeButton />
         </>
       ) : isTipper ? (
         <>
@@ -188,7 +172,7 @@ const ClaimTipPage: NextPage = () => {
           <Spacer y={2} />
           <Text color="error">{t("expired")}</Text>
           <Spacer />
-          <DashboardButton />
+          <HomeButton />
         </>
       ) : (
         <ClaimTipView publicTip={publicTip} />

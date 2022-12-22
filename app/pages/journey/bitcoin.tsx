@@ -21,9 +21,9 @@ const slideImages = {
   digitalCash: "wallet.png",
   anytimeAnywhere: "map.png",
   beYourOwnBank: "vault.png",
-  deflationary: "calculator.png",
-  freedom: "heart.png",
   absoluteScarcity: "chart.png",
+  freedom: "heart.png",
+  deflationary: "calculator.png",
   bitcoinNotCrypto: "crown.png",
   renewableEnergy: "sun.png",
 };
