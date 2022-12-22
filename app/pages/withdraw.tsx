@@ -72,9 +72,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
             body: JSON.stringify(withdrawalRequest),
             headers: { "Content-Type": "application/json" },
           });
-          if (result.ok) {
-            toast.success("Funds withdrawn!", { duration: 5000 });
-          } else {
+          if (!result.ok) {
             const body = await result.text();
             toast.error(
               "Failed to withdraw: " + result.statusText + `\n${body}`
@@ -120,12 +118,30 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
     ? withdrawableTips.map((tip) => tip.amount).reduce((a, b) => a + b)
     : 0;
 
-  const hasWithdrawnTip = tips?.some((tip) => tip.status === "WITHDRAWN");
+  const [prevAvailableBalance, setPrevAvailableBalance] =
+    React.useState(availableBalance);
+  const [hasWithdrawn, setWithdrawn] = React.useState(false);
   React.useEffect(() => {
-    if (availableBalance === 0 && flow === "tippee" && hasWithdrawnTip) {
-      router.push(PageRoutes.journeyCongratulations);
+    if (prevAvailableBalance > 0 && availableBalance === 0) {
+      if (flow === "tipper" || flow === "tippee") {
+        setWithdrawn(true);
+      }
+      toast.success("Funds withdrawn!", { duration: 5000 });
+      switch (flow) {
+        case "tipper":
+          router.push(PageRoutes.dashboard);
+          break;
+        case "tippee":
+          router.push(PageRoutes.journeyCongratulations);
+          break;
+        case "anonymous":
+          // We cannot know if this person or someone else withdrew the tip.
+          // The page will be updated to provide the user with options of what to do next (e.g. create an account or send a tip)
+          break;
+      }
     }
-  }, [availableBalance, flow, router, hasWithdrawnTip]);
+    setPrevAvailableBalance(availableBalance);
+  }, [availableBalance, flow, prevAvailableBalance, router]);
 
   React.useEffect(() => {
     if (availableBalance > 0) {
@@ -194,7 +210,12 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
 
   return (
     <>
-      {!availableBalance ? (
+      {hasWithdrawn ? (
+        <>
+          {/* show loading spinner while redirecting */}
+          <Loading />
+        </>
+      ) : !availableBalance ? (
         <>
           <Text>
             {`It doesn't look like you have any ${
