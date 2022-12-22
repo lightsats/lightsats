@@ -72,9 +72,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
             body: JSON.stringify(withdrawalRequest),
             headers: { "Content-Type": "application/json" },
           });
-          if (result.ok) {
-            toast.success("Funds withdrawn!", { duration: 5000 });
-          } else {
+          if (!result.ok) {
             const body = await result.text();
             toast.error(
               "Failed to withdraw: " + result.statusText + `\n${body}`
@@ -120,12 +118,56 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
     ? withdrawableTips.map((tip) => tip.amount).reduce((a, b) => a + b)
     : 0;
 
-  const hasWithdrawnTip = tips?.some((tip) => tip.status === "WITHDRAWN");
+  const [prevAvailableBalance, setPrevAvailableBalance] =
+    React.useState(availableBalance);
+  const [hasWithdrawn, setWithdrawn] = React.useState(false);
+  const tippeeWithdrawnTipsCount = tips?.filter(
+    (tip) => tip.status === "WITHDRAWN"
+  ).length;
+  const [initialTippeeWithdrawnTipsCount, setInitialTippeeWithdrawnTipsCount] =
+    React.useState<number | undefined>(tippeeWithdrawnTipsCount);
   React.useEffect(() => {
-    if (availableBalance === 0 && flow === "tippee" && hasWithdrawnTip) {
-      router.push(PageRoutes.journeyCongratulations);
+    if (initialTippeeWithdrawnTipsCount === undefined) {
+      setInitialTippeeWithdrawnTipsCount(tippeeWithdrawnTipsCount);
     }
-  }, [availableBalance, flow, router, hasWithdrawnTip]);
+  }, [initialTippeeWithdrawnTipsCount, tippeeWithdrawnTipsCount]);
+
+  React.useEffect(() => {
+    if (prevAvailableBalance > 0 && availableBalance === 0) {
+      // Available balance dropped to 0, so most likely a successful withdrawal.
+
+      // For the anonymous flow we cannot know if this person or someone else withdrew the tip.
+      // In that case the claim page will be updated to provide the user with options of what to do next
+      // (e.g. create an account or send a tip).
+
+      // For a tippee, there is a chance the tipper could have reclaimed the tip before it was withdrawn
+      // (also decreasing the tippee's available balance)
+      // so there is also a check to make sure the tippee's number of withdrawn tips has increased.
+      if (
+        flow === "tipper" ||
+        (flow === "tippee" &&
+          initialTippeeWithdrawnTipsCount !== undefined &&
+          tippeeWithdrawnTipsCount &&
+          tippeeWithdrawnTipsCount > initialTippeeWithdrawnTipsCount)
+      ) {
+        setWithdrawn(true);
+        toast.success("Funds withdrawn!", { duration: 5000 });
+        if (flow === "tipper") {
+          router.push(PageRoutes.dashboard);
+        } else {
+          router.push(PageRoutes.journeyCongratulations);
+        }
+      }
+    }
+    setPrevAvailableBalance(availableBalance);
+  }, [
+    availableBalance,
+    flow,
+    initialTippeeWithdrawnTipsCount,
+    prevAvailableBalance,
+    router,
+    tippeeWithdrawnTipsCount,
+  ]);
 
   React.useEffect(() => {
     if (availableBalance > 0) {
@@ -194,7 +236,12 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
 
   return (
     <>
-      {!availableBalance ? (
+      {hasWithdrawn ? (
+        <>
+          {/* show loading spinner while redirecting */}
+          <Loading />
+        </>
+      ) : !availableBalance ? (
         <>
           <Text>
             {`It doesn't look like you have any ${
