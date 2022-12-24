@@ -1,4 +1,11 @@
 {
     "hello": "أهلاً",
-    "tipperHasGiftedYou": "{{tipperName}} عرضت عليك"
+    "tipperHasGiftedYou": "{{tipperName}} عرضت عليك",
+    "youHaveBeenGifted": "لقد تلقيت هدية",
+    "expired": "انتهت صلاحية هذه الإكرامية.",
+    "instructions.email": "أدخل عنوان بريدك الإلكتروني أدناه واضغط على الزر للمطالبة بأموالك.",
+    "instructions.lightning": "تسجيل الدخول باستخدام Lightning",
+    "expiresIn": "تنتهي في {{expiry}}",
+    "claim": "المطالبة بأموالي",
+    "instructions.phone": "أدخل رقم هاتفك أدناه واضغط على الزر للمطالبة بأموالك."
 }
