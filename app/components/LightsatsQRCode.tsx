@@ -28,7 +28,13 @@ export function LightsatsQRCode(props: LightsatsQRCodeProps) {
   React.useEffect(() => {
     if (!props.height && wrapperRef.current?.offsetHeight) {
       setLogoSize(
-        calculateLogoSize(props.value, wrapperRef.current?.offsetHeight)
+        calculateLogoSize(
+          props.value,
+          Math.min(
+            wrapperRef.current?.offsetWidth,
+            wrapperRef.current?.offsetHeight
+          )
+        )
       );
     }
   }, [props.height, props.value]);

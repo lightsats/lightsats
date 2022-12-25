@@ -1,3 +1,6 @@
 {
-    "title": "جاهز للسحب؟"
+    "title": "جاهز للسحب؟",
+    "withdrawing": "سحب ...",
+    "lnurlInstructions": "امسح ضوئيا أو انقر أو انسخ الرابط أدناه في محفظة البيتكوين الخاصة بك للسحب.",
+    "withdrawAvailableBalance": "سحب {{availableBalance}} ساتس لمحفظتك"
 }

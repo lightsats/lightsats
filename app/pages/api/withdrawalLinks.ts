@@ -63,7 +63,6 @@ async function postWithdrawLink(req: NextApiRequest, res: NextApiResponse) {
         "Tip " + withdrawalRequest.tipId + " has no staging wallet"
       );
     }
-    await deleteUnusedWithdrawalLinks(undefined, withdrawalRequest.tipId, true);
   } else {
     if (!session) {
       throw new Error("User is not logged in");
@@ -76,8 +75,8 @@ async function postWithdrawLink(req: NextApiRequest, res: NextApiResponse) {
     if (!userWallet) {
       throw new Error("User " + session.user.id + " has no staging wallet");
     }
-    await deleteUnusedWithdrawalLinks(userId, withdrawalRequest.tipId, true);
   }
+  await deleteUnusedWithdrawalLinks(userId, withdrawalRequest.tipId, true);
 
   const existingWithdrawLink = await prisma.withdrawalLink.findFirst({
     where: {
