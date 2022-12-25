@@ -1,4 +1,4 @@
-import { Prisma, WithdrawalLink } from "@prisma/client";
+import { WithdrawalLink } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import { payWithdrawalInvoice } from "lib/payWithdrawalInvoice";
 import prisma from "lib/prismadb";
@@ -39,33 +39,17 @@ async function initiatePayWithdrawalLink(
   req: NextApiRequest,
   res: NextApiResponse<InitiatePayWithdrawalLinkResponse>
 ) {
+  if (withdrawalLink.used) {
+    return res.json({
+      status: "OK",
+    });
+  }
+
   const { pr: invoice } = req.query;
   console.log("initiatePayWithdrawalLink", invoice);
 
   if (!invoice) {
     return res.json({ status: "ERROR", reason: "No invoice provided" });
-  }
-
-  const [usedResult] = await prisma.$transaction(
-    [
-      prisma.withdrawalLink.findUniqueOrThrow({
-        where: { id: withdrawalLink.id },
-        select: { used: true },
-      }),
-      prisma.withdrawalLink.update({
-        where: { id: withdrawalLink.id },
-        data: { used: true },
-      }),
-    ],
-    {
-      isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-    }
-  );
-
-  if (usedResult.used) {
-    return res.json({
-      status: "OK",
-    });
   }
 
   // TODO: this should happen in a separate thread
@@ -79,6 +63,14 @@ async function initiatePayWithdrawalLink(
     );
     res.json({
       status: "OK",
+    });
+    await prisma.withdrawalLink.update({
+      where: {
+        id: withdrawalLink.id,
+      },
+      data: {
+        used: true,
+      },
     });
   } catch (error) {
     console.error(

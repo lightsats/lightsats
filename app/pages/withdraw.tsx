@@ -52,15 +52,6 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
   const [withdrawalLinkLnurl, setWithdrawalLinkLnurl] = React.useState("");
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [hasLaunchedWebln, setLaunchedWebln] = React.useState(false);
-  const [withdrawalLinkPollId, setWithdrawalLinkPollId] = React.useState(0);
-
-  // check for a new withdrawal link every 5 seconds (in case of failed withdrawal e.g. no_route)
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setWithdrawalLinkPollId((current) => current + 1);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   const executeWithdrawal = React.useCallback(
     (invoice: string, isWebln: boolean) => {
@@ -201,7 +192,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
         }
       })();
     }
-  }, [availableBalance, flow, tipId, withdrawalLinkPollId]);
+  }, [availableBalance, flow, tipId]);
   React.useEffect(() => {
     if (availableBalance > 0) {
       (async () => {
