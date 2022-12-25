@@ -1,3 +1,21 @@
 {
-    "install": "تثبيت"
+    "install": "تثبيت",
+    "open": "فتح",
+    "compatibleWallets": "المحافظ المتوافقة",
+    "recommendedWallet": "المحفظة الموصى بها",
+    "otherWallets": "محافظ أخرى",
+    "recommendedItems": "موصى به",
+    "minBalance": "{{minBalance}} ⚡ الحد الأدنى للرصيد",
+    "nonCustodial": "غير احتجازيl",
+    "custodial": "الحراسة",
+    "platforms": {
+        "mobile": "جوال",
+        "desktop": "سطح المكتب",
+        "web": "الويب",
+        "android-only": "أندرويد",
+        "ios-only": "iOS"
+    },
+    "features": "الميزات",
+    "otherItems": "أكثر",
+    "scanToLogin": "امسح لتسجيل الدخول"
 }
