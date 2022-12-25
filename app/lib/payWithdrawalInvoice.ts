@@ -168,31 +168,21 @@ export async function payWithdrawalInvoice(
   );
 
   if (!payInvoiceResponse.ok || !payInvoiceResponseBody) {
-    const withdrawalError = await prisma.withdrawalError.create({
-      data: {
-        message:
-          payInvoiceResponse.status +
-          " " +
-          payInvoiceResponse.statusText +
-          " " +
-          (JSON.stringify(payInvoiceResponseBody) ?? "Unknown error"),
-        userId,
-        tipId,
-      },
-    });
-
     const errorMessage =
-      "Failed to withdraw funds for user " + userId + " tipId " + tipId;
-    ": " + withdrawalError.message;
+      "Failed to pay withdrawal invoice for " +
+      (userId ? `user " + ${userId}` : `tip ${tipId}`);
+    ": " +
+      payInvoiceResponse.status +
+      " " +
+      payInvoiceResponse.statusText +
+      " " +
+      (JSON.stringify(payInvoiceResponseBody) ?? "Unknown error");
 
     await prisma.withdrawalError.create({
       data: {
         message: errorMessage,
         userId,
         tipId,
-        withdrawalMethod,
-        withdrawalFlow,
-        withdrawalInvoice: invoice,
       },
     });
 
