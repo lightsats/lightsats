@@ -2,5 +2,37 @@
     "SELF_CLAIMED": {
         "title": "تم المطالبة بها",
         "description": "لقد طالبت الإكرامية الأولى."
+    },
+    "BECAME_TIPPER": {
+        "title": "مُكْرِم",
+        "description": "لقد أ صبحت Lightsats مكرم."
+    },
+    "LINKED_EMAIL": {
+        "title": "بريد إلكتروني",
+        "description": "يمكنك الآن تسجيل الدخول وتلقي الإخطارات عبر البريد الإلكتروني."
+    },
+    "LINKED_WALLET": {
+        "title": "محفظة",
+        "description": "يمكنك الآن تسجيل الدخول عبر محفظة Lightning الخاصة بك."
+    },
+    "SET_NAME": {
+        "title": "اسم",
+        "description": "أنت لم تعد مجهولاً."
+    },
+    "SET_AVATAR_URL": {
+        "title": "الصورة الرمزية",
+        "description": "أنت تضع وجها لاسمك. عظيم!"
+    },
+    "SET_LIGHTNING_ADDRESS": {
+        "title": "عنوان البرق",
+        "description": "يمكنك الآن تلقي الإكرامية مباشرة من قبل المستخدمين الآخرين للليتساتس."
+    },
+    "CREATED_TIP": {
+        "title": "تم إنشاء الإكرامية",
+        "description": "لقد أنشأت اكراميتك الأولى."
+    },
+    "FUNDED_TIP": {
+        "title": "تم تمويل الإكرامية",
+        "description": "لقد قمت بتمويل اكراميتك الأولى."
     }
 }
