@@ -45,7 +45,7 @@ export function TipGroupProgress({ tipGroup }: { tipGroup: TipGroupWithTips }) {
                 100
               }%, $success 100%)`,
         width: "100%",
-        mx: "$10",
+        mx: "$5",
         height: "12px",
         borderRadius: "$base",
       }}
