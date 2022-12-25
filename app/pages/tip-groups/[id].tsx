@@ -9,7 +9,10 @@ import {
   Text,
 } from "@nextui-org/react";
 import { NextLink } from "components/NextLink";
+import { PersonalizeTip } from "components/tipper/PersonalizeTip";
 import { SentTipCard } from "components/tipper/SentTipCard";
+import { TipGroupProgress } from "components/tipper/TipGroupProgress";
+import { TipGroupStatusBadge } from "components/tipper/TipGroupStatusBadge";
 import { PayInvoice } from "components/tipper/TipPage/PayInvoice";
 import { ApiRoutes } from "lib/ApiRoutes";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
@@ -28,6 +31,7 @@ const TipGroupPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const [showClaimUrls, setShowClaimUrls] = React.useState(false);
+  const [skipPersonalize, setSkipPersonalize] = React.useState(false);
 
   const { data: tipGroup } = useSWR<TipGroupWithTips>(
     `${ApiRoutes.tipGroups}/${id}`,
@@ -36,6 +40,18 @@ const TipGroupPage: NextPage = () => {
   );
 
   if (tipGroup) {
+    const header = (
+      <>
+        <Text h1>Group of {tipGroup.quantity} Tips</Text>
+        <Row justify="space-between" align="center">
+          <TipGroupStatusBadge tipGroup={tipGroup} />
+          <TipGroupProgress tipGroup={tipGroup} />
+        </Row>
+        <Spacer />
+      </>
+    );
+
+    const firstTip = tipGroup.tips[0];
     const unfundedTips = tipGroup.tips.filter(
       (tip) => tip.status === "UNFUNDED"
     );
@@ -46,21 +62,30 @@ const TipGroupPage: NextPage = () => {
     if (tipGroup.status === "FUNDED" && fundedProgress < 100) {
       return (
         <>
+          {header}
           <Text>Preparing tips...</Text>
           <Progress value={fundedProgress} />
         </>
       );
     }
 
+    if ((!skipPersonalize && !firstTip.note) || !firstTip.tippeeName) {
+      return (
+        <>
+          {header}
+          <PersonalizeTip
+            href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
+            skip={() => setSkipPersonalize(true)}
+            bulk
+          />
+        </>
+      );
+    }
+
     return (
       <>
-        <Text h1>Tip Group</Text>
-        <Text>{tipGroup.status}</Text>
-        <Text>{tipGroup.quantity} tips</Text>
-        <Text>
-          {(tipGroup.tips[0].amount + tipGroup.tips[0].fee) * tipGroup.quantity}{" "}
-          sats
-        </Text>
+        {header}
+
         {tipGroup.status === "UNFUNDED" && tipGroup.invoice && (
           <>
             <PayInvoice invoice={tipGroup.invoice} variant="tipGroup" />

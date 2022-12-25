@@ -1,16 +1,8 @@
-import {
-  Button,
-  Card,
-  Link,
-  Loading,
-  Row,
-  Spacer,
-  Text,
-} from "@nextui-org/react";
+import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
 import { TipStatus } from "@prisma/client";
 import { ConfettiContainer } from "components/ConfettiContainer";
-import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
+import { PersonalizeTip } from "components/tipper/PersonalizeTip";
 import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTracker";
 import { PayInvoice } from "components/tipper/TipPage/PayInvoice";
 import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
@@ -108,48 +100,10 @@ const TipPage: NextPage = () => {
           {tip.groupId && <TipGroupLink groupId={tip.groupId} />}
           <ClaimProgressTracker tipId={tip.id} />
           <Spacer />
-          <Card css={{ dropShadow: "$sm", background: "$primary" }}>
-            <Card.Body>
-              <Row justify="center">
-                <Text h3 css={{ color: "$white", ta: "center" }}>
-                  Personalize your tip
-                </Text>
-              </Row>
-              <Row justify="center">
-                <NextImage
-                  src="/images/icons/personalize.png"
-                  width={150}
-                  height={150}
-                  alt="zap"
-                />
-              </Row>
-              <Row justify="center">
-                <Text css={{ textAlign: "center", color: "$white" }}>
-                  {
-                    "Provide extra details to improve your recipient's onboarding experience"
-                  }
-                </Text>
-              </Row>
-              <Spacer />
-              <Row justify="center">
-                <NextLink href={`${PageRoutes.tips}/${tip.id}/edit`} passHref>
-                  <a>
-                    <Button size="md" color="secondary">
-                      Personalize tip
-                    </Button>
-                  </a>
-                </NextLink>
-              </Row>
-              <Spacer />
-              <Row justify="center">
-                <Button light onClick={() => setSkipPersonalize(true)}>
-                  <Text color="white" size="small">
-                    Skip for now
-                  </Text>
-                </Button>
-              </Row>
-            </Card.Body>
-          </Card>
+          <PersonalizeTip
+            href={`${PageRoutes.tips}/${tip.id}/edit`}
+            skip={() => setSkipPersonalize(true)}
+          />
         </>
       );
     }
