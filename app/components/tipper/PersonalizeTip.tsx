@@ -37,7 +37,7 @@ export function PersonalizeTip({ href, skip, bulk }: PersonalizeTipProps) {
           <NextLink href={href} passHref>
             <a>
               <Button size="md" color="secondary">
-                Personalize tip
+                {bulk ? "Personalize tips" : "Personalize tip"}
               </Button>
             </a>
           </NextLink>
