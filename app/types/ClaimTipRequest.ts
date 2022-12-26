@@ -1,2 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type ClaimTipRequest = {};
+export type ClaimTipRequest = {
+  isPrinted?: boolean;
+};

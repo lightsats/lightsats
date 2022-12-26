@@ -165,7 +165,7 @@ async function handlePostTip(
       lnbitsWalletAdminKey
     );
 
-    //await createAchievement(session.user.id, "CREATED_TIP_GROUP");
+    await createAchievement(session.user.id, "BULK_TIP_CREATED");
     res.json(tipGroup);
   } else {
     let tip = await prisma.tip.create({

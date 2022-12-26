@@ -1,3 +1,4 @@
+import { createAchievement } from "lib/createAchievement";
 import { getPayment } from "lib/lnbits/getPayment";
 import prisma from "lib/prismadb";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
@@ -31,8 +32,12 @@ export async function checkTipGroupHasBeenFunded(
             tips: true,
           },
         });
-        //await createAchievement(tipGroup.tipperId, "FUNDED_TIP_GROUP");
-        // console.log("Tip group has been funded: ", tip.id);
+        await createAchievement(tipGroup.tipperId, "BULK_TIP_FUNDED");
+        for (const numTips of [10, 25, 50, 100] as const) {
+          if (tipGroup.tips.length >= numTips) {
+            await createAchievement(tipGroup.tipperId, `BULK_TIP_${numTips}`);
+          }
+        }
       }
     } catch (error) {
       console.error("Failed to get tip invoice status", error);

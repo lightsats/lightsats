@@ -174,6 +174,27 @@ export async function completeWithdrawal(
     for (const tip of tips) {
       await createNotification(tip.tipperId, "TIP_WITHDRAWN", tip.id);
       await createAchievement(tip.tipperId, "TIP_WITHDRAWN");
+      if (withdrawalFlow === "anonymous") {
+        await createAchievement(tip.tipperId, "TIPPED_A_BITCOINER");
+      }
+      if (tip.claimedFromPrintedCard) {
+        await createAchievement(tip.tipperId, "PRINTED_CARD_TIP_WITHDRAWN");
+      }
+      if (tip.groupId) {
+        await createAchievement(tip.tipperId, "BULK_TIP_WITHDRAWN");
+
+        const firstUnwithdrawnTipInGroup = await prisma.tip.findFirst({
+          where: {
+            groupId: tip.groupId,
+            status: {
+              not: "WITHDRAWN",
+            },
+          },
+        });
+        if (!firstUnwithdrawnTipInGroup) {
+          await createAchievement(tip.tipperId, "BULK_TIP_ALL_WITHDRAWN");
+        }
+      }
 
       try {
         if (tip.tipper.email) {

@@ -96,19 +96,67 @@
     "description": "You added the Lightsats PWA to your mobile homescreen. Use LNURL auth to login!"
   },
   "TIPS_10": {
-    "title": "Sent 10 tips",
+    "title": "Sent 10 Tips",
     "description": "You sent 10 tips that were successfully withdrawn by their recipient."
   },
   "TIPS_25": {
-    "title": "Sent 25 tips",
+    "title": "Sent 25 Tips",
     "description": "You sent 25 tips that were successfully withdrawn by their recipient."
   },
   "TIPS_50": {
-    "title": "Sent 50 tips",
+    "title": "Sent 50 Tips",
     "description": "You sent 50 tips that were successfully withdrawn by their recipient."
   },
   "TIPS_100": {
-    "title": "Sent 100 tips",
+    "title": "Sent 100 Tips",
     "description": "You sent 100 tips that were successfully withdrawn by their recipient."
+  },
+  "TIPPED_A_BITCOINER": {
+    "title": "Tipped a Bitcoiner",
+    "description": "Your tip was withdrawn using \"Skip Onboarding\" mode."
+  },
+  "BULK_TIP_CREATED": {
+    "title": "Bulk Tips Created",
+    "description": "You created multiple tips in one go."
+  },
+  "BULK_TIP_FUNDED": {
+    "title": "Bulk Tips Funded",
+    "description": "You funded all your tips by paying a single invoice!"
+  },
+  "BULK_TIP_CLAIMED": {
+    "title": "Bulk Tip Claimed",
+    "description": "One of your bulk tips was claimed"
+  },
+  "BULK_TIP_WITHDRAWN": {
+    "title": "Bulk Tip Withdrawn",
+    "description": "One of your bulk tips was withdrawn"
+  },
+  "BULK_TIP_ALL_WITHDRAWN": {
+    "title": "All Bulk Tips Withdrawn",
+    "description": "All tips you created in bulk were successfully withdrawn!"
+  },
+  "BULK_TIP_10": {
+    "title": "Bulk 10 Tips",
+    "description": "You created and funded 10 or more tips in bulk"
+  },
+  "BULK_TIP_25": {
+    "title": "Bulk 25 Tips",
+    "description": "You created and funded 25 or more tips in bulk"
+  },
+  "BULK_TIP_50": {
+    "title": "Bulk 50 Tips",
+    "description": "You created and funded 50 or more tips in bulk"
+  },
+  "BULK_TIP_100": {
+    "title": "Bulk 100 Tips",
+    "description": "You created and funded 100 or more tips in bulk"
+  },
+  "PRINTED_CARD_TIP_CLAIMED": {
+    "title": "Printed Card Claimed",
+    "description": "A tip that you printed onto a card was claimed!"
+  },
+  "PRINTED_CARD_TIP_WITHDRAWN": {
+    "title": "Printed Card Withdrawn",
+    "description": "A tip that you printed onto a card was withdrawn!"
   }
 }
