@@ -9,5 +9,5 @@ export default async function handler(
   const { k1 } = req.query;
   const authKey = await getAuthKey(k1 as string);
 
-  res.json({ verified: !!authKey?.key });
+  res.json({ verified: !!authKey?.key, used: !authKey });
 }
