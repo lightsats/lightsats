@@ -39,12 +39,13 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const router = useRouter();
   const { t } = useTranslation(["common", "login"]);
   const linkExistingAccount = router.query["link"] === "true";
+  const [isRedirecting, setRedirecting] = React.useState(false);
   const callbackUrlWithFallback =
     callbackUrl ||
     (router.query["callbackUrl"] as string) ||
     PageRoutes.dashboard;
   // only retrieve the qr code once
-  const { data: qr } = useSWRImmutable<LnurlAuthLoginInfo>(
+  const { data: qr, mutate: fetchNewQR } = useSWRImmutable<LnurlAuthLoginInfo>(
     `/api/auth/lnurl/generate-secret?linkExistingAccount=${linkExistingAccount}`,
     defaultFetcher
   );
@@ -56,7 +57,15 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   );
 
   React.useEffect(() => {
+    if (status?.used && !status.verified && !isRedirecting) {
+      toast.error("Generating new QR code");
+      fetchNewQR();
+    }
+  }, [fetchNewQR, isRedirecting, status?.used, status?.verified]);
+
+  React.useEffect(() => {
     if (qr && status?.verified) {
+      setRedirecting(true);
       (async () => {
         try {
           const result = await signIn("lnurl", {
