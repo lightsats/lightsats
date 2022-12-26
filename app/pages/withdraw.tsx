@@ -341,6 +341,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
                 <Input
                   label="Lightning Invoice"
                   fullWidth
+                  placeholder="lnbc..."
                   value={invoiceFieldValue}
                   onChange={(event) => setInvoiceFieldValue(event.target.value)}
                 />
