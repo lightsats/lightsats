@@ -1,16 +1,27 @@
-import { Button, Card, Input, Loading, Row, Spacer } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Input,
+  Loading,
+  Row,
+  Spacer,
+  Switch,
+  Text,
+} from "@nextui-org/react";
 import { LeaderboardTheme } from "@prisma/client";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { format } from "date-fns";
+import { useUserRoles } from "hooks/useUserRoles";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export type LeaderboardFormData = {
   title: string;
   startDate: string;
-  endDate: string;
-  startTime: string;
+  endDate: string | undefined;
+  startTime: string | undefined;
   theme: LeaderboardTheme | undefined;
+  isGlobal: boolean;
 };
 
 export type LeaderboardFormSubmitData = LeaderboardFormData;
@@ -24,7 +35,7 @@ const formStyle: React.CSSProperties = {
 
 type LeaderboardFormProps = {
   onSubmit(formData: LeaderboardFormSubmitData): Promise<void>;
-  defaultValues?: Partial<LeaderboardFormData>;
+  defaultValues?: LeaderboardFormData;
   mode: "create" | "update";
 };
 
@@ -40,10 +51,15 @@ export function LeaderboardForm({
   defaultValues = {
     title: "",
     startDate: format(new Date(), "yyyy-MM-dd"),
+    endDate: undefined,
+    startTime: undefined,
+    isGlobal: false,
+    theme: undefined,
   },
   mode,
 }: LeaderboardFormProps) {
   const [isSubmitting, setSubmitting] = React.useState(false);
+  const { data: userRoles } = useUserRoles();
 
   const { control, handleSubmit, setFocus, watch, setValue } =
     useForm<LeaderboardFormData>({
@@ -67,7 +83,9 @@ export function LeaderboardForm({
       (async () => {
         await onSubmitProp({
           ...data,
-          startDate: data.startDate + " " + data.startTime,
+          startDate: data.startTime
+            ? data.startDate + " " + data.startTime
+            : data.startDate,
         });
         setSubmitting(false);
       })();
@@ -79,6 +97,27 @@ export function LeaderboardForm({
     <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
+          {userRoles?.some((role) => role.roleType === "SUPERADMIN") && (
+            <>
+              <Row>
+                <Text>Global (All users participate by default)</Text>
+              </Row>
+              <Row>
+                <Controller
+                  name="isGlobal"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      {...field}
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
+                  )}
+                />
+              </Row>
+              <Spacer />
+            </>
+          )}
           <Row>
             <Controller
               name="title"
@@ -139,6 +178,9 @@ export function LeaderboardForm({
             />
           </Row>
           <Spacer />
+          <Row>
+            <Text>Theme</Text>
+          </Row>
           <Row>
             <CustomSelect
               options={themeSelectOptions}

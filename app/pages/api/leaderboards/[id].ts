@@ -49,7 +49,7 @@ async function deleteLeaderboard(
   res: NextApiResponse<never>
 ) {
   const { id } = req.query;
-  if (!session || !isAdmin(session.user.id)) {
+  if (!session || !(await isAdmin(session.user.id))) {
     return res.status(StatusCodes.FORBIDDEN).end();
   }
   await prisma.leaderboard.delete({
@@ -67,8 +67,25 @@ async function updateLeaderboard(
   res: NextApiResponse<Leaderboard>
 ) {
   const { id } = req.query;
+
+  const leaderboard = await prisma.leaderboard.findUnique({
+    where: {
+      id: id as string,
+    },
+  });
+
+  if (!leaderboard) {
+    return res.status(StatusCodes.NOT_FOUND).end();
+  }
+
   const updateLeaderboardRequest = req.body as UpdateLeaderboardRequest;
-  if (!session || !isAdmin(session.user.id)) {
+  if (
+    !session ||
+    !(
+      leaderboard.creatorId === session.user.id ||
+      (await isAdmin(session.user.id))
+    )
+  ) {
     return res.status(StatusCodes.FORBIDDEN).end();
   }
   const updatedLeaderboard = await prisma.leaderboard.update({
@@ -76,6 +93,8 @@ async function updateLeaderboard(
       id: id as string,
     },
     data: {
+      global:
+        (await isAdmin(session.user.id)) && updateLeaderboardRequest.isGlobal,
       title: updateLeaderboardRequest.title,
       start: new Date(updateLeaderboardRequest.startDate),
       end: updateLeaderboardRequest.endDate

@@ -17,7 +17,7 @@ export default async function handler(
     return res.status(StatusCodes.UNAUTHORIZED).end();
   }
 
-  if (!isAdmin(session.user.id)) {
+  if (!(await isAdmin(session.user.id))) {
     return res.status(StatusCodes.FORBIDDEN).end();
   }
 

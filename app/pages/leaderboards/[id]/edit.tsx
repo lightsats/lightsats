@@ -29,7 +29,7 @@ const EditLeaderboard: NextPage = () => {
       return undefined;
     }
 
-    const defaultValues: Partial<LeaderboardFormData> = {
+    const defaultValues: LeaderboardFormData = {
       title: leaderboard.title,
       startDate: format(new Date(leaderboard.start), "yyyy-MM-dd"),
       startTime: format(new Date(leaderboard.start), "HH:mm"),
@@ -37,6 +37,7 @@ const EditLeaderboard: NextPage = () => {
         ? format(new Date(leaderboard.end), "yyyy-MM-dd")
         : "",
       theme: leaderboard.theme ?? undefined,
+      isGlobal: leaderboard.global,
     };
     return defaultValues;
   }, [leaderboard]);

@@ -44,7 +44,7 @@ async function handlePostLeaderboard(
   res: NextApiResponse<Leaderboard>
 ) {
   // TODO: allow non-global leaderboards to be created by users
-  if (!session || !isAdmin(session.user.id)) {
+  if (!session) {
     return res.status(StatusCodes.FORBIDDEN).end();
   }
 
@@ -52,7 +52,8 @@ async function handlePostLeaderboard(
 
   const leaderboard = await prisma.leaderboard.create({
     data: {
-      global: true,
+      global:
+        (await isAdmin(session.user.id)) && createLeaderboardRequest.isGlobal,
       title: createLeaderboardRequest.title,
       start: new Date(createLeaderboardRequest.startDate),
       end: createLeaderboardRequest.endDate
