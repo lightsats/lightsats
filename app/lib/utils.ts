@@ -116,8 +116,10 @@ export const formatAmount = (amount: number, decimals = 2) => {
 export const getTipUrl = (tip: Tip | PublicTip, locale: string | undefined) =>
   `${getAppUrl()}${getLocalePath(locale)}${PageRoutes.tips}/${tip.id}`;
 
-export const getClaimUrl = (tip: Tip | PublicTip) =>
-  `${getTipUrl(tip, tip.tippeeLocale ?? undefined)}/claim`;
+export const getClaimUrl = (tip: Tip | PublicTip, isPrinted = false) =>
+  `${getTipUrl(tip, tip.tippeeLocale ?? undefined)}/claim${
+    isPrinted ? "?printed=true" : ""
+  }`;
 
 export const switchRouterLocale = (router: NextRouter, nextLocale: string) => {
   const { pathname, asPath, query } = router;

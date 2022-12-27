@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
 import { mutate } from "swr";
+import { TipGroupWithTips } from "types/TipGroupWithTips";
 import { CreateTipRequest } from "types/TipRequest";
 
 const NewTip: NextPage = () => {
@@ -18,6 +19,7 @@ const NewTip: NextPage = () => {
       try {
         const createTipRequest: CreateTipRequest = {
           amount: data.satsAmount,
+          quantity: data.quantity,
           currency: data.currency,
           expiry: add(new Date(), {
             [data.expiryUnit]: data.expiresIn,
@@ -30,11 +32,19 @@ const NewTip: NextPage = () => {
           headers: { "Content-Type": "application/json" },
         });
         if (result.ok) {
-          toast.success("Tip created");
-          const tip = (await result.json()) as Tip;
-          // add tip to cache so it's immediately available
-          mutate(`/api/tipper/tips/${tip.id}`, tip);
-          router.push(`${PageRoutes.tips}/${tip.id}`);
+          if (data.quantity > 1) {
+            toast.success("Tips created");
+            const tipGroup = (await result.json()) as TipGroupWithTips;
+            // add tip to cache so it's immediately available
+            mutate(`/api/tipGroups/${tipGroup.id}`, tipGroup);
+            router.push(`${PageRoutes.tipGroups}/${tipGroup.id}`);
+          } else {
+            toast.success("Tip created");
+            const tip = (await result.json()) as Tip;
+            // add tip to cache so it's immediately available
+            mutate(`/api/tipper/tips/${tip.id}`, tip);
+            router.push(`${PageRoutes.tips}/${tip.id}`);
+          }
         } else {
           toast.error("Failed to create tip: " + result.statusText);
         }

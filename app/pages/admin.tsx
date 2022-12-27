@@ -137,6 +137,9 @@ const AdminPage: NextPage = () => {
         <Text>{adminDashboard.tips.length} tips</Text>
       </Row>
       <Row justify="center" align="center">
+        <Text>{adminDashboard.tipGroups.length} tip groups</Text>
+      </Row>
+      <Row justify="center" align="center">
         <Text>
           {completedTips.length} completed tips (
           {completedTips.filter((t) => t.status === "WITHDRAWN").length}{" "}
@@ -271,7 +274,9 @@ const AdminPage: NextPage = () => {
             <Button css={{ bg: "$purple700" }}>Tips</Button>
           </a>
         </NextLink>
-        <Spacer />
+      </Row>
+      <Spacer />
+      <Row justify="center" align="center">
         <NextLink href={PageRoutes.adminWithdrawals}>
           <a>
             <Button css={{ bg: "$green700" }}>Withdrawals</Button>
@@ -281,6 +286,14 @@ const AdminPage: NextPage = () => {
         <NextLink href={PageRoutes.adminWithdrawalErrors}>
           <a>
             <Button css={{ bg: "$red700" }}>Withdrawal Errors</Button>
+          </a>
+        </NextLink>
+      </Row>
+      <Spacer />
+      <Row justify="center" align="center">
+        <NextLink href={PageRoutes.adminTipGroups}>
+          <a>
+            <Button css={{ bg: "$blue700" }}>Tip Groups</Button>
           </a>
         </NextLink>
       </Row>

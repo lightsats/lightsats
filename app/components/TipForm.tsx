@@ -1,5 +1,6 @@
 import { ForwardIcon, InformationCircleIcon } from "@heroicons/react/24/solid";
 import {
+  Badge,
   Button,
   Card,
   Col,
@@ -16,12 +17,12 @@ import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Divider } from "components/Divider";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
-import { SatsPrice } from "components/SatsPrice";
 import { useExchangeRates } from "hooks/useExchangeRates";
 import { useTips } from "hooks/useTips";
 import {
   appName,
   FEE_PERCENT,
+  MAX_TIP_GROUP_QUANTITY,
   MAX_TIP_SATS,
   MINIMUM_FEE_SATS,
   MIN_TIP_SATS,
@@ -47,6 +48,7 @@ const tippeeLocaleSelectOptions: SelectOption[] = locales.map((locale) => ({
 
 export type TipFormData = {
   amount: number;
+  quantity: number;
   amountString: string;
   currency: string;
   note: string | undefined;
@@ -72,11 +74,13 @@ type TipFormProps = {
   onSubmit(formData: TipFormSubmitData): Promise<void>;
   defaultValues?: Partial<TipFormData>;
   mode: "create" | "update";
+  quantity?: number;
 };
 
 export function TipForm({
   onSubmit: onSubmitProp,
   defaultValues = {
+    quantity: 1,
     amountString: "1",
     currency: "USD",
     expiresIn: 21,
@@ -84,6 +88,7 @@ export function TipForm({
     tippeeLocale: DEFAULT_LOCALE,
   },
   mode,
+  quantity = 1,
 }: TipFormProps) {
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [inputMethod, setInputMethod] = React.useState<InputMethod>("fiat");
@@ -117,6 +122,10 @@ export function TipForm({
 
   const watchedAmountString = watch("amountString");
   const watchedAmount = watch("amount");
+  let watchedQuantity = watch("quantity");
+  if (isNaN(watchedQuantity)) {
+    watchedQuantity = 1;
+  }
   const watchedCurrency = watch("currency");
   const watchedTippeeLocale = watch("tippeeLocale");
   const watchedSkipOnboarding = watch("skipOnboarding");
@@ -337,6 +346,48 @@ export function TipForm({
                   </Row>
                 </Col>
               </Row>
+              <Spacer />
+              <Row align="center">
+                <Row align="center">
+                  <Tooltip
+                    placement="right"
+                    content={`Create and print tips in bulk!`}
+                  >
+                    <Text>Quantity</Text>
+                  </Tooltip>
+                  <Spacer x={0.125} />
+                  <Badge size="sm" color="warning">
+                    BETA
+                  </Badge>
+                </Row>
+                <Col>
+                  <Row justify="flex-end">
+                    <Controller
+                      name="quantity"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          {...register("quantity", {
+                            valueAsNumber: true,
+                          })}
+                          min={1}
+                          max={MAX_TIP_GROUP_QUANTITY}
+                          step={1}
+                          type="number"
+                          inputMode="numeric"
+                          aria-label="quantity"
+                          css={{ width: "100px" }}
+                          size="lg"
+                          fullWidth
+                          bordered
+                          autoFocus
+                        />
+                      )}
+                    />
+                  </Row>
+                </Col>
+              </Row>
               <Divider />
               <Row>
                 <Col>
@@ -359,13 +410,19 @@ export function TipForm({
                     <>
                       <Text>
                         <FiatPrice
-                          sats={!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
+                          sats={
+                            !isNaN(watchedAmountFee)
+                              ? watchedAmountFee * watchedQuantity
+                              : 0
+                          }
                           currency={watchedCurrency}
                           exchangeRate={watchedExchangeRate}
                         />
                       </Text>
                       <Text small css={{ position: "relative", top: "-5px" }}>
-                        {!isNaN(watchedAmountFee) ? watchedAmountFee : 0}
+                        {!isNaN(watchedAmountFee)
+                          ? watchedAmountFee * watchedQuantity
+                          : 0}
                         {" sats"}
                       </Text>
                     </>
@@ -387,34 +444,25 @@ export function TipForm({
                         exchangeRate={exchangeRates[watchedCurrency]}
                         sats={
                           !isNaN(watchedAmount)
-                            ? (inputMethod === "fiat"
+                            ? ((inputMethod === "fiat"
                                 ? getSatsAmount(
                                     watchedAmount,
                                     watchedExchangeRate
                                   )
-                                : watchedAmount) + watchedAmountFee
+                                : watchedAmount) +
+                                watchedAmountFee) *
+                              watchedQuantity
                             : 0
                         }
                       />
                     </Text>
                     <Text small css={{ position: "relative", top: "-5px" }}>
-                      <SatsPrice
-                        exchangeRate={exchangeRates[watchedCurrency]}
-                        fiat={
-                          !isNaN(watchedAmount)
-                            ? inputMethod === "sats"
-                              ? getFiatAmount(
-                                  watchedAmount + watchedAmountFee,
-                                  watchedExchangeRate
-                                )
-                              : watchedAmount +
-                                getFiatAmount(
-                                  watchedAmountFee,
-                                  watchedExchangeRate
-                                )
-                            : 0
-                        }
-                      />
+                      {((inputMethod === "sats"
+                        ? watchedAmount
+                        : getSatsAmount(watchedAmount, watchedExchangeRate)) +
+                        watchedAmountFee) *
+                        watchedQuantity}{" "}
+                      sats
                     </Text>
                   </Col>
                 </Row>
@@ -426,16 +474,28 @@ export function TipForm({
               <Controller
                 name="tippeeName"
                 control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    label="Recipient name"
-                    placeholder="Hal Finney"
-                    maxLength={255}
-                    fullWidth
-                    bordered
-                  />
-                )}
+                render={({ field }) =>
+                  quantity > 1 ? (
+                    <Textarea
+                      {...field}
+                      label={"Recipient names (one per line)"}
+                      placeholder={`Hal Finney
+Micheal Saylor`}
+                      fullWidth
+                      bordered
+                      rows={quantity}
+                    />
+                  ) : (
+                    <Input
+                      {...field}
+                      label="Recipient name"
+                      placeholder="Hal Finney"
+                      maxLength={255}
+                      fullWidth
+                      bordered
+                    />
+                  )
+                }
               />
               <Spacer />
               <Controller
@@ -444,8 +504,14 @@ export function TipForm({
                 render={({ field }) => (
                   <Textarea
                     {...field}
-                    label="Note to recipient"
-                    placeholder="Thank you for your amazing service!"
+                    label={
+                      quantity > 1 ? "Note to recipients" : "Note to recipient"
+                    }
+                    placeholder={
+                      quantity > 1
+                        ? "Thank you {{name}} for your amazing service!"
+                        : "Thank you for your amazing service!"
+                    }
                     maxLength={255}
                     fullWidth
                     bordered
@@ -561,7 +627,15 @@ export function TipForm({
         {isSubmitting ? (
           <Loading color="currentColor" size="sm" />
         ) : (
-          <>{mode === "create" ? "Create tip" : "Update tip"}</>
+          <>
+            {quantity > 1 || watchedQuantity > 1
+              ? mode === "create"
+                ? "Create tips"
+                : "Update tips"
+              : mode === "create"
+              ? "Create tip"
+              : "Update tip"}
+          </>
         )}
       </Button>
     </form>

@@ -87,5 +87,11 @@ async function handleGetAdminDashboard(
     users: await prisma.user.findMany(),
     walletBalance,
     smsForSatsAccountBalance,
+    tipGroups: await prisma.tipGroup.findMany({
+      include: {
+        tips: true,
+        tipper: true,
+      },
+    }),
   });
 }

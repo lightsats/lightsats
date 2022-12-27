@@ -1,18 +1,10 @@
-import {
-  Button,
-  Card,
-  Link,
-  Loading,
-  Row,
-  Spacer,
-  Text,
-} from "@nextui-org/react";
+import { Button, Link, Loading, Spacer, Text } from "@nextui-org/react";
 import { TipStatus } from "@prisma/client";
 import { ConfettiContainer } from "components/ConfettiContainer";
-import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
+import { PersonalizeTip } from "components/tipper/PersonalizeTip";
 import { ClaimProgressTracker } from "components/tipper/TipPage/ClaimProgressTracker";
-import { PayTipInvoice } from "components/tipper/TipPage/PayTipInvoice";
+import { PayInvoice } from "components/tipper/TipPage/PayInvoice";
 import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
 import { useLeaderboardPosition } from "hooks/useLeaderboardPosition";
@@ -105,55 +97,19 @@ const TipPage: NextPage = () => {
     ) {
       return (
         <>
+          {tip.groupId && <TipGroupLink groupId={tip.groupId} />}
           <ClaimProgressTracker tipId={tip.id} />
           <Spacer />
-          <Card css={{ dropShadow: "$sm", background: "$primary" }}>
-            <Card.Body>
-              <Row justify="center">
-                <Text h3 css={{ color: "$white", ta: "center" }}>
-                  Personalize your tip
-                </Text>
-              </Row>
-              <Row justify="center">
-                <NextImage
-                  src="/images/icons/personalize.png"
-                  width={150}
-                  height={150}
-                  alt="zap"
-                />
-              </Row>
-              <Row justify="center">
-                <Text css={{ textAlign: "center", color: "$white" }}>
-                  {
-                    "Provide extra details to improve your recipient's onboarding experience"
-                  }
-                </Text>
-              </Row>
-              <Spacer />
-              <Row justify="center">
-                <NextLink href={`${PageRoutes.tips}/${tip.id}/edit`} passHref>
-                  <a>
-                    <Button size="md" color="secondary">
-                      Personalize tip
-                    </Button>
-                  </a>
-                </NextLink>
-              </Row>
-              <Spacer />
-              <Row justify="center">
-                <Button light onClick={() => setSkipPersonalize(true)}>
-                  <Text color="white" size="small">
-                    Skip for now
-                  </Text>
-                </Button>
-              </Row>
-            </Card.Body>
-          </Card>
+          <PersonalizeTip
+            href={`${PageRoutes.tips}/${tip.id}/edit`}
+            skip={() => setSkipPersonalize(true)}
+          />
         </>
       );
     }
     return (
       <>
+        {tip.groupId && <TipGroupLink groupId={tip.groupId} />}
         {!hasExpired ? (
           <>
             <TipPageStatusHeader status={tip.status} />
@@ -170,7 +126,15 @@ const TipPage: NextPage = () => {
           <>
             {tip.status === "UNFUNDED" && tip.invoice && (
               <>
-                <PayTipInvoice invoice={tip.invoice} />
+                <PayInvoice invoice={tip.invoice} variant="tip" />
+                <Spacer />
+              </>
+            )}
+            {tip.status === "UNFUNDED" && tip.groupId && (
+              <>
+                <Text blockquote>
+                  {"This tip is part of a group which hasn't been funded yet."}
+                </Text>
                 <Spacer />
               </>
             )}
@@ -269,3 +233,12 @@ const TipPage: NextPage = () => {
 export default TipPage;
 
 export { getStaticProps, getStaticPaths };
+
+function TipGroupLink({ groupId }: { groupId: string }) {
+  return (
+    <Text blockquote>
+      {"This tip is part of a group"}
+      <Link href={`${PageRoutes.tipGroups}/${groupId}`}>Go to the group</Link>
+    </Text>
+  );
+}

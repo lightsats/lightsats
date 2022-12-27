@@ -1,21 +1,22 @@
-import { Tip } from "@prisma/client";
+import { Tip, TipGroupStatus } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { MAX_TIP_GROUP_QUANTITY } from "lib/constants";
 import { createAchievement } from "lib/createAchievement";
-import {
-  createLnbitsUserAndWallet,
-  generateUserAndWalletName,
-} from "lib/lnbits/createLnbitsUserAndWallet";
+import { prepareFundingWallet } from "lib/prepareFundingWallet";
 import prisma from "lib/prismadb";
 import { recreateTipFundingInvoice } from "lib/recreateTipFundingInvoice";
+import { recreateTipGroupFundingInvoice } from "lib/recreateTipGroupFundingInvoice";
 import { calculateFee } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
+import { TipGroupWithTips } from "types/TipGroupWithTips";
 import { CreateTipRequest } from "types/TipRequest";
+import { TipWithGroup } from "types/TipWithGroup";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Tip | Tip[]>
+  res: NextApiResponse<Tip | Tip[] | TipGroupWithTips | TipWithGroup[]>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
@@ -34,17 +35,44 @@ export default async function handler(
 async function getTips(
   session: Session,
   req: NextApiRequest,
-  res: NextApiResponse<Tip[]>
+  res: NextApiResponse<Tip[] | TipWithGroup[]>
 ) {
+  const { withGroups } = req.query;
+
   const tips = await prisma.tip.findMany({
     where: {
       tipperId: {
         equals: session.user.id,
       },
+      ...(withGroups
+        ? {
+            OR: [
+              {
+                groupTipIndex: {
+                  equals: 1,
+                },
+              },
+              {
+                groupTipIndex: {
+                  equals: null,
+                },
+              },
+            ],
+          }
+        : {}),
     },
     orderBy: {
       created: "desc",
     },
+    include: withGroups
+      ? {
+          group: {
+            include: {
+              tips: true,
+            },
+          },
+        }
+      : undefined,
   });
 
   return res.status(StatusCodes.OK).json(tips);
@@ -53,7 +81,7 @@ async function getTips(
 async function handlePostTip(
   session: Session,
   req: NextApiRequest,
-  res: NextApiResponse<Tip>
+  res: NextApiResponse<Tip | TipGroupWithTips>
 ) {
   if (!process.env.APP_URL) {
     throw new Error("No APP_URL provided");
@@ -78,62 +106,87 @@ async function handlePostTip(
   ) {
     throw new Error("Only tips with positive, whole amounts are allowed");
   }
+  if (
+    createTipRequest.quantity < 1 ||
+    createTipRequest.quantity > MAX_TIP_GROUP_QUANTITY ||
+    Math.floor(createTipRequest.quantity) !== createTipRequest.quantity
+  ) {
+    throw new Error("Unsupported tip quantity: " + createTipRequest.quantity);
+  }
 
   const expiry = createTipRequest.expiry;
   const fee = calculateFee(createTipRequest.amount);
-  let tip = await prisma.tip.create({
-    data: {
-      tipperId: session.user.id,
-      amount: createTipRequest.amount,
-      fee,
-      status: "UNFUNDED",
-      expiry,
-      currency: createTipRequest.currency,
-      skipOnboarding: createTipRequest.skipOnboarding,
-      version: 1 /* 0=all tips in same bucket, 1=one wallet per tip */,
-    },
-  });
 
-  const deleteTip = () =>
-    prisma.tip.delete({
-      where: {
-        id: tip.id,
-      },
-    });
+  const createTipData: Parameters<typeof prisma.tip.create>[0]["data"] = {
+    tipperId: session.user.id,
+    amount: createTipRequest.amount,
+    fee,
+    status: "UNFUNDED",
+    expiry,
+    currency: createTipRequest.currency,
+    skipOnboarding: createTipRequest.skipOnboarding,
+    version: 1 /* 0=all tips in same bucket, 1=one wallet per tip */,
+  };
 
-  // create a user and wallet for the tip
-  const { createLnbitsUserResponse, createLnbitsUserResponseBody } =
-    await createLnbitsUserAndWallet(generateUserAndWalletName("tip", tip.id));
-
-  if (!createLnbitsUserResponse.ok) {
-    console.error(
-      "Failed to create lnbits user+wallet for tip",
-      createLnbitsUserResponseBody
-    );
-    await deleteTip();
-    throw new Error("Failed to create lnbits user+wallet for tip");
-  }
-
-  const lnbitsWallet = createLnbitsUserResponseBody.wallets[0];
-  try {
-    // save the newly-created lnbits wallet (for creating/paying invoice)
-    await prisma.lnbitsWallet.create({
+  if (createTipRequest.quantity > 1) {
+    let tipGroup = await prisma.tipGroup.create({
       data: {
-        tipId: tip.id,
-        id: lnbitsWallet.id,
-        lnbitsUserId: lnbitsWallet.user,
-        adminKey: lnbitsWallet.adminkey,
+        quantity: createTipRequest.quantity,
+        status: TipGroupStatus.UNFUNDED,
+        tipperId: session.user.id,
+        tips: {
+          createMany: {
+            data: [...new Array(createTipRequest.quantity)].map((_, index) => ({
+              ...createTipData,
+              groupTipIndex: index,
+            })),
+          },
+        },
+      },
+      include: {
+        tips: true,
       },
     });
-  } catch (error) {
-    console.error("Failed to save tip lnbits wallet to database", error);
-    await deleteTip();
-    throw new Error("Failed to save tip lnbits wallet to database");
+
+    let lnbitsWalletAdminKey: string;
+    try {
+      lnbitsWalletAdminKey = await prepareFundingWallet(undefined, tipGroup.id);
+    } catch (error) {
+      await prisma.tipGroup.delete({
+        where: {
+          id: tipGroup.id,
+        },
+      });
+      throw error;
+    }
+
+    tipGroup = await recreateTipGroupFundingInvoice(
+      tipGroup,
+      lnbitsWalletAdminKey
+    );
+
+    await createAchievement(session.user.id, "BULK_TIP_CREATED");
+    res.json(tipGroup);
+  } else {
+    let tip = await prisma.tip.create({
+      data: createTipData,
+    });
+
+    let lnbitsWalletAdminKey: string;
+    try {
+      lnbitsWalletAdminKey = await prepareFundingWallet(tip.id, undefined);
+    } catch (error) {
+      await prisma.tip.delete({
+        where: {
+          id: tip.id,
+        },
+      });
+      throw error;
+    }
+
+    tip = await recreateTipFundingInvoice(tip, lnbitsWalletAdminKey);
+
+    await createAchievement(session.user.id, "CREATED_TIP");
+    res.json(tip);
   }
-
-  tip = await recreateTipFundingInvoice(tip, lnbitsWallet.adminkey);
-
-  await createAchievement(session.user.id, "CREATED_TIP");
-
-  res.json(tip);
 }

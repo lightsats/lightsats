@@ -23,7 +23,7 @@ const ClaimTipPage: NextPage = () => {
   const { t } = useTranslation("claim");
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
-  const { id } = router.query;
+  const { id, printed: isPrinted } = router.query;
   const { data: publicTip, mutate: mutatePublicTip } = useSWR<PublicTip>(
     id ? `/api/tippee/tips/${id}` : null,
     defaultFetcher
@@ -92,10 +92,12 @@ const ClaimTipPage: NextPage = () => {
 
   // autoclaim after login
   React.useEffect(() => {
-    if (canClaim && !isClaiming) {
+    if (canClaim && !isClaiming && router.isReady) {
       setClaiming(true);
       (async () => {
-        const claimTipRequest: ClaimTipRequest = {};
+        const claimTipRequest: ClaimTipRequest = {
+          isPrinted: isPrinted === "true",
+        };
         const result = await fetch(`/api/tippee/tips/${id}/claim`, {
           method: "POST",
           body: JSON.stringify(claimTipRequest),
@@ -113,7 +115,15 @@ const ClaimTipPage: NextPage = () => {
         }
       })();
     }
-  }, [canClaim, destinationRoute, isClaiming, id, mutatePublicTip, router]);
+  }, [
+    canClaim,
+    destinationRoute,
+    isClaiming,
+    id,
+    mutatePublicTip,
+    router,
+    isPrinted,
+  ]);
 
   const isLoading =
     !publicTip ||

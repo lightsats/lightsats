@@ -48,6 +48,11 @@ async function handleGetUser(
           created: "desc",
         },
       },
+      tipGroups: {
+        include: {
+          tips: true,
+        },
+      },
       lnbitsWallet: true,
       withdrawals: {
         include: {

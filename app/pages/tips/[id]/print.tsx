@@ -223,7 +223,7 @@ const InsidePage = ({ tip }: InsidePageProps) => {
               <LightsatsQRCode
                 width={500}
                 height={500}
-                value={getClaimUrl(tip)}
+                value={getClaimUrl(tip, true)}
               />
             </div>
 

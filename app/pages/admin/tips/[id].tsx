@@ -10,6 +10,7 @@ import {
 import { User } from "@prisma/client";
 import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
 import { AdminTipCardContents } from "components/admin/AdminTipCardContents";
+import { AdminTipGroupCard } from "components/admin/AdminTipGroupCard";
 import { AdminUserCard } from "components/admin/AdminUserCard";
 import { AdminWithdrawalCard } from "components/admin/AdminWithdrawalCard";
 import { AdminWithdrawalErrorsList } from "components/admin/AdminWithdrawalErrorsList";
@@ -103,6 +104,13 @@ const AdminTipPage: NextPage = () => {
       <Spacer />
       <AdminTipUser title="tippee" user={tip.tippee} />
       <Spacer />
+      {tip.group && (
+        <>
+          <Text h2>Group</Text>
+          <AdminTipGroupCard tipGroup={tip.group} />
+          <Spacer />
+        </>
+      )}
       <h2>Withdrawal Errors</h2>
       <AdminWithdrawalErrorsList withdrawalErrors={tip.withdrawalErrors} />
       <Spacer />
