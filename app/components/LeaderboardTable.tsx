@@ -10,6 +10,7 @@ import {
   Table,
   Text,
 } from "@nextui-org/react";
+import { LeaderboardTheme } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { LeaderboardsGrid } from "components/leaderboard/LeaderboardsGrid";
 import { NextImage } from "components/NextImage";
@@ -34,6 +35,7 @@ type LeaderboardTableProps = {
   creatorId?: string;
   startDate?: Date;
   endDate?: Date;
+  theme?: LeaderboardTheme;
 };
 
 export function LeaderboardTable({
@@ -43,6 +45,7 @@ export function LeaderboardTable({
   creatorId,
   startDate,
   endDate,
+  theme,
 }: LeaderboardTableProps) {
   const { data: leaderboardContents } = useLeaderboardContents(leaderboardId);
   const paginationRef = React.useRef<HTMLDivElement>(null);
@@ -91,7 +94,7 @@ export function LeaderboardTable({
                 avatarURL: creator.avatarURL ?? undefined,
                 fallbackAvatarId: creator.fallbackAvatarId,
               }}
-              hasTheme
+              theme={theme}
             />
           </Row>
           <Spacer />
@@ -189,7 +192,7 @@ export function LeaderboardTable({
             <>
               <LeaderboardTableContents
                 visibleScoreboardEntries={visibleScoreboardEntries}
-                hasTheme={!!leaderboardId}
+                theme={theme}
               />
               <div ref={paginationRef} />
             </>
@@ -217,12 +220,12 @@ export function LeaderboardTable({
 }
 type LeaderboardTableContentsProps = {
   visibleScoreboardEntries: LeaderboardEntry[];
-  hasTheme: boolean;
+  theme: LeaderboardTheme | undefined;
 };
 
 function LeaderboardTableContents({
   visibleScoreboardEntries,
-  hasTheme,
+  theme,
 }: LeaderboardTableContentsProps) {
   return (
     <>
@@ -254,10 +257,7 @@ function LeaderboardTableContents({
                       {i + 1}
                     </Badge>
                     <Col>
-                      <LeaderboardUser
-                        hasTheme={hasTheme}
-                        user={scoreboardEntry}
-                      />
+                      <LeaderboardUser theme={theme} user={scoreboardEntry} />
                     </Col>
                     <Col>
                       {scoreboardEntry.twitterUsername && (
@@ -339,10 +339,7 @@ function LeaderboardTableContents({
                     </Table.Cell>
                     <Table.Cell css={{ overflow: "visible" }}>
                       <Row align="center">
-                        <LeaderboardUser
-                          hasTheme={hasTheme}
-                          user={scoreboardEntry}
-                        />
+                        <LeaderboardUser theme={theme} user={scoreboardEntry} />
                         {scoreboardEntry.twitterUsername && (
                           <TwitterButton
                             username={scoreboardEntry.twitterUsername}
@@ -384,18 +381,18 @@ type LeaderboardUserProps = {
     avatarURL: string | undefined;
     fallbackAvatarId: string | undefined;
   };
-  hasTheme: boolean;
+  theme: LeaderboardTheme | undefined;
 };
-function LeaderboardUser({ user, hasTheme }: LeaderboardUserProps) {
+function LeaderboardUser({ user, theme }: LeaderboardUserProps) {
   return (
     <NextLink href={`${PageRoutes.users}/${user.userId}`} passHref>
       <a style={{ display: "flex", position: "relative", overflow: "visible" }}>
-        {hasTheme && (
+        {theme && (
           <div
             style={{ position: "absolute", top: -21, left: 1, zIndex: 10000 }}
           >
             <NextImage
-              src="/leaderboards/christmas/hat.png"
+              src={`/leaderboards/${theme}/hat.png`}
               width={60}
               height={60}
             />

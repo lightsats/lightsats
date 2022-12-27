@@ -36,6 +36,7 @@ const EditLeaderboard: NextPage = () => {
       endDate: leaderboard.end
         ? format(new Date(leaderboard.end), "yyyy-MM-dd")
         : "",
+      theme: leaderboard.theme ?? undefined,
     };
     return defaultValues;
   }, [leaderboard]);

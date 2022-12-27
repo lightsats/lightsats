@@ -85,9 +85,17 @@ export function LeaderboardsGrid({ featured }: LeaderboardsGridProps) {
                       isHoverable
                       isPressable
                     >
-                      <LeaderboardBackground />
-                      <LeaderboardBackgroundTop variant="card" />
-                      <LeaderboardBackgroundBottom variant="card" />
+                      <LeaderboardBackground
+                        theme={leaderboard.theme ?? undefined}
+                      />
+                      <LeaderboardBackgroundTop
+                        theme={leaderboard.theme ?? undefined}
+                        variant="card"
+                      />
+                      <LeaderboardBackgroundBottom
+                        theme={leaderboard.theme ?? undefined}
+                        variant="card"
+                      />
                       <Card.Body>
                         <Row>
                           <Text b>{leaderboard.title}</Text>

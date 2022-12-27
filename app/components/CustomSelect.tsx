@@ -1,13 +1,14 @@
 import { useTheme } from "@nextui-org/react";
 import Select from "react-select";
-export type SelectOption = { label: string; value: string };
+export type SelectOption = { label: string; value: string | undefined };
 
 type CustomSelectProps = {
   options: SelectOption[];
   defaultValue?: string;
   value?: string;
-  onChange(value: string): void;
+  onChange(value: string | undefined): void;
   width?: string;
+  isClearable?: boolean;
 };
 
 export function CustomSelect({
@@ -16,8 +17,21 @@ export function CustomSelect({
   value,
   onChange,
   width,
+  isClearable,
 }: CustomSelectProps) {
   const { theme } = useTheme();
+
+  // function handleChange = React.useCallback((event) => {
+  //   // Overwrite the event with your own object if it doesn't exist
+  //   if (!event) {
+  //     event = {
+  //       target: inputRef,
+  //       value: '',
+  //     };
+  //   }
+  //   onChange(event);
+  // });
+
   return (
     <Select
       value={
@@ -25,6 +39,7 @@ export function CustomSelect({
           ? options.find((option: SelectOption) => option.value === value)
           : undefined
       }
+      isClearable={isClearable}
       menuPortalTarget={global.document?.body}
       options={options}
       defaultValue={
@@ -34,7 +49,7 @@ export function CustomSelect({
             )
           : undefined
       }
-      onChange={(e) => e && onChange(e?.value)}
+      onChange={(e) => (e || isClearable) && onChange(e?.value)}
       styles={{
         input: (baseStyles) => ({
           ...baseStyles,
@@ -58,6 +73,12 @@ export function CustomSelect({
         indicatorSeparator: (baseStyles) => ({
           ...baseStyles,
           backgroundColor: "transparent",
+        }),
+        clearIndicator: (baseStyles) => ({
+          ...baseStyles,
+          color: theme?.colors.secondary.value,
+          marginRight: "-10px",
+          marginLeft: "-10px",
         }),
       }}
     />

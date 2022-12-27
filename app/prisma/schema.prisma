@@ -259,9 +259,9 @@ model Leaderboard {
   end DateTime?
   creator User @relation("leaderboardsCreated", fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId String
+  theme LeaderboardTheme?
   // TODO: password
   // TODO: goalAmount
-  // TODO: theme/themeUrl/leaderboard customisation
 }
 
 //model LeaderboardUser {
@@ -372,4 +372,8 @@ enum RoleType {
 enum UserType {
   tipper
   tippee
+}
+
+enum LeaderboardTheme {
+  CHRISTMAS
 }

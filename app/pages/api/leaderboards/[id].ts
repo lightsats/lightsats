@@ -81,6 +81,9 @@ async function updateLeaderboard(
       end: updateLeaderboardRequest.endDate
         ? new Date(updateLeaderboardRequest.endDate)
         : null,
+      theme: updateLeaderboardRequest.theme
+        ? updateLeaderboardRequest.theme
+        : null,
     },
   });
 

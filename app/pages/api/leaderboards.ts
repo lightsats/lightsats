@@ -59,6 +59,7 @@ async function handlePostLeaderboard(
         ? new Date(createLeaderboardRequest.endDate)
         : null,
       creatorId: session.user.id as string,
+      theme: createLeaderboardRequest.theme,
     },
   });
 

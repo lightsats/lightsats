@@ -1,5 +1,5 @@
 import { Loading, Spacer } from "@nextui-org/react";
-import { Leaderboard } from "@prisma/client";
+import { Leaderboard, LeaderboardTheme } from "@prisma/client";
 import { LeaderboardTable } from "components/LeaderboardTable";
 import { useUserRoles } from "hooks/useUserRoles";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
@@ -40,9 +40,9 @@ const CustomLeaderboardPage: NextPage = () => {
         startDate={new Date(leaderboard.start)}
         endDate={leaderboard.end ? new Date(leaderboard.end) : undefined}
       />
-      <LeaderboardBackground />
-      <LeaderboardBackgroundTop />
-      <LeaderboardBackgroundBottom />
+      <LeaderboardBackground theme={leaderboard.theme ?? undefined} />
+      <LeaderboardBackgroundTop theme={leaderboard.theme ?? undefined} />
+      <LeaderboardBackgroundBottom theme={leaderboard.theme ?? undefined} />
     </>
   );
 };
@@ -51,7 +51,17 @@ export default CustomLeaderboardPage;
 
 export { getStaticProps, getStaticPaths };
 
-export function LeaderboardBackground() {
+type LeaderboardBackgroundProps = {
+  theme: LeaderboardTheme | undefined;
+};
+type LeaderboardBackgroundVariantProps = {
+  variant?: "card" | "page";
+};
+
+export function LeaderboardBackground({ theme }: LeaderboardBackgroundProps) {
+  if (!theme) {
+    return null;
+  }
   return (
     <div
       style={{
@@ -60,7 +70,7 @@ export function LeaderboardBackground() {
         left: 0,
         width: "100vw",
         height: "100vh",
-        background: "url(/leaderboards/christmas/background.png)",
+        background: `url(/leaderboards/${theme.toLowerCase()}/background.png)`,
         backgroundSize: "25%",
         backgroundRepeat: "repeat",
         opacity: 0.05,
@@ -70,13 +80,16 @@ export function LeaderboardBackground() {
   );
 }
 
-type LeaderboardBackgroundTopProps = {
-  variant?: "card" | "page";
-};
+type LeaderboardBackgroundTopProps = LeaderboardBackgroundProps &
+  LeaderboardBackgroundVariantProps;
 
 export function LeaderboardBackgroundTop({
   variant = "page",
+  theme,
 }: LeaderboardBackgroundTopProps) {
+  if (!theme) {
+    return null;
+  }
   return (
     <div
       style={{
@@ -85,7 +98,7 @@ export function LeaderboardBackgroundTop({
         left: 0,
         width: variant === "card" ? "200%" : "100vw",
         height: variant === "card" ? "300%" : "min(50vw, calc(100vh - 76px))",
-        background: "url(/leaderboards/christmas/bg-top.png)",
+        background: `url(/leaderboards/${theme.toLowerCase()}/bg-top.png)`,
         backgroundSize: "contain",
         backgroundPositionX: "140%",
         opacity: 0.5,
@@ -95,13 +108,16 @@ export function LeaderboardBackgroundTop({
   );
 }
 
-type LeaderboardBackgroundBottomProps = {
-  variant?: "card" | "page";
-};
+type LeaderboardBackgroundBottomProps = LeaderboardBackgroundProps &
+  LeaderboardBackgroundVariantProps;
 
 export function LeaderboardBackgroundBottom({
   variant = "page",
+  theme,
 }: LeaderboardBackgroundBottomProps) {
+  if (!theme) {
+    return null;
+  }
   return (
     <div
       style={{
@@ -110,7 +126,7 @@ export function LeaderboardBackgroundBottom({
         left: 0,
         width: variant === "card" ? "100%" : "100vw",
         height: variant === "card" ? "100%" : "50vw",
-        background: "url(/leaderboards/christmas/bg-bottom.png)",
+        background: `url(/leaderboards/${theme.toLowerCase()}/bg-bottom.png)`,
         backgroundSize: "contain",
         opacity: 0.5,
         zIndex: -1,

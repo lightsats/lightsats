@@ -1,4 +1,6 @@
 import { Button, Card, Input, Loading, Row, Spacer } from "@nextui-org/react";
+import { LeaderboardTheme } from "@prisma/client";
+import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { format } from "date-fns";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -8,6 +10,7 @@ export type LeaderboardFormData = {
   startDate: string;
   endDate: string;
   startTime: string;
+  theme: LeaderboardTheme | undefined;
 };
 
 export type LeaderboardFormSubmitData = LeaderboardFormData;
@@ -25,6 +28,13 @@ type LeaderboardFormProps = {
   mode: "create" | "update";
 };
 
+const themeSelectOptions: SelectOption[] = Object.keys(LeaderboardTheme).map(
+  (key) => ({
+    value: key,
+    label: key,
+  })
+);
+
 export function LeaderboardForm({
   onSubmit: onSubmitProp,
   defaultValues = {
@@ -35,13 +45,21 @@ export function LeaderboardForm({
 }: LeaderboardFormProps) {
   const [isSubmitting, setSubmitting] = React.useState(false);
 
-  const { control, handleSubmit, setFocus } = useForm<LeaderboardFormData>({
-    defaultValues,
-  });
+  const { control, handleSubmit, setFocus, watch, setValue } =
+    useForm<LeaderboardFormData>({
+      defaultValues,
+    });
 
   React.useEffect(() => {
     setFocus("title");
   }, [setFocus]);
+
+  const watchedTheme = watch("theme");
+
+  const setTheme = React.useCallback(
+    (theme: LeaderboardTheme | undefined) => setValue("theme", theme),
+    [setValue]
+  );
 
   const onSubmit = React.useCallback(
     (data: LeaderboardFormData) => {
@@ -118,6 +136,15 @@ export function LeaderboardForm({
                   bordered
                 />
               )}
+            />
+          </Row>
+          <Spacer />
+          <Row>
+            <CustomSelect
+              options={themeSelectOptions}
+              value={watchedTheme}
+              onChange={setTheme}
+              isClearable
             />
           </Row>
         </Card.Body>
