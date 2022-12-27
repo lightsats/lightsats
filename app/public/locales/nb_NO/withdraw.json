@@ -1,1 +1,6 @@
-{}
+{
+    "withdrawAvailableBalance": "Gjør uttak av {{availableBalance}} Sats til din lommebok",
+    "withdrawing": "Utfører uttak …",
+    "title": "Klar til å gjøre uttak?",
+    "lnurlInstructions": "Skann, trykk, eller kopier lenken nedenfor inn i bitcoin-lommeboken din for å gjøre uttak."
+}
