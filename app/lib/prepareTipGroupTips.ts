@@ -12,6 +12,9 @@ const PREPARE_RETRY_INTERVAL = 15000;
 export async function prepareTipGroupTips(
   tipGroup: TipGroupWithTips
 ): Promise<TipGroupWithTips> {
+  if (tipGroup.status === "UNFUNDED") {
+    return tipGroup;
+  }
   // TODO: this could loop a reasonable number of times to speed up the tip preparation process
 
   const availableUnfundedTip = tipGroup.tips.find(
