@@ -94,7 +94,7 @@ async function postWithdrawLink(req: NextApiRequest, res: NextApiResponse) {
   });
 
   if (existingWithdrawLink) {
-    return res.status(StatusCodes.OK).json(existingWithdrawLink.lnurl);
+    return res.json(existingWithdrawLink.lnurl);
   }
 
   const withdrawalLinkId: string = uuidv4();
@@ -119,5 +119,5 @@ async function postWithdrawLink(req: NextApiRequest, res: NextApiResponse) {
     },
   });
 
-  return res.status(StatusCodes.OK).json(lnurlValue);
+  return res.json(lnurlValue);
 }

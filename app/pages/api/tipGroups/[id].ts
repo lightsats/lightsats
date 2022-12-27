@@ -52,5 +52,5 @@ async function getTipGroup(
   tipGroup = await regenerateExpiredTipGroupInvoice(tipGroup);
   tipGroup = await prepareTipGroupTips(tipGroup);
 
-  return res.status(StatusCodes.OK).json(tipGroup);
+  return res.json(tipGroup);
 }

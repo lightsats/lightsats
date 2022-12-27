@@ -28,5 +28,5 @@ async function getTips(req: NextApiRequest, res: NextApiResponse<Tip[]>) {
     return res.status(StatusCodes.NOT_FOUND).end();
   }
 
-  return res.status(StatusCodes.OK).json([tip]);
+  return res.json([tip]);
 }

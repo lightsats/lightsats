@@ -106,7 +106,7 @@ async function getTip(
     tip = await regenerateExpiredTipInvoice(tip);
   }
 
-  return res.status(StatusCodes.OK).json(tip);
+  return res.json(tip);
 }
 
 async function updateTip(

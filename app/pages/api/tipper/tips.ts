@@ -75,7 +75,7 @@ async function getTips(
       : undefined,
   });
 
-  return res.status(StatusCodes.OK).json(tips);
+  return res.json(tips);
 }
 
 async function handlePostTip(

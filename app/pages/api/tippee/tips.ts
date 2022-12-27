@@ -48,7 +48,7 @@ async function getPublicTips(
     },
   });
 
-  return res.status(StatusCodes.OK).json(tips.map(mapTipToPublicTip));
+  return res.json(tips.map(mapTipToPublicTip));
 }
 
 async function getTips(
@@ -67,5 +67,5 @@ async function getTips(
     },
   });
 
-  return res.status(StatusCodes.OK).json(tips);
+  return res.json(tips);
 }

@@ -29,13 +29,14 @@ async function getLeaderboards(
   const leaderboards = await prisma.leaderboard.findMany({
     where: {
       global: true,
+      public: true,
     },
     orderBy: {
       created: "desc",
     },
   });
 
-  return res.status(StatusCodes.OK).json(leaderboards);
+  return res.json(leaderboards);
 }
 
 async function handlePostLeaderboard(
@@ -54,6 +55,8 @@ async function handlePostLeaderboard(
     data: {
       global:
         (await isAdmin(session.user.id)) && createLeaderboardRequest.isGlobal,
+      public:
+        (await isAdmin(session.user.id)) && createLeaderboardRequest.isPublic,
       title: createLeaderboardRequest.title,
       start: new Date(createLeaderboardRequest.startDate),
       end: createLeaderboardRequest.endDate

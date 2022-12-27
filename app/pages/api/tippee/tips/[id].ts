@@ -30,5 +30,5 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     return res.status(StatusCodes.NOT_FOUND).end();
   }
 
-  return res.status(StatusCodes.OK).json(mapTipToPublicTip(tip));
+  return res.json(mapTipToPublicTip(tip));
 }

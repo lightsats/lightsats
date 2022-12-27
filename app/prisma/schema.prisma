@@ -85,6 +85,7 @@ model User {
   notifications Notification[]
   achievements Achievement[]
   leaderboardsCreated Leaderboard[] @relation("leaderboardsCreated")
+  leaderboardUsers LeaderboardUser[]
 }
 
 model TipGroup {
@@ -253,6 +254,7 @@ model Leaderboard {
   id String @id @default(cuid())
   title String
   global Boolean // if false, requires a join link. Joined users will be added as LeaderboardUsers (TODO)
+  public Boolean @default(true) // if true, will be included on the leaderboards list
   created DateTime @default(now())
   updated DateTime @default(now()) @updatedAt
   start DateTime
@@ -260,13 +262,20 @@ model Leaderboard {
   creator User @relation("leaderboardsCreated", fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId String
   theme LeaderboardTheme?
-  // TODO: password
+  leaderboardUsers LeaderboardUser[]
+  password String?
   // TODO: goalAmount
 }
 
-//model LeaderboardUser {
+model LeaderboardUser {
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  leaderboard Leaderboard @relation(fields: [leaderboardId], references: [id], onDelete: Cascade)
+  leaderboardId String
+  created DateTime @default(now())
 
-//}
+  @@id([userId, leaderboardId])
+}
 
 model Achievement {
   type AchievementType

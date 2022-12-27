@@ -12,17 +12,20 @@ import {
 } from "@nextui-org/react";
 import { LeaderboardTheme } from "@prisma/client";
 import { Alert } from "components/Alert";
+import { JoinLeaderboard } from "components/JoinLeaderboard";
 import { LeaderboardsGrid } from "components/leaderboard/LeaderboardsGrid";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { NextUIUser } from "components/NextUIUser";
 import { TwitterButton } from "components/TwitterButton";
-import { formatDistance } from "date-fns";
+import { format, formatDistance } from "date-fns";
 import { useLeaderboardContents } from "hooks/useLeaderboardContents";
+import { useLeaderboardUsers } from "hooks/useLeaderboardUsers";
 import { usePublicUser } from "hooks/usePublicUser";
 import { DEFAULT_NAME } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
 import { formatAmount, getAvatarUrl } from "lib/utils";
+import { useSession } from "next-auth/react";
 import React from "react";
 import Countdown from "react-countdown";
 import { useInViewport } from "react-in-viewport";
@@ -55,10 +58,13 @@ export function LeaderboardTable({
     { disconnectOnLeave: false }
   );
   const [perPage, setPerPage] = React.useState(10);
+  const { data: session } = useSession();
 
   const { data: creator } = usePublicUser(creatorId, true);
 
   const numEntries = leaderboardContents?.entries.length ?? 0;
+
+  const { data: leaderboardUsers } = useLeaderboardUsers(leaderboardId);
 
   React.useEffect(() => {
     if (inViewport && perPage < numEntries) {
@@ -83,6 +89,14 @@ export function LeaderboardTable({
       <Text h2>{title}</Text>
       {creator && (
         <>
+          {startDate && (
+            <>
+              <Text size="small" color="$gray700">
+                {format(new Date(startDate), "d MMMM yyyy")} -{" "}
+                {endDate ? format(new Date(endDate), "d MMMM yyyy") : "∞"}
+              </Text>
+            </>
+          )}
           <Spacer />
           <Row justify="center" align="center">
             <Text>Created by</Text>
@@ -136,6 +150,30 @@ export function LeaderboardTable({
           <Spacer />
         </>
       )}
+      {session && !hasEnded && leaderboardId && leaderboardUsers && (
+        <>
+          <Card css={{}}>
+            <Card.Body>
+              <Row>
+                <Col css={{ position: "absolute" }}>
+                  <Text h3>{leaderboardUsers.length}</Text>
+                  <Text>participants</Text>
+                </Col>
+                {!leaderboardUsers.some(
+                  (user) => user.userId === session.user.id
+                ) && (
+                  <>
+                    <Spacer />
+                    <JoinLeaderboard leaderboardId={leaderboardId} />
+                  </>
+                )}
+              </Row>
+            </Card.Body>
+          </Card>
+          <Spacer />
+        </>
+      )}
+
       {hasStarted && (
         <>
           <Grid.Container

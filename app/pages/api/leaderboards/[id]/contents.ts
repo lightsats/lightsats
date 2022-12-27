@@ -27,7 +27,7 @@ export default async function handler(
   if (!leaderboardContents) {
     return res.status(StatusCodes.NOT_FOUND).end();
   }
-  return res.status(StatusCodes.OK).json(leaderboardContents);
+  return res.json(leaderboardContents);
 }
 
 async function getLeaderboardContents(

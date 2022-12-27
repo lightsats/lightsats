@@ -139,7 +139,7 @@ async function getUser(
   await createUserNotifications(user);
   await createUserAchievements(user, isPWA);
 
-  return res.status(StatusCodes.OK).json(user);
+  return res.json(user);
 }
 
 async function createUserNotifications(user: ExtendedUser) {

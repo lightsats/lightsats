@@ -38,6 +38,7 @@ const EditLeaderboard: NextPage = () => {
         : "",
       theme: leaderboard.theme ?? undefined,
       isGlobal: leaderboard.global,
+      isPublic: leaderboard.public,
     };
     return defaultValues;
   }, [leaderboard]);

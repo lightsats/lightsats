@@ -6,6 +6,7 @@ export type LeadboardRequestBase = {
   endDate: string | undefined;
   theme: LeaderboardTheme | undefined;
   isGlobal: boolean;
+  isPublic: boolean;
 };
 
 export type CreateLeaderboardRequest = LeadboardRequestBase;

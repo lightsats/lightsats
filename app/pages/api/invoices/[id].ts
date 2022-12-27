@@ -1,4 +1,3 @@
-import { StatusCodes } from "http-status-codes";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = unknown;
@@ -29,6 +28,6 @@ export default async function handler(
 
   if (getInvoiceResponse.ok) {
     const invoiceData = await getInvoiceResponse.json();
-    return res.status(StatusCodes.OK).json(invoiceData);
+    return res.json(invoiceData);
   }
 }

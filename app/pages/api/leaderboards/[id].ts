@@ -95,6 +95,8 @@ async function updateLeaderboard(
     data: {
       global:
         (await isAdmin(session.user.id)) && updateLeaderboardRequest.isGlobal,
+      public:
+        (await isAdmin(session.user.id)) && updateLeaderboardRequest.isPublic,
       title: updateLeaderboardRequest.title,
       start: new Date(updateLeaderboardRequest.startDate),
       end: updateLeaderboardRequest.endDate

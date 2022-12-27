@@ -22,6 +22,7 @@ export type LeaderboardFormData = {
   startTime: string | undefined;
   theme: LeaderboardTheme | undefined;
   isGlobal: boolean;
+  isPublic: boolean;
 };
 
 export type LeaderboardFormSubmitData = LeaderboardFormData;
@@ -54,6 +55,7 @@ export function LeaderboardForm({
     endDate: undefined,
     startTime: undefined,
     isGlobal: false,
+    isPublic: false,
     theme: undefined,
   },
   mode,
@@ -71,6 +73,7 @@ export function LeaderboardForm({
   }, [setFocus]);
 
   const watchedTheme = watch("theme");
+  const watchedIsGlobal = watch("isGlobal");
 
   const setTheme = React.useCallback(
     (theme: LeaderboardTheme | undefined) => setValue("theme", theme),
@@ -86,6 +89,7 @@ export function LeaderboardForm({
           startDate: data.startTime
             ? data.startDate + " " + data.startTime
             : data.startDate,
+          isPublic: data.isGlobal ? true : data.isPublic,
         });
         setSubmitting(false);
       })();
@@ -118,6 +122,28 @@ export function LeaderboardForm({
               <Spacer />
             </>
           )}
+          {userRoles?.some((role) => role.roleType === "SUPERADMIN") &&
+            !watchedIsGlobal && (
+              <>
+                <Row>
+                  <Text>Public (leaderboard listed publically)</Text>
+                </Row>
+                <Row>
+                  <Controller
+                    name="isPublic"
+                    control={control}
+                    render={({ field }) => (
+                      <Switch
+                        {...field}
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                      />
+                    )}
+                  />
+                </Row>
+                <Spacer />
+              </>
+            )}
           <Row>
             <Controller
               name="title"
