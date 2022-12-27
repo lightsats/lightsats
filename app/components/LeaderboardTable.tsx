@@ -11,7 +11,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Alert } from "components/Alert";
-import { FeaturedLeaderboards } from "components/leaderboard/FeaturedLeaderboards";
+import { LeaderboardsGrid } from "components/leaderboard/LeaderboardsGrid";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { NextUIUser } from "components/NextUIUser";
@@ -181,7 +181,7 @@ export function LeaderboardTable({
           <Spacer />
         </>
       )}
-      {!leaderboardId && <FeaturedLeaderboards />}
+      {!leaderboardId && <LeaderboardsGrid featured />}
 
       {hasStarted ? (
         <>
