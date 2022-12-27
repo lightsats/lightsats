@@ -10,11 +10,13 @@ import {
   Table,
   Text,
 } from "@nextui-org/react";
+import { Alert } from "components/Alert";
 import { FeaturedLeaderboards } from "components/leaderboard/FeaturedLeaderboards";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { NextUIUser } from "components/NextUIUser";
 import { TwitterButton } from "components/TwitterButton";
+import { formatDistance } from "date-fns";
 import { useLeaderboardContents } from "hooks/useLeaderboardContents";
 import { usePublicUser } from "hooks/usePublicUser";
 import { DEFAULT_NAME } from "lib/constants";
@@ -31,6 +33,7 @@ type LeaderboardTableProps = {
   canEdit?: boolean;
   creatorId?: string;
   startDate?: Date;
+  endDate?: Date;
 };
 
 export function LeaderboardTable({
@@ -39,6 +42,7 @@ export function LeaderboardTable({
   canEdit,
   creatorId,
   startDate,
+  endDate,
 }: LeaderboardTableProps) {
   const { data: leaderboardContents } = useLeaderboardContents(leaderboardId);
   const paginationRef = React.useRef<HTMLDivElement>(null);
@@ -69,6 +73,7 @@ export function LeaderboardTable({
   }
 
   const hasStarted = !startDate || startDate.getTime() < Date.now();
+  const hasEnded = endDate && endDate.getTime() < Date.now();
 
   return (
     <>
@@ -89,6 +94,15 @@ export function LeaderboardTable({
               hasTheme
             />
           </Row>
+          <Spacer />
+        </>
+      )}
+      {hasEnded && (
+        <>
+          <Alert>
+            This leaderboard ended{" "}
+            {formatDistance(new Date(), new Date(endDate))} ago
+          </Alert>
           <Spacer />
         </>
       )}
