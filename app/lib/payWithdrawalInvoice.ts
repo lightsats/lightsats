@@ -170,8 +170,8 @@ export async function payWithdrawalInvoice(
   if (!payInvoiceResponse.ok || !payInvoiceResponseBody) {
     const errorMessage =
       "Failed to pay withdrawal invoice for " +
-      (userId ? `user " + ${userId}` : `tip ${tipId}`);
-    ": " +
+      (userId ? `user " + ${userId}` : `tip ${tipId}`) +
+      ": " +
       payInvoiceResponse.status +
       " " +
       payInvoiceResponse.statusText +
@@ -183,6 +183,9 @@ export async function payWithdrawalInvoice(
         message: errorMessage,
         userId,
         tipId,
+        withdrawalFlow,
+        withdrawalInvoice: invoice,
+        withdrawalMethod,
       },
     });
 
