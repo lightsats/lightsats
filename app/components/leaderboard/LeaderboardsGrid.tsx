@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useUserRoles } from "hooks/useUserRoles";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
+import { useSession } from "next-auth/react";
 import {
   LeaderboardBackground,
   LeaderboardBackgroundBottom,
@@ -14,14 +15,21 @@ import useSWR from "swr";
 
 type LeaderboardsGridProps = {
   featured?: boolean;
+  userId?: string;
+  showAll?: boolean;
 };
 
-export function LeaderboardsGrid({ featured }: LeaderboardsGridProps) {
+export function LeaderboardsGrid({
+  showAll,
+  featured,
+  userId,
+}: LeaderboardsGridProps) {
   const { data: leaderboards } = useSWR<Leaderboard[]>(
-    `/api/leaderboards`,
+    `/api/leaderboards${userId ? `?userId=${userId}` : ""}`,
     defaultFetcher
   );
   const { data: userRoles } = useUserRoles();
+  const { data: session } = useSession();
 
   return leaderboards?.length ||
     userRoles?.some((role) => role.roleType === "SUPERADMIN") ? (
@@ -29,12 +37,22 @@ export function LeaderboardsGrid({ featured }: LeaderboardsGridProps) {
       <Spacer />
       <Row align="center">
         <Text b>
-          {featured ? <>⭐ Featured Leaderboards</> : <>⭐ All Leaderboards</>}
+          {userId ? (
+            <>👑 Your Leaderboards</>
+          ) : featured ? (
+            <>⭐ Featured Leaderboards</>
+          ) : (
+            <>✨ All Leaderboards</>
+          )}
         </Text>
-        {featured ? (
+        {!showAll ? (
           <>
             <Spacer x={0.5} />
-            <NextLink href={PageRoutes.leaderboards}>
+            <NextLink
+              href={`${PageRoutes.leaderboards}${
+                userId ? `?userId=${userId}` : ""
+              }`}
+            >
               <a>
                 <Button size="sm" flat auto>
                   See All
@@ -54,7 +72,7 @@ export function LeaderboardsGrid({ featured }: LeaderboardsGridProps) {
             </NextLink>
           </>
         )}
-        {userRoles?.some((role) => role.roleType === "SUPERADMIN") && (
+        {session && (
           <>
             <Spacer x={0.5} />
             <NextLink href={PageRoutes.newLeaderboard}>

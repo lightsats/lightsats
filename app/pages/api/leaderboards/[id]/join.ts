@@ -3,19 +3,27 @@ import { LeaderboardUser } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "pages/api/auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<LeaderboardUser[]>
 ) {
-  if (req.method !== "GET") {
+  const session = await unstable_getServerSession(req, res, authOptions);
+  if (!session) {
+    return res.status(StatusCodes.UNAUTHORIZED).end();
+  }
+
+  if (req.method !== "POST") {
     return res.status(StatusCodes.NOT_FOUND).end();
   }
   const { id } = req.query;
-  const leaderboardUsers = await prisma.leaderboardUser.findMany({
-    where: {
+  await prisma.leaderboardUser.create({
+    data: {
       leaderboardId: id as string,
+      userId: session.user.id,
     },
   });
-  return res.json(leaderboardUsers);
+  return res.status(StatusCodes.NO_CONTENT).end();
 }

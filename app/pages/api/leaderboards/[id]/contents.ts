@@ -14,6 +14,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<LeaderboardContents>
 ) {
+  if (req.method !== "GET") {
+    return res.status(StatusCodes.NOT_FOUND).end();
+  }
   const { id } = req.query;
   if (!id || id.length > 255) {
     throw new Error("Invalid leaderboard ID field");
@@ -51,6 +54,16 @@ async function getLeaderboardContents(
 
   // TODO: for non-global scoreboards, find users matching leaderboard
   const users = await prisma.user.findMany({
+    where:
+      leaderboard && !leaderboard.global
+        ? {
+            leaderboardUsers: {
+              some: {
+                leaderboardId: leaderboard.id,
+              },
+            },
+          }
+        : undefined,
     include: {
       tipsSent: true,
       tipsReceived: true,
@@ -89,9 +102,10 @@ async function getLeaderboardContents(
       (tip) =>
         isTipInPeriod(tip) &&
         tip.status === "WITHDRAWN" &&
-        tip.claimed &&
-        tip.claimed > startDate &&
-        tip.claimed < endDate
+        ((tip.claimed && tip.claimed > startDate && tip.claimed < endDate) ||
+          (tip.lastWithdrawal /* anonymous withdrawal is not claimed */ &&
+            tip.lastWithdrawal > startDate &&
+            tip.lastWithdrawal < endDate))
     );
 
   const entries: LeaderboardEntry[] = users

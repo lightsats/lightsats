@@ -152,24 +152,36 @@ export function LeaderboardTable({
       )}
       {session && !hasEnded && leaderboardId && leaderboardUsers && (
         <>
-          <Card css={{}}>
-            <Card.Body>
+          <Row>
+            <Card css={{ height: "130px", justifyContent: "center" }}>
+              <Card.Body>
+                <Row>
+                  <Col>
+                    <Text h3>{leaderboardUsers.length}</Text>
+                    <Text>participants</Text>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Row>
+          {!leaderboardUsers.some(
+            (user) => user.userId === session.user.id
+          ) && (
+            <>
+              <Spacer />
               <Row>
-                <Col css={{ position: "absolute" }}>
-                  <Text h3>{leaderboardUsers.length}</Text>
-                  <Text>participants</Text>
-                </Col>
-                {!leaderboardUsers.some(
-                  (user) => user.userId === session.user.id
-                ) && (
-                  <>
-                    <Spacer />
-                    <JoinLeaderboard leaderboardId={leaderboardId} />
-                  </>
-                )}
+                <Card css={{ height: "130px", justifyContent: "center" }}>
+                  <Card.Body>
+                    <Row>
+                      <>
+                        <JoinLeaderboard leaderboardId={leaderboardId} />
+                      </>
+                    </Row>
+                  </Card.Body>
+                </Card>
               </Row>
-            </Card.Body>
-          </Card>
+            </>
+          )}
           <Spacer />
         </>
       )}
@@ -223,6 +235,9 @@ export function LeaderboardTable({
         </>
       )}
       {!leaderboardId && <LeaderboardsGrid featured />}
+      {session && !leaderboardId && (
+        <LeaderboardsGrid userId={session.user.id} />
+      )}
 
       {hasStarted ? (
         <>

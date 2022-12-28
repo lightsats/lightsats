@@ -57,7 +57,7 @@ const breez: Wallet = {
   features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   lightsatsRecommended: true,
   category: "wallets",
-  minBalance: 2000,
+  minBalance: 3000,
   link: "https://lgt.st/breez",
   image: "breez.png",
   placeholderDataUrl:

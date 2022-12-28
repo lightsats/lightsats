@@ -17,19 +17,38 @@ export default async function handler(
     case "POST":
       return handlePostLeaderboard(session, req, res);
     case "GET":
-      return getLeaderboards(req, res);
+      return getLeaderboards(session, req, res);
     default:
       return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 async function getLeaderboards(
+  session: Session | null,
   req: NextApiRequest,
   res: NextApiResponse<Leaderboard[]>
 ) {
+  const { userId } = req.query;
+  if (userId && session?.user.id !== userId) {
+    return res.status(StatusCodes.FORBIDDEN).end();
+  }
   const leaderboards = await prisma.leaderboard.findMany({
     where: {
-      global: true,
-      public: true,
+      ...(userId
+        ? {
+            OR: [
+              {
+                creatorId: userId as string,
+              },
+              {
+                leaderboardUsers: {
+                  some: {
+                    userId: userId as string,
+                  },
+                },
+              },
+            ],
+          }
+        : { public: true }),
     },
     orderBy: {
       created: "desc",
