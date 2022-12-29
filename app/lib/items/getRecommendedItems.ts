@@ -154,6 +154,9 @@ function getWalletScore(item: Item) {
   if (wallet.features.indexOf("non-custodial") > -1) {
     ++score;
   }
+  if (wallet.features.indexOf("lightning address") > -1) {
+    ++score;
+  }
   if (wallet.platforms.indexOf("mobile") > -1) {
     ++score;
   }

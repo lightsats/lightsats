@@ -10,6 +10,7 @@
   "nonCustodial": "non-custodial",
   "custodial": "custodial",
   "scanToLogin": "Scan to login",
+  "lightningAddress": "Lightning address",
   "platforms": {
     "mobile": "Mobile",
     "desktop": "Desktop",
