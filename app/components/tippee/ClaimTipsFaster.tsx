@@ -13,7 +13,7 @@ export function ClaimTipsFaster() {
         </Text>
         <Spacer />
         <Row justify="center">
-          <NextLink href={PageRoutes.login}>
+          <NextLink href={PageRoutes.signin}>
             <Button auto color="primary">
               <>{"🚀 Sign in"}</>
             </Button>

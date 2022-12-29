@@ -39,7 +39,7 @@ function HomepageCTA() {
       href={
         sessionStatus === "authenticated"
           ? PageRoutes.dashboard
-          : PageRoutes.login
+          : PageRoutes.signin
       }
       passHref
     >

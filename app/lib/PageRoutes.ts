@@ -35,7 +35,7 @@ export enum PageRoutes {
   adminWithdrawals = "/admin/withdrawals",
   adminWithdrawalErrors = "/admin/errors/withdrawals",
   about = "/about",
-  login = "/signin",
+  signin = "/signin",
   features = "/features",
   users = "/users",
   notifications = "/notifications",
