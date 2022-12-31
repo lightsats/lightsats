@@ -11,7 +11,7 @@
     "checkSMSText": "Un enlace mágico 🪄 se ha enviado a tu celular. Haz clic en el enlace para confirmarlo.",
     "openInWallet": "Abrir en billetera",
     "copy": "Copiar",
-    "copiedToClipboard": "Copiado en el portapapeles",
+    "copiedToClipboard": "Copiado al portapapeles",
     "createdAgo": "creado hace {{distance}}",
     "amountInSats": "{{amount}} sats"
 }
