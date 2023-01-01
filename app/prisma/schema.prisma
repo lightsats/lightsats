@@ -138,6 +138,7 @@ model Tip {
   groupId String?
   group TipGroup? @relation(fields: [groupId], references: [id])
   groupTipIndex Int?
+  claimedFromPrintedCard Boolean @default(false)
 }
 
 model LnbitsWallet {
@@ -308,6 +309,18 @@ enum AchievementType {
   TIPS_25
   TIPS_50
   TIPS_100
+  TIPPED_A_BITCOINER // successful withdraw with "skip journey"
+  BULK_TIP_CREATED
+  BULK_TIP_FUNDED
+  BULK_TIP_CLAIMED
+  BULK_TIP_WITHDRAWN
+  BULK_TIP_ALL_WITHDRAWN // all tips in group withdrawn
+  BULK_TIP_10
+  BULK_TIP_25
+  BULK_TIP_50
+  BULK_TIP_100
+  PRINTED_CARD_TIP_CLAIMED
+  PRINTED_CARD_TIP_WITHDRAWN
 }
 
 enum NotificationType {

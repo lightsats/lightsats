@@ -87,7 +87,7 @@ const TipGroupPage: NextPage = () => {
       );
     }
 
-    if ((!skipPersonalize && !firstTip.note) || !firstTip.tippeeName) {
+    if (!skipPersonalize && (!firstTip.note || !firstTip.tippeeName)) {
       return (
         <>
           {header}

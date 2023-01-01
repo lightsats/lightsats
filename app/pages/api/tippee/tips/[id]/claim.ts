@@ -9,6 +9,7 @@ import { getTipUrl, hasTipExpired } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
+import { ClaimTipRequest } from "types/ClaimTipRequest";
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,6 +34,7 @@ async function handleClaimTip(
   res: NextApiResponse<Tip>
 ) {
   const { id } = req.query;
+  const claimTipRequest = req.body as ClaimTipRequest;
   const tip = await prisma.tip.findUnique({
     where: {
       id: id as string,
@@ -66,8 +68,13 @@ async function handleClaimTip(
       status: "CLAIMED",
       claimed: new Date(),
       tippeeId: session.user.id,
+      claimedFromPrintedCard: claimTipRequest.isPrinted,
     },
   });
+  if (claimTipRequest.isPrinted) {
+    await createAchievement(tip.tipperId, "PRINTED_CARD_TIP_CLAIMED");
+  }
+
   const userHasTips = !!(await prisma.tip.findFirst({
     where: {
       tipperId: session.user.id,
@@ -86,6 +93,9 @@ async function handleClaimTip(
     });
   }
   await createNotification(tip.tipperId, "TIP_CLAIMED", tip.id);
+  if (tip.groupId) {
+    await createAchievement(tip.tipperId, "BULK_TIP_CLAIMED");
+  }
   await createAchievement(session.user.id, "SELF_CLAIMED");
   await createAchievement(tip.tipperId, "TIP_CLAIMED");
   if (tip.tipper.email) {

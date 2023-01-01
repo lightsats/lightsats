@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import EmailSignIn from "pages/auth/signin/email";
 import LnurlAuthSignIn from "pages/auth/signin/lnurl";
 import PhoneSignIn from "pages/auth/signin/phone";
-import { useState } from "react";
+import React, { useState } from "react";
 import { LoginMethod, loginMethods } from "types/LoginMethod";
 
 type LoginProps = {
@@ -56,7 +56,7 @@ export function Login({
           .filter((method) => method !== loginMethod)
           .map((method, i) => {
             return (
-              <>
+              <React.Fragment key={method}>
                 <Button
                   light
                   auto
@@ -67,7 +67,7 @@ export function Login({
                   {t(`common:${method}`)}
                 </Button>
                 {i === 0 && <Text>&nbsp;{t("common:or")}&nbsp;</Text>}
-              </>
+              </React.Fragment>
             );
           })}
         <Text>&nbsp; {t("login:instead")}</Text>
