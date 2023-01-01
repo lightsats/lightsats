@@ -1,6 +1,6 @@
 import {
-  Button,
   Card,
+  Dropdown,
   Grid,
   Loading,
   Progress,
@@ -42,11 +42,29 @@ const TipGroupPage: NextPage = () => {
   if (tipGroup) {
     const header = (
       <>
-        <Text h1>Group of {tipGroup.quantity} Tips</Text>
-        <Row justify="space-between" align="center">
-          <TipGroupStatusBadge tipGroup={tipGroup} />
-          <TipGroupProgress tipGroup={tipGroup} />
+        <Row justify="space-between">
+          <Text h3>
+            👥 Group of {tipGroup.quantity} tips &nbsp;
+            <TipGroupStatusBadge tipGroup={tipGroup} />
+          </Text>
+          <Dropdown placement="bottom-right" type="menu">
+            <Dropdown.Button flat>⚙️</Dropdown.Button>
+            <Dropdown.Menu aria-label="Static Actions">
+              <Dropdown.Item key="edit">
+                <NextLink
+                  href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
+                  passHref
+                >
+                  <a>Bulk edit</a>
+                </NextLink>
+              </Dropdown.Item>
+              <Dropdown.Item key="copy">Copy URLs to clipboard</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Row>
+
+        <Spacer />
+        <TipGroupProgress tipGroup={tipGroup} />
         <Spacer />
       </>
     );
@@ -93,21 +111,9 @@ const TipGroupPage: NextPage = () => {
           </>
         )}
 
-        <Text h6>Manage Tips</Text>
-        <>
-          <NextLink
-            href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
-            passHref
-          >
-            <a>
-              <Button>Bulk Edit</Button>
-            </a>
-          </NextLink>
-          <Spacer />
-        </>
-        <Button onClick={() => setShowClaimUrls((current) => !current)}>
+        {/* <Button onClick={() => setShowClaimUrls((current) => !current)}>
           Show/Hide claim URLs
-        </Button>
+        </Button> */}
         <Spacer />
         {showClaimUrls && (
           <>
@@ -124,6 +130,7 @@ const TipGroupPage: NextPage = () => {
           </>
         )}
 
+        <h3>Tips</h3>
         <Grid.Container justify="center" gap={1}>
           {tipGroup.tips.map((tip) => (
             <SentTipCard tip={tip} key={tip.id} />

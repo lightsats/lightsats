@@ -1,4 +1,5 @@
 import { Loading, Spacer, Text } from "@nextui-org/react";
+import { Alert } from "components/Alert";
 import { TipForm, TipFormData, TipFormSubmitData } from "components/TipForm";
 import { add, differenceInHours } from "date-fns";
 import { ApiRoutes } from "lib/ApiRoutes";
@@ -99,9 +100,9 @@ const EditTipGroup: NextPage = () => {
   return (
     <>
       <Text h3>✏️ Edit tips</Text>
-      <Text b>
-        Warning: Any individual changes to tips will be overwritten.
-      </Text>
+
+      <Alert>⚠️ Any individual changes to tips will be overwritten.</Alert>
+
       <Spacer />
       <TipForm
         onSubmit={onSubmit}

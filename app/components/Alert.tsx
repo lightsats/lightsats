@@ -16,7 +16,7 @@ export function Alert(props: Props) {
       }}
     >
       <Card.Body>
-        <Row justify="center" align="center">
+        <Row justify="center" align="center" css={{ ta: "center" }}>
           {props.children}
         </Row>
       </Card.Body>

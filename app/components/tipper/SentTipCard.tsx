@@ -18,7 +18,7 @@ import { PageRoutes } from "lib/PageRoutes";
 import { hasTipExpired } from "lib/utils";
 import { CSSProperties } from "react";
 
-const cardLinkStyle: CSSProperties = { flex: 1 };
+const cardLinkStyle: CSSProperties = { flex: 1, position: "relative" };
 
 type SentTipCardProps = {
   tip: Tip;
@@ -32,11 +32,27 @@ export function SentTipCard({ tip }: SentTipCardProps) {
     <Grid xs={12} justify="center">
       <NextLink href={`${PageRoutes.tips}/${tip.id}`}>
         <a style={cardLinkStyle}>
-          <Card isPressable isHoverable css={{ dropShadow: "$sm" }}>
+          <Card
+            isPressable
+            isHoverable
+            css={{
+              dropShadow: "$sm",
+            }}
+          >
             <Card.Body>
               <Row justify="space-between">
                 <Text color="#F8AF43">
-                  {tip.groupId && <Badge>Part of a group</Badge>}
+                  {/* {tip.groupId && (
+                    <Tooltip
+                      content={"This tip is part of a group."}
+                      color="primary"
+                      triggerCss={{ display: "inline" }}
+                    >
+                      <Badge variant="flat" color={"secondary"}>
+                        👨‍👩‍👧‍👦
+                      </Badge>
+                    </Tooltip>
+                  )} */}
                   <TipStatusBadge tip={tip} />
                   {!hasExpired &&
                     expirableTipStatuses.indexOf(tip.status) >= 0 && (
