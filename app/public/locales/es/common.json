@@ -13,5 +13,5 @@
     "copy": "Copiar",
     "copiedToClipboard": "Copiado al portapapeles",
     "createdAgo": "creado hace {{distance}}",
-    "amountInSats": "{{amount}} sats"
+    "amountInSats": "{{amount}} Sats"
 }
