@@ -1,1 +1,6 @@
-{}
+{
+  "title": "Bereit zum abheben?",
+  "withdrawing": "Abhebevorgang läuft...",
+  "lnurlInstructions": "Scanne, klicke oder kopiere den link unten in Deine bitcoin wallet, um den Betrag abzuheben.",
+  "withdrawAvailableBalance": "Sende {{availableBalance}} sats zu Deiner wallet"
+}
