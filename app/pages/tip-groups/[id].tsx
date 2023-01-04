@@ -206,7 +206,7 @@ const TipGroupPage: NextPage = () => {
                 <Col>
                   <Row wrap="wrap" justify="space-between">
                     <Text b>
-                      {"🎁 Looking for cards to hand out in person?"}
+                      {"🎫 Looking for cards to hand out in person?"}
                     </Text>
                   </Row>
                   <Spacer />

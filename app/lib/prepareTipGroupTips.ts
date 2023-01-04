@@ -17,19 +17,24 @@ export async function prepareTipGroupTips(
   }
   // TODO: review number of iterations to speed up the tip preparation process
   const maxIterations = 5;
+  const attemptedTips: Tip[] = [];
+  const promises: Promise<void>[] = [];
   for (let i = 0; i < maxIterations; i++) {
     const availableUnfundedTip = tipGroup.tips.find(
       (tip) =>
         tip.status === "UNFUNDED" &&
+        attemptedTips.indexOf(tip) < 0 &&
         (!tip.lastWithdrawal ||
           Date.now() - new Date(tip.lastWithdrawal).getTime() >
             PREPARE_RETRY_INTERVAL)
     );
 
     if (availableUnfundedTip) {
-      await prepareTipGroupTip(tipGroup, availableUnfundedTip);
+      attemptedTips.push(availableUnfundedTip);
+      promises.push(prepareTipGroupTip(tipGroup, availableUnfundedTip));
     }
   }
+  await Promise.all(promises);
 
   return tipGroup;
 }

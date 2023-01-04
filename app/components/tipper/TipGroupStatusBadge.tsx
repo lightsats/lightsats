@@ -39,7 +39,12 @@ export function TipGroupStatusBadge({
         textTransform: "capitalize",
       }}
     >
-      {(color === "success" ? "Completed" : status).toLowerCase()}
+      {(color === "warning"
+        ? "Reclaimed"
+        : color === "success"
+        ? "Completed"
+        : status
+      ).toLowerCase()}
     </Badge>
   );
 }

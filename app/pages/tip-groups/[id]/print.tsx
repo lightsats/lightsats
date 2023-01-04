@@ -9,30 +9,36 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
+import { NextUIUser } from "components/NextUIUser";
+import { useUser } from "hooks/useUser";
 import { ApiRoutes } from "lib/ApiRoutes";
+import { DEFAULT_NAME } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { defaultFetcher } from "lib/swr";
+import { getClaimUrl, getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
+import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 import useSWR from "swr";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 
-const PrintTipCardPage: NextPage = () => {
+const PrintTipCardsPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const { data: tipGroup } = useSWR<TipGroupWithTips>(
     `${ApiRoutes.tipGroups}/${id}`,
     defaultFetcher
   );
+  const { data: user } = useUser();
   const printRef = React.useRef(null);
 
   const print = useReactToPrint({
     content: () => printRef.current,
   });
 
-  if (!tipGroup) {
+  if (!tipGroup || !user) {
     return <Loading />;
   }
 
@@ -83,7 +89,7 @@ const PrintTipCardPage: NextPage = () => {
           <Row justify="center">
             <Button
               onClick={() => {
-                document.title = "card.pdf";
+                document.title = "cards.pdf";
                 print();
               }}
             >
@@ -163,24 +169,6 @@ const PrintTipCardPage: NextPage = () => {
                             padding: "6.5% 9%",
                           }}
                         >
-                          {/*TODO: remove below */}
-                          <div
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              opacity: 0.1,
-                              //background: "yellow",
-                              //background:
-                              //  'url("/tip-groups/printed-cards/generic/card-background.png")',
-                              background:
-                                'url("/tip-groups/printed-cards/generic/preview.png")',
-                              backgroundSize: "cover",
-                              backgroundRepeat: "no-repeat",
-                              width: "100%",
-                              height: "100%",
-                            }}
-                          />
                           <Row justify="space-between" align="flex-start">
                             <Text
                               color="white"
@@ -199,9 +187,52 @@ const PrintTipCardPage: NextPage = () => {
                               height={200}
                               style={{
                                 marginTop: "-65px",
-                                marginRight: "-25px",
+                                marginRight: "-30px",
                               }}
                             />
+                          </Row>
+                          <div style={{ flex: 1 }} />
+                          <Row justify="space-between" align="flex-end">
+                            <NextUIUser
+                              bordered
+                              size="lg"
+                              css={{
+                                transform: "scale(2,2)",
+                                pb: "26px",
+                                pl: "41px",
+                                ".nextui-user-avatar": {
+                                  padding: "4px",
+                                },
+                                ".nextui-avatar-bg": {
+                                  background: "rgba(255, 255, 255, 0.25)",
+                                  padding: "$10",
+                                },
+                                ".nextui-avatar-img": {
+                                  border: "none",
+                                },
+                              }}
+                              name={
+                                <Text
+                                  b
+                                  color="white"
+                                  css={{ fontSize: "20px" }}
+                                >
+                                  {user.name ?? DEFAULT_NAME}
+                                </Text>
+                              }
+                              src={getUserAvatarUrl(user)}
+                            />
+                            <div
+                              style={{
+                                filter:
+                                  "drop-shadow(0px 0px 16px rgba(0, 0, 0, 0.25))",
+                                padding: "20px",
+                                background: "white",
+                                borderRadius: "32px",
+                              }}
+                            >
+                              <QRCode value={getClaimUrl(tip, true)} />
+                            </div>
                           </Row>
                         </div>
                       </div>
@@ -216,7 +247,7 @@ const PrintTipCardPage: NextPage = () => {
   );
 };
 
-export default PrintTipCardPage;
+export default PrintTipCardsPage;
 
 export { getStaticProps, getStaticPaths };
 
