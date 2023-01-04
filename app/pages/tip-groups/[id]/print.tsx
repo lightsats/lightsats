@@ -158,7 +158,7 @@ const PrintTipCardsPage: NextPage = () => {
                           style={{
                             //background: "yellow",
                             background:
-                              'url("/tip-groups/printed-cards/generic/card-background.png")',
+                              'url("/tip-groups/printed-cards/generic/card-background-2.png")',
                             backgroundSize: "cover",
                             backgroundRepeat: "no-repeat",
                             width: "100%",
@@ -229,6 +229,9 @@ const PrintTipCardsPage: NextPage = () => {
                                 padding: "20px",
                                 background: "white",
                                 borderRadius: "32px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
                               }}
                             >
                               <QRCode value={getClaimUrl(tip, true)} />
