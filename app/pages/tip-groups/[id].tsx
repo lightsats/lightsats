@@ -71,17 +71,23 @@ const TipGroupPage: NextPage = () => {
   );
 
   const reclaimTips = React.useCallback(() => {
-    (async () => {
-      router.push(PageRoutes.dashboard);
-      const result = await fetch(`${ApiRoutes.tipGroups}/${id}/reclaim`, {
-        method: "POST",
-      });
-      if (!result.ok) {
-        toast.error("Failed to reclaim tips: " + result.statusText);
-      } else {
-        mutateTips();
-      }
-    })();
+    if (
+      window.confirm(
+        "Are you sure you wish to reclaim all tips? your recipients won't be able to withdraw their sats."
+      )
+    ) {
+      (async () => {
+        router.push(PageRoutes.dashboard);
+        const result = await fetch(`${ApiRoutes.tipGroups}/${id}/reclaim`, {
+          method: "POST",
+        });
+        if (!result.ok) {
+          toast.error("Failed to reclaim tips: " + result.statusText);
+        } else {
+          mutateTips();
+        }
+      })();
+    }
   }, [id, mutateTips, router]);
 
   if (tipGroup) {

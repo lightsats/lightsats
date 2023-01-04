@@ -75,18 +75,25 @@ const TipPage: NextPage = () => {
   }, [id, router, mutateTips]);
 
   const reclaimTip = React.useCallback(() => {
-    (async () => {
-      router.push(PageRoutes.dashboard);
-      const result = await fetch(`/api/tipper/tips/${id}/reclaim`, {
-        method: "POST",
-      });
-      if (!result.ok) {
-        toast.error("Failed to reclaim tip: " + result.statusText);
-      } else {
-        mutateTips();
-      }
-    })();
-  }, [id, mutateTips, router]);
+    if (
+      hasExpired ||
+      window.confirm(
+        "Are you sure you wish to reclaim your tip? your recipient won't be able to withdraw their sats."
+      )
+    ) {
+      (async () => {
+        router.push(PageRoutes.dashboard);
+        const result = await fetch(`/api/tipper/tips/${id}/reclaim`, {
+          method: "POST",
+        });
+        if (!result.ok) {
+          toast.error("Failed to reclaim tip: " + result.statusText);
+        } else {
+          mutateTips();
+        }
+      })();
+    }
+  }, [hasExpired, id, mutateTips, router]);
 
   if (tip) {
     if (
