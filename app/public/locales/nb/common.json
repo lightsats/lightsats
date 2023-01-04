@@ -8,5 +8,10 @@
     "checkEmailTitle": "Sjekk innboksen din",
     "checkEmailText": "Du har fått en 🪄 magisk lenke i innboksen. Klikk den for å bekrefte e-postadressen din.",
     "checkSMSTitle": "Sjekk telefonen din",
-    "checkSMSText": "🪄 En magisk lenke har blitt sendt til telefonen din. Klikk den for å bekrefte telefonnummeret ditt."
+    "checkSMSText": "🪄 En magisk lenke har blitt sendt til telefonen din. Klikk den for å bekrefte telefonnummeret ditt.",
+    "openInWallet": "Åpne i lommebok",
+    "copiedToClipboard": "Kopiert til utklippstavle",
+    "copy": "Kopier",
+    "amountInSats": "{{amount}} Sats",
+    "createdAgo": "opprettet for {{distance}} siden"
 }
