@@ -133,12 +133,8 @@ const PrintTipCardsPage: NextPage = () => {
               >
                 <div
                   style={{
-                    display: "flex",
-                    flexWrap: "wrap",
                     width: "100%",
                     height: "100%",
-                    //justifyContent: "center",
-                    //alignItems: "center",
                     //background: "green",
                   }}
                 >
@@ -151,6 +147,7 @@ const PrintTipCardsPage: NextPage = () => {
                           width: "calc(100% / 3)",
                           height: "calc(100% / 3)",
                           padding: "0.5%",
+                          display: "inline-block",
                           //background: "white",
                         }}
                       >
