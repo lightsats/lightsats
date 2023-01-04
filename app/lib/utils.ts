@@ -11,6 +11,7 @@ import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { PageRoutes } from "lib/PageRoutes";
 import { NextRouter } from "next/router";
 import { MouseEventHandler } from "react";
+import { GiftCardTheme } from "types/GiftCardTheme";
 import { Item } from "types/Item";
 import { PublicTip } from "types/PublicTip";
 import { PublicUser } from "types/PublicUser";
@@ -150,3 +151,7 @@ export function isMobile() {
 
 export const isPWA = () =>
   isMobile() && window.matchMedia("(display-mode: standalone)").matches;
+
+export function getDefaultGiftCardTheme(): GiftCardTheme {
+  return new Date().getMonth() === 11 ? "christmas" : "generic";
+}

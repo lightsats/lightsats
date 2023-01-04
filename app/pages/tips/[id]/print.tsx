@@ -7,9 +7,11 @@ import {
   Loading,
   Row,
   Spacer,
+  Switch,
   Text,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
+import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { FlexBox } from "components/FlexBox";
 import { NextUIUser } from "components/NextUIUser";
 import { format } from "date-fns";
@@ -17,12 +19,24 @@ import { useTip } from "hooks/useTip";
 import { useUser } from "hooks/useUser";
 import { DEFAULT_NAME } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
-import { getClaimUrl, getUserAvatarUrl } from "lib/utils";
+import {
+  getClaimUrl,
+  getDefaultGiftCardTheme,
+  getUserAvatarUrl,
+} from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
+import { GiftCardTheme, GiftCardThemes } from "types/GiftCardTheme";
+
+const themeSelectOptions: SelectOption[] = Object.values(GiftCardThemes).map(
+  (key) => ({
+    value: key,
+    label: key,
+  })
+);
 
 const PrintTipCardPage: NextPage = () => {
   const router = useRouter();
@@ -30,12 +44,18 @@ const PrintTipCardPage: NextPage = () => {
   const { data: tip } = useTip(id as string);
   const insidePageRef = React.useRef(null);
   const outsidePageRef = React.useRef(null);
+  const bothPagesRef = React.useRef(null);
+  const [theme, setTheme] = React.useState(getDefaultGiftCardTheme());
+  const [duplex, setDuplex] = React.useState(true);
 
   const printInside = useReactToPrint({
     content: () => insidePageRef.current,
   });
   const printOutside = useReactToPrint({
     content: () => outsidePageRef.current,
+  });
+  const printDuplex = useReactToPrint({
+    content: () => bothPagesRef.current,
   });
 
   if (!tip) {
@@ -44,10 +64,25 @@ const PrintTipCardPage: NextPage = () => {
 
   return (
     <>
-      <h3>DIY Bitcoin Vouchers</h3>
+      <h3>DIY Bitcoin Gift Card</h3>
+      <Row>
+        <Text>Theme</Text>
+      </Row>
+      <Row>
+        <CustomSelect
+          options={themeSelectOptions}
+          value={theme}
+          onChange={(value) => {
+            if (value) {
+              setTheme(value as GiftCardTheme);
+            }
+          }}
+        />
+      </Row>
+      <Spacer />
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Image
-          src="/tips/printed-cards/christmas/preview2.jpg"
+          src={`/tips/printed-cards/${theme}/preview2.jpg`}
           objectFit="cover"
           width="100%"
           height={340}
@@ -75,37 +110,71 @@ const PrintTipCardPage: NextPage = () => {
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
           <Text h4>🪜 Step by step</Text>
-          <Text>
-            1) Insert the sheet into your printer and print the inside of your
-            card, using A4 or Letter size.
-          </Text>
-          <Spacer />
-          <Row justify="center">
-            <Button
-              onClick={() => {
-                document.title = "inside.pdf";
-                printInside();
-              }}
-            >
-              🖨️ Print inside page
-            </Button>
+          <Row align="center">
+            <Text>Duplex Printer</Text>
+            <Spacer />
+            <Switch
+              checked={duplex}
+              onChange={(e) => setDuplex(e.target.checked)}
+            />
           </Row>
-          <Spacer y={2} />
-          <Text>
-            {`2) Flip your printed page over and re-insert it back into the
+          <Spacer />
+          {duplex ? (
+            <>
+              <Text>1) Insert the sheet into your printer.</Text>
+              <Spacer />
+              <Text>
+                2) Press the button below to print your card, using A4 or Letter
+                size. Make sure to enable on two-sided printing or duplex mode.
+              </Text>
+              <Spacer />
+              <Row justify="center">
+                <Button
+                  onClick={() => {
+                    document.title = "card.pdf";
+                    printDuplex();
+                  }}
+                >
+                  🖨️ Print both sides
+                </Button>
+              </Row>
+            </>
+          ) : (
+            <>
+              <Text>
+                1) Insert the sheet into your printer and print the inside of
+                your card, using A4 or Letter size.
+              </Text>
+              <Spacer />
+              <Row justify="center">
+                <Button
+                  onClick={() => {
+                    document.title = "inside.pdf";
+                    printInside();
+                  }}
+                >
+                  🖨️ Print inside page
+                </Button>
+              </Row>
+              <Spacer y={2} />
+              <Text>
+                {`2) Flip your printed page over and re-insert it back into the
             printer. We're going to print the outside of the page now:`}
-          </Text>
-          <Spacer />
-          <Row justify="center">
-            <Button
-              onClick={() => {
-                document.title = "outside.pdf";
-                printOutside();
-              }}
-            >
-              🖨️ Print outside page
-            </Button>
-          </Row>
+              </Text>
+              <Spacer />
+              <Row justify="center">
+                <Button
+                  onClick={() => {
+                    document.title = "outside.pdf";
+                    printOutside();
+                  }}
+                >
+                  🖨️ Print outside page
+                </Button>
+              </Row>
+            </>
+          )}
+
           <Spacer y={2} />
           <Text>3) Cut out the card along the lines on the front.</Text>
           <Spacer />
@@ -123,12 +192,14 @@ const PrintTipCardPage: NextPage = () => {
             process.env.NEXT_PUBLIC_TEST_PRINT === "true" ? "block" : "none",
         }}
       >
-        <PrintablePage ref={insidePageRef}>
-          <InsidePage tip={tip} />
-        </PrintablePage>
-        <PrintablePage ref={outsidePageRef}>
-          <OutsidePage />
-        </PrintablePage>
+        <div ref={bothPagesRef}>
+          <PrintablePage ref={insidePageRef}>
+            <InsidePage tip={tip} />
+          </PrintablePage>
+          <PrintablePage ref={outsidePageRef}>
+            <OutsidePage theme={theme} />
+          </PrintablePage>
+        </div>
       </div>
     </>
   );
@@ -314,14 +385,19 @@ const InsidePage = ({ tip }: InsidePageProps) => {
     </>
   );
 };
-const OutsidePage = () => {
+
+type OutsidePageProps = {
+  theme: GiftCardTheme;
+};
+
+const OutsidePage = ({ theme }: OutsidePageProps) => {
   return (
     <>
       <img
         alt=""
         width="100%"
         height="100%"
-        src="/tips/printed-cards/christmas/outside.png"
+        src={`/tips/printed-cards/${theme}/outside.png`}
       />
     </>
   );

@@ -17,10 +17,11 @@ import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
 import { PageRoutes } from "lib/PageRoutes";
-import { getClaimUrl } from "lib/utils";
+import { getClaimUrl, getDefaultGiftCardTheme } from "lib/utils";
 import React from "react";
 import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
+import { GiftCardTheme } from "types/GiftCardTheme";
 
 type ShareUnclaimedTipProps = {
   tip: Tip;
@@ -107,42 +108,54 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
         </Card.Footer>
       </Card>
       <Spacer />
-      <Card css={{ dropShadow: "$sm" }}>
-        <Card.Image
-          src="/tips/printed-cards/christmas/preview.jpg"
-          objectFit="cover"
-          width="100%"
-          height={340}
-          alt="Card image background"
-        />
-        <Card.Footer
-          css={{
-            position: "absolute",
-            color: "$white",
-            bottom: 0,
-            width: "100%",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Text b color="white"></Text>
-        </Card.Footer>
-        <Card.Footer css={{ justifyItems: "flex-start" }}>
-          <Col>
-            <Row wrap="wrap" justify="space-between">
-              <Text b>⌛ Need a last minute chrismas gift?</Text>
-            </Row>
-            <Spacer />
-            <Row justify="center">
-              <NextLink href={`${PageRoutes.tips}/${tip.id}/print`}>
-                <a>
-                  <Button>🖨️ Print card</Button>
-                </a>
-              </NextLink>
-            </Row>
-          </Col>
-        </Card.Footer>
-      </Card>
+      <PrintCard tip={tip} />
       <Spacer y={3} />
     </>
+  );
+}
+
+type PrintCardProps = { theme?: GiftCardTheme; tip: Tip };
+
+function PrintCard({ theme = getDefaultGiftCardTheme(), tip }: PrintCardProps) {
+  return (
+    <Card css={{ dropShadow: "$sm" }}>
+      <Card.Image
+        src={`/tips/printed-cards/${theme}/preview.jpg`}
+        objectFit="cover"
+        width="100%"
+        height={340}
+        alt="Card image background"
+      />
+      <Card.Footer
+        css={{
+          position: "absolute",
+          color: "$white",
+          bottom: 0,
+          width: "100%",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Text b color="white"></Text>
+      </Card.Footer>
+      <Card.Footer css={{ justifyItems: "flex-start" }}>
+        <Col>
+          <Row wrap="wrap" justify="space-between">
+            <Text b>
+              {theme === "christmas"
+                ? "⌛ Need a last minute chrismas gift?"
+                : "🎁 Looking for something more tangible?"}
+            </Text>
+          </Row>
+          <Spacer />
+          <Row justify="center">
+            <NextLink href={`${PageRoutes.tips}/${tip.id}/print`}>
+              <a>
+                <Button>🖨️ Print card</Button>
+              </a>
+            </NextLink>
+          </Row>
+        </Col>
+      </Card.Footer>
+    </Card>
   );
 }
