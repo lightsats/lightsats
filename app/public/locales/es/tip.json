@@ -4,7 +4,7 @@
         "expired": "No retiraste esta propina a tiempo😭"
     },
     "tipper": {
-        "expired": "Tu destinatario no retiró su propina a tiempo. Esta propina caducó hace {{distance}} días 😭",
+        "expired": "Tu destinatario no retiró su propina a tiempo. Expiró hace {{distance}} 😭",
         "willExpire": "Tu destinatario recibirá recordatorios ocasionales para reclamar y retirar su propina antes de que caduque ✌️"
     }
 }
