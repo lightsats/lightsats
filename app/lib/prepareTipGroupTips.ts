@@ -15,18 +15,20 @@ export async function prepareTipGroupTips(
   if (tipGroup.status === "UNFUNDED") {
     return tipGroup;
   }
-  // TODO: this could loop a reasonable number of times to speed up the tip preparation process
+  // TODO: review number of iterations to speed up the tip preparation process
+  const maxIterations = 5;
+  for (let i = 0; i < maxIterations; i++) {
+    const availableUnfundedTip = tipGroup.tips.find(
+      (tip) =>
+        tip.status === "UNFUNDED" &&
+        (!tip.lastWithdrawal ||
+          Date.now() - new Date(tip.lastWithdrawal).getTime() >
+            PREPARE_RETRY_INTERVAL)
+    );
 
-  const availableUnfundedTip = tipGroup.tips.find(
-    (tip) =>
-      tip.status === "UNFUNDED" &&
-      (!tip.lastWithdrawal ||
-        Date.now() - new Date(tip.lastWithdrawal).getTime() >
-          PREPARE_RETRY_INTERVAL)
-  );
-
-  if (availableUnfundedTip) {
-    await prepareTipGroupTip(tipGroup, availableUnfundedTip);
+    if (availableUnfundedTip) {
+      await prepareTipGroupTip(tipGroup, availableUnfundedTip);
+    }
   }
 
   return tipGroup;

@@ -1,6 +1,7 @@
 import {
   Button,
   Card,
+  Col,
   Grid,
   Loading,
   Progress,
@@ -134,61 +135,102 @@ const TipGroupPage: NextPage = () => {
           <>
             <PayInvoice invoice={tipGroup.invoice} variant="tipGroup" />
             <Spacer />
-          </>
-        )}
-
-        <Text h6>Manage Tips</Text>
-        <>
-          <NextLink
-            href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
-            passHref
-          >
-            <a>
-              <Button>Bulk Edit</Button>
-            </a>
-          </NextLink>
-          <Spacer />
-        </>
-        <Button onClick={() => setShowClaimUrls((current) => !current)}>
-          Show/Hide claim URLs
-        </Button>
-        <Spacer />
-        {tipGroup.status === "UNFUNDED" && (
-          <>
             <Button onClick={deleteTipGroup} color="error">
               Delete Tip Group
             </Button>
             <Spacer />
           </>
         )}
-        {(reclaimableTips?.length ?? 0) > 0 && (
+
+        {tipGroup.status === "FUNDED" && (
           <>
-            <Button onClick={reclaimTips} color="error">
-              Reclaim unwithdrawn tips ({reclaimableTips?.length})
+            <Text h6>Manage Tips</Text>
+            <>
+              <NextLink
+                href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
+                passHref
+              >
+                <a>
+                  <Button>Bulk Edit</Button>
+                </a>
+              </NextLink>
+              <Spacer />
+            </>
+            <Button onClick={() => setShowClaimUrls((current) => !current)}>
+              Show/Hide claim URLs
             </Button>
             <Spacer />
-          </>
-        )}
-        {showClaimUrls && (
-          <>
-            <Card>
-              <Card.Body>
-                {tipGroup.tips.map((tip) => (
-                  <Row key={tip.id}>
-                    <Text>{getClaimUrl(tip)}</Text>
+            {(reclaimableTips?.length ?? 0) > 0 && (
+              <>
+                <Button onClick={reclaimTips} color="error">
+                  Reclaim unwithdrawn tips ({reclaimableTips?.length})
+                </Button>
+                <Spacer />
+              </>
+            )}
+            {showClaimUrls && (
+              <>
+                <Card>
+                  <Card.Body>
+                    {tipGroup.tips.map((tip) => (
+                      <Row key={tip.id}>
+                        <Text>{getClaimUrl(tip)}</Text>
+                      </Row>
+                    ))}
+                  </Card.Body>
+                </Card>
+                <Spacer />
+              </>
+            )}
+
+            <Card css={{ dropShadow: "$sm" }}>
+              <Card.Image
+                src={`/tip-groups/printed-cards/generic/preview.png`}
+                objectFit="cover"
+                width="100%"
+                height={340}
+                alt="Card image background"
+              />
+              <Card.Footer
+                css={{
+                  position: "absolute",
+                  color: "$white",
+                  bottom: 0,
+                  width: "100%",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Text b color="white"></Text>
+              </Card.Footer>
+              <Card.Footer css={{ justifyItems: "flex-start" }}>
+                <Col>
+                  <Row wrap="wrap" justify="space-between">
+                    <Text b>
+                      {"🎁 Looking for cards to hand out in person?"}
+                    </Text>
                   </Row>
-                ))}
-              </Card.Body>
+                  <Spacer />
+                  <Row justify="center">
+                    <NextLink
+                      href={`${PageRoutes.tipGroups}/${tipGroup.id}/print`}
+                    >
+                      <a>
+                        <Button>🖨️ Bulk print cards</Button>
+                      </a>
+                    </NextLink>
+                  </Row>
+                </Col>
+              </Card.Footer>
             </Card>
             <Spacer />
+
+            <Grid.Container justify="center" gap={1}>
+              {tipGroup.tips.map((tip) => (
+                <SentTipCard tip={tip} key={tip.id} />
+              ))}
+            </Grid.Container>
           </>
         )}
-
-        <Grid.Container justify="center" gap={1}>
-          {tipGroup.tips.map((tip) => (
-            <SentTipCard tip={tip} key={tip.id} />
-          ))}
-        </Grid.Container>
       </>
     );
   } else {
