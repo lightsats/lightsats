@@ -22,7 +22,8 @@ import { getClaimUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import useSWR, { SWRConfiguration } from "swr";
+import toast from "react-hot-toast";
+import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 
 const pollTipGroupConfig: SWRConfiguration = { refreshInterval: 1000 };
@@ -38,6 +39,26 @@ const TipGroupPage: NextPage = () => {
     defaultFetcher,
     pollTipGroupConfig
   );
+
+  const { mutate } = useSWRConfig();
+  const mutateTips = React.useCallback(
+    () => mutate("/api/tipper/tips"),
+    [mutate]
+  );
+
+  const deleteTipGroup = React.useCallback(() => {
+    (async () => {
+      router.push(PageRoutes.dashboard);
+      const result = await fetch(`${ApiRoutes.tipGroups}/${id}`, {
+        method: "DELETE",
+      });
+      if (!result.ok) {
+        toast.error("Failed to delete tip group: " + result.statusText);
+      } else {
+        mutateTips();
+      }
+    })();
+  }, [id, router, mutateTips]);
 
   if (tipGroup) {
     const header = (
@@ -109,6 +130,14 @@ const TipGroupPage: NextPage = () => {
           Show/Hide claim URLs
         </Button>
         <Spacer />
+        {tipGroup.status === "UNFUNDED" && (
+          <>
+            <Button onClick={deleteTipGroup} color="error">
+              Delete Tip Group
+            </Button>
+            <Spacer />
+          </>
+        )}
         {showClaimUrls && (
           <>
             <Card>

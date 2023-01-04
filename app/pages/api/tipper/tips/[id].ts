@@ -1,6 +1,7 @@
 import { Tip, TipStatus } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import { checkTipHasBeenFunded } from "lib/checkTipHasBeenFunded";
+import { deleteLnbitsUser } from "lib/lnbits/deleteLnbitsUser";
 import prisma from "lib/prismadb";
 import { regenerateExpiredTipInvoice } from "lib/regenerateExpiredTipInvoice";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -46,50 +47,30 @@ async function deleteTip(
   req: NextApiRequest,
   res: NextApiResponse<never>
 ) {
-  if (!process.env.LNBITS_API_KEY) {
-    throw new Error("No LNBITS_API_KEY provided");
-  }
   if (tip.groupId) {
     throw new Error("Tips in groups cannot be individually deleted");
   }
 
-  if (tip.status === TipStatus.UNFUNDED) {
-    const lnbitsWallet = await prisma.lnbitsWallet.findUnique({
-      where: {
-        tipId: tip.id,
-      },
-    });
-    if (lnbitsWallet) {
-      const deleteWalletRequestHeaders = new Headers();
-      deleteWalletRequestHeaders.append(
-        "X-Api-Key",
-        process.env.LNBITS_API_KEY
-      );
-
-      const deleteLnbitsUserResponse = await fetch(
-        `${process.env.LNBITS_URL}/usermanager/api/v1/users/${lnbitsWallet.lnbitsUserId}`,
-        {
-          method: "DELETE",
-          headers: deleteWalletRequestHeaders,
-        }
-      );
-      console.log(
-        "Tip",
-        tip.id,
-        "Delete tip lnbits user + wallet response: ",
-        deleteLnbitsUserResponse.status,
-        deleteLnbitsUserResponse.statusText
-      );
-    } else {
-      console.warn("No lnbits user+wallet for tip " + tip.id);
-    }
-
-    await prisma.tip.delete({
-      where: {
-        id: tip.id,
-      },
-    });
+  if (tip.status !== TipStatus.UNFUNDED) {
+    return res.status(StatusCodes.CONFLICT).end();
   }
+
+  const lnbitsWallet = await prisma.lnbitsWallet.findUnique({
+    where: {
+      tipId: tip.id,
+    },
+  });
+  if (lnbitsWallet) {
+    await deleteLnbitsUser(lnbitsWallet.lnbitsUserId);
+  } else {
+    console.warn("No lnbits user+wallet for tip " + tip.id);
+  }
+
+  await prisma.tip.delete({
+    where: {
+      id: tip.id,
+    },
+  });
 
   return res.status(StatusCodes.NO_CONTENT).end();
 }

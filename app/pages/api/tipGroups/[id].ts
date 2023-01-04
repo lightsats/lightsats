@@ -1,5 +1,7 @@
+import { TipGroupStatus } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import { checkTipGroupHasBeenFunded } from "lib/checkTipGroupHasBeenFunded";
+import { deleteLnbitsUser } from "lib/lnbits/deleteLnbitsUser";
 import { prepareTipGroupTips } from "lib/prepareTipGroupTips";
 import prisma from "lib/prismadb";
 import { regenerateExpiredTipGroupInvoice } from "lib/regenerateExpiredTipGroupInvoice";
@@ -36,6 +38,8 @@ export default async function handler(
   switch (req.method) {
     case "GET":
       return getTipGroup(tipGroup, req, res);
+    case "DELETE":
+      return deleteTipGroup(tipGroup, req, res);
     default:
       return res.status(StatusCodes.NOT_FOUND).end();
   }
@@ -53,4 +57,37 @@ async function getTipGroup(
   tipGroup = await prepareTipGroupTips(tipGroup);
 
   return res.json(tipGroup);
+}
+
+async function deleteTipGroup(
+  tipGroup: TipGroupWithTips,
+  req: NextApiRequest,
+  res: NextApiResponse<TipGroupWithTips>
+) {
+  if (tipGroup.status !== TipGroupStatus.UNFUNDED) {
+    return res.status(StatusCodes.CONFLICT).end();
+  }
+
+  const lnbitsWallet = await prisma.lnbitsWallet.findUnique({
+    where: {
+      tipGroupId: tipGroup.id,
+    },
+  });
+  if (lnbitsWallet) {
+    await deleteLnbitsUser(lnbitsWallet.lnbitsUserId);
+  } else {
+    console.warn("No lnbits user+wallet for tip group " + tipGroup.id);
+  }
+
+  await prisma.tip.deleteMany({
+    where: {
+      groupId: tipGroup.id,
+    },
+  });
+  await prisma.tipGroup.delete({
+    where: {
+      id: tipGroup.id,
+    },
+  });
+  return res.status(StatusCodes.NO_CONTENT).end();
 }
