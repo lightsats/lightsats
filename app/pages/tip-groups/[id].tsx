@@ -15,6 +15,7 @@ import { TipGroupProgress } from "components/tipper/TipGroupProgress";
 import { TipGroupStatusBadge } from "components/tipper/TipGroupStatusBadge";
 import { PayInvoice } from "components/tipper/TipPage/PayInvoice";
 import { ApiRoutes } from "lib/ApiRoutes";
+import { refundableTipStatuses } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
@@ -59,6 +60,28 @@ const TipGroupPage: NextPage = () => {
       }
     })();
   }, [id, router, mutateTips]);
+
+  const reclaimableTips = React.useMemo(
+    () =>
+      tipGroup?.tips.filter(
+        (tip) => refundableTipStatuses.indexOf(tip.status) >= 0
+      ),
+    [tipGroup?.tips]
+  );
+
+  const reclaimTips = React.useCallback(() => {
+    (async () => {
+      router.push(PageRoutes.dashboard);
+      const result = await fetch(`${ApiRoutes.tipGroups}/${id}/reclaim`, {
+        method: "POST",
+      });
+      if (!result.ok) {
+        toast.error("Failed to reclaim tips: " + result.statusText);
+      } else {
+        mutateTips();
+      }
+    })();
+  }, [id, mutateTips, router]);
 
   if (tipGroup) {
     const header = (
@@ -134,6 +157,14 @@ const TipGroupPage: NextPage = () => {
           <>
             <Button onClick={deleteTipGroup} color="error">
               Delete Tip Group
+            </Button>
+            <Spacer />
+          </>
+        )}
+        {(reclaimableTips?.length ?? 0) > 0 && (
+          <>
+            <Button onClick={reclaimTips} color="error">
+              Reclaim unwithdrawn tips ({reclaimableTips?.length})
             </Button>
             <Spacer />
           </>

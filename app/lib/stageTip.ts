@@ -1,6 +1,6 @@
 // move a tip to a user's staging wallet in preparation for withdrawal
 
-import { LnbitsWallet, Tip, WithdrawalFlow } from "@prisma/client";
+import { WithdrawalFlow } from "@prisma/client";
 import { createInvoice } from "lib/lnbits/createInvoice";
 import {
   createLnbitsUserAndWallet,
@@ -8,10 +8,7 @@ import {
 } from "lib/lnbits/createLnbitsUserAndWallet";
 import { payInvoice } from "lib/lnbits/payInvoice";
 import prisma from "lib/prismadb";
-
-type TipWithWallet = Tip & {
-  lnbitsWallet: LnbitsWallet | null;
-};
+import { TipWithWallet } from "types/TipWithWallet";
 
 export async function stageTip(
   userId: string,

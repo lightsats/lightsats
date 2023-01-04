@@ -1,15 +1,14 @@
-import { Tip } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import { refundableTipStatuses } from "lib/constants";
 import prisma from "lib/prismadb";
-import { stageTip } from "lib/stageTip";
+import { reclaimTip } from "lib/reclaimTip";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Tip | Tip[]>
+  res: NextApiResponse<never>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
@@ -27,7 +26,7 @@ export default async function handler(
 async function handleReclaimTip(
   session: Session,
   req: NextApiRequest,
-  res: NextApiResponse<Tip>
+  res: NextApiResponse<never>
 ) {
   const { id } = req.query;
   const tip = await prisma.tip.findUnique({
@@ -47,15 +46,8 @@ async function handleReclaimTip(
   if (refundableTipStatuses.indexOf(tip.status) < 0) {
     return res.status(StatusCodes.CONFLICT).end();
   }
-  await stageTip(session.user.id, tip, "tipper");
-  await prisma.tip.update({
-    where: {
-      id: id as string,
-    },
-    data: {
-      status: "RECLAIMED",
-      tippeeId: session.user.id,
-    },
-  });
+
+  await reclaimTip(tip);
+
   return res.status(204).end();
 }
