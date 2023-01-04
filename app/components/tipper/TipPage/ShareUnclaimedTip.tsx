@@ -14,13 +14,13 @@ import {
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { Icon } from "components/Icon";
-import { LightsatsQRCode } from "components/LightsatsQRCode";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
 import { PageRoutes } from "lib/PageRoutes";
 import { getClaimUrl } from "lib/utils";
 import React from "react";
 import toast from "react-hot-toast";
+import QRCode from "react-qr-code";
 
 type ShareUnclaimedTipProps = {
   tip: Tip;
@@ -79,7 +79,7 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
           <Row justify="center">
             <NextLink href={claimUrl}>
               <a>
-                <LightsatsQRCode value={claimUrl} />
+                <QRCode value={claimUrl} />
               </a>
             </NextLink>
           </Row>

@@ -11,7 +11,7 @@ import {
 } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { ItemsList } from "components/items/ItemsList";
-import { LightsatsQRCode } from "components/LightsatsQRCode";
+import { LightningQRCode } from "components/LightningQRCode";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
 import { getStaticProps } from "lib/i18n/i18next";
@@ -119,7 +119,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
               <>
                 <NextLink href={`lightning:${qr.encoded}`}>
                   <a>
-                    <LightsatsQRCode value={qr.encoded} />
+                    <LightningQRCode value={qr.encoded} />
                   </a>
                 </NextLink>
               </>

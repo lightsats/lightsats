@@ -1,7 +1,7 @@
 import { ClipboardDocumentIcon, WalletIcon } from "@heroicons/react/24/solid";
 import { Button, Card, Col, Loading, Row, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
-import { LightsatsQRCode } from "components/LightsatsQRCode";
+import { LightningQRCode } from "components/LightningQRCode";
 import { NextLink } from "components/NextLink";
 import copy from "copy-to-clipboard";
 import { useTranslation } from "next-i18next";
@@ -58,7 +58,7 @@ export function PayInvoice({ variant, invoice }: PayInvoiceProps) {
           <Row justify="center">
             <NextLink href={`lightning:${invoice}`}>
               <a>
-                <LightsatsQRCode value={invoice} />
+                <LightningQRCode value={invoice} />
               </a>
             </NextLink>
           </Row>

@@ -11,7 +11,6 @@ import {
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { FlexBox } from "components/FlexBox";
-import { LightsatsQRCode } from "components/LightsatsQRCode";
 import { NextUIUser } from "components/NextUIUser";
 import { format } from "date-fns";
 import { useTip } from "hooks/useTip";
@@ -22,6 +21,7 @@ import { getClaimUrl, getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
+import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 
 const PrintTipCardPage: NextPage = () => {
@@ -220,11 +220,7 @@ const InsidePage = ({ tip }: InsidePageProps) => {
                 borderRadius: "32px",
               }}
             >
-              <LightsatsQRCode
-                width={500}
-                height={500}
-                value={getClaimUrl(tip, true)}
-              />
+              <QRCode width={500} height={500} value={getClaimUrl(tip, true)} />
             </div>
 
             <Text

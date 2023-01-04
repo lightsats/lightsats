@@ -1,7 +1,7 @@
 import React from "react";
 import QRCode, { QRCodeProps } from "react-qr-code";
 
-type LightsatsQRCodeProps = QRCodeProps;
+type LightningQRCodeProps = QRCodeProps;
 
 function calculateLogoSize(
   value: string,
@@ -19,7 +19,7 @@ function calculateLogoSize(
   );
 }
 
-export function LightsatsQRCode(props: LightsatsQRCodeProps) {
+export function LightningQRCode(props: LightningQRCodeProps) {
   const [logoSize, setLogoSize] = React.useState(
     calculateLogoSize(props.value, props.height)
   );

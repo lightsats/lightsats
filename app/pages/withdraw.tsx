@@ -15,7 +15,7 @@ import { FlexBox } from "components/FlexBox";
 import { HomeButton } from "components/HomeButton";
 import { Icon } from "components/Icon";
 import { ItemsList } from "components/items/ItemsList";
-import { LightsatsQRCode } from "components/LightsatsQRCode";
+import { LightningQRCode } from "components/LightningQRCode";
 import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import copy from "copy-to-clipboard";
@@ -282,7 +282,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
                     <FlexBox style={{ alignItems: "center" }}>
                       <NextLink href={`lightning:${withdrawalLinkLnurl}`}>
                         <a>
-                          <LightsatsQRCode value={withdrawalLinkLnurl} />
+                          <LightningQRCode value={withdrawalLinkLnurl} />
                         </a>
                       </NextLink>
                     </FlexBox>
