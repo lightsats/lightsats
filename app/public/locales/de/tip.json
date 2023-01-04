@@ -1,1 +1,10 @@
-{}
+{
+  "tippee": {
+    "expired": "Du hast diese Spende leider nicht rechtzeitig abgehoben 😭",
+    "willExpire": "Diese Spende läuft bald ab. Beeile Dich besser! ✌️"
+  },
+  "tipper": {
+    "expired": "Dein Empänger hat die Spende nicht rechtzeitig abgehoben. Sie lief vor {{distance}} ab 😭",
+    "willExpire": "Dein Empfänger wird ab und zu Erinnerungen erhalten, die Spende zu beanspruchen und abzuheben, bevor diese abläuft ✌️"
+  }
+}
