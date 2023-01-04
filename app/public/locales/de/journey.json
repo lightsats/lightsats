@@ -1,1 +1,74 @@
-{}
+{
+  "header": {
+    "progress": "Schritt {{page}} von {{numPages}}"
+  },
+  "bitcoin": {
+    "beYourOwnBank": {
+      "description": "Übernimm die Kontrolle über Dein Geld mit Bitcoin. Sag tschüss zu Banken bailouts und staatlichen Banken. Vergiss intime Fragen und Formulare - mit Bitcoin, kannst Du schnell und einfach Geld empfangen oder versenden.",
+      "title": "Sei Deine eigene Bank"
+    },
+    "freedom": {
+      "title": "Bitcoin ist Freiheit",
+      "description": "Die Alternativer zu Bitcoin ist staatlich kontrolliertes digitales Geld, kurz \"CBDCs\". Damit kann Deine Regierung entscheiden wie und wann du Dein Geld ausgibst, und es Dir sogar wegnehmen, wenn Du es nicht schnell genug ausgibst."
+    },
+    "needAWallet": "Um Deine Bitcoin abzuheben, braucht Du zuerst eine Wallet. Erfahre mehr darüber, im nächsten Schritt.",
+    "footer": {
+      "text": "Weiter",
+      "cta": "Installiere eine Wallet"
+    },
+    "digitalCash": {
+      "title": "Bitcoin ist digitales Bargeld",
+      "description": "Bitcoin ist eine digitale Währung, welche Dich Geld direkt an andere Personen senden lässt, ohne auf Banken oder Dritte angewiesen zu sein. Es ist so, als wenn Du mit Bargeld am Kiosk bezahlst."
+    },
+    "anytimeAnywhere": {
+      "title": "Immer und überall",
+      "description": "Bitcoin läuft immer, auch am Wochenende. Alles was Du brauchst, ist ein Computer oder ein Handy um loszulegen. Bitcoin ermöglicht es Dir, überall auf der Welt Geld zu empfagen und zu versenden."
+    },
+    "deflationary": {
+      "title": "Bitcoin ist deflationär",
+      "description": "Bitcoin ermöglicht Dir Kontrolle über Dein Geld udn beschützt Dich vor unfairen Regulierungen und Inflation. Mit einer fixen Geldmenge, ist es eine stabile Alternative zu normalen Währungen."
+    },
+    "absoluteScarcity": {
+      "title": "Absolute Knappheit",
+      "description": "Bitcoin ist die einzige Währung mit einem fixen endlichen Geldmenge. Nicht wie bei Gold, von dem wir nicht wissen, wieviel existiert. Es gibt nur 21 Millionen Bitcoin."
+    },
+    "bitcoinNotCrypto": {
+      "title": "Bitcoin ist nicht \"Crypto\"",
+      "description": "Bitcoin hat kein Marekting Team, hatte keinen premine und keinen support durch Risikokapital. Es wurde so fair wie möglich entwickelt, mit keinem initalen Wert. Es gibt keine bessere Wahl."
+    },
+    "renewableEnergy": {
+      "title": "Erneuerbare Energien nach vorne bringen",
+      "description": "Bitcoin miner nutzen Elektrizität, für einem Wettbewerb um neue bitcoins und helfen damit das Netzwerk sicher zu halten. Günstige, erneuerbare Energie gibt minern einen Vorteil und macht das Stromnetz stabiler."
+    }
+  },
+  "wallet": {
+    "footer": {
+      "text": "Weiter",
+      "cta": "Abheben"
+    },
+    "needAWallet": "Du musst eine wallet herunterladen, um Deine bitcoin selbst zu verwalten.",
+    "selfCustody": "Bitcoin selbst verwalten, ist wie den Schlüssel zu Deinem eigenen Haus zu besitzen. Eigene Schlüssel zu haben, gibt Dir direkten Zugriff und Kontrolle über Dein Eigentum. Ausserdem hilft es Dir sicherzustellen, dass niemand anderes ohne Deine Erlaubnis, in Dein Haus kommt."
+  },
+  "footer": {
+    "nextUp": "Nächster Schritt"
+  },
+  "claimed": {
+    "title": "Top 👍",
+    "subtitle": "Du hast Deine Spende eingefordert",
+    "getStarted": "Folge uns auf Deinem Weg zu Bitcoin!",
+    "footer": {
+      "text": "Beginne Deinen Weg",
+      "cta": "Was ist Bitcoin?"
+    },
+    "description": "Deine Spende ist bereit zum abheben. Hebst Du Sie nicht ab, bevor sie abläuft, geht Deine Spende zurück an {{tipperName}}."
+  },
+  "congratulations": {
+    "footer": {
+      "text": "Weiter",
+      "cta": "Bitcoin benutzen"
+    },
+    "title": "Fertig! 🎉",
+    "subtitle": "Du bist besitzt jetzt ein wenig Bitcoin.",
+    "quote": "Es wird gesagt, Menschen die Bitcoin geschenkt bekommen, sind ganz besondere Menschen."
+  }
+}
