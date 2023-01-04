@@ -39,6 +39,7 @@ type LeaderboardTableProps = {
   startDate?: Date;
   endDate?: Date;
   theme?: LeaderboardTheme;
+  isGlobal?: boolean;
 };
 
 export function LeaderboardTable({
@@ -49,6 +50,7 @@ export function LeaderboardTable({
   startDate,
   endDate,
   theme,
+  isGlobal = true,
 }: LeaderboardTableProps) {
   const { data: leaderboardContents } = useLeaderboardContents(leaderboardId);
   const paginationRef = React.useRef<HTMLDivElement>(null);
@@ -164,24 +166,25 @@ export function LeaderboardTable({
               </Card.Body>
             </Card>
           </Row>
-          {!leaderboardUsers.some(
-            (user) => user.userId === session.user.id
-          ) && (
-            <>
-              <Spacer />
-              <Row>
-                <Card css={{ height: "130px", justifyContent: "center" }}>
-                  <Card.Body>
-                    <Row>
-                      <>
-                        <JoinLeaderboard leaderboardId={leaderboardId} />
-                      </>
-                    </Row>
-                  </Card.Body>
-                </Card>
-              </Row>
-            </>
-          )}
+          {!isGlobal &&
+            !leaderboardUsers.some(
+              (user) => user.userId === session.user.id
+            ) && (
+              <>
+                <Spacer />
+                <Row>
+                  <Card css={{ height: "130px", justifyContent: "center" }}>
+                    <Card.Body>
+                      <Row>
+                        <>
+                          <JoinLeaderboard leaderboardId={leaderboardId} />
+                        </>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                </Row>
+              </>
+            )}
           <Spacer />
         </>
       )}

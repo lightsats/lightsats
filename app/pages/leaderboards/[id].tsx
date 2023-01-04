@@ -39,6 +39,7 @@ const CustomLeaderboardPage: NextPage = () => {
         creatorId={leaderboard.creatorId}
         startDate={new Date(leaderboard.start)}
         endDate={leaderboard.end ? new Date(leaderboard.end) : undefined}
+        isGlobal={leaderboard.global}
       />
       <LeaderboardBackground theme={leaderboard.theme ?? undefined} />
       <LeaderboardBackgroundTop theme={leaderboard.theme ?? undefined} />
