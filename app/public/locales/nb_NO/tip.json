@@ -1,1 +1,10 @@
-{}
+{
+    "tippee": {
+        "expired": "Du har ikke gjort uttak av denne påskjønnelsen tidsnok 😭",
+        "willExpire": "Denne påskjønnelsen er i ferd med å utløpe. Best å skynde seg. ✌️"
+    },
+    "tipper": {
+        "expired": "Mottageren har ikke gjort uttak av påskjønnelsen tidsnok. Den utløp for {{distance}} siden 😭",
+        "willExpire": "Mottageren din vil motta påminnelser nå og da om å gjøre uttak av påskjønnelsen før den utløper ✌️"
+    }
+}

@@ -13,7 +13,7 @@ export function BecomeATipper() {
 
   const becomeTipper = React.useCallback(() => {
     if (!user?.id) {
-      router.push(PageRoutes.login);
+      router.push(PageRoutes.signin);
       return;
     }
     if (isSubmitting) {

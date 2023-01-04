@@ -9,10 +9,12 @@ import React from "react";
 const Logout: NextPage = () => {
   const router = useRouter();
   React.useEffect(() => {
-    signOut({
-      redirect: false,
-    });
-    router.push(PageRoutes.home);
+    (async () => {
+      await signOut({
+        redirect: false,
+      });
+      router.push(PageRoutes.home);
+    })();
   }, [router]);
 
   return (

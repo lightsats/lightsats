@@ -43,7 +43,7 @@ export default function UserPublicProfile() {
             <Text h3>Want to join the tipping battle?</Text>
           </Row>
           <Row justify="center">
-            <NextLink href={PageRoutes.login}>
+            <NextLink href={PageRoutes.signin}>
               <a>
                 <Button auto>Create your account</Button>
               </a>

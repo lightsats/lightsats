@@ -243,9 +243,12 @@ export function AppNavbar() {
               <Dropdown.Menu
                 aria-label="User menu actions"
                 disabledKeys={["language"]}
+                onAction={(key: React.Key) => {
+                  router.push(key as string);
+                }}
               >
                 <Dropdown.Item
-                  key="notifications"
+                  key={PageRoutes.notifications}
                   icon={
                     <Badge
                       color={numNotifications > 0 ? "error" : "primary"}
@@ -257,23 +260,17 @@ export function AppNavbar() {
                     </Badge>
                   }
                 >
-                  <NextLink href={PageRoutes.notifications} passHref>
-                    <a>
-                      <Row justify="space-between">
-                        <Text
-                          color={numNotifications > 0 ? "error" : "primary"}
-                        >
-                          Notifications
-                        </Text>
-                        {numNotifications > 0 && (
-                          <Badge color="error">{numNotifications}</Badge>
-                        )}
-                      </Row>
-                    </a>
-                  </NextLink>
+                  <Row justify="space-between">
+                    <Text color={numNotifications > 0 ? "error" : "primary"}>
+                      Notifications
+                    </Text>
+                    {numNotifications > 0 && (
+                      <Badge color="error">{numNotifications}</Badge>
+                    )}
+                  </Row>
                 </Dropdown.Item>
                 <Dropdown.Item
-                  key="profile"
+                  key={PageRoutes.profile}
                   icon={
                     <Badge color="primary" css={{ p: 4 }}>
                       <Icon width={16} height={16}>
@@ -282,14 +279,10 @@ export function AppNavbar() {
                     </Badge>
                   }
                 >
-                  <NextLink href={PageRoutes.profile} passHref>
-                    <a>
-                      <Text color="primary">Profile</Text>
-                    </a>
-                  </NextLink>
+                  <Text color="primary">Profile</Text>
                 </Dropdown.Item>
                 <Dropdown.Item
-                  key="logout"
+                  key={PageRoutes.logout}
                   withDivider
                   icon={
                     <Badge color="default" css={{ p: 4 }}>
@@ -299,11 +292,7 @@ export function AppNavbar() {
                     </Badge>
                   }
                 >
-                  <NextLink href={PageRoutes.logout} passHref>
-                    <a>
-                      <Text color="default">Log out</Text>
-                    </a>
-                  </NextLink>
+                  <Text color="default">Log out</Text>
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
@@ -312,9 +301,9 @@ export function AppNavbar() {
       )}
       {!user && (
         <Navbar.Content>
-          {!hideNavbar && !router.pathname.startsWith(PageRoutes.login) && (
+          {!hideNavbar && !router.pathname.startsWith(PageRoutes.signin) && (
             <Navbar.Item hideIn="xs">
-              <NextLink href={PageRoutes.login} passHref>
+              <NextLink href={PageRoutes.signin} passHref>
                 <a>
                   <Button auto>Get started</Button>
                 </a>

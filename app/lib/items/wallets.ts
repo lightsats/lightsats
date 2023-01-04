@@ -3,7 +3,7 @@ import { Wallet } from "types/Wallet";
 
 const wos: Wallet = {
   category: "wallets",
-  features: ["lnurl-withdraw"],
+  features: ["lnurl-withdraw", "lightning address"],
   minBalance: 0,
   link: "https://lgt.st/walletofsatoshi",
   image: "wos.png",
@@ -129,7 +129,12 @@ const blue: Wallet = {
 };
 
 const alby: Wallet = {
-  features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
+  features: [
+    "lnurl-auth",
+    "lnurl-withdraw",
+    "non-custodial",
+    "lightning address",
+  ],
   lightsatsRecommended: true,
   category: "wallets",
   minBalance: 0,
@@ -173,7 +178,7 @@ const lntips: Wallet = {
   platforms: ["mobile"],
 };
 const lntxbot: Wallet = {
-  features: [],
+  features: ["lightning address"],
   category: "wallets",
   minBalance: 0,
   link: "https://lgt.st/lntxbot",

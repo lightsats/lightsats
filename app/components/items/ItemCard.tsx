@@ -70,6 +70,12 @@ function getItemFeatures(
       // variant: "success",
     });
   }
+  if ((item as Wallet).features?.indexOf("lightning address") > -1) {
+    itemFeatures.push({
+      name: t("lightningAddress"),
+      // variant: "success",
+    });
+  }
   if ((item as LearnItem).difficulty) {
     itemFeatures.push({
       name: (item as LearnItem).difficulty,
