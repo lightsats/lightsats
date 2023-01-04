@@ -38,5 +38,10 @@
             "text": "Fortsett",
             "cta": "Bruk Bitcoin"
         }
+    },
+    "wallet": {
+        "footer": {
+            "text": "Fortsett"
+        }
     }
 }
