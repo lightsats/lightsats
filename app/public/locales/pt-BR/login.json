@@ -1,9 +1,9 @@
 {
-  "welcome": "Bem-Vindo",
-  "chooseSignIn": "Por favor escolha tua forma preferida para acessar.",
-  "generatingQrCode": "Gerando QrCode...",
-  "scanQrCode": "Escaneie este QrCode ou copie + cole em tua carteira. Ou clique para logar com tua carteira do navegador.",
-  "clickToConnect": "Clique para conectar",
-  "use": "Use",
-  "instead": ""
+    "welcome": "Bem-Vindo",
+    "chooseSignIn": "Por favor escolha tua forma preferida para acessar.",
+    "generatingQrCode": "Gerando código QR…",
+    "scanQrCode": "Escaneie este QrCode ou copie + cole em tua carteira. Ou clique para logar com tua carteira do navegador.",
+    "clickToConnect": "Clique para conectar",
+    "use": "Use",
+    "instead": ""
 }

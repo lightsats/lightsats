@@ -1,1 +1,8 @@
-{}
+{
+    "welcome": "Velkommen",
+    "clickToConnect": "Klikk for å koble til",
+    "chooseSignIn": "Velg foretrukken metode for innlogging.",
+    "use": "Bruk",
+    "generatingQrCode": "Genererer QR-kode …",
+    "instead": "istedenfor"
+}

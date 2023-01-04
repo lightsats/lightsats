@@ -1,1 +1,15 @@
-{}
+{
+    "compatibleWallets": "Kompatible lommebøker",
+    "recommendedWallet": "Anbefalt lommebok",
+    "platforms": {
+        "android-only": "Android",
+        "ios-only": "iOS"
+    },
+    "features": "Funksjoner",
+    "install": "Installer",
+    "open": "Åpne",
+    "otherWallets": "Andre lommebøker",
+    "recommendedItems": "Anbefalt",
+    "otherItems": "Mer",
+    "scanToLogin": "Skann for å logge inn"
+}
