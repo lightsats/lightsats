@@ -1,1 +1,22 @@
-{}
+{
+  "lightningAddress": "Lightning Adresse",
+  "platforms": {
+    "ios-only": "iOS",
+    "desktop": "Desktop",
+    "web": "Web",
+    "mobile": "Mobile",
+    "android-only": "Android"
+  },
+  "features": "Features",
+  "scanToLogin": "Zum einloggen scannen",
+  "install": "Installieren",
+  "open": "Öffnen",
+  "compatibleWallets": "Kompatible Wallets",
+  "recommendedWallet": "Empfohlene wallet",
+  "otherWallets": "Andere wallets",
+  "recommendedItems": "Empfohlen",
+  "otherItems": "Mehr",
+  "minBalance": "{{minBalance}}⚡ min Guthaben",
+  "nonCustodial": "nicht-custodial",
+  "custodial": "custodial"
+}
