@@ -173,19 +173,16 @@ const PrintTipCardsPage: NextPage = () => {
                                 fontSize: "60px",
                                 fontWeight: "bold",
                                 letterSpacing: "$wider",
+                                lineHeight: "50px",
                               }}
                             >
                               Bitcoin Giftcard
                             </Text>
                             <img
                               alt="logo"
-                              src="/images/logo-white.svg"
+                              src="/images/logo-white-cropped.svg"
                               width={200}
-                              height={200}
-                              style={{
-                                marginTop: "-65px",
-                                marginRight: "-30px",
-                              }}
+                              style={{}}
                             />
                           </Row>
                           <div style={{ flex: 1 }} />
@@ -195,8 +192,8 @@ const PrintTipCardsPage: NextPage = () => {
                               size="lg"
                               css={{
                                 transform: "scale(2,2)",
-                                pb: "26px",
-                                pl: "41px",
+                                pb: "14px",
+                                pl: "49px",
                                 ".nextui-user-avatar": {
                                   padding: "4px",
                                 },
