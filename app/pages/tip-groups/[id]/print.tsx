@@ -163,7 +163,7 @@ const PrintTipCardsPage: NextPage = () => {
                             position: "relative",
                             display: "flex",
                             flexDirection: "column",
-                            padding: "6.5% 9%",
+                            padding: "100px",
                           }}
                         >
                           <Row justify="space-between" align="flex-start">
