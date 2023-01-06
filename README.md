@@ -8,6 +8,8 @@ Gift Sats without losing them✌🏼
 
 Project on Bolt fun: https://makers.bolt.fun/project/Lightsats
 
+Roadmap: https://github.com/orgs/lightsats/projects/1
+
 ## Contributing
 
 Join our discord channel to stay up to date! https://lgt.st/community
