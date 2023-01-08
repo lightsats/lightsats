@@ -20,9 +20,10 @@ import { refundableTipStatuses } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
-import { getClaimUrl } from "lib/utils";
+import { getClaimUrl, getDefaultBulkGiftCardTheme } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import { BulkTipGiftCardContentsPreview } from "pages/tip-groups/[id]/print";
 import React from "react";
 import toast from "react-hot-toast";
 import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
@@ -190,13 +191,11 @@ const TipGroupPage: NextPage = () => {
             )}
 
             <Card css={{ dropShadow: "$sm" }}>
-              <Card.Image
-                src={`/tip-groups/printed-cards/generic/preview.png`}
-                objectFit="cover"
-                width="100%"
-                height={340}
-                alt="Card image background"
+              <BulkTipGiftCardContentsPreview
+                theme={getDefaultBulkGiftCardTheme()}
+                tip={firstTip}
               />
+
               <Card.Footer
                 css={{
                   position: "absolute",

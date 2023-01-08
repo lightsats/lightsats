@@ -11,6 +11,7 @@ import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { PageRoutes } from "lib/PageRoutes";
 import { NextRouter } from "next/router";
 import { MouseEventHandler } from "react";
+import { BulkGiftCardTheme } from "types/BulkGiftCardTheme";
 import { GiftCardTheme } from "types/GiftCardTheme";
 import { Item } from "types/Item";
 import { PublicTip } from "types/PublicTip";
@@ -154,4 +155,8 @@ export const isPWA = () =>
 
 export function getDefaultGiftCardTheme(): GiftCardTheme {
   return new Date().getMonth() === 11 ? "christmas" : "generic";
+}
+
+export function getDefaultBulkGiftCardTheme(): BulkGiftCardTheme {
+  return "sunset";
 }

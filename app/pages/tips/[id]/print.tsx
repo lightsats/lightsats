@@ -14,7 +14,9 @@ import { Tip } from "@prisma/client";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { FlexBox } from "components/FlexBox";
 import { NextUIUser } from "components/NextUIUser";
+import { MobilePrintWarning } from "components/tipper/MobilePrintWarning";
 import { format } from "date-fns";
+import { useDevPrintPreview } from "hooks/useDevPrintPreview";
 import { useTip } from "hooks/useTip";
 import { useUser } from "hooks/useUser";
 import { DEFAULT_NAME } from "lib/constants";
@@ -58,6 +60,8 @@ const PrintTipCardPage: NextPage = () => {
     content: () => bothPagesRef.current,
   });
 
+  useDevPrintPreview();
+
   if (!tip) {
     return <Loading />;
   }
@@ -65,6 +69,7 @@ const PrintTipCardPage: NextPage = () => {
   return (
     <>
       <h3>DIY Bitcoin Gift Card</h3>
+      <MobilePrintWarning />
       <Row>
         <Text>Theme</Text>
       </Row>
@@ -85,7 +90,7 @@ const PrintTipCardPage: NextPage = () => {
           src={`/tips/printed-cards/${theme}/preview2.jpg`}
           objectFit="cover"
           width="100%"
-          height={340}
+          height="auto"
           alt="Card image background"
         />
         <Collapse
@@ -125,7 +130,8 @@ const PrintTipCardPage: NextPage = () => {
               <Spacer />
               <Text>
                 2) Press the button below to print your card, using A4 or Letter
-                size. Make sure to enable on two-sided printing or duplex mode.
+                size. Make sure to enable on two-sided printing or duplex mode,
+                and switch the print edge to long side.
               </Text>
               <Spacer />
               <Row justify="center">
@@ -194,7 +200,7 @@ const PrintTipCardPage: NextPage = () => {
       >
         <div ref={bothPagesRef}>
           <PrintablePage ref={insidePageRef}>
-            <InsidePage tip={tip} />
+            <InsidePage theme={theme} tip={tip} />
           </PrintablePage>
           <PrintablePage ref={outsidePageRef}>
             <OutsidePage theme={theme} />
@@ -229,26 +235,33 @@ const PrintablePage = React.forwardRef<HTMLDivElement, React.PropsWithChildren>(
 
 type InsidePageProps = {
   tip: Tip;
+  theme: GiftCardTheme;
 };
 
-const InsidePage = ({ tip }: InsidePageProps) => {
+function PrintGuide() {
+  return (
+    <img
+      alt=""
+      width="100%"
+      height="100%"
+      src="/tips/printed-cards/guide.png"
+      style={{ position: "absolute", zIndex: 1 }}
+    />
+  );
+}
+
+const InsidePage = ({ tip, theme }: InsidePageProps) => {
   const { data: user } = useUser();
   if (!user) {
     return null;
   }
   const defaultNote =
-    "Wishing you a merry Christmas and a prosperous new year, filled with sats, joy, and laughter! 🎅";
+    theme === "christmas"
+      ? "Wishing you a merry Christmas and a prosperous new year, filled with sats, joy, and laughter! 🎅"
+      : "Here's to a successful year ahead, filled with bitcoin and endless possibilities! 🚀";
   return (
     <>
-      {process.env.NEXT_PUBLIC_TEST_PRINT === "true" && (
-        <img
-          alt=""
-          width="100%"
-          height="100%"
-          src="/tips/printed-cards/christmas/inside-guide.png"
-          style={{ position: "absolute", zIndex: -1 }}
-        />
-      )}
+      <PrintGuide />
       <div
         style={{
           width: "100%",
@@ -393,12 +406,28 @@ type OutsidePageProps = {
 const OutsidePage = ({ theme }: OutsidePageProps) => {
   return (
     <>
-      <img
-        alt=""
-        width="100%"
-        height="100%"
-        src={`/tips/printed-cards/${theme}/outside.png`}
-      />
+      <PrintGuide />
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          padding: "340px 481.67px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div
+          style={{
+            backgroundImage: `url(/tips/printed-cards/${theme}/outside.png)`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+            height: "100%",
+          }}
+        />
+      </div>
     </>
   );
 };
