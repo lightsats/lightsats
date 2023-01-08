@@ -196,7 +196,11 @@ const PrintTipCardsPage: NextPage = () => {
                           display: "inline-block",
                         }}
                       >
-                        <BulkTipGiftCardContents theme={theme} tip={tip} />
+                        <BulkTipGiftCardContents
+                          theme={theme}
+                          tip={tip}
+                          backgroundUrl={backgroundUrl}
+                        />
                       </div>
                     ))}
                 </div>
