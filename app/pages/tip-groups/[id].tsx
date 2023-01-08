@@ -1,6 +1,12 @@
 import {
+  DocumentDuplicateIcon,
+  PencilIcon,
+  PrinterIcon,
+  WalletIcon,
+} from "@heroicons/react/24/solid";
+import {
+  Button,
   Card,
-  Col,
   Dropdown,
   Grid,
   Loading,
@@ -9,6 +15,7 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
+import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { PersonalizeTip } from "components/tipper/PersonalizeTip";
 import { SentTipCard } from "components/tipper/SentTipCard";
@@ -101,8 +108,15 @@ const TipGroupPage: NextPage = () => {
           </Text>
           <Dropdown placement="bottom-right" type="menu">
             <Dropdown.Button flat>⚙️</Dropdown.Button>
-            <Dropdown.Menu aria-label="Static Actions">
-              <Dropdown.Item key="edit">
+            <Dropdown.Menu css={{ $$dropdownMenuWidth: "300px" }}>
+              <Dropdown.Item
+                key="edit"
+                icon={
+                  <Icon>
+                    <PencilIcon />
+                  </Icon>
+                }
+              >
                 <NextLink
                   href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
                   passHref
@@ -110,7 +124,53 @@ const TipGroupPage: NextPage = () => {
                   <a>Bulk edit</a>
                 </NextLink>
               </Dropdown.Item>
-              <Dropdown.Item key="copy">Copy URLs to clipboard</Dropdown.Item>
+              <Dropdown.Item
+                key="print"
+                icon={
+                  <Icon>
+                    <PrinterIcon />
+                  </Icon>
+                }
+              >
+                <NextLink
+                  href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
+                  passHref
+                >
+                  <a>Print</a>
+                </NextLink>
+              </Dropdown.Item>
+              <Dropdown.Item
+                key="copy"
+                icon={
+                  <Icon>
+                    <DocumentDuplicateIcon />
+                  </Icon>
+                }
+              >
+                <a onClick={() => setShowClaimUrls((current) => !current)}>
+                  Show claim URLs
+                </a>
+              </Dropdown.Item>
+              {(reclaimableTips?.length ?? 0) > 0 && (
+                <Dropdown.Section title="Danger zone">
+                  <Dropdown.Item
+                    color="error"
+                    icon={
+                      <Icon>
+                        <WalletIcon />
+                      </Icon>
+                    }
+                  >
+                    {/* <Button  color="error">
+                      Reclaim unwithdrawn tips ({reclaimableTips?.length})
+                    </Button>
+                    <Spacer /> */}
+                    <a href="" onClick={reclaimTips}>
+                      Reclaim {reclaimableTips?.length} tips
+                    </a>
+                  </Dropdown.Item>
+                </Dropdown.Section>
+              )}
             </Dropdown.Menu>
           </Dropdown>
         </Row>
@@ -169,33 +229,9 @@ const TipGroupPage: NextPage = () => {
 
         {tipGroup.status === "FUNDED" && (
           <>
-            <Text h6>Manage Tips</Text>
-            <>
-              <NextLink
-                href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
-                passHref
-              >
-                <a>
-                  <Button>Bulk Edit</Button>
-                </a>
-              </NextLink>
-              <Spacer />
-            </>
-            <Button onClick={() => setShowClaimUrls((current) => !current)}>
-              Show/Hide claim URLs
-            </Button>
-            <Spacer />
-            {(reclaimableTips?.length ?? 0) > 0 && (
-              <>
-                <Button onClick={reclaimTips} color="error">
-                  Reclaim unwithdrawn tips ({reclaimableTips?.length})
-                </Button>
-                <Spacer />
-              </>
-            )}
             {showClaimUrls && (
               <>
-                <Card>
+                <Card css={{ dropShadow: "$sm" }}>
                   <Card.Body>
                     {tipGroup.tips.map((tip) => (
                       <Row key={tip.id}>
@@ -209,52 +245,34 @@ const TipGroupPage: NextPage = () => {
             )}
 
             <Card css={{ dropShadow: "$sm" }}>
-              <BulkTipGiftCardContentsPreview
-                theme={getDefaultBulkGiftCardTheme()}
-                tip={firstTip}
-              />
-
-              <Card.Footer
-                css={{
-                  position: "absolute",
-                  color: "$white",
-                  bottom: 0,
-                  width: "100%",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Text b color="white"></Text>
-              </Card.Footer>
-              <Card.Footer css={{ justifyItems: "flex-start" }}>
-                <Col>
-                  <Row wrap="wrap" justify="space-between">
-                    <Text b>
-                      {"🎫 Looking for cards to hand out in person?"}
-                    </Text>
-                  </Row>
-                  <Spacer />
-                  <Row justify="center">
-                    <NextLink
-                      href={`${PageRoutes.tipGroups}/${tipGroup.id}/print`}
-                    >
-                      <a>
-                        <Button>🖨️ Bulk print cards</Button>
-                      </a>
-                    </NextLink>
-                  </Row>
-                </Col>
-              </Card.Footer>
+              <Card.Header>
+                <Row justify="space-between">
+                  <Text b>{"🆕 Physical cards to print yourself"}</Text>
+                  <NextLink
+                    href={`${PageRoutes.tipGroups}/${tipGroup.id}/print`}
+                    style={{ display: "inline-block" }}
+                  >
+                    <a>
+                      <Button size={"sm"}>Choose design</Button>
+                    </a>
+                  </NextLink>
+                </Row>
+              </Card.Header>
+              <Card.Body>
+                <Card css={{ dropShadow: "$sm", p: 0, scale: 0.8, mt: -25 }}>
+                  <BulkTipGiftCardContentsPreview
+                    theme={getDefaultBulkGiftCardTheme()}
+                    tip={firstTip}
+                  />
+                </Card>
+              </Card.Body>
             </Card>
-            <Spacer />
 
-            <Grid.Container justify="center" gap={1}>
-              {tipGroup.tips.map((tip) => (
-                <SentTipCard tip={tip} key={tip.id} />
-              ))}
-            </Grid.Container>
+            <Spacer />
           </>
         )}
 
+        <Spacer />
         <h3>Tips</h3>
         <Grid.Container justify="center" gap={1}>
           {tipGroup.tips.map((tip) => (

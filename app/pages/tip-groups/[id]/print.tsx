@@ -71,33 +71,38 @@ const PrintTipCardsPage: NextPage = () => {
 
   return (
     <>
-      <h3>DIY Bitcoin Gift Cards</h3>
-      <MobilePrintWarning />
-      <Row>
-        <Text>Theme</Text>
-      </Row>
-      <Row>
-        <CustomSelect
-          options={themeSelectOptions}
-          value={theme}
-          onChange={(value) => {
-            if (value) {
-              setTheme(value as BulkGiftCardTheme);
+      <Text h3>DIY Bitcoin Gift Cards</Text>
+      <Card>
+        <Card.Header>
+          <Text h5>🎨 Choose your design</Text>
+        </Card.Header>
+        <Card.Body css={{ pt: 0 }}>
+          <MobilePrintWarning />
+          <Row align="center" justify="space-between">
+            <Text>Theme</Text>
+            <CustomSelect
+              options={themeSelectOptions}
+              value={theme}
+              onChange={(value) => {
+                if (value) {
+                  setTheme(value as BulkGiftCardTheme);
+                }
+              }}
+            />
+          </Row>
+          <Row></Row>
+          <Spacer />
+          <Input
+            fullWidth
+            label="Custom Background Image URL"
+            value={backgroundUrl}
+            placeholder={
+              "https://images.pexels.com/photos/14546306/pexels-photo-14546306.jpeg"
             }
-          }}
-        />
-      </Row>
-      <Spacer />
-      <Input
-        fullWidth
-        label="Custom Background Image URL"
-        value={backgroundUrl}
-        placeholder={
-          "https://images.pexels.com/photos/14546306/pexels-photo-14546306.jpeg"
-        }
-        onChange={(e) => setBackgroundUrl(e.target.value)}
-      />
-
+            onChange={(e) => setBackgroundUrl(e.target.value)}
+          />
+        </Card.Body>
+      </Card>
       <Spacer />
       <Card css={{ dropShadow: "$sm" }}>
         <BulkTipGiftCardContentsPreview
@@ -105,23 +110,23 @@ const PrintTipCardsPage: NextPage = () => {
           theme={theme}
           tip={firstTip}
         />
-
-        <Collapse
-          shadow
-          title={<Text b>What you will need 👇</Text>}
-          css={{ width: "100%", background: "$white", border: "none" }}
-        >
-          <ul>
-            <li>🖥️ A computer</li>
-            <li>🖨️ A printer</li>
-            <li>
-              📄 {numPages} sheets of paper, A4 or letter size (use thicker
-              paper for some sturdiness)
-            </li>
-            <li>✂️ Scissors (a box cutter is even better)</li>
-          </ul>
-        </Collapse>
       </Card>
+      <Spacer />
+      <Collapse
+        shadow
+        title={<Text b>What you will need</Text>}
+        css={{ width: "100%", background: "$white", border: "none" }}
+      >
+        <ul>
+          <li>🖥️ A computer</li>
+          <li>🖨️ A printer</li>
+          <li>
+            📄 {numPages} sheets of paper, A4 or letter size (use thicker paper
+            for some sturdiness)
+          </li>
+          <li>✂️ Scissors (a box cutter is even better)</li>
+        </ul>
+      </Collapse>
       <Spacer />
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
@@ -153,7 +158,6 @@ const PrintTipCardsPage: NextPage = () => {
         </Card.Body>
       </Card>
       <Spacer />
-
       <div
         style={{
           display:
@@ -259,12 +263,13 @@ export function BulkTipGiftCardContents({
         })`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
         width,
         height,
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        padding: "80px",
+        padding: "50px",
       }}
     >
       <Row justify="space-between" align="flex-start">
@@ -315,10 +320,10 @@ export function BulkTipGiftCardContents({
         />
         <div
           style={{
-            filter: "drop-shadow(0px 0px 16px rgba(0, 0, 0, 0.25))",
+            filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))",
             padding: "20px",
             background: "white",
-            borderRadius: "32px",
+            borderRadius: "24px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -350,6 +355,8 @@ export function BulkTipGiftCardContentsPreview(
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        borderRadius: "8px",
+        overflow: "hidden",
       }}
     >
       <div

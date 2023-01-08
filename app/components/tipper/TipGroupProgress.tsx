@@ -1,5 +1,3 @@
-import { Avatar, Card, Col } from "@nextui-org/react";
-import { getUserAvatarUrl } from "lib/utils";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 
 export function TipGroupProgress({ tipGroup }: { tipGroup: TipGroupWithTips }) {
@@ -7,7 +5,7 @@ export function TipGroupProgress({ tipGroup }: { tipGroup: TipGroupWithTips }) {
 
   return (
     <>
-      <Card>
+      {/* <Card>
         <Card.Header>Journey summary</Card.Header>
         <Card.Body>
           {steps.map((x) => {
@@ -23,7 +21,7 @@ export function TipGroupProgress({ tipGroup }: { tipGroup: TipGroupWithTips }) {
             );
           })}
         </Card.Body>
-      </Card>
+      </Card> */}
     </>
     // <Col
     //   css={{
