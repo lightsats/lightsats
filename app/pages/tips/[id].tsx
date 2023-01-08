@@ -12,13 +12,15 @@ import { useTip } from "hooks/useTip";
 import { expirableTipStatuses, refundableTipStatuses } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
+import { defaultFetcher } from "lib/swr";
 import { hasTipExpired, nth } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
-import { useSWRConfig } from "swr";
+import useSWR, { useSWRConfig } from "swr";
+import { PublicTip } from "types/PublicTip";
 
 const TipPage: NextPage = () => {
   const { data: session, status: sessionStatus } = useSession();
@@ -36,16 +38,24 @@ const TipPage: NextPage = () => {
   );
 
   const { data: tip } = useTip(id as string, true);
+  const { data: publicTip } = useSWR<PublicTip>(
+    `/api/tippee/tips/${id}`,
+    defaultFetcher
+  );
+  const tipperId = publicTip?.tipperId;
 
   React.useEffect(() => {
     // tipper might have accidentally linked the current page
     // navigate to the claim page
     // TODO: support claiming and managing tip on the same page
     // TODO: add redirect or fallback from the old claim page to this one
-    if (sessionStatus === "unauthenticated") {
+    if (
+      sessionStatus === "unauthenticated" ||
+      (session && session.user.id !== tipperId)
+    ) {
       router.push(`${PageRoutes.tips}/${id}/claim`);
     }
-  }, [id, router, sessionStatus]);
+  }, [id, router, session, sessionStatus, tipperId]);
 
   const tipStatus = tip?.status;
 
