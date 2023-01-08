@@ -271,6 +271,7 @@ export function TipForm({
               <Row justify="space-between" align="flex-end">
                 <CustomSelect
                   options={tippeeLocaleSelectOptions}
+                  defaultValue={DEFAULT_LOCALE}
                   value={watchedTippeeLocale}
                   onChange={setDropdownSelectedTippeeLocale}
                   width="100px"
