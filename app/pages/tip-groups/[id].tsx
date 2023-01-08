@@ -174,9 +174,6 @@ const TipGroupPage: NextPage = () => {
             </Dropdown.Menu>
           </Dropdown>
         </Row>
-
-        <Spacer />
-        <TipGroupProgress tipGroup={tipGroup} />
         <Spacer />
       </>
     );
@@ -215,7 +212,6 @@ const TipGroupPage: NextPage = () => {
     return (
       <>
         {header}
-
         {tipGroup.status === "UNFUNDED" && tipGroup.invoice && (
           <>
             <PayInvoice invoice={tipGroup.invoice} variant="tipGroup" />
@@ -226,7 +222,6 @@ const TipGroupPage: NextPage = () => {
             <Spacer />
           </>
         )}
-
         {tipGroup.status === "FUNDED" && (
           <>
             {showClaimUrls && (
@@ -271,9 +266,9 @@ const TipGroupPage: NextPage = () => {
             <Spacer />
           </>
         )}
-
         <Spacer />
         <h3>Tips</h3>
+        <TipGroupProgress tipGroup={tipGroup} />
         <Grid.Container justify="center" gap={1}>
           {tipGroup.tips.map((tip) => (
             <SentTipCard tip={tip} key={tip.id} />

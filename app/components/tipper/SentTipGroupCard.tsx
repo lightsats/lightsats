@@ -53,7 +53,7 @@ export function SentTipGroupCard({ tipGroup }: SentTipGroupCardProps) {
                     }
                   >
                     <Badge variant="flat" color="primary">
-                      👤 {tipGroup.tips.length}
+                      👨 {tipGroup.tips.length}
                     </Badge>
                   </Tooltip>
                   <TipGroupStatusBadge tipGroup={tipGroup} />
