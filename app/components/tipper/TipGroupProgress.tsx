@@ -2,6 +2,8 @@ import { Col } from "@nextui-org/react";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 
 export function TipGroupProgress({ tipGroup }: { tipGroup: TipGroupWithTips }) {
+  const steps = ["UNCLAIMED", "CLAIMED", "WITHDRAWN"];
+
   const numUnclaimedTips = tipGroup.tips.filter(
     (tip) => tip.status === "UNCLAIMED"
   ).length;
@@ -21,6 +23,7 @@ export function TipGroupProgress({ tipGroup }: { tipGroup: TipGroupWithTips }) {
     tipGroup.tips.length - numUnclaimedTips - numClaimedTips - numWithdrawnTips;
   //numReclaimedTips -
   //numRefundedTips;
+
   return (
     <Col
       css={{

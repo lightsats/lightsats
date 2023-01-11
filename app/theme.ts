@@ -4,7 +4,7 @@ const theme = createTheme({
   type: "light",
   theme: {
     colors: {
-      background: "#F7F7F7",
+      background: "#EFEFEF",
       default: "#2E74ED",
 
       primary: "#2E74ED",
