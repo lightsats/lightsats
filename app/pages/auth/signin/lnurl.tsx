@@ -1,10 +1,13 @@
-import { ClipboardIcon } from "@heroicons/react/24/solid";
+import {
+  ClipboardIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
-  Collapse,
   Divider,
   Loading,
+  Modal,
   Row,
   Spacer,
   Text,
@@ -40,6 +43,8 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const { t } = useTranslation(["common", "login"]);
   const linkExistingAccount = router.query["link"] === "true";
   const [isRedirecting, setRedirecting] = React.useState(false);
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
+
   const callbackUrlWithFallback =
     callbackUrl ||
     (router.query["callbackUrl"] as string) ||
@@ -113,7 +118,6 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
         </Card.Header>
         <Divider />
         <Card.Body>
-          <Spacer y={0.5} />
           <Row justify="center">
             {qr ? (
               <>
@@ -130,11 +134,36 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
               </>
             )}
           </Row>
-          <Row justify="center">
-            <Text css={{ maxWidth: "250px", ta: "center" }}>
-              {t("login:scanQrCode")}
+
+          <Row justify="center" css={{ mt: "$sm" }}>
+            <Text color="primary">
+              <Icon>
+                <InformationCircleIcon />
+              </Icon>
             </Text>
+            &nbsp;
+            <a onClick={() => setModalIsOpen(true)}>
+              <Text color="primary" css={{ maxWidth: "250px", ta: "center" }}>
+                {t("items:compatibleWallets")}
+              </Text>
+            </a>
           </Row>
+
+          <Modal
+            closeButton
+            aria-labelledby="modal-title"
+            open={modalIsOpen}
+            onClose={() => setModalIsOpen(false)}
+          >
+            <Modal.Header>
+              <Text size={18} b>
+                {t("items:compatibleWallets")}
+              </Text>
+            </Modal.Header>
+            <Modal.Body>
+              <ItemsList category="wallets" options={categoryFilterOptions} />
+            </Modal.Body>
+          </Modal>
         </Card.Body>
         {qr && (
           <>
@@ -157,17 +186,6 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
           </>
         )}
       </Card>
-      <Spacer />
-      <Card variant="flat">
-        <Card.Body css={{ p: 0 }}>
-          <Collapse.Group>
-            <Collapse title={<Text b>{t("items:compatibleWallets")}</Text>}>
-              <ItemsList category="wallets" options={categoryFilterOptions} />
-            </Collapse>
-          </Collapse.Group>
-        </Card.Body>
-      </Card>
-      <Spacer />
     </>
   );
 }

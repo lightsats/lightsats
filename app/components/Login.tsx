@@ -48,30 +48,31 @@ export function Login({
           <LnurlAuthSignIn callbackUrl={callbackUrl} />
         </>
       )}
-
-      <Spacer />
-      <Row justify="center" align="center">
-        <Text>{t("login:use")} &nbsp;</Text>
-        {loginMethods
-          .filter((method) => method !== loginMethod)
-          .map((method, i) => {
-            return (
-              <React.Fragment key={method}>
+      <Spacer y={1.5} />
+      <Text color="$gray800" size="$sm">
+        {t(`common:alternativeWaysToSignIn`)}
+      </Text>
+      <Spacer y={0.5} />
+      {loginMethods
+        .filter((method) => method !== loginMethod)
+        .map((method) => {
+          return (
+            <React.Fragment key={method}>
+              <Row justify="center" align="center">
                 <Button
-                  light
-                  auto
-                  css={{ px: "$5" }}
-                  color="primary"
+                  bordered
+                  css={{
+                    margin: "$5",
+                    width: "100%",
+                  }}
                   onClick={() => setLoginMethod(method)}
                 >
                   {t(`common:${method}`)}
                 </Button>
-                {i === 0 && <Text>&nbsp;{t("common:or")}&nbsp;</Text>}
-              </React.Fragment>
-            );
-          })}
-        <Text>&nbsp; {t("login:instead")}</Text>
-      </Row>
+              </Row>
+            </React.Fragment>
+          );
+        })}
     </>
   );
 }
