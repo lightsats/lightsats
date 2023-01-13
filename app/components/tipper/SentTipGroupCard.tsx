@@ -9,11 +9,13 @@ import {
 } from "@nextui-org/react";
 import { FiatPrice } from "components/FiatPrice";
 import { NextLink } from "components/NextLink";
+import { TipGroupProgress } from "components/tipper/TipGroupProgress";
 import { TipGroupStatusBadge } from "components/tipper/TipGroupStatusBadge";
 import { formatDistance } from "date-fns";
 import { useExchangeRates } from "hooks/useExchangeRates";
 import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
+import { isTipGroupActive } from "lib/utils";
 import { CSSProperties } from "react";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 
@@ -37,7 +39,7 @@ export function SentTipGroupCard({ tipGroup }: SentTipGroupCardProps) {
           <Card isPressable isHoverable css={{ dropShadow: "$sm", zIndex: 10 }}>
             <Card.Body>
               <Row justify="space-between" align="center">
-                <div>
+                <Row css={{ gap: "$1" }}>
                   <Tooltip
                     color="primary"
                     triggerCss={{ display: "inline" }}
@@ -57,7 +59,7 @@ export function SentTipGroupCard({ tipGroup }: SentTipGroupCardProps) {
                     </Badge>
                   </Tooltip>
                   <TipGroupStatusBadge tipGroup={tipGroup} />
-                </div>
+                </Row>
                 <Text b>
                   <FiatPrice
                     currency={firstTip.currency ?? DEFAULT_FIAT_CURRENCY}
@@ -66,7 +68,7 @@ export function SentTipGroupCard({ tipGroup }: SentTipGroupCardProps) {
                         firstTip.currency ?? DEFAULT_FIAT_CURRENCY
                       ]
                     }
-                    sats={firstTip.amount}
+                    sats={firstTip.amount * tipGroup.tips.length}
                   />
                   &nbsp;
                 </Text>
@@ -78,9 +80,15 @@ export function SentTipGroupCard({ tipGroup }: SentTipGroupCardProps) {
                   {formatDistance(Date.now(), new Date(tipGroup.created))} ago
                 </Text>
                 <Text size="small">
-                  {tipGroup.tips.length * firstTip.amount} sats
+                  {firstTip.amount * tipGroup.tips.length} sats
                 </Text>
               </Row>
+              {isTipGroupActive(tipGroup) && (
+                <>
+                  <Spacer y={0.5} />
+                  <TipGroupProgress tipGroup={tipGroup} />
+                </>
+              )}
             </Card.Body>
           </Card>
           <Card

@@ -41,7 +41,7 @@ export function SentTipCard({ tip }: SentTipCardProps) {
           >
             <Card.Body>
               <Row justify="space-between">
-                <Text color="#F8AF43">
+                <Row css={{ gap: "$1" }}>
                   {/* {tip.groupId && (
                     <Tooltip
                       content={"This tip is part of a group."}
@@ -91,7 +91,7 @@ export function SentTipCard({ tip }: SentTipCardProps) {
                       </Badge>
                     </Tooltip>
                   )}
-                </Text>
+                </Row>
                 <Text b>
                   <FiatPrice
                     currency={tip.currency ?? DEFAULT_FIAT_CURRENCY}

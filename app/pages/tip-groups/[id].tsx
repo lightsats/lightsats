@@ -1,13 +1,6 @@
 import {
-  DocumentDuplicateIcon,
-  PencilIcon,
-  PrinterIcon,
-  WalletIcon,
-} from "@heroicons/react/24/solid";
-import {
   Button,
   Card,
-  Dropdown,
   Grid,
   Loading,
   Progress,
@@ -15,19 +8,22 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { PersonalizeTip } from "components/tipper/PersonalizeTip";
 import { SentTipCard } from "components/tipper/SentTipCard";
+import { TipGroupSettingsDropdown } from "components/tipper/TipGroupPage/TipGroupSettingsDropdown";
 import { TipGroupProgress } from "components/tipper/TipGroupProgress";
 import { TipGroupStatusBadge } from "components/tipper/TipGroupStatusBadge";
 import { PayInvoice } from "components/tipper/TipPage/PayInvoice";
 import { ApiRoutes } from "lib/ApiRoutes";
-import { refundableTipStatuses } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
-import { getClaimUrl, getDefaultBulkGiftCardTheme } from "lib/utils";
+import {
+  getClaimUrl,
+  getDefaultBulkGiftCardTheme,
+  isTipGroupActive,
+} from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { BulkTipGiftCardContentsPreview } from "pages/tip-groups/[id]/print";
@@ -70,34 +66,6 @@ const TipGroupPage: NextPage = () => {
     })();
   }, [id, router, mutateTips]);
 
-  const reclaimableTips = React.useMemo(
-    () =>
-      tipGroup?.tips.filter(
-        (tip) => refundableTipStatuses.indexOf(tip.status) >= 0
-      ),
-    [tipGroup?.tips]
-  );
-
-  const reclaimTips = React.useCallback(() => {
-    if (
-      window.confirm(
-        "Are you sure you wish to reclaim all tips? your recipients won't be able to withdraw their sats."
-      )
-    ) {
-      (async () => {
-        router.push(PageRoutes.dashboard);
-        const result = await fetch(`${ApiRoutes.tipGroups}/${id}/reclaim`, {
-          method: "POST",
-        });
-        if (!result.ok) {
-          toast.error("Failed to reclaim tips: " + result.statusText);
-        } else {
-          mutateTips();
-        }
-      })();
-    }
-  }, [id, mutateTips, router]);
-
   if (tipGroup) {
     const header = (
       <>
@@ -106,73 +74,7 @@ const TipGroupPage: NextPage = () => {
             👥 Group of {tipGroup.quantity} tips &nbsp;
             <TipGroupStatusBadge tipGroup={tipGroup} />
           </Text>
-          <Dropdown placement="bottom-right" type="menu">
-            <Dropdown.Button flat>⚙️</Dropdown.Button>
-            <Dropdown.Menu css={{ $$dropdownMenuWidth: "300px" }}>
-              <Dropdown.Item
-                key="edit"
-                icon={
-                  <Icon>
-                    <PencilIcon />
-                  </Icon>
-                }
-              >
-                <NextLink
-                  href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
-                  passHref
-                >
-                  <a>Bulk edit</a>
-                </NextLink>
-              </Dropdown.Item>
-              <Dropdown.Item
-                key="print"
-                icon={
-                  <Icon>
-                    <PrinterIcon />
-                  </Icon>
-                }
-              >
-                <NextLink
-                  href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
-                  passHref
-                >
-                  <a>Print</a>
-                </NextLink>
-              </Dropdown.Item>
-              <Dropdown.Item
-                key="copy"
-                icon={
-                  <Icon>
-                    <DocumentDuplicateIcon />
-                  </Icon>
-                }
-              >
-                <a onClick={() => setShowClaimUrls((current) => !current)}>
-                  Show claim URLs
-                </a>
-              </Dropdown.Item>
-              {(reclaimableTips?.length ?? 0) > 0 && (
-                <Dropdown.Section title="Danger zone">
-                  <Dropdown.Item
-                    color="error"
-                    icon={
-                      <Icon>
-                        <WalletIcon />
-                      </Icon>
-                    }
-                  >
-                    {/* <Button  color="error">
-                      Reclaim unwithdrawn tips ({reclaimableTips?.length})
-                    </Button>
-                    <Spacer /> */}
-                    <a href="" onClick={reclaimTips}>
-                      Reclaim {reclaimableTips?.length} tips
-                    </a>
-                  </Dropdown.Item>
-                </Dropdown.Section>
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
+          <TipGroupSettingsDropdown />
         </Row>
         <Spacer />
       </>
@@ -267,8 +169,14 @@ const TipGroupPage: NextPage = () => {
           </>
         )}
         <Spacer />
-        <h3>Tips</h3>
-        <TipGroupProgress tipGroup={tipGroup} />
+        <Text h3>Tips</Text>
+        {isTipGroupActive(tipGroup) && (
+          <>
+            <TipGroupProgress tipGroup={tipGroup} />
+            <Spacer />
+          </>
+        )}
+        <Spacer />
         <Grid.Container justify="center" gap={1}>
           {tipGroup.tips.map((tip) => (
             <SentTipCard tip={tip} key={tip.id} />

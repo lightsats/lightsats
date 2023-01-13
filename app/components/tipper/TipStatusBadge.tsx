@@ -1,9 +1,8 @@
 import { Badge } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
-import { PublicTip } from "types/PublicTip";
+import { TipStatus } from "@prisma/client";
 
 type TipStatusBadgeProps = {
-  tip: Tip | PublicTip;
+  tip: { status: TipStatus; claimLinkViewed: boolean; count?: number };
 };
 
 export function TipStatusBadge({ tip }: TipStatusBadgeProps) {
@@ -34,6 +33,12 @@ export function TipStatusBadge({ tip }: TipStatusBadgeProps) {
         : tip.claimLinkViewed
         ? "👀 Seen"
         : "🙈 Unseen"}
+      {tip.count && (
+        <>
+          &nbsp;
+          {tip.count}
+        </>
+      )}
     </Badge>
   );
 }

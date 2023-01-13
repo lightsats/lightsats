@@ -5,6 +5,7 @@ import {
   expirableTipStatuses,
   FEE_PERCENT,
   MINIMUM_FEE_SATS,
+  refundableTipStatuses,
   SATS_TO_BTC,
 } from "lib/constants";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
@@ -16,6 +17,7 @@ import { GiftCardTheme } from "types/GiftCardTheme";
 import { Item } from "types/Item";
 import { PublicTip } from "types/PublicTip";
 import { PublicUser } from "types/PublicUser";
+import { TipGroupWithTips } from "types/TipGroupWithTips";
 
 export function getSatsAmount(fiat: number, exchangeRate: number) {
   return Math.ceil((fiat / exchangeRate) * SATS_TO_BTC);
@@ -159,4 +161,10 @@ export function getDefaultGiftCardTheme(): GiftCardTheme {
 
 export function getDefaultBulkGiftCardTheme(): BulkGiftCardTheme {
   return "sunset";
+}
+
+export function isTipGroupActive(tipGroup: TipGroupWithTips) {
+  return tipGroup.tips.some(
+    (tip) => refundableTipStatuses.indexOf(tip.status) > -1
+  );
 }

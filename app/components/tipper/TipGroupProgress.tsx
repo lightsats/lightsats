@@ -1,57 +1,35 @@
-import { Col } from "@nextui-org/react";
+import { Grid } from "@nextui-org/react";
+import { TipStatus } from "@prisma/client";
+import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 
 export function TipGroupProgress({ tipGroup }: { tipGroup: TipGroupWithTips }) {
-  const steps = ["UNCLAIMED", "CLAIMED", "WITHDRAWN"];
-
-  const numUnclaimedTips = tipGroup.tips.filter(
-    (tip) => tip.status === "UNCLAIMED"
-  ).length;
-  const numClaimedTips = tipGroup.tips.filter(
-    (tip) => tip.status === "CLAIMED"
-  ).length;
-  const numWithdrawnTips = tipGroup.tips.filter(
-    (tip) => tip.status === "WITHDRAWN"
-  ).length;
-  // const numReclaimedTips = tipGroup.tips.filter(
-  //   (tip) => tip.status === "RECLAIMED"
-  // ).length;
-  // const numRefundedTips = tipGroup.tips.filter(
-  //   (tip) => tip.status === "REFUNDED"
-  // ).length;
-  const numOtherTips =
-    tipGroup.tips.length - numUnclaimedTips - numClaimedTips - numWithdrawnTips;
-  //numReclaimedTips -
-  //numRefundedTips;
-
+  const tipStatusCounts = (
+    [] as { status: TipStatus; claimLinkViewed: boolean; count: number }[]
+  ).concat(
+    ...[true, false].map((claimLinkViewed) =>
+      Object.values(TipStatus)
+        .map((status) => ({
+          status,
+          count: tipGroup.tips.filter(
+            (tip) =>
+              tip.status === status &&
+              (!claimLinkViewed ||
+                (tip.status === "UNCLAIMED" &&
+                  tip.claimLinkViewed === claimLinkViewed))
+          ).length,
+          claimLinkViewed,
+        }))
+        .filter((entry) => entry.count > 0)
+    )
+  );
   return (
-    <Col
-      css={{
-        background:
-          tipGroup.status === "UNFUNDED"
-            ? "$error"
-            : `linear-gradient(90deg, $gray 0%, $gray ${
-                (numOtherTips / tipGroup.tips.length) * 100
-              }%, $warning ${
-                (numOtherTips / tipGroup.tips.length) * 100
-              }%, $warning ${
-                ((numOtherTips + numUnclaimedTips) / tipGroup.tips.length) * 100
-              }%, $primary ${
-                ((numOtherTips + numUnclaimedTips) / tipGroup.tips.length) * 100
-              }%, $primary ${
-                ((numOtherTips + numUnclaimedTips + numClaimedTips) /
-                  tipGroup.tips.length) *
-                100
-              }%, $success ${
-                ((numOtherTips + numUnclaimedTips + numClaimedTips) /
-                  tipGroup.tips.length) *
-                100
-              }%, $success 100%)`,
-        width: "100%",
-        mx: "$5",
-        height: "12px",
-        borderRadius: "$base",
-      }}
-    />
+    <Grid.Container css={{ gap: "$2" }}>
+      {tipStatusCounts.map((entry) => (
+        <Grid key={entry.status + entry.claimLinkViewed}>
+          <TipStatusBadge tip={entry} />
+        </Grid>
+      ))}
+    </Grid.Container>
   );
 }
