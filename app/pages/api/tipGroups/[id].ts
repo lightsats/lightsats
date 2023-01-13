@@ -25,7 +25,11 @@ export default async function handler(
       id: id as string,
     },
     include: {
-      tips: true,
+      tips: {
+        orderBy: {
+          groupTipIndex: "asc",
+        },
+      },
     },
   });
   if (!tipGroup) {
@@ -50,11 +54,10 @@ async function getTipGroup(
   res: NextApiResponse<TipGroupWithTips>
 ) {
   // FIXME: this should be in a separate endpoint (GET should be idempotent)
-  // currently used to check if the tip has been funded yet (polled on the tip page)
-
-  tipGroup = await checkTipGroupHasBeenFunded(tipGroup);
-  tipGroup = await regenerateExpiredTipGroupInvoice(tipGroup);
-  tipGroup = await prepareTipGroupTips(tipGroup);
+  // currently used to check if the tip has been funded yet (polled on the tip group page)
+  await checkTipGroupHasBeenFunded(tipGroup);
+  await regenerateExpiredTipGroupInvoice(tipGroup);
+  await prepareTipGroupTips(tipGroup);
 
   return res.json(tipGroup);
 }

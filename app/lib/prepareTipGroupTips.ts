@@ -11,9 +11,9 @@ const PREPARE_RETRY_INTERVAL = 15000;
 
 export async function prepareTipGroupTips(
   tipGroup: TipGroupWithTips
-): Promise<TipGroupWithTips> {
+): Promise<void> {
   if (tipGroup.status === "UNFUNDED") {
-    return tipGroup;
+    return;
   }
   // TODO: review number of iterations to speed up the tip preparation process
   const maxIterations = 5;
@@ -35,8 +35,6 @@ export async function prepareTipGroupTips(
     }
   }
   await Promise.all(promises);
-
-  return tipGroup;
 }
 
 async function prepareTipGroupTip(tipGroup: TipGroupWithTips, tip: Tip) {

@@ -6,9 +6,9 @@ import { TipGroupWithTips } from "types/TipGroupWithTips";
 
 export async function regenerateExpiredTipGroupInvoice(
   tipGroup: TipGroupWithTips
-): Promise<TipGroupWithTips> {
+): Promise<void> {
   if (tipGroup.status !== "UNFUNDED" || !tipGroup.invoice) {
-    return tipGroup;
+    return;
   }
 
   const decodedInvoice = bolt11.decode(tipGroup.invoice);
@@ -24,7 +24,7 @@ export async function regenerateExpiredTipGroupInvoice(
     });
     if (wallet) {
       console.log("Regenerating expired tip invoice for " + tipGroup.id);
-      return recreateTipGroupFundingInvoice(tipGroup, wallet.adminKey);
+      await recreateTipGroupFundingInvoice(tipGroup, wallet.adminKey);
     } else {
       console.error(
         "No wallet exists for tip group " +
@@ -33,6 +33,4 @@ export async function regenerateExpiredTipGroupInvoice(
       );
     }
   }
-
-  return tipGroup;
 }

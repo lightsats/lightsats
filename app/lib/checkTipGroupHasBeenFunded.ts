@@ -5,9 +5,9 @@ import { TipGroupWithTips } from "types/TipGroupWithTips";
 
 export async function checkTipGroupHasBeenFunded(
   tipGroup: TipGroupWithTips
-): Promise<TipGroupWithTips> {
+): Promise<void> {
   if (tipGroup.status !== "UNFUNDED") {
-    return tipGroup;
+    return;
   }
   const wallet = await prisma.lnbitsWallet.findUnique({
     where: {
@@ -21,7 +21,7 @@ export async function checkTipGroupHasBeenFunded(
         tipGroup.invoiceId
       );
       if (invoiceStatus.paid) {
-        tipGroup = await prisma.tipGroup.update({
+        await prisma.tipGroup.update({
           data: {
             status: "FUNDED",
           },
@@ -43,5 +43,4 @@ export async function checkTipGroupHasBeenFunded(
       console.error("Failed to get tip invoice status", error);
     }
   }
-  return tipGroup;
 }

@@ -19,11 +19,7 @@ import { ApiRoutes } from "lib/ApiRoutes";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
-import {
-  getClaimUrl,
-  getDefaultBulkGiftCardTheme,
-  isTipGroupActive,
-} from "lib/utils";
+import { getDefaultBulkGiftCardTheme, isTipGroupActive } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { BulkTipGiftCardContentsPreview } from "pages/tip-groups/[id]/print";
@@ -36,7 +32,6 @@ const pollTipGroupConfig: SWRConfiguration = { refreshInterval: 1000 };
 const TipGroupPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const [showClaimUrls, setShowClaimUrls] = React.useState(false);
   const [skipPersonalize, setSkipPersonalize] = React.useState(false);
   const [copyIndividualLinksEnabled, setCopyIndividualLinksEnabled] =
     React.useState(false);
@@ -108,21 +103,6 @@ const TipGroupPage: NextPage = () => {
         )}
         {tipGroup.status === "FUNDED" && (
           <>
-            {showClaimUrls && (
-              <>
-                <Card css={{ dropShadow: "$sm" }}>
-                  <Card.Body>
-                    {tipGroup.tips.map((tip) => (
-                      <Row key={tip.id}>
-                        <Text>{getClaimUrl(tip)}</Text>
-                      </Row>
-                    ))}
-                  </Card.Body>
-                </Card>
-                <Spacer />
-              </>
-            )}
-
             {!copyIndividualLinksEnabled && isTipGroupActive(tipGroup) && (
               <>
                 <Card css={{ dropShadow: "$sm" }}>
