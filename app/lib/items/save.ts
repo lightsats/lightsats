@@ -79,7 +79,7 @@ export const save: Item[] = [
     languageCodes: [getLanguageCode("English")],
     platforms: ["web"],
     placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAO0lEQVR4nAXBwQ0AQAQEQJ/NJV66UIDQggI07qcMJbgZYmYziwhmpvded8+MiJCq7u7duTsByMyqAvABfUwPfGOPixEAAAAASUVORK5CYII=",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGNgYmSvaWwJTU1lZeZgKKyt/fP736qLZ/1yMhmUvNz0ytOc57TLBPowcLFxS/i5SQV6cXPwAgDPpg/+ocjR2AAAAABJRU5ErkJggg==",
     name: "Blockstream Jade",
     slogan:
       "Blockstream Jade is an easy-to-use, purely open-source hardware wallet that offers advanced security for your Bitcoin.",

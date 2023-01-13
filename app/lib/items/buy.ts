@@ -149,7 +149,7 @@ export const buy: Item[] = [
     image: "coinbits.jpg",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGOIYGCYws+wJ0hiXwQDQyIDw/+tc/+/OrHBiZkhn4Hh/+MLj5sy2xgYGCIYGEoZGMIYGGIYGADVsBCEgNfnOgAAAABJRU5ErkJggg==",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AIvOvQBbPgBLLX3FsgAAHwAIjHLe//oAMA4AAB0AKJZ+l9TFACgAAITKuQBRNAAzEXS+rNK3EbWhSlrDAAAAAElFTkSuQmCC",
     name: "Coinbits",
     slogan:
       "Coinbits is the best choice for people who want to get started with bitcoin quickly and safely, with no long-term commitment.",
@@ -161,7 +161,7 @@ export const buy: Item[] = [
     image: "relai.png",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGOIYGCYws+wJ0hiXwQDQyIDw/+tc/+/OrHBiZkhn4Hh/+MLj5sy2xgYGCIYGEoZGMIYGGIYGADVsBCEgNfnOgAAAABJRU5ErkJggg==",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AAAAYVRgwVNgvwAAYQBBUbHl6//d5P8+T7IAPU6v6vH/5Ov/PU6vAAAAYFNgwFNgwAAAX12yF3wJteCsAAAAAElFTkSuQmCC",
     name: "Relai",
     slogan:
       "Relai is a Bitcoin investment app that allows anyone to buy bitcoin within one minutes or set up an automated savings plan.",
@@ -173,8 +173,8 @@ export const buy: Item[] = [
     image: "bottlepay.jpeg",
     languageCodes: [getLanguageCode("English")],
     placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGOIYGCYws+wJ0hiXwQDQyIDw/+tc/+/OrHBiZkhn4Hh/+MLj5sy2xgYGCIYGEoZGMIYGGIYGADVsBCEgNfnOgAAAABJRU5ErkJggg==",
-    name: "Bottlpay",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPElEQVR4nGOQl1cvK6tWUNBgZuZlsLf3+PP779atO9TUDBgcHDy+f/uxbdtOTU0jBllZtdycIllZFaAyAMluERJ+0pmSAAAAAElFTkSuQmCC",
+    name: "Bottlepay",
     slogan:
       "Bottlepay makes buying bitcoin easy. Make a one-off purchase or set up a recurring trade hourly, daily, weekly or monthly.",
     platforms: ["web"],

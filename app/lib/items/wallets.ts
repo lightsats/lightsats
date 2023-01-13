@@ -197,7 +197,7 @@ const obw: Wallet = {
   link: "https://lgt.st/obw",
   image: "obw.webp",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAM0lEQVR4nGNgkEhicOtn0CwBMRgkkqx3fc65+p9BrZCBQTp18e//S/78h8owGNeCkEQSAJekECqxrsHvAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAALElEQVR4nGP4/+g/HDGsav3PweDMzmBfFHaUoSD0sACnr5Rg2LVV/xmQlQEAPnQgO33asswAAAAASUVORK5CYII=",
   name: "OBW",
   slogan:
     "It is a simple, fast, intuitive wallet app, using advanced technology, open source, free, non-custodial, non-KYC.",
@@ -212,7 +212,7 @@ const bbw: Wallet = {
   link: "https://lgt.st/bbw",
   image: "bbw.png",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVR4nGP4////+eV9T87u+///P8P///+btRj2tGRBOH/FGVQYRGIhnH/1sw/N3nkFyAEAqOAjYOEgd8oAAAAASUVORK5CYII=",
   name: "Bitcoin Beach Wallet",
   slogan:
     "The Bitcoin Beach Wallet, the most secure and accessible Lightning-enabled Bitcoin wallet that makes receiving, saving and spending Bitcoin easy.",
@@ -234,7 +234,7 @@ const zeus: Wallet = {
   link: "https://lgt.st/zeus",
   image: "zeus.webp",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAP0lEQVR4nAE0AMv/AP/IJ//mMv/sRv/QQQD/4lKDdiV1dm3/5VsA//iZ3de+bWUq/9orAP/KLf/XPgABCPi0NiumHSY+n4GVAAAAAElFTkSuQmCC",
   name: "Zeus",
   slogan:
     "Zeus is an open-source, non-custodial Bitcoin wallet that gives you full control over how you make payments.",
@@ -255,7 +255,7 @@ const zebedee: Wallet = {
   link: "https://lgt.st/zebedee",
   image: "zebedee.jpeg",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nB3JoRUAIAhFUXZgLkmsYvuL0ohG2qsevfUasD/AujszY8XMGODukt5UlaTzXTx1IMR3DRAKAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPElEQVR4nGMQFtfg4JTi4JQSk9RmqKyb9OXn/w9f/heVdTGUV/ffe/zjwbPfWblNDMLiGqwcUsxsEkBlAPPnExX6CVBpAAAAAElFTkSuQmCC",
   name: "ZEBEDEE",
   slogan:
     "We make the points you earn in games matter. By harnessing the power of Bitcoin, we attach real-world value to points, scores and economies in virtual worlds",
@@ -269,7 +269,7 @@ const blixt: Wallet = {
   link: "https://lgt.st/blixt",
   image: "blixt.jpeg",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAM0lEQVR4nGNgkEhicOtn0CwBMRgkkqx3fc65+p9BrZCBQTp18e//S/78h8owGNeCkEQSAJekECqxrsHvAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAOElEQVR4nGPYN4Xh6GyGfVNAiKEzieH/z8q7m/g6kxgYYs0YtvQw/H+cGWvGwGDNwmDLA0LWLAwAHQ0Q/Bk/+cgAAAAASUVORK5CYII=",
   name: "Blixt",
   slogan:
     "Blixt Wallet is a non-custodial open-source Bitcoin Lightning Wallet for Android with focus on usability and user experience, powered by lnd and Neutrino SPV.",
@@ -283,7 +283,7 @@ const strike: Wallet = {
   link: "https://lgt.st/strike",
   image: "strike.webp",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nB3JoRUAIAhFUXZgLkmsYvuL0ohG2qsevfUasD/AujszY8XMGODukt5UlaTzXTx1IMR3DRAKAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAJUlEQVR4nGNgQAYiIiL79++/deuWoKAgiJ+RkfHr1y9PT08UVQAE+Ao8BpEpowAAAABJRU5ErkJggg==",
   name: "Strike",
   slogan:
     "Buy and sell bitcoin. Strike offers the easiest way to buy bitcoin. Skip transaction fees and stack sats, the right way.",
@@ -297,7 +297,7 @@ const cashapp: Wallet = {
   link: "https://lgt.st/cashapp",
   image: "cashapp.png",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nB3JoRUAIAhFUXZgLkmsYvuL0ohG2qsevfUasD/AujszY8XMGODukt5UlaTzXTx1IMR3DRAKAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMElEQVR4nGNg0GRgsGBgSGYAMRiUGNre5c//38GgzgASqHmWuvb/NLCMJliNI4gBABEUCpGscxy/AAAAAElFTkSuQmCC",
   name: "Cash App",
   slogan:
     "Cash App is the easy way to buy, sell, send, and receive the world's leading cryptocurrency. Buy bitcoin instantly in any amount—as little as $1.",
@@ -311,7 +311,7 @@ const pouch: Wallet = {
   link: "https://lgt.st/cashapp",
   image: "pouch.jpeg",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nB3JoRUAIAhFUXZgLkmsYvuL0ohG2qsevfUasD/AujszY8XMGODukt5UlaTzXTx1IMR3DRAKAAAAAElFTkSuQmCC",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVR4nB3JsQmAMBQFwNvRpRxB+KRJsMgoqdzAVZ6S7uAwmLQNlZXnDDfae6WO0O3t1I8PuhYRDqtUbxoAAAAASUVORK5CYII=",
   name: "Pouch",
   slogan:
     "Made with ❤️ in the Philippines. Pouch supports philippine peso payments over bitcoin's Lightning Network ⚡",
