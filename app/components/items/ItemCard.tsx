@@ -1,5 +1,5 @@
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
-import { Button, Collapse, Row, Spacer, Text } from "@nextui-org/react";
+import { Button, Collapse, Grid, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import {
   ItemFeatureBadge,
@@ -127,11 +127,13 @@ export function ItemCard({ item, expanded }: ItemCardProps) {
       <Text color="$gray" size={10} b transform="uppercase">
         {t("features")}
       </Text>
-      <Row justify="flex-start" align="flex-start" style={{ flexWrap: "wrap" }}>
+      <Grid.Container css={{ gap: "$1" }}>
         {features.map((feature) => (
-          <ItemFeatureBadge key={feature.name} {...feature} />
+          <Grid key={feature.name}>
+            <ItemFeatureBadge {...feature} />
+          </Grid>
         ))}
-      </Row>
+      </Grid.Container>
       <Spacer y={1} />
       <NextLink href={itemLink} passHref>
         <a target="_blank" rel="noreferrer noopener">

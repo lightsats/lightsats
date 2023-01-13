@@ -171,7 +171,7 @@ export const earn: Item[] = [
     category: "earn",
     image: "smiles.jpeg",
     languageCodes: [getLanguageCode("English")],
-    link: "https://lgt.st/fountain",
+    link: "https://lgt.st/smiles",
     placeholderDataUrl:
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAOUlEQVR4nGNg0J7NELiXofIuiMEg2TX36f/FL/8zyE8AcSbf/r/7138GsTYGBu4yhoAtDPZLGdhKAAglE5JG6rZ2AAAAAElFTkSuQmCC",
     name: "sMiles",
@@ -242,7 +242,7 @@ export const earn: Item[] = [
     category: "earn",
     image: "slice.jpeg",
     languageCodes: [getLanguageCode("English")],
-    link: "https://lgt.st/slash",
+    link: "https://lgt.st/slice",
     placeholderDataUrl:
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AAAAmgA3xAA7xwACmwB9g/n09v/Exf+Wm/8ADUPNv8L/4uT/ZXHsAAAAkwA8yCRJ0QAAk3KyGFsJl3meAAAAAElFTkSuQmCC",
     name: "Slice",
