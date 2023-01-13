@@ -143,4 +143,40 @@ export const buy: Item[] = [
     slogan: "Peach: Buy and Sell bitcoin the way you want!",
     platforms: ["web", "mobile"],
   },
+  {
+    category: "buy",
+    link: "https://lgt.st/coinbits",
+    image: "coinbits.jpg",
+    languageCodes: [getLanguageCode("English")],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGOIYGCYws+wJ0hiXwQDQyIDw/+tc/+/OrHBiZkhn4Hh/+MLj5sy2xgYGCIYGEoZGMIYGGIYGADVsBCEgNfnOgAAAABJRU5ErkJggg==",
+    name: "Coinbits",
+    slogan:
+      "Coinbits is the best choice for people who want to get started with bitcoin quickly and safely, with no long-term commitment.",
+    platforms: ["web"],
+  },
+  {
+    category: "buy",
+    link: "https://lgt.st/relai",
+    image: "relai.png",
+    languageCodes: [getLanguageCode("English")],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGOIYGCYws+wJ0hiXwQDQyIDw/+tc/+/OrHBiZkhn4Hh/+MLj5sy2xgYGCIYGEoZGMIYGGIYGADVsBCEgNfnOgAAAABJRU5ErkJggg==",
+    name: "Relai",
+    slogan:
+      "Relai is a Bitcoin investment app that allows anyone to buy bitcoin within one minutes or set up an automated savings plan.",
+    platforms: ["web"],
+  },
+  {
+    category: "buy",
+    link: "https://lgt.st/bottlepay",
+    image: "bottlepay.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGOIYGCYws+wJ0hiXwQDQyIDw/+tc/+/OrHBiZkhn4Hh/+MLj5sy2xgYGCIYGEoZGMIYGGIYGADVsBCEgNfnOgAAAABJRU5ErkJggg==",
+    name: "Bottlpay",
+    slogan:
+      "Bottlepay makes buying bitcoin easy. Make a one-off purchase or set up a recurring trade hourly, daily, weekly or monthly.",
+    platforms: ["web"],
+  },
 ];

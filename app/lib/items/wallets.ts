@@ -41,7 +41,7 @@ const wos: Wallet = {
 //
 const muun: Wallet = {
   category: "wallets",
-  features: ["lnurl-withdraw"],
+  features: ["lnurl-withdraw", "non-custodial"],
   minBalance: 0,
   link: "https://lgt.st/muun",
   image: "muun.png",
@@ -190,19 +190,133 @@ const lntxbot: Wallet = {
   languageCodes: [getLanguageCode("English")],
   platforms: ["mobile"],
 };
-const sbw: Wallet = {
+const obw: Wallet = {
   features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   category: "wallets",
   minBalance: 0,
-  link: "https://lgt.st/sbw",
-  image: "sbw.webp",
+  link: "https://lgt.st/obw",
+  image: "obw.webp",
   placeholderDataUrl:
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAM0lEQVR4nGNgkEhicOtn0CwBMRgkkqx3fc65+p9BrZCBQTp18e//S/78h8owGNeCkEQSAJekECqxrsHvAAAAAElFTkSuQmCC",
-  name: "Simple Bitcoin Wallet",
+  name: "OBW",
   slogan:
-    "Simple Bitcoin Wallet (aka SBW) is an open-source, non-custodial, autonomous wallet for Android devices which can store, send and receive bitcoins.",
+    "It is a simple, fast, intuitive wallet app, using advanced technology, open source, free, non-custodial, non-KYC.",
   languageCodes: [getLanguageCode("English")],
   platforms: ["android-only"],
+};
+const bbw: Wallet = {
+  features: ["lnurl-auth", "lnurl-withdraw", "lightning address"],
+  lightsatsRecommended: true,
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/bbw",
+  image: "bbw.png",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+  name: "Bitcoin Beach Wallet",
+  slogan:
+    "The Bitcoin Beach Wallet, the most secure and accessible Lightning-enabled Bitcoin wallet that makes receiving, saving and spending Bitcoin easy.",
+  languageCodes: [
+    getLanguageCode("English"),
+    getLanguageCode("Spanish"),
+    getLanguageCode("Portuguese"),
+    getLanguageCode("Czech"),
+    getLanguageCode("German"),
+    getLanguageCode("French"),
+  ],
+  platforms: ["mobile"],
+};
+const zeus: Wallet = {
+  features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
+  lightsatsRecommended: true,
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/zeus",
+  image: "zeus.webp",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
+  name: "Zeus",
+  slogan:
+    "Zeus is an open-source, non-custodial Bitcoin wallet that gives you full control over how you make payments.",
+  languageCodes: [
+    getLanguageCode("English"),
+    getLanguageCode("Spanish"),
+    getLanguageCode("Portuguese"),
+    getLanguageCode("Czech"),
+    getLanguageCode("German"),
+    getLanguageCode("French"),
+  ],
+  platforms: ["mobile"],
+};
+const zebedee: Wallet = {
+  features: ["lightning address"],
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/zebedee",
+  image: "zebedee.jpeg",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nB3JoRUAIAhFUXZgLkmsYvuL0ohG2qsevfUasD/AujszY8XMGODukt5UlaTzXTx1IMR3DRAKAAAAAElFTkSuQmCC",
+  name: "ZEBEDEE",
+  slogan:
+    "We make the points you earn in games matter. By harnessing the power of Bitcoin, we attach real-world value to points, scores and economies in virtual worlds",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile"],
+};
+const blixt: Wallet = {
+  features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/blixt",
+  image: "blixt.jpeg",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAAM0lEQVR4nGNgkEhicOtn0CwBMRgkkqx3fc65+p9BrZCBQTp18e//S/78h8owGNeCkEQSAJekECqxrsHvAAAAAElFTkSuQmCC",
+  name: "Blixt",
+  slogan:
+    "Blixt Wallet is a non-custodial open-source Bitcoin Lightning Wallet for Android with focus on usability and user experience, powered by lnd and Neutrino SPV.",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["android-only"],
+};
+const strike: Wallet = {
+  features: ["lnurl-withdraw"],
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/strike",
+  image: "strike.webp",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nB3JoRUAIAhFUXZgLkmsYvuL0ohG2qsevfUasD/AujszY8XMGODukt5UlaTzXTx1IMR3DRAKAAAAAElFTkSuQmCC",
+  name: "Strike",
+  slogan:
+    "Buy and sell bitcoin. Strike offers the easiest way to buy bitcoin. Skip transaction fees and stack sats, the right way.",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile", "desktop"],
+};
+const cashapp: Wallet = {
+  features: ["lnurl-withdraw"],
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/cashapp",
+  image: "cashapp.png",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nB3JoRUAIAhFUXZgLkmsYvuL0ohG2qsevfUasD/AujszY8XMGODukt5UlaTzXTx1IMR3DRAKAAAAAElFTkSuQmCC",
+  name: "Cash App",
+  slogan:
+    "Cash App is the easy way to buy, sell, send, and receive the world's leading cryptocurrency. Buy bitcoin instantly in any amount—as little as $1.",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile"],
+};
+const pouch: Wallet = {
+  features: ["lnurl-withdraw"],
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/cashapp",
+  image: "pouch.jpeg",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nB3JoRUAIAhFUXZgLkmsYvuL0ohG2qsevfUasD/AujszY8XMGODukt5UlaTzXTx1IMR3DRAKAAAAAElFTkSuQmCC",
+  name: "Pouch",
+  slogan:
+    "Made with ❤️ in the Philippines. Pouch supports philippine peso payments over bitcoin's Lightning Network ⚡",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile"],
 };
 export const wallets: Wallet[] = [
   wos,
@@ -213,5 +327,12 @@ export const wallets: Wallet[] = [
   phoenix,
   lntips,
   lntxbot,
-  sbw,
+  obw,
+  bbw,
+  zeus,
+  zebedee,
+  blixt,
+  strike,
+  cashapp,
+  pouch,
 ];

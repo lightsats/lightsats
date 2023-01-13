@@ -71,6 +71,18 @@ export const save: Item[] = [
     name: "BitBox",
     slogan:
       "Swiss-made hardware and software for easy Bitcoin and cryptocurrency storage.",
-    link: "https://lgt.st/foundation",
+    link: "https://lgt.st/bitbox",
+  },
+  {
+    category: "save",
+    image: "jade.png",
+    languageCodes: [getLanguageCode("English")],
+    platforms: ["web"],
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAO0lEQVR4nAXBwQ0AQAQEQJ/NJV66UIDQggI07qcMJbgZYmYziwhmpvded8+MiJCq7u7duTsByMyqAvABfUwPfGOPixEAAAAASUVORK5CYII=",
+    name: "Blockstream Jade",
+    slogan:
+      "Blockstream Jade is an easy-to-use, purely open-source hardware wallet that offers advanced security for your Bitcoin.",
+    link: "https://lgt.st/jade",
   },
 ];
