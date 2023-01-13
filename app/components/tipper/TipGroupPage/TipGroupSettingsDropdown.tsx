@@ -1,21 +1,31 @@
 import {
+  ClipboardDocumentListIcon,
   DocumentDuplicateIcon,
   PencilIcon,
   PrinterIcon,
+  TrashIcon,
   WalletIcon,
 } from "@heroicons/react/24/solid";
 import { Dropdown } from "@nextui-org/react";
 import { Icon } from "components/Icon";
-import { NextLink } from "components/NextLink";
+import copy from "copy-to-clipboard";
 import { ApiRoutes } from "lib/ApiRoutes";
 import { refundableTipStatuses } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
+import { getClaimUrl } from "lib/utils";
 import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
+
+enum actionKeys {
+  copyAll = "copyAll",
+  copyIndividual = "copyIndividual",
+  reclaimTips = "reclaimTips",
+  deleteTipGroup = "deleteTipGroup",
+}
 
 export function TipGroupSettingsDropdown() {
   const router = useRouter();
@@ -55,87 +65,145 @@ export function TipGroupSettingsDropdown() {
     }
   }, [id, mutateTipGroup, router]);
 
+  const { mutate } = useSWRConfig();
+  const mutateTips = React.useCallback(
+    () => mutate("/api/tipper/tips"),
+    [mutate]
+  );
+
+  const deleteTipGroup = React.useCallback(() => {
+    (async () => {
+      router.push(PageRoutes.dashboard);
+      const result = await fetch(`${ApiRoutes.tipGroups}/${id}`, {
+        method: "DELETE",
+      });
+      if (!result.ok) {
+        toast.error("Failed to delete tip group: " + result.statusText);
+      } else {
+        mutateTips();
+      }
+    })();
+  }, [id, router, mutateTips]);
+
+  const copyAllTipUrls = React.useCallback(() => {
+    (async () => {
+      if (tipGroup) {
+        copy(tipGroup.tips.map((tip) => getClaimUrl(tip)).join("\n"));
+        toast.success("Copied all tip URLs to clipboard");
+      }
+    })();
+  }, [tipGroup]);
+
   const menuItems = React.useMemo(
     () =>
       tipGroup
         ? [
             <Dropdown.Item
-              key="edit"
+              key={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
               icon={
                 <Icon>
                   <PencilIcon />
                 </Icon>
               }
             >
-              <NextLink
-                href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
-                passHref
-              >
-                <a>Bulk edit</a>
-              </NextLink>
+              Bulk edit
             </Dropdown.Item>,
             <Dropdown.Item
-              key="print"
+              key={`${PageRoutes.tipGroups}/${tipGroup.id}/print`}
               icon={
                 <Icon>
                   <PrinterIcon />
                 </Icon>
               }
             >
-              <NextLink
-                href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
-                passHref
-              >
-                <a>Print</a>
-              </NextLink>
+              Print
             </Dropdown.Item>,
             <Dropdown.Item
-              key="copy"
+              key={actionKeys.copyAll}
+              icon={
+                <Icon>
+                  <ClipboardDocumentListIcon />
+                </Icon>
+              }
+            >
+              Copy all claim links
+            </Dropdown.Item>,
+            <Dropdown.Item
+              key={actionKeys.copyIndividual}
               icon={
                 <Icon>
                   <DocumentDuplicateIcon />
                 </Icon>
               }
             >
-              <a
-                onClick={() =>
-                  /*setShowClaimUrls((current) => !current)*/ alert("TODO")
-                }
-              >
-                Enable copy mode
-              </a>
+              Copy individual claim links
             </Dropdown.Item>,
-            ...((reclaimableTips?.length ?? 0) > 0
+            ...((reclaimableTips?.length ?? 0) > 0 ||
+            tipGroup.status === "UNFUNDED"
               ? [
                   <Dropdown.Section title="Danger zone" key="danger">
-                    <Dropdown.Item
-                      color="error"
-                      icon={
-                        <Icon>
-                          <WalletIcon />
-                        </Icon>
-                      }
-                    >
-                      {/* <Button  color="error">
-          Reclaim unwithdrawn tips ({reclaimableTips?.length})
-        </Button>
-        <Spacer /> */}
-                      <a href="" onClick={reclaimTips}>
+                    {tipGroup.status === "UNFUNDED" ? (
+                      <Dropdown.Item
+                        key={actionKeys.deleteTipGroup}
+                        color="error"
+                        icon={
+                          <Icon>
+                            <TrashIcon />
+                          </Icon>
+                        }
+                      >
+                        Delete Tip Group
+                      </Dropdown.Item>
+                    ) : (
+                      <Dropdown.Item
+                        key={actionKeys.reclaimTips}
+                        color="error"
+                        icon={
+                          <Icon>
+                            <WalletIcon />
+                          </Icon>
+                        }
+                      >
                         Reclaim {reclaimableTips?.length} tips
-                      </a>
-                    </Dropdown.Item>
+                      </Dropdown.Item>
+                    )}
                   </Dropdown.Section>,
                 ]
               : []),
           ]
         : [],
-    [reclaimTips, reclaimableTips?.length, tipGroup]
+    [reclaimableTips?.length, tipGroup]
+  );
+
+  const onDropdownAction = React.useCallback(
+    (key: React.Key) => {
+      switch (key) {
+        case actionKeys.copyAll:
+          copyAllTipUrls();
+          break;
+        case actionKeys.copyIndividual:
+          alert("Coming soon");
+          break;
+        case actionKeys.reclaimTips:
+          reclaimTips();
+          break;
+        case actionKeys.deleteTipGroup:
+          deleteTipGroup();
+          break;
+        default:
+          router.push(key as string);
+      }
+    },
+    [copyAllTipUrls, deleteTipGroup, reclaimTips, router]
   );
 
   return (
     <Dropdown placement="bottom-right" type="menu">
       <Dropdown.Button flat>⚙️</Dropdown.Button>
-      <Dropdown.Menu css={{ $$dropdownMenuWidth: "300px" }}>
+      <Dropdown.Menu
+        css={{ $$dropdownMenuWidth: "300px" }}
+        onAction={onDropdownAction}
+      >
         {menuItems}
       </Dropdown.Menu>
     </Dropdown>
