@@ -21,11 +21,12 @@ export function useTips(
   );
 }
 
-export function useSentTipsWithGroups() {
+export function useSentTipsWithGroups(poll = false) {
   const { data: session } = useSession();
   return useSWR<TipWithGroup[]>(
     session ? "/api/tipper/tips?withGroups=true" : null,
-    defaultFetcher
+    defaultFetcher,
+    poll ? pollTipsConfig : undefined
   );
 }
 

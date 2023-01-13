@@ -1,7 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { refundableTipStatuses } from "lib/constants";
 import prisma from "lib/prismadb";
-import { reclaimTip } from "lib/reclaimTip";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -17,13 +15,13 @@ export default async function handler(
 
   switch (req.method) {
     case "POST":
-      return handleReclaimTip(session, req, res);
+      return handleMarkTipCopied(session, req, res);
     default:
       return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 
-async function handleReclaimTip(
+async function handleMarkTipCopied(
   session: Session,
   req: NextApiRequest,
   res: NextApiResponse<never>
@@ -33,9 +31,6 @@ async function handleReclaimTip(
     where: {
       id: id as string,
     },
-    include: {
-      lnbitsWallet: true,
-    },
   });
   if (!tip) {
     return res.status(StatusCodes.NOT_FOUND).end();
@@ -43,11 +38,15 @@ async function handleReclaimTip(
   if (session.user.id !== tip.tipperId) {
     return res.status(StatusCodes.FORBIDDEN).end();
   }
-  if (refundableTipStatuses.indexOf(tip.status) < 0) {
-    return res.status(StatusCodes.CONFLICT).end();
-  }
 
-  await reclaimTip(tip);
+  await prisma.tip.update({
+    where: {
+      id: tip.id,
+    },
+    data: {
+      copiedClaimUrl: new Date(),
+    },
+  });
 
   return res.status(StatusCodes.NO_CONTENT).end();
 }

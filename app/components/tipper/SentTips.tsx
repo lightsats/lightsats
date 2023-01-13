@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 
 export function SentTips() {
   const { data: session } = useSession();
-  const { data: tips } = useSentTipsWithGroups();
+  const { data: tips } = useSentTipsWithGroups(true);
 
   if (session && !tips) {
     return <Loading color="currentColor" size="sm" />;

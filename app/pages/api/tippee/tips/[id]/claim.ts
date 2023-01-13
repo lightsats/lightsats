@@ -115,5 +115,5 @@ async function handleClaimTip(
       );
     }
   }
-  return res.status(204).end();
+  return res.status(StatusCodes.NO_CONTENT).end();
 }

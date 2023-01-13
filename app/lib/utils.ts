@@ -5,16 +5,19 @@ import {
   expirableTipStatuses,
   FEE_PERCENT,
   MINIMUM_FEE_SATS,
+  refundableTipStatuses,
   SATS_TO_BTC,
 } from "lib/constants";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { PageRoutes } from "lib/PageRoutes";
 import { NextRouter } from "next/router";
 import { MouseEventHandler } from "react";
+import { BulkGiftCardTheme } from "types/BulkGiftCardTheme";
 import { GiftCardTheme } from "types/GiftCardTheme";
 import { Item } from "types/Item";
 import { PublicTip } from "types/PublicTip";
 import { PublicUser } from "types/PublicUser";
+import { TipGroupWithTips } from "types/TipGroupWithTips";
 
 export function getSatsAmount(fiat: number, exchangeRate: number) {
   return Math.ceil((fiat / exchangeRate) * SATS_TO_BTC);
@@ -154,4 +157,14 @@ export const isPWA = () =>
 
 export function getDefaultGiftCardTheme(): GiftCardTheme {
   return new Date().getMonth() === 11 ? "christmas" : "generic";
+}
+
+export function getDefaultBulkGiftCardTheme(): BulkGiftCardTheme {
+  return "sunset";
+}
+
+export function isTipGroupActive(tipGroup: TipGroupWithTips) {
+  return tipGroup.tips.some(
+    (tip) => refundableTipStatuses.indexOf(tip.status) > -1
+  );
 }
