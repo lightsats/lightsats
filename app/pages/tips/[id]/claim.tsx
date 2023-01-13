@@ -1,4 +1,5 @@
 import { Collapse, Loading, Spacer, Text } from "@nextui-org/react";
+import { Alert } from "components/Alert";
 import { ClaimedTipCard } from "components/ClaimedTipCard";
 import { HomeButton } from "components/HomeButton";
 import { Login } from "components/Login";
@@ -11,6 +12,7 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { Withdraw } from "pages/withdraw";
 import React from "react";
@@ -175,6 +177,11 @@ const ClaimTipPage: NextPage = () => {
         </>
       ) : isTipper ? (
         <>
+          <Alert>
+            You created this tip.&nbsp;
+            <Link href={`${PageRoutes.tips}/${id}`}>Go to Tip</Link>
+          </Alert>
+          <Spacer />
           <ClaimTipView publicTip={publicTip} />
         </>
       ) : hasExpired ? (

@@ -10,6 +10,7 @@ import { placeholderDataUrl as defaultPlaceholderDataUrl } from "lib/constants";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { getItemImageLocation } from "lib/utils";
+import { useSession } from "next-auth/react";
 import { TFunction, useTranslation } from "next-i18next";
 import NextImage from "next/image";
 import { useRouter } from "next/router";
@@ -97,6 +98,9 @@ export function ItemCard({ item, expanded }: ItemCardProps) {
     () => getItemFeatures(item, router.locale || DEFAULT_LOCALE, t),
     [item, router.locale, t]
   );
+  const { data: session } = useSession();
+
+  const itemLink = item.link.replace(/{{userId}}/g, session?.user.id ?? "");
 
   return (
     <Collapse
@@ -129,7 +133,7 @@ export function ItemCard({ item, expanded }: ItemCardProps) {
         ))}
       </Row>
       <Spacer y={1} />
-      <NextLink href={item.link} passHref>
+      <NextLink href={itemLink} passHref>
         <a target="_blank" rel="noreferrer noopener">
           <Row justify="flex-end">
             <Button auto>
