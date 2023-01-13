@@ -11,10 +11,10 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
-import { CustomSelect, SelectOption } from "components/CustomSelect";
+import { SelectOption } from "components/CustomSelect";
 import { FlexBox } from "components/FlexBox";
 import { NextUIUser } from "components/NextUIUser";
-import { MobilePrintWarning } from "components/tipper/MobilePrintWarning";
+import { PrintDesignPicker } from "components/tipper/PrintDesignPicker";
 import { format } from "date-fns";
 import { useDevPrintPreview } from "hooks/useDevPrintPreview";
 import { useTip } from "hooks/useTip";
@@ -48,6 +48,7 @@ const PrintTipCardPage: NextPage = () => {
   const outsidePageRef = React.useRef(null);
   const bothPagesRef = React.useRef(null);
   const [theme, setTheme] = React.useState(getDefaultGiftCardTheme());
+  const [backgroundUrl, setBackgroundUrl] = React.useState("");
   const [duplex, setDuplex] = React.useState(true);
 
   const printInside = useReactToPrint({
@@ -69,21 +70,13 @@ const PrintTipCardPage: NextPage = () => {
   return (
     <>
       <h3>DIY Bitcoin Gift Card</h3>
-      <MobilePrintWarning />
-      <Row>
-        <Text>Theme</Text>
-      </Row>
-      <Row>
-        <CustomSelect
-          options={themeSelectOptions}
-          value={theme}
-          onChange={(value) => {
-            if (value) {
-              setTheme(value as GiftCardTheme);
-            }
-          }}
-        />
-      </Row>
+      <PrintDesignPicker
+        themeSelectOptions={themeSelectOptions}
+        theme={theme}
+        setTheme={setTheme}
+        backgroundUrl={backgroundUrl}
+        setBackgroundUrl={setBackgroundUrl}
+      />
       <Spacer />
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Image
@@ -203,7 +196,7 @@ const PrintTipCardPage: NextPage = () => {
             <InsidePage theme={theme} tip={tip} />
           </PrintablePage>
           <PrintablePage ref={outsidePageRef}>
-            <OutsidePage theme={theme} />
+            <OutsidePage theme={theme} backgroundUrl={backgroundUrl} />
           </PrintablePage>
         </div>
       </div>
@@ -401,9 +394,10 @@ const InsidePage = ({ tip, theme }: InsidePageProps) => {
 
 type OutsidePageProps = {
   theme: GiftCardTheme;
+  backgroundUrl: string;
 };
 
-const OutsidePage = ({ theme }: OutsidePageProps) => {
+const OutsidePage = ({ theme, backgroundUrl }: OutsidePageProps) => {
   return (
     <>
       <PrintGuide />
@@ -425,8 +419,25 @@ const OutsidePage = ({ theme }: OutsidePageProps) => {
             backgroundRepeat: "no-repeat",
             width: "100%",
             height: "100%",
+            position: "relative",
           }}
-        />
+        >
+          {backgroundUrl && (
+            <div
+              style={{
+                backgroundImage: `url(${backgroundUrl}`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "50%",
+                height: "100%",
+              }}
+            />
+          )}
+        </div>
       </div>
     </>
   );
