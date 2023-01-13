@@ -51,7 +51,7 @@ const TipPage: NextPage = () => {
     // TODO: add redirect or fallback from the old claim page to this one
     if (
       sessionStatus === "unauthenticated" ||
-      (session && session.user.id !== tipperId)
+      (tipperId && session && session.user.id !== tipperId)
     ) {
       router.push(`${PageRoutes.tips}/${id}/claim`);
     }

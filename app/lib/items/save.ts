@@ -12,7 +12,7 @@ export const save: Item[] = [
     name: "Trezor",
     slogan:
       "Trezor hardware wallets are the safest and most resilient way to secure Bitcoin assets offline.",
-    link: "https://lgt.st/trezor",
+    link: "https://lgt.st/trezor?aff_sub={{userId}}",
   },
   {
     category: "save",

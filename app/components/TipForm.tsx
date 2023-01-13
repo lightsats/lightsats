@@ -1,4 +1,4 @@
-import { ForwardIcon, InformationCircleIcon } from "@heroicons/react/24/solid";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import {
   Badge,
   Button,
@@ -271,6 +271,7 @@ export function TipForm({
               <Row justify="space-between" align="flex-end">
                 <CustomSelect
                   options={tippeeLocaleSelectOptions}
+                  defaultValue={DEFAULT_LOCALE}
                   value={watchedTippeeLocale}
                   onChange={setDropdownSelectedTippeeLocale}
                   width="100px"
@@ -525,7 +526,7 @@ Micheal Saylor`}
       <Spacer />
       <Card css={{ dropShadow: "$sm" }}>
         <Card.Body>
-          <Row align="center">
+          <Row align="flex-start">
             <Col>
               <Text>⌛ Tip expiry</Text>
               <Text
@@ -561,68 +562,34 @@ Micheal Saylor`}
             </Col>
           </Row>
           <Spacer />
-          <Row
-            align="center"
-            justify="center"
-            css={{
-              background: watchedSkipOnboarding ? "$warningShadow" : undefined,
-              p: "$10",
-              borderRadius: "$lg",
-            }}
-          >
-            <Icon>
-              <ForwardIcon />
-            </Icon>
-            <Spacer x={0.5} />
-            <Text weight="medium">Skip Onboarding</Text>
-            <Spacer x={0.5} />
-            <Tooltip
-              placement="top"
-              content={
-                <Col>
-                  <Row justify="center">
-                    <Text>
-                      Check this if your recipient already knows about Bitcoin
-                      and already has a wallet.
-                    </Text>
-                  </Row>
-                  <Row justify="center">
-                    <Text>
-                      They will be linked directly to the withdrawal page
-                      without needing to authenticate first.
-                    </Text>
-                  </Row>
-                </Col>
-              }
-            >
-              <Text color="primary">
-                <Icon
-                  width={16}
-                  height={16}
-                  color={watchedSkipOnboarding ? "white" : undefined}
-                >
-                  <InformationCircleIcon />
-                </Icon>
+          <Row align="flex-start">
+            <Col>
+              <Text css={{ whiteSpace: "nowrap" }}>⏭️ Skip onboarding</Text>
+              <Text
+                small
+                css={{ mt: 6, lineHeight: 1.2, display: "inline-block" }}
+              >
+                Allow your recipient to directly withraw.
               </Text>
-            </Tooltip>
-
-            <Spacer />
-            <Controller
-              name="skipOnboarding"
-              control={control}
-              render={({ field }) => (
-                <Switch
-                  {...field}
-                  checked={field.value}
-                  color={watchedSkipOnboarding ? "warning" : undefined}
-                  onChange={(e) => field.onChange(e.target.checked)}
-                />
-              )}
-            />
+            </Col>
+            <Col css={{ ta: "right" }}>
+              <Controller
+                name="skipOnboarding"
+                control={control}
+                render={({ field }) => (
+                  <Switch
+                    {...field}
+                    checked={field.value}
+                    color={watchedSkipOnboarding ? "warning" : undefined}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                )}
+              />
+            </Col>
           </Row>
         </Card.Body>
       </Card>
-      <Spacer y={2} />
+      <Spacer y={1} />
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? (
           <Loading color="currentColor" size="sm" />
