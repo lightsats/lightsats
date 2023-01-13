@@ -61,5 +61,5 @@ async function handleReclaimTips(
     await reclaimTip(tip);
   }
 
-  return res.status(204).end();
+  return res.status(StatusCodes.NO_CONTENT).end();
 }

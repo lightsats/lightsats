@@ -27,7 +27,15 @@ enum actionKeys {
   deleteTipGroup = "deleteTipGroup",
 }
 
-export function TipGroupSettingsDropdown() {
+type TipGroupSettingsDropdownProps = {
+  setCopyIndividualLinksEnabled(): void;
+  copyIndividualLinksEnabled: boolean;
+};
+
+export function TipGroupSettingsDropdown({
+  copyIndividualLinksEnabled,
+  setCopyIndividualLinksEnabled,
+}: TipGroupSettingsDropdownProps) {
   const router = useRouter();
   const { id } = router.query;
   //const [showClaimUrls, setShowClaimUrls] = React.useState(false);
@@ -136,7 +144,9 @@ export function TipGroupSettingsDropdown() {
                 </Icon>
               }
             >
-              Copy individual claim links
+              {copyIndividualLinksEnabled
+                ? "Finish copying"
+                : "Copy individual claim links"}
             </Dropdown.Item>,
             ...((reclaimableTips?.length ?? 0) > 0 ||
             tipGroup.status === "UNFUNDED"
@@ -172,7 +182,7 @@ export function TipGroupSettingsDropdown() {
               : []),
           ]
         : [],
-    [reclaimableTips?.length, tipGroup]
+    [copyIndividualLinksEnabled, reclaimableTips?.length, tipGroup]
   );
 
   const onDropdownAction = React.useCallback(
@@ -182,7 +192,7 @@ export function TipGroupSettingsDropdown() {
           copyAllTipUrls();
           break;
         case actionKeys.copyIndividual:
-          alert("Coming soon");
+          setCopyIndividualLinksEnabled();
           break;
         case actionKeys.reclaimTips:
           reclaimTips();
@@ -194,7 +204,13 @@ export function TipGroupSettingsDropdown() {
           router.push(key as string);
       }
     },
-    [copyAllTipUrls, deleteTipGroup, reclaimTips, router]
+    [
+      copyAllTipUrls,
+      deleteTipGroup,
+      reclaimTips,
+      router,
+      setCopyIndividualLinksEnabled,
+    ]
   );
 
   return (

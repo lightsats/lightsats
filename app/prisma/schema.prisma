@@ -123,6 +123,7 @@ model Tip {
   updated DateTime @updatedAt
   claimed DateTime?
   expiry DateTime
+  copiedClaimUrl DateTime?
   currency String?
   note String? @db.VarChar(255)
   version Int @default(0)

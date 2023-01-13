@@ -37,7 +37,7 @@ async function handlePayInvoice(req: NextApiRequest, res: NextApiResponse) {
       withdrawalRequest.tipId,
       isWebln === "true" ? "webln" : "invoice"
     );
-    return res.status(204).end();
+    return res.status(StatusCodes.NO_CONTENT).end();
   } catch (error) {
     console.error(
       "Failed to pay manual invoice " +

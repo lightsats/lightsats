@@ -38,6 +38,8 @@ const TipGroupPage: NextPage = () => {
   const { id } = router.query;
   const [showClaimUrls, setShowClaimUrls] = React.useState(false);
   const [skipPersonalize, setSkipPersonalize] = React.useState(false);
+  const [copyIndividualLinksEnabled, setCopyIndividualLinksEnabled] =
+    React.useState(false);
 
   const { data: tipGroup } = useSWR<TipGroupWithTips>(
     `${ApiRoutes.tipGroups}/${id}`,
@@ -53,7 +55,12 @@ const TipGroupPage: NextPage = () => {
             👥 Group of {tipGroup.quantity} tips &nbsp;
             <TipGroupStatusBadge tipGroup={tipGroup} />
           </Text>
-          <TipGroupSettingsDropdown />
+          <TipGroupSettingsDropdown
+            copyIndividualLinksEnabled={copyIndividualLinksEnabled}
+            setCopyIndividualLinksEnabled={() =>
+              setCopyIndividualLinksEnabled((current) => !current)
+            }
+          />
         </Row>
         <Spacer />
       </>
@@ -116,31 +123,37 @@ const TipGroupPage: NextPage = () => {
               </>
             )}
 
-            <Card css={{ dropShadow: "$sm" }}>
-              <Card.Header>
-                <Row justify="space-between">
-                  <Text b>{"🆕 Physical cards to print yourself"}</Text>
-                  <NextLink
-                    href={`${PageRoutes.tipGroups}/${tipGroup.id}/print`}
-                    style={{ display: "inline-block" }}
-                  >
-                    <a>
-                      <Button size={"sm"}>Choose design</Button>
-                    </a>
-                  </NextLink>
-                </Row>
-              </Card.Header>
-              <Card.Body>
-                <Card css={{ dropShadow: "$sm", p: 0, scale: 0.8, mt: -25 }}>
-                  <BulkTipGiftCardContentsPreview
-                    theme={getDefaultBulkGiftCardTheme()}
-                    tip={firstTip}
-                  />
+            {!copyIndividualLinksEnabled && isTipGroupActive(tipGroup) && (
+              <>
+                <Card css={{ dropShadow: "$sm" }}>
+                  <Card.Header>
+                    <Row justify="space-between">
+                      <Text b>{"🆕 Physical cards to print yourself"}</Text>
+                      <NextLink
+                        href={`${PageRoutes.tipGroups}/${tipGroup.id}/print`}
+                        style={{ display: "inline-block" }}
+                      >
+                        <a>
+                          <Button size={"sm"}>Choose design</Button>
+                        </a>
+                      </NextLink>
+                    </Row>
+                  </Card.Header>
+                  <Card.Body>
+                    <Card
+                      css={{ dropShadow: "$sm", p: 0, scale: 0.8, mt: -25 }}
+                    >
+                      <BulkTipGiftCardContentsPreview
+                        theme={getDefaultBulkGiftCardTheme()}
+                        tip={firstTip}
+                      />
+                    </Card>
+                  </Card.Body>
                 </Card>
-              </Card.Body>
-            </Card>
 
-            <Spacer />
+                <Spacer />
+              </>
+            )}
           </>
         )}
         <Spacer />
@@ -154,7 +167,11 @@ const TipGroupPage: NextPage = () => {
         <Spacer />
         <Grid.Container justify="center" gap={1}>
           {tipGroup.tips.map((tip) => (
-            <SentTipCard tip={tip} key={tip.id} />
+            <SentTipCard
+              tip={tip}
+              key={tip.id}
+              copyIndividualLinksEnabled={copyIndividualLinksEnabled}
+            />
           ))}
         </Grid.Container>
       </>
