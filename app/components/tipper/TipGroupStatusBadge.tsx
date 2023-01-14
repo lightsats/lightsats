@@ -39,7 +39,9 @@ export function TipGroupStatusBadge({
         textTransform: "capitalize",
       }}
     >
-      {(color === "warning"
+      {(color === "default"
+        ? "Refunded"
+        : color === "warning"
         ? "Reclaimed"
         : color === "success"
         ? "Completed"

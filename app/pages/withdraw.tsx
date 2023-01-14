@@ -19,7 +19,11 @@ import { LightningQRCode } from "components/LightningQRCode";
 import { NextLink } from "components/NextLink";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import copy from "copy-to-clipboard";
+import { add } from "date-fns";
+import { usePublicTip } from "hooks/usePublicTip";
 import { useTips } from "hooks/useTips";
+import { useUser } from "hooks/useUser";
+import { WITHDRAWAL_RETRY_DELAY } from "lib/constants";
 import { getStaticProps } from "lib/i18n/i18next";
 import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
 import { PageRoutes } from "lib/PageRoutes";
@@ -30,6 +34,7 @@ import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+import Countdown from "react-countdown";
 import toast from "react-hot-toast";
 import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
@@ -45,13 +50,20 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
   const { data: session } = useSession();
   const router = useRouter();
 
+  const { data: publicTip } = usePublicTip(tipId, true);
+  const { data: user } = useUser(true);
+
   // poll to get updated statuses after withdrawing
   const { data: tips } = useTips(flow, true, tipId);
 
   const [invoiceFieldValue, setInvoiceFieldValue] = React.useState("");
   const [withdrawalLinkLnurl, setWithdrawalLinkLnurl] = React.useState("");
+  const [prevWithdrawalLinkLnurl, setPrevWithdrawalLinkLnurl] =
+    React.useState("");
   const [isSubmitting, setSubmitting] = React.useState(false);
   const [hasLaunchedWebln, setLaunchedWebln] = React.useState(false);
+
+  const lastWithdrawalTime = publicTip?.lastWithdrawal ?? user?.lastWithdrawal;
 
   const executeWithdrawal = React.useCallback(
     (invoice: string, isWebln: boolean) => {
@@ -193,6 +205,18 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
       })();
     }
   }, [availableBalance, flow, tipId]);
+
+  React.useEffect(() => {
+    if (
+      withdrawalLinkLnurl &&
+      prevWithdrawalLinkLnurl &&
+      prevWithdrawalLinkLnurl !== withdrawalLinkLnurl
+    ) {
+      toast.success("QR code updated");
+    }
+    setPrevWithdrawalLinkLnurl(withdrawalLinkLnurl);
+  }, [prevWithdrawalLinkLnurl, withdrawalLinkLnurl]);
+
   React.useEffect(() => {
     if (availableBalance > 0) {
       (async () => {
@@ -230,6 +254,11 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
     [availableBalance]
   );
 
+  const wasRecentlyWithdrawn =
+    lastWithdrawalTime &&
+    Date.now() - new Date(lastWithdrawalTime).getTime() <
+      WITHDRAWAL_RETRY_DELAY;
+
   if ((!session && flow !== "anonymous") || !tips) {
     return <Loading />;
   }
@@ -254,10 +283,26 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
       ) : (
         <div style={{ maxWidth: "100%" }}>
           <Text h3>
-            {isSubmitting ? t("withdraw:withdrawing") : t("withdraw:title")}
+            {isSubmitting || wasRecentlyWithdrawn
+              ? t("withdraw:withdrawing")
+              : t("withdraw:title")}
           </Text>
+          {wasRecentlyWithdrawn && (
+            <>
+              <Text>
+                A withdrawal is in progress. Please wait...&nbsp;
+                <Countdown
+                  renderer={(props) => <>{props.seconds}</>}
+                  date={add(new Date(lastWithdrawalTime), {
+                    seconds: WITHDRAWAL_RETRY_DELAY / 1000,
+                  })}
+                ></Countdown>
+              </Text>
+              <Spacer />
+            </>
+          )}
 
-          {withdrawalLinkLnurl && !isSubmitting ? (
+          {withdrawalLinkLnurl && !isSubmitting && !wasRecentlyWithdrawn ? (
             <>
               <Text>{t("withdraw:lnurlInstructions")}</Text>
               <Spacer />
@@ -320,7 +365,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
               <Loading />
             </Row>
           )}
-          {!isSubmitting && (
+          {!isSubmitting && !wasRecentlyWithdrawn && (
             <>
               <Spacer y={1} />
               <Collapse shadow title={<Text b>Manual withdrawal</Text>}>
@@ -346,15 +391,8 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
                   onChange={(event) => setInvoiceFieldValue(event.target.value)}
                 />
                 <Spacer />
-                <Button
-                  onClick={submitForm}
-                  disabled={isSubmitting || !invoiceFieldValue}
-                >
-                  {isSubmitting ? (
-                    <Loading color="currentColor" size="sm" />
-                  ) : (
-                    <>Withdraw</>
-                  )}
+                <Button onClick={submitForm} disabled={!invoiceFieldValue}>
+                  Withdraw
                 </Button>
               </Collapse>
               {flow === "anonymous" && (

@@ -1,6 +1,7 @@
 import { Prisma, WithdrawalFlow, WithdrawalMethod } from "@prisma/client";
 import * as bolt11 from "bolt11";
 import { completeWithdrawal } from "lib/completeWithdrawal";
+import { WITHDRAWAL_RETRY_DELAY } from "lib/constants";
 import { getPayment } from "lib/lnbits/getPayment";
 import { payInvoice } from "lib/lnbits/payInvoice";
 import prisma from "lib/prismadb";
@@ -35,7 +36,7 @@ export async function payWithdrawalInvoice(
     preliminaryLastWithdrawalResult.lastWithdrawal &&
     Date.now() -
       new Date(preliminaryLastWithdrawalResult.lastWithdrawal).getTime() <
-      60000 /* allow withdrawals once per minute */
+      WITHDRAWAL_RETRY_DELAY /* only allow withdrawals once per X seconds */
   ) {
     const errorMessage =
       "Your last withdrawal attempt was less than a minute ago. Please wait before trying again.";
@@ -84,7 +85,7 @@ export async function payWithdrawalInvoice(
   if (
     lastWithdrawalResult.lastWithdrawal &&
     Date.now() - new Date(lastWithdrawalResult.lastWithdrawal).getTime() <
-      60000 /* allow withdrawals once per minute */
+      WITHDRAWAL_RETRY_DELAY /* only allow withdrawals once per X seconds */
   ) {
     const errorMessage =
       "Your last withdrawal attempt was less than a minute ago. Please wait a full minute before trying again. (Transaction)";

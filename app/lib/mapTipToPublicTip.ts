@@ -36,5 +36,6 @@ export function mapTipToPublicTip(
     claimLinkViewed: tip.claimLinkViewed,
     tippeeLocale: tip.tippeeLocale,
     skipOnboarding: tip.skipOnboarding,
+    lastWithdrawal: tip.lastWithdrawal,
   };
 }

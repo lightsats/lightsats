@@ -16,6 +16,7 @@ export const DEFAULT_PAGE_SIZE = 10;
 export const USE_PREV_TIP_PROPERTIES = true;
 export const DEFAULT_LEADERBOARD_ID = "default";
 export const LIGHTSATS_INCEPTION = new Date("2022-10-01");
+export const WITHDRAWAL_RETRY_DELAY = 30000;
 
 export const refundableTipStatuses: TipStatus[] = [
   "UNCLAIMED",
