@@ -11,7 +11,7 @@ console.log("(CLIENT) SENTRY DSN: ", SENTRY_DSN);
 Sentry.init({
   dsn: SENTRY_DSN,
   // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 0.1,
+  tracesSampleRate: 0.01,
   integrations: [
     new CaptureConsole({
       levels: ["error"],
