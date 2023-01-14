@@ -111,7 +111,12 @@ export default async function handler(
         " " +
         ((await generateShortLink(verifyUrl)) ?? verifyUrl);
 
-      await sendSms(twoFactorLoginRequest.phoneNumber, smsBody);
+      await sendSms(
+        twoFactorLoginRequest.phoneNumber,
+        smsBody,
+        "LOGIN",
+        user?.id
+      );
 
       return res.status(StatusCodes.NO_CONTENT).end();
     } catch (error) {

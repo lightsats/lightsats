@@ -209,7 +209,9 @@ async function sendReminder(reminder: Reminder) {
         ? "Lightsats Reminder: You haven't withdrawn your tip yet!"
         : "Lightsats Reminder: Your tip is expiring tomorrow!") +
         " " +
-        shortUrl
+        shortUrl,
+      "REMINDER",
+      reminder.userId
     );
   } else {
     throw new Error(

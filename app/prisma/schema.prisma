@@ -288,6 +288,21 @@ model Achievement {
   @@id([userId, type])
 }
 
+model SmsLog {
+  id String @id @default(cuid())
+  to String
+  userId String?
+  smsType SmsType
+  created DateTime @default(now())
+  success Boolean
+  usedProvider String?
+}
+
+enum SmsType {
+  LOGIN
+  REMINDER
+}
+
 enum AchievementType {
   SELF_CLAIMED
   // SELF_WITHDRAWN - more specific versions below (webln, manual, lnurl)
