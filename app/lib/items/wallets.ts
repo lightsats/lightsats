@@ -308,7 +308,7 @@ const pouch: Wallet = {
   features: ["lnurl-withdraw"],
   category: "wallets",
   minBalance: 0,
-  link: "https://lgt.st/cashapp",
+  link: "https://lgt.st/pouch",
   image: "pouch.jpeg",
   placeholderDataUrl:
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVR4nB3JsQmAMBQFwNvRpRxB+KRJsMgoqdzAVZ6S7uAwmLQNlZXnDDfae6WO0O3t1I8PuhYRDqtUbxoAAAAASUVORK5CYII=",

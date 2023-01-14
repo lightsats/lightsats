@@ -26,8 +26,20 @@ export async function completeWithdrawal(
   tips: (Tip & {
     tipper: User;
   })[],
-  deleteUsedWithdrawalLinks: boolean
+  deleteUsedWithdrawalLinks: boolean,
+  withdrawalLinkId: string | undefined
 ) {
+  if (withdrawalLinkId) {
+    await prisma.withdrawalLink.update({
+      where: {
+        id: withdrawalLinkId,
+      },
+      data: {
+        used: true,
+      },
+    });
+  }
+
   if (deleteUsedWithdrawalLinks) {
     try {
       await deleteUnusedWithdrawalLinks(userId, tipId, false);

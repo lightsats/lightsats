@@ -35,7 +35,8 @@ async function handlePayInvoice(req: NextApiRequest, res: NextApiResponse) {
       withdrawalRequest.invoice,
       userId,
       withdrawalRequest.tipId,
-      isWebln === "true" ? "webln" : "invoice"
+      isWebln === "true" ? "webln" : "invoice",
+      undefined
     );
     return res.status(StatusCodes.NO_CONTENT).end();
   } catch (error) {

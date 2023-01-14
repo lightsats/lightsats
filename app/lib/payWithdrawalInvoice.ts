@@ -11,7 +11,8 @@ export async function payWithdrawalInvoice(
   invoice: string,
   userId: string | undefined,
   tipId: string | undefined,
-  withdrawalMethod: WithdrawalMethod
+  withdrawalMethod: WithdrawalMethod,
+  withdrawalLinkId: string | undefined
 ) {
   if (!userId && !tipId) {
     throw new Error("Either userId or tipId must be provided");
@@ -228,7 +229,8 @@ export async function payWithdrawalInvoice(
       payment.details.bolt11,
       withdrawalMethod,
       tips,
-      withdrawalMethod === "lnurlw"
+      withdrawalMethod === "lnurlw",
+      withdrawalLinkId
     );
   }
 }

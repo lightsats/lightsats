@@ -59,18 +59,12 @@ async function initiatePayWithdrawalLink(
       invoice as string,
       withdrawalLink.userId ?? undefined,
       withdrawalLink.tipId ?? undefined,
-      "lnurlw"
+      "lnurlw",
+      withdrawalLink.id
     );
+
     res.json({
       status: "OK",
-    });
-    await prisma.withdrawalLink.update({
-      where: {
-        id: withdrawalLink.id,
-      },
-      data: {
-        used: true,
-      },
     });
   } catch (error) {
     console.error(
