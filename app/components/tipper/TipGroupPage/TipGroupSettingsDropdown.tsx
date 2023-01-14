@@ -215,7 +215,7 @@ export function TipGroupSettingsDropdown({
 
   return (
     <Dropdown placement="bottom-right" type="menu">
-      <Dropdown.Button flat>⚙️</Dropdown.Button>
+      <Dropdown.Button flat>⚙️&nbsp;Manage Tips</Dropdown.Button>
       <Dropdown.Menu
         css={{ $$dropdownMenuWidth: "300px" }}
         onAction={onDropdownAction}
