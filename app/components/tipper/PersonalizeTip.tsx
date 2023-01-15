@@ -3,12 +3,11 @@ import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 
 type PersonalizeTipProps = {
-  skip: () => void;
   href: string;
   bulk?: boolean;
 };
 
-export function PersonalizeTip({ href, skip, bulk }: PersonalizeTipProps) {
+export function PersonalizeTip({ href, bulk }: PersonalizeTipProps) {
   return (
     <Card css={{ dropShadow: "$sm", background: "$primary" }}>
       <Card.Body>
@@ -41,14 +40,6 @@ export function PersonalizeTip({ href, skip, bulk }: PersonalizeTipProps) {
               </Button>
             </a>
           </NextLink>
-        </Row>
-        <Spacer />
-        <Row justify="center">
-          <Button light onClick={skip}>
-            <Text color="white" size="small">
-              Skip for now
-            </Text>
-          </Button>
         </Row>
       </Card.Body>
     </Card>

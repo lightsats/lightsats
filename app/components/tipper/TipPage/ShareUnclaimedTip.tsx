@@ -109,7 +109,7 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
       </Card>
       <Spacer />
       <PrintCard tip={tip} />
-      <Spacer y={3} />
+      <Spacer />
     </>
   );
 }
