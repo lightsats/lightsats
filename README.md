@@ -1,6 +1,6 @@
 # lightsats ⚡
 
-Gift Sats without losing them✌🏼
+Gift sats without losing them✌🏼
 
 <font size="4">Create a tip now at https://lightsats.com</font>
 
