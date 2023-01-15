@@ -22,7 +22,11 @@ export default async function handler(
       id: id as string,
     },
     include: {
-      tips: true,
+      tips: {
+        orderBy: {
+          groupTipIndex: "asc",
+        },
+      },
     },
   });
   if (!tipGroup) {
@@ -59,8 +63,21 @@ async function updateTips(
     },
   });
 
+  const tippeeNameTemplate =
+    updateTipsRequest.tippeeNames?.length === 1
+      ? updateTipsRequest.tippeeNames[0]
+      : undefined;
+
   for (let i = 0; i < tipGroup.tips.length; i++) {
-    const tippeeName = updateTipsRequest.tippeeNames?.[i] ?? null;
+    const tippeeName = tippeeNameTemplate
+      ? tippeeNameTemplate.replaceAll("{{index}}", (i + 1).toString())
+      : updateTipsRequest.tippeeNames?.[i] ?? null;
+    console.log(
+      "Tip " + i + " tippeeName: ",
+      tippeeName,
+      "Template",
+      tippeeNameTemplate
+    );
     const note =
       updateTipsRequest.note?.replaceAll(
         "{{name}}",
@@ -72,7 +89,7 @@ async function updateTips(
         id: tipGroup.tips[i].id,
       },
       data: {
-        tippeeName: tippeeName,
+        tippeeName,
         note,
       },
     });

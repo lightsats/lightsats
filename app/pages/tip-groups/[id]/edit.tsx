@@ -29,6 +29,12 @@ const EditTipGroup: NextPage = () => {
     }
 
     const firstTip = tipGroup.tips[0];
+    const secondTip = tipGroup.tips[1];
+    if (!secondTip) {
+      throw new Error(
+        "Tip group should have at least two tips: " + tipGroup.id
+      );
+    }
 
     const expiresIn = Math.max(
       Math.ceil(differenceInHours(new Date(firstTip.expiry), new Date()) / 24),
@@ -42,6 +48,23 @@ const EditTipGroup: NextPage = () => {
         "{{name}}"
       );
     }
+    let tippeeName = undefined;
+    let enterIndividualNames = false;
+    if (
+      tipGroup.tips.every(
+        (tip) =>
+          tip.tippeeName &&
+          tip.tippeeName.indexOf(((tip.groupTipIndex || 0) + 1).toString()) > 0
+      )
+    ) {
+      tippeeName = firstTip.tippeeName?.replace("1", "{{index}}");
+    } else if (firstTip.tippeeName && firstTip.tippeeName !== DEFAULT_NAME) {
+      tippeeName = tipGroup.tips
+        .map((tip) => tip.tippeeName)
+        .filter((tipName) => tipName)
+        .join("\n");
+      enterIndividualNames = tippeeName.split("\n").length > 1;
+    }
 
     const defaultValues: Partial<TipFormData> = {
       currency: firstTip.currency || DEFAULT_FIAT_CURRENCY,
@@ -49,10 +72,9 @@ const EditTipGroup: NextPage = () => {
       expiryUnit: "days",
       tippeeLocale: firstTip.tippeeLocale || undefined,
       note,
-      tippeeName:
-        tipGroup.tips.map((tip) => tip.tippeeName ?? DEFAULT_NAME).join("\n") ||
-        undefined,
+      tippeeName,
       skipOnboarding: firstTip.skipOnboarding,
+      enterIndividualNames,
     };
     return defaultValues;
   }, [tipGroup]);

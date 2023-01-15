@@ -57,9 +57,12 @@ export type TipFormData = {
   tippeeName: string | undefined;
   tippeeLocale: string;
   skipOnboarding: boolean;
+  enterIndividualNames: boolean;
 };
 
-export type TipFormSubmitData = TipFormData & { satsAmount: number };
+export type TipFormSubmitData = Omit<TipFormData, "enterIndividualNames"> & {
+  satsAmount: number;
+};
 
 type InputMethod = "fiat" | "sats";
 
@@ -86,6 +89,7 @@ export function TipForm({
     expiresIn: 21,
     expiryUnit: "days",
     tippeeLocale: DEFAULT_LOCALE,
+    enterIndividualNames: false,
   },
   mode,
   quantity = 1,
@@ -128,7 +132,9 @@ export function TipForm({
   }
   const watchedCurrency = watch("currency");
   const watchedTippeeLocale = watch("tippeeLocale");
+  const watchedTippeeName = watch("tippeeName");
   const watchedSkipOnboarding = watch("skipOnboarding");
+  const watchedEnterIndividualNames = watch("enterIndividualNames");
   const watchedExchangeRate = exchangeRates?.[watchedCurrency];
   const watchedAmountFee = watchedExchangeRate
     ? calculateFee(
@@ -477,15 +483,48 @@ export function TipForm({
                 control={control}
                 render={({ field }) =>
                   quantity > 1 ? (
-                    <Textarea
-                      {...field}
-                      label={"Recipient names (one per line)"}
-                      placeholder={`Hal Finney
-Micheal Saylor`}
-                      fullWidth
-                      bordered
-                      rows={quantity}
-                    />
+                    <Col>
+                      <Row align="center" justify="space-between">
+                        <Row>
+                          <Text>Recipient names</Text>
+                        </Row>
+                        <Row align="flex-start" justify="flex-end">
+                          <Text size="small">Individual Names</Text>
+                          <Spacer x={0.5} />
+                          <Switch
+                            size="xs"
+                            checked={watchedEnterIndividualNames}
+                            onChange={(e) =>
+                              setValue("enterIndividualNames", e.target.checked)
+                            }
+                          />
+                        </Row>
+                      </Row>
+                      <Spacer y={0.5} />
+                      {watchedEnterIndividualNames && (
+                        <Text size="small">
+                          Entered{" "}
+                          {watchedTippeeName?.split("\n").filter((name) => name)
+                            .length || 0}
+                          &nbsp;/&nbsp;{quantity} names
+                        </Text>
+                      )}
+                      <Textarea
+                        {...field}
+                        aria-label={"Recipient names"}
+                        placeholder={
+                          watchedEnterIndividualNames
+                            ? `Hal Finney
+Micheal Saylor`
+                            : "Recipient {{index}}"
+                        }
+                        fullWidth
+                        bordered
+                        rows={
+                          watchedEnterIndividualNames ? quantity : undefined
+                        }
+                      />
+                    </Col>
                   ) : (
                     <Input
                       {...field}
