@@ -2,20 +2,16 @@ export type TipRequestBase = {
   currency: string;
   expiry: Date;
   skipOnboarding: boolean;
+  tippeeName?: string;
+  tippeeLocale: string;
+  note?: string;
+  tippeeNames?: string[]; // bulk tips only
 };
 
 export type CreateTipRequest = TipRequestBase & {
   amount: number;
   quantity: number;
 };
-export type UpdateTipRequest = TipRequestBase & {
-  tippeeName?: string;
-  tippeeLocale: string;
-  note?: string;
-};
+export type UpdateTipRequest = TipRequestBase;
 
-export type UpdateTipsRequest = TipRequestBase & {
-  tippeeLocale: string;
-  tippeeNames?: string[];
-  note?: string;
-};
+export type UpdateTipsRequest = TipRequestBase;

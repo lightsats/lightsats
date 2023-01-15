@@ -134,26 +134,25 @@ const TipGroupPage: NextPage = () => {
                 <Spacer />
               </>
             )}
-          </>
-        )}
-        <Spacer />
-        <Text h3>Tips</Text>
-        {isTipGroupActive(tipGroup) && (
-          <>
-            <TipGroupProgress tipGroup={tipGroup} />
             <Spacer />
+            <Text h3>Tips</Text>
+            {isTipGroupActive(tipGroup) && (
+              <>
+                <TipGroupProgress tipGroup={tipGroup} />
+              </>
+            )}
+            <Spacer />
+            <Grid.Container justify="center" css={{ gap: "$5" }}>
+              {tipGroup.tips.map((tip) => (
+                <SentTipCard
+                  tip={tip}
+                  key={tip.id}
+                  copyIndividualLinksEnabled={copyIndividualLinksEnabled}
+                />
+              ))}
+            </Grid.Container>
           </>
         )}
-        <Spacer />
-        <Grid.Container justify="center" gap={1}>
-          {tipGroup.tips.map((tip) => (
-            <SentTipCard
-              tip={tip}
-              key={tip.id}
-              copyIndividualLinksEnabled={copyIndividualLinksEnabled}
-            />
-          ))}
-        </Grid.Container>
       </>
     );
   } else {

@@ -10,6 +10,7 @@ import { calculateFee } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getTemplatedGroupTipProperties } from "pages/api/tipGroups/[id]/tips";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 import { CreateTipRequest } from "types/TipRequest";
 import { TipWithGroup } from "types/TipWithGroup";
@@ -125,6 +126,9 @@ async function handlePostTip(
     expiry,
     currency: createTipRequest.currency,
     skipOnboarding: createTipRequest.skipOnboarding,
+    note: createTipRequest.note || null,
+    tippeeName: createTipRequest.tippeeName,
+    tippeeLocale: createTipRequest.tippeeLocale,
     version: 1 /* 0=all tips in same bucket, 1=one wallet per tip */,
   };
 
@@ -139,6 +143,7 @@ async function handlePostTip(
             data: [...new Array(createTipRequest.quantity)].map((_, index) => ({
               ...createTipData,
               groupTipIndex: index,
+              ...getTemplatedGroupTipProperties(createTipRequest, index),
             })),
           },
         },

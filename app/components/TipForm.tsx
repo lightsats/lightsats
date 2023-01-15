@@ -58,9 +58,13 @@ export type TipFormData = {
   tippeeLocale: string;
   skipOnboarding: boolean;
   enterIndividualNames: boolean;
+  showAdvancedOptions: boolean;
 };
 
-export type TipFormSubmitData = Omit<TipFormData, "enterIndividualNames"> & {
+export type TipFormSubmitData = Omit<
+  TipFormData,
+  "enterIndividualNames" | "showAdvancedOptions"
+> & {
   satsAmount: number;
 };
 
@@ -71,6 +75,8 @@ const formStyle: React.CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
+  width: "320px",
+  maxWidth: "100%",
 };
 
 type TipFormProps = {
@@ -90,6 +96,7 @@ export function TipForm({
     expiryUnit: "days",
     tippeeLocale: DEFAULT_LOCALE,
     enterIndividualNames: false,
+    showAdvancedOptions: false,
   },
   mode,
   quantity = 1,
@@ -128,13 +135,14 @@ export function TipForm({
   const watchedAmount = watch("amount");
   let watchedQuantity = watch("quantity");
   if (isNaN(watchedQuantity)) {
-    watchedQuantity = 1;
+    watchedQuantity = quantity;
   }
   const watchedCurrency = watch("currency");
   const watchedTippeeLocale = watch("tippeeLocale");
   const watchedTippeeName = watch("tippeeName");
   const watchedSkipOnboarding = watch("skipOnboarding");
   const watchedEnterIndividualNames = watch("enterIndividualNames");
+  const watchedShowAdvancedOptions = watch("showAdvancedOptions");
   const watchedExchangeRate = exchangeRates?.[watchedCurrency];
   const watchedAmountFee = watchedExchangeRate
     ? calculateFee(
@@ -231,10 +239,10 @@ export function TipForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
-      <Card css={{ dropShadow: "$sm" }}>
-        <Card.Body>
-          {mode === "create" && (
-            <>
+      {mode === "create" && (
+        <>
+          <Card css={{ dropShadow: "$sm", w: "100%" }}>
+            <Card.Body>
               <Row justify="space-between" align="center">
                 <Col>Currency</Col>
                 <Col>
@@ -249,56 +257,6 @@ export function TipForm({
               </Row>
               <Divider />
               <Spacer />
-            </>
-          )}
-
-          {mode === "update" && (
-            <>
-              <Tooltip
-                content={
-                  <>
-                    <Text>
-                      {
-                        "Improve the recipient's initial experience by choosing their main language and currency."
-                      }
-                    </Text>
-                    <Spacer />
-                    <Text>
-                      {
-                        "They probably don't know about Bitcoin or satoshis yet!"
-                      }
-                    </Text>
-                  </>
-                }
-              >
-                <Text>Recipient Language & Currency</Text>
-              </Tooltip>
-              <Spacer y={0.25} />
-              <Row justify="space-between" align="flex-end">
-                <CustomSelect
-                  options={tippeeLocaleSelectOptions}
-                  defaultValue={DEFAULT_LOCALE}
-                  value={watchedTippeeLocale}
-                  onChange={setDropdownSelectedTippeeLocale}
-                  width="100px"
-                />
-
-                <Spacer x={0.5} />
-                {exchangeRateSelectOptions && (
-                  <CustomSelect
-                    options={exchangeRateSelectOptions}
-                    value={watchedCurrency}
-                    onChange={setDropdownSelectedCurrency}
-                    width="100px"
-                  />
-                )}
-              </Row>
-              <Spacer />
-            </>
-          )}
-
-          {mode === "create" && (
-            <>
               <Row>
                 <Col>
                   Amount
@@ -474,15 +432,96 @@ export function TipForm({
                   </Col>
                 </Row>
               )}
-            </>
+            </Card.Body>
+          </Card>
+          <Spacer />
+        </>
+      )}
+
+      <Card css={{ dropShadow: "$sm" }}>
+        <Card.Body>
+          {mode === "create" && (
+            <Row align="center" justify="space-between">
+              <Text>Advanced Options</Text>
+              <Switch
+                checked={watchedShowAdvancedOptions}
+                onChange={(e) =>
+                  setValue("showAdvancedOptions", e.target.checked)
+                }
+              />
+            </Row>
           )}
-          {mode === "update" && (
+
+          {watchedShowAdvancedOptions && (
             <>
+              {mode === "create" && <Spacer />}
+              <Row align="flex-start">
+                <Col>
+                  <Text>⌛ Tip expiry</Text>
+                  <Text
+                    small
+                    css={{ mt: 6, lineHeight: 1.2, display: "inline-block" }}
+                  >
+                    Days until the tip returns back to you.
+                  </Text>
+                </Col>
+                <Col css={{ ta: "right" }}>
+                  <Controller
+                    name="expiresIn"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        aria-label="Tip expires in"
+                        {...field}
+                        {...register("expiresIn", {
+                          valueAsNumber: true,
+                        })}
+                        min={1}
+                        style={{
+                          textAlign: "center",
+                        }}
+                        width="100px"
+                        type="number"
+                        inputMode="decimal"
+                        bordered
+                        color="primary"
+                      />
+                    )}
+                  />
+                </Col>
+              </Row>
+              <Spacer />
+              <Row align="flex-start">
+                <Col>
+                  <Text css={{ whiteSpace: "nowrap" }}>⏭️ Skip onboarding</Text>
+                </Col>
+                <Col css={{ ta: "right" }}>
+                  <Controller
+                    name="skipOnboarding"
+                    control={control}
+                    render={({ field }) => (
+                      <Switch
+                        {...field}
+                        checked={field.value}
+                        color={watchedSkipOnboarding ? "warning" : undefined}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                      />
+                    )}
+                  />
+                </Col>
+              </Row>
+              <Text
+                small
+                css={{ mt: 0, mb: 6, lineHeight: 1.2, display: "inline-block" }}
+              >
+                Allow your recipient to directly withraw without logging in.
+              </Text>
+              <Divider />
               <Controller
                 name="tippeeName"
                 control={control}
                 render={({ field }) =>
-                  quantity > 1 ? (
+                  watchedQuantity > 1 ? (
                     <Col>
                       <Row align="center" justify="space-between">
                         <Row>
@@ -506,7 +545,7 @@ export function TipForm({
                           Entered{" "}
                           {watchedTippeeName?.split("\n").filter((name) => name)
                             .length || 0}
-                          &nbsp;/&nbsp;{quantity} names
+                          &nbsp;/&nbsp;{watchedQuantity} names
                         </Text>
                       )}
                       <Textarea
@@ -521,7 +560,9 @@ Micheal Saylor`
                         fullWidth
                         bordered
                         rows={
-                          watchedEnterIndividualNames ? quantity : undefined
+                          watchedEnterIndividualNames
+                            ? watchedQuantity
+                            : undefined
                         }
                       />
                     </Col>
@@ -545,10 +586,12 @@ Micheal Saylor`
                   <Textarea
                     {...field}
                     label={
-                      quantity > 1 ? "Note to recipients" : "Note to recipient"
+                      watchedQuantity > 1
+                        ? "Note to recipients"
+                        : "Note to recipient"
                     }
                     placeholder={
-                      quantity > 1
+                      watchedQuantity > 1
                         ? "Thank you {{name}} for your amazing service!"
                         : "Thank you for your amazing service!"
                     }
@@ -558,83 +601,32 @@ Micheal Saylor`
                   />
                 )}
               />
+              <Spacer />
+              <Text>Recipient Language</Text>
+              <Text size="small">
+                {
+                  "Your recipient's language is autodetected, but you can explictly set it if needed."
+                }
+              </Text>
+              <Spacer y={0.5} />
+              <CustomSelect
+                options={tippeeLocaleSelectOptions}
+                defaultValue={DEFAULT_LOCALE}
+                value={watchedTippeeLocale}
+                onChange={setDropdownSelectedTippeeLocale}
+                width="100px"
+              />
             </>
           )}
         </Card.Body>
       </Card>
       <Spacer />
-      <Card css={{ dropShadow: "$sm" }}>
-        <Card.Body>
-          <Row align="flex-start">
-            <Col>
-              <Text>⌛ Tip expiry</Text>
-              <Text
-                small
-                css={{ mt: 6, lineHeight: 1.2, display: "inline-block" }}
-              >
-                Days until the tip returns back to you.
-              </Text>
-            </Col>
-            <Col css={{ ta: "right" }}>
-              <Controller
-                name="expiresIn"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    aria-label="Tip expires in"
-                    {...field}
-                    {...register("expiresIn", {
-                      valueAsNumber: true,
-                    })}
-                    min={1}
-                    style={{
-                      textAlign: "center",
-                    }}
-                    width="100px"
-                    type="number"
-                    inputMode="decimal"
-                    bordered
-                    color="primary"
-                  />
-                )}
-              />
-            </Col>
-          </Row>
-          <Spacer />
-          <Row align="flex-start">
-            <Col>
-              <Text css={{ whiteSpace: "nowrap" }}>⏭️ Skip onboarding</Text>
-              <Text
-                small
-                css={{ mt: 6, lineHeight: 1.2, display: "inline-block" }}
-              >
-                Allow your recipient to directly withraw.
-              </Text>
-            </Col>
-            <Col css={{ ta: "right" }}>
-              <Controller
-                name="skipOnboarding"
-                control={control}
-                render={({ field }) => (
-                  <Switch
-                    {...field}
-                    checked={field.value}
-                    color={watchedSkipOnboarding ? "warning" : undefined}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                  />
-                )}
-              />
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
-      <Spacer y={1} />
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? (
           <Loading color="currentColor" size="sm" />
         ) : (
           <>
-            {quantity > 1 || watchedQuantity > 1
+            {watchedQuantity > 1
               ? mode === "create"
                 ? "Create tips"
                 : "Update tips"

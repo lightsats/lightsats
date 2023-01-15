@@ -106,48 +106,52 @@ export function TipGroupSettingsDropdown({
     () =>
       tipGroup
         ? [
-            <Dropdown.Item
-              key={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
-              icon={
-                <Icon>
-                  <PencilIcon />
-                </Icon>
-              }
-            >
-              Bulk edit
-            </Dropdown.Item>,
-            <Dropdown.Item
-              key={`${PageRoutes.tipGroups}/${tipGroup.id}/print`}
-              icon={
-                <Icon>
-                  <PrinterIcon />
-                </Icon>
-              }
-            >
-              Print
-            </Dropdown.Item>,
-            <Dropdown.Item
-              key={actionKeys.copyAll}
-              icon={
-                <Icon>
-                  <ClipboardDocumentListIcon />
-                </Icon>
-              }
-            >
-              Copy all claim links
-            </Dropdown.Item>,
-            <Dropdown.Item
-              key={actionKeys.copyIndividual}
-              icon={
-                <Icon>
-                  <DocumentDuplicateIcon />
-                </Icon>
-              }
-            >
-              {copyIndividualLinksEnabled
-                ? "Finish copying"
-                : "Copy individual claim links"}
-            </Dropdown.Item>,
+            ...(tipGroup.status === "FUNDED"
+              ? [
+                  <Dropdown.Item
+                    key={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
+                    icon={
+                      <Icon>
+                        <PencilIcon />
+                      </Icon>
+                    }
+                  >
+                    Bulk edit
+                  </Dropdown.Item>,
+                  <Dropdown.Item
+                    key={`${PageRoutes.tipGroups}/${tipGroup.id}/print`}
+                    icon={
+                      <Icon>
+                        <PrinterIcon />
+                      </Icon>
+                    }
+                  >
+                    Print
+                  </Dropdown.Item>,
+                  <Dropdown.Item
+                    key={actionKeys.copyAll}
+                    icon={
+                      <Icon>
+                        <ClipboardDocumentListIcon />
+                      </Icon>
+                    }
+                  >
+                    Copy all claim links
+                  </Dropdown.Item>,
+                  <Dropdown.Item
+                    key={actionKeys.copyIndividual}
+                    icon={
+                      <Icon>
+                        <DocumentDuplicateIcon />
+                      </Icon>
+                    }
+                  >
+                    {copyIndividualLinksEnabled
+                      ? "Finish copying"
+                      : "Copy individual claim links"}
+                  </Dropdown.Item>,
+                ]
+              : []),
             ...((reclaimableTips?.length ?? 0) > 0 ||
             tipGroup.status === "UNFUNDED"
               ? [
