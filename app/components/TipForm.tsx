@@ -29,7 +29,7 @@ import {
   USE_PREV_TIP_PROPERTIES,
 } from "lib/constants";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
-import { DEFAULT_LOCALE, locales } from "lib/i18n/locales";
+import { locales } from "lib/i18n/locales";
 import {
   calculateFee,
   getFiatAmount,
@@ -94,7 +94,7 @@ export function TipForm({
     currency: "USD",
     expiresIn: 21,
     expiryUnit: "days",
-    tippeeLocale: DEFAULT_LOCALE,
+    tippeeLocale: undefined,
     enterIndividualNames: false,
     showAdvancedOptions: false,
   },
@@ -611,7 +611,7 @@ Micheal Saylor`
               <Spacer y={0.5} />
               <CustomSelect
                 options={tippeeLocaleSelectOptions}
-                defaultValue={DEFAULT_LOCALE}
+                isClearable
                 value={watchedTippeeLocale}
                 onChange={setDropdownSelectedTippeeLocale}
                 width="100px"
