@@ -10,7 +10,7 @@ export const tip: Item[] = [
     placeholderDataUrl:
       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAALUlEQVR4nGNgYGDg4uISERFhgIADBw58+/YVyvn9+/eJEyegHBEREVZWViALAB/1CxAyCekdAAAAAElFTkSuQmCC",
     name: "Lightsats",
-    slogan: "Gift Sats without losing them✌🏼",
+    slogan: "Gift sats without losing them✌🏼",
     link: "/",
     lightsatsRecommended: true,
   },

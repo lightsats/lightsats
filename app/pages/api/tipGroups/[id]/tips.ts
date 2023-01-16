@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
-import { UpdateTipsRequest } from "types/TipRequest";
+import { TipRequestBase, UpdateTipsRequest } from "types/TipRequest";
 
 export default async function handler(
   req: NextApiRequest,
@@ -63,35 +63,12 @@ async function updateTips(
     },
   });
 
-  const tippeeNameTemplate =
-    updateTipsRequest.tippeeNames?.length === 1
-      ? updateTipsRequest.tippeeNames[0]
-      : undefined;
-
   for (let i = 0; i < tipGroup.tips.length; i++) {
-    const tippeeName = tippeeNameTemplate
-      ? tippeeNameTemplate.replaceAll("{{index}}", (i + 1).toString())
-      : updateTipsRequest.tippeeNames?.[i] ?? null;
-    console.log(
-      "Tip " + i + " tippeeName: ",
-      tippeeName,
-      "Template",
-      tippeeNameTemplate
-    );
-    const note =
-      updateTipsRequest.note?.replaceAll(
-        "{{name}}",
-        tippeeName ?? DEFAULT_NAME
-      ) ?? null;
-
     await prisma.tip.update({
       where: {
         id: tipGroup.tips[i].id,
       },
-      data: {
-        tippeeName,
-        note,
-      },
+      data: getTemplatedGroupTipProperties(updateTipsRequest, i),
     });
   }
 
@@ -109,4 +86,25 @@ async function updateTips(
   }
 
   return res.json(updatedTipGroup);
+}
+
+export function getTemplatedGroupTipProperties(
+  tipRequest: TipRequestBase,
+  index: number
+) {
+  const tippeeNameTemplate =
+    tipRequest.tippeeNames?.length === 1
+      ? tipRequest.tippeeNames[0]
+      : undefined;
+
+  const tippeeName = tippeeNameTemplate
+    ? tippeeNameTemplate.replaceAll("{{index}}", (index + 1).toString())
+    : tipRequest.tippeeNames?.[index] ?? null;
+  const note =
+    tipRequest.note?.replaceAll("{{name}}", tippeeName ?? DEFAULT_NAME) ?? null;
+
+  return {
+    tippeeName,
+    note,
+  };
 }

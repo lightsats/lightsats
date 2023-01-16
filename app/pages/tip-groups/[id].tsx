@@ -32,7 +32,6 @@ const pollTipGroupConfig: SWRConfiguration = { refreshInterval: 1000 };
 const TipGroupPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const [skipPersonalize, setSkipPersonalize] = React.useState(false);
   const [copyIndividualLinksEnabled, setCopyIndividualLinksEnabled] =
     React.useState(false);
 
@@ -79,19 +78,6 @@ const TipGroupPage: NextPage = () => {
       );
     }
 
-    if (!skipPersonalize && (!firstTip.note || !firstTip.tippeeName)) {
-      return (
-        <>
-          {header}
-          <PersonalizeTip
-            href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
-            skip={() => setSkipPersonalize(true)}
-            bulk
-          />
-        </>
-      );
-    }
-
     return (
       <>
         {header}
@@ -130,30 +116,32 @@ const TipGroupPage: NextPage = () => {
                     </Card>
                   </Card.Body>
                 </Card>
-
-                <Spacer />
               </>
             )}
-          </>
-        )}
-        <Spacer />
-        <Text h3>Tips</Text>
-        {isTipGroupActive(tipGroup) && (
-          <>
-            <TipGroupProgress tipGroup={tipGroup} />
             <Spacer />
+            <PersonalizeTip
+              href={`${PageRoutes.tipGroups}/${tipGroup.id}/edit`}
+              bulk
+            />
+            <Spacer />
+            <Text h3>Tips</Text>
+            {isTipGroupActive(tipGroup) && (
+              <>
+                <TipGroupProgress tipGroup={tipGroup} />
+              </>
+            )}
+            <Spacer />
+            <Grid.Container justify="center" css={{ gap: "$5" }}>
+              {tipGroup.tips.map((tip) => (
+                <SentTipCard
+                  tip={tip}
+                  key={tip.id}
+                  copyIndividualLinksEnabled={copyIndividualLinksEnabled}
+                />
+              ))}
+            </Grid.Container>
           </>
         )}
-        <Spacer />
-        <Grid.Container justify="center" gap={1}>
-          {tipGroup.tips.map((tip) => (
-            <SentTipCard
-              tip={tip}
-              key={tip.id}
-              copyIndividualLinksEnabled={copyIndividualLinksEnabled}
-            />
-          ))}
-        </Grid.Container>
       </>
     );
   } else {

@@ -29,7 +29,6 @@ const TipPage: NextPage = () => {
   const [prevTipStatus, setPrevTipStatus] = React.useState<
     TipStatus | undefined
   >();
-  const [skipPersonalize, setSkipPersonalize] = React.useState(false);
 
   const { mutate } = useSWRConfig();
   const mutateTips = React.useCallback(
@@ -106,24 +105,6 @@ const TipPage: NextPage = () => {
   }, [hasExpired, id, mutateTips, router]);
 
   if (tip) {
-    if (
-      !skipPersonalize &&
-      !hasExpired &&
-      expirableTipStatuses.indexOf(tip.status) > -1 &&
-      !tip.note
-    ) {
-      return (
-        <>
-          {tip.groupId && <TipGroupLink groupId={tip.groupId} />}
-          <ClaimProgressTracker tipId={tip.id} />
-          <Spacer />
-          <PersonalizeTip
-            href={`${PageRoutes.tips}/${tip.id}/edit`}
-            skip={() => setSkipPersonalize(true)}
-          />
-        </>
-      );
-    }
     return (
       <>
         {tip.groupId && <TipGroupLink groupId={tip.groupId} />}
@@ -161,11 +142,7 @@ const TipPage: NextPage = () => {
 
         {expirableTipStatuses.indexOf(tip.status) > -1 && (
           <>
-            <NextLink href={`${PageRoutes.tips}/${tip.id}/edit`} passHref>
-              <a>
-                <Button>Edit Tip</Button>
-              </a>
-            </NextLink>
+            <PersonalizeTip href={`${PageRoutes.tips}/${tip.id}/edit`} />
             <Spacer />
           </>
         )}
@@ -254,8 +231,8 @@ export { getStaticProps, getStaticPaths };
 function TipGroupLink({ groupId }: { groupId: string }) {
   return (
     <Text blockquote>
-      {"This tip is part of a group"}
-      <Link href={`${PageRoutes.tipGroups}/${groupId}`}>Go to the group</Link>
+      {"This tip is part of a group."}&nbsp;
+      <Link href={`${PageRoutes.tipGroups}/${groupId}`}>Open</Link>
     </Text>
   );
 }

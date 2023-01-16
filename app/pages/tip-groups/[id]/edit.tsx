@@ -75,6 +75,7 @@ const EditTipGroup: NextPage = () => {
       tippeeName,
       skipOnboarding: firstTip.skipOnboarding,
       enterIndividualNames,
+      showAdvancedOptions: true,
     };
     return defaultValues;
   }, [tipGroup]);

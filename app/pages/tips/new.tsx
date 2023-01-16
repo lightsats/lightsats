@@ -25,6 +25,10 @@ const NewTip: NextPage = () => {
             [data.expiryUnit]: data.expiresIn,
           }),
           skipOnboarding: data.skipOnboarding,
+          tippeeLocale: data.tippeeLocale,
+          note: data.note,
+          tippeeName: data.tippeeName,
+          tippeeNames: data.tippeeName?.split("\n"),
         };
         const result = await fetch("/api/tipper/tips", {
           method: "POST",

@@ -39,6 +39,7 @@ const EditTip: NextPage = () => {
       note: tip.note || undefined,
       tippeeName: tip.tippeeName || undefined,
       skipOnboarding: tip.skipOnboarding,
+      showAdvancedOptions: true,
     };
     return defaultValues;
   }, [tip]);
