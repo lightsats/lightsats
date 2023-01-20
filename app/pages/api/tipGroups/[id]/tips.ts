@@ -57,9 +57,9 @@ async function updateTips(
     },
     data: {
       expiry: updateTipsRequest.expiry,
-      currency: updateTipsRequest.currency,
-      tippeeLocale: updateTipsRequest.tippeeLocale,
-      skipOnboarding: updateTipsRequest.skipOnboarding,
+      currency: updateTipsRequest.currency || null,
+      tippeeLocale: updateTipsRequest.tippeeLocale || null,
+      skipOnboarding: updateTipsRequest.skipOnboarding ?? false,
     },
   });
 

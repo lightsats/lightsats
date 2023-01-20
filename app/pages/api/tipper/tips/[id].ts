@@ -103,11 +103,11 @@ async function updateTip(
     },
     data: {
       expiry: updateTipRequest.expiry,
-      currency: updateTipRequest.currency,
+      currency: updateTipRequest.currency || null,
       note: updateTipRequest.note || null,
-      tippeeName: updateTipRequest.tippeeName,
-      tippeeLocale: updateTipRequest.tippeeLocale,
-      skipOnboarding: updateTipRequest.skipOnboarding,
+      tippeeName: updateTipRequest.tippeeName || null,
+      tippeeLocale: updateTipRequest.tippeeLocale || null,
+      skipOnboarding: updateTipRequest.skipOnboarding ?? false,
     },
   });
 
