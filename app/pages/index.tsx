@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  Grid,
-  Loading,
-  Spacer,
-  Text,
-} from "@nextui-org/react";
+import { Avatar, Button, Card, Grid, Spacer, Text } from "@nextui-org/react";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { useLeaderboardContents } from "hooks/useLeaderboardContents";
@@ -14,6 +6,7 @@ import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import React, { useRef } from "react";
 import { useInViewport } from "react-in-viewport";
 import { Tweet } from "react-twitter-widgets";
@@ -61,6 +54,8 @@ function HomepageCTA() {
 function Homepage() {
   const { data: leaderboardContents } = useLeaderboardContents();
   const [pageLoaded, setPageLoaded] = React.useState(false);
+  const { status: sessionStatus } = useSession();
+  const router = useRouter();
 
   React.useEffect(() => {
     const onPageLoad = () => {
@@ -74,10 +69,11 @@ function Homepage() {
       return () => window.removeEventListener("load", onPageLoad);
     }
   }, []);
-
-  if (!leaderboardContents) {
-    return <Loading color="currentColor" size="lg" />;
-  }
+  React.useEffect(() => {
+    if (sessionStatus === "authenticated") {
+      router.push(PageRoutes.dashboard);
+    }
+  }, [router, sessionStatus]);
 
   return (
     <>
@@ -184,7 +180,7 @@ function Homepage() {
         </Card>
       </Grid.Container>
       <Spacer y={5} />
-      <TipCounter totalSatsSent={leaderboardContents.totalSatsSent} />
+      <TipCounter totalSatsSent={leaderboardContents?.totalSatsSent || 0} />
       <Spacer y={5} />
       <Text h3 style={{ textAlign: "center" }}>
         🧡 What others have to say about us
@@ -221,58 +217,62 @@ function Homepage() {
         Join the tipping battle
       </Text>
       <Spacer />
-      <Avatar.Group count={leaderboardContents.numTippers - 3}>
-        <Avatar
-          size="xl"
-          text="name"
-          stacked
-          src="https://pbs.twimg.com/profile_images/558632546398134274/LpoJ5y4L_400x400.jpeg"
-        />
-        <Avatar
-          size="xl"
-          text="name"
-          stacked
-          src="https://secure.gravatar.com/avatar/07e22939e7672b38c56615068c4c715f?size=200&default=mm&rating=g"
-        />
-        <Avatar
-          size="xl"
-          text="name"
-          stacked
-          src="https://pbs.twimg.com/profile_images/1476767205689724932/NZUSZUTd_400x400.jpg"
-        />
-      </Avatar.Group>
+      {leaderboardContents && (
+        <Avatar.Group count={leaderboardContents.numTippers - 3}>
+          <Avatar
+            size="xl"
+            text="name"
+            stacked
+            src="https://pbs.twimg.com/profile_images/558632546398134274/LpoJ5y4L_400x400.jpeg"
+          />
+          <Avatar
+            size="xl"
+            text="name"
+            stacked
+            src="https://secure.gravatar.com/avatar/07e22939e7672b38c56615068c4c715f?size=200&default=mm&rating=g"
+          />
+          <Avatar
+            size="xl"
+            text="name"
+            stacked
+            src="https://pbs.twimg.com/profile_images/1476767205689724932/NZUSZUTd_400x400.jpg"
+          />
+        </Avatar.Group>
+      )}
       <Spacer y={0.25} />
-      <Text style={{ textAlign: "center" }}>
-        Join{" "}
-        <a
-          href="https://lightsats.com/users/cl9q2861o0015grf6z64ls8mj"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Juan
-        </a>
-        ,{" "}
-        <a
-          href="https://lightsats.com/users/cl9milvij0003j9f6eseeugra"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          René
-        </a>
-        ,{" "}
-        <a
-          href="https://lightsats.com/users/cl9gmxceu0000fjf67ozj59n5"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Roland
-        </a>{" "}
-        &{" "}
-        <NextLink href={PageRoutes.leaderboard}>
-          <a>{leaderboardContents.numTippers - 3} others</a>
-        </NextLink>{" "}
-        to 🍊💊 the world around you.
-      </Text>
+      {leaderboardContents && (
+        <Text style={{ textAlign: "center" }}>
+          Join{" "}
+          <a
+            href="https://lightsats.com/users/cl9q2861o0015grf6z64ls8mj"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Juan
+          </a>
+          ,{" "}
+          <a
+            href="https://lightsats.com/users/cl9milvij0003j9f6eseeugra"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            René
+          </a>
+          ,{" "}
+          <a
+            href="https://lightsats.com/users/cl9gmxceu0000fjf67ozj59n5"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Roland
+          </a>{" "}
+          &{" "}
+          <NextLink href={PageRoutes.leaderboard}>
+            <a>{leaderboardContents.numTippers - 3} others</a>
+          </NextLink>{" "}
+          to 🍊💊 the world around you.
+        </Text>
+      )}
       <Spacer y={2} />
       <HomepageCTA />
       <Spacer y={5} />
