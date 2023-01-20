@@ -51,22 +51,87 @@ async function getBtcUsdPrice() {
 }
 
 async function getFiatExchangeRates() {
-  const exchangeRatesResponse = await fetch(
-    `https://open.er-api.com/v6/latest/USD`,
-    {
-      method: "GET",
-    }
-  );
+  const sources = (
+    await Promise.all([
+      getFiatExchangeRatesYadio(),
+      getFiatExchangeRatesErApi(),
+    ])
+  ).filter((rates) => rates) as ExchangeRates[];
 
-  if (!exchangeRatesResponse.ok) {
-    throw new Error("Failed to get exchange rates data");
+  const mergedRates: ExchangeRates = {};
+  for (const source of sources) {
+    for (const entry of Object.entries(source)) {
+      if (!mergedRates[entry[0]]) {
+        // console.log(
+        //   "Adding ",
+        //   entry[0],
+        //   entry[1],
+        //   "source",
+        //   sources.indexOf(source)
+        // );
+        mergedRates[entry[0]] = entry[1];
+      } else {
+        // console.log(
+        //   "Already exists ",
+        //   entry[0],
+        //   "primary source",
+        //   mergedRates[entry[0]],
+        //   "next source",
+        //   entry[1]
+        // );
+      }
+    }
   }
+  return mergedRates;
+}
 
-  const exhangeRates = (
-    (await exchangeRatesResponse.json()) as {
-      rates: { [currency: string]: number };
+async function getFiatExchangeRatesYadio() {
+  try {
+    const exchangeRatesResponse = await fetch(
+      `https://api.yadio.io/exrates/USD`,
+      {
+        method: "GET",
+      }
+    );
+
+    if (!exchangeRatesResponse.ok) {
+      throw new Error("Failed to get exchange rates data");
     }
-  ).rates;
 
-  return exhangeRates;
+    const exhangeRates = (
+      (await exchangeRatesResponse.json()) as {
+        USD: { [currency: string]: number };
+      }
+    ).USD;
+
+    return exhangeRates;
+  } catch (error) {
+    console.error("Failed to fetch exchange rates from yadio", error);
+    return undefined;
+  }
+}
+async function getFiatExchangeRatesErApi() {
+  try {
+    const exchangeRatesResponse = await fetch(
+      `https://open.er-api.com/v6/latest/USD`,
+      {
+        method: "GET",
+      }
+    );
+
+    if (!exchangeRatesResponse.ok) {
+      throw new Error("Failed to get exchange rates data");
+    }
+
+    const exhangeRates = (
+      (await exchangeRatesResponse.json()) as {
+        rates: { [currency: string]: number };
+      }
+    ).rates;
+
+    return exhangeRates;
+  } catch (error) {
+    console.error("Failed to fetch exchange rates from er-api", error);
+    return undefined;
+  }
 }
