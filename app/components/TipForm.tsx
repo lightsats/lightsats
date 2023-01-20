@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Col,
+  Collapse,
   Input,
   Loading,
   Row,
@@ -237,6 +238,170 @@ export function TipForm({
     [watchedExchangeRate, isSubmitting, inputMethod, mode, onSubmitProp]
   );
 
+  // TODO: move to a separate component
+  const advancedOptions = watchedShowAdvancedOptions && (
+    <>
+      {mode === "create" && <Spacer />}
+      <Row align="flex-start">
+        <Col>
+          <Text>⌛ Tip expiry</Text>
+          <Text small css={{ mt: 6, lineHeight: 1.2, display: "inline-block" }}>
+            Days until the tip returns back to you.
+          </Text>
+        </Col>
+        <Col css={{ ta: "right" }}>
+          <Controller
+            name="expiresIn"
+            control={control}
+            render={({ field }) => (
+              <Input
+                aria-label="Tip expires in"
+                {...field}
+                {...register("expiresIn", {
+                  valueAsNumber: true,
+                })}
+                min={1}
+                style={{
+                  textAlign: "center",
+                }}
+                width="100px"
+                type="number"
+                inputMode="decimal"
+                bordered
+                color="primary"
+              />
+            )}
+          />
+        </Col>
+      </Row>
+      <Spacer />
+      <Row align="flex-start">
+        <Col>
+          <Text css={{ whiteSpace: "nowrap" }}>⏭️ Skip onboarding</Text>
+        </Col>
+        <Col css={{ ta: "right" }}>
+          <Controller
+            name="skipOnboarding"
+            control={control}
+            render={({ field }) => (
+              <Switch
+                {...field}
+                checked={field.value}
+                color={watchedSkipOnboarding ? "warning" : undefined}
+                onChange={(e) => field.onChange(e.target.checked)}
+              />
+            )}
+          />
+        </Col>
+      </Row>
+      <Text
+        small
+        css={{
+          mt: 0,
+          mb: 6,
+          lineHeight: 1.2,
+          display: "inline-block",
+        }}
+      >
+        Allow your recipient to directly withraw without logging in.
+      </Text>
+      <Divider />
+      <Controller
+        name="tippeeName"
+        control={control}
+        render={({ field }) =>
+          watchedQuantity > 1 ? (
+            <Col>
+              <Row align="center" justify="space-between">
+                <Row>
+                  <Text>Recipient names</Text>
+                </Row>
+                <Row align="flex-start" justify="flex-end">
+                  <Text size="small">Individual Names</Text>
+                  <Spacer x={0.5} />
+                  <Switch
+                    size="xs"
+                    checked={watchedEnterIndividualNames}
+                    onChange={(e) =>
+                      setValue("enterIndividualNames", e.target.checked)
+                    }
+                  />
+                </Row>
+              </Row>
+              <Spacer y={0.5} />
+              {watchedEnterIndividualNames && (
+                <Text size="small">
+                  Entered{" "}
+                  {watchedTippeeName?.split("\n").filter((name) => name)
+                    .length || 0}
+                  &nbsp;/&nbsp;{watchedQuantity} names
+                </Text>
+              )}
+              <Textarea
+                {...field}
+                aria-label={"Recipient names"}
+                placeholder={
+                  watchedEnterIndividualNames
+                    ? `Hal Finney
+Micheal Saylor`
+                    : "Recipient {{index}}"
+                }
+                fullWidth
+                bordered
+                rows={watchedEnterIndividualNames ? watchedQuantity : undefined}
+              />
+            </Col>
+          ) : (
+            <Input
+              {...field}
+              label="Recipient name"
+              placeholder="Hal Finney"
+              maxLength={255}
+              fullWidth
+              bordered
+            />
+          )
+        }
+      />
+      <Spacer />
+      <Controller
+        name="note"
+        control={control}
+        render={({ field }) => (
+          <Textarea
+            {...field}
+            label={
+              watchedQuantity > 1 ? "Note to recipients" : "Note to recipient"
+            }
+            placeholder={
+              watchedQuantity > 1
+                ? "Thank you {{name}} for your amazing service!"
+                : "Thank you for your amazing service!"
+            }
+            maxLength={255}
+            fullWidth
+            bordered
+          />
+        )}
+      />
+      <Spacer />
+      <Text>Recipient Language</Text>
+      <Text size="small">
+        {
+          "Your recipient's language is autodetected, but you can explictly set it if needed."
+        }
+      </Text>
+      <Spacer y={0.5} />
+      <CustomSelect
+        options={tippeeLocaleSelectOptions}
+        isClearable
+        value={watchedTippeeLocale}
+        onChange={setDropdownSelectedTippeeLocale}
+        width="100px"
+      />
+    </>
+  );
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
       {mode === "create" && (
@@ -438,188 +603,29 @@ export function TipForm({
         </>
       )}
 
-      <Card css={{ dropShadow: "$sm" }}>
-        <Card.Body>
-          {mode === "create" && (
-            <Row align="center" justify="space-between">
-              <Text>Advanced Options</Text>
-              <Switch
-                checked={watchedShowAdvancedOptions}
-                onChange={(e) =>
-                  setValue("showAdvancedOptions", e.target.checked)
-                }
-              />
-            </Row>
-          )}
-
-          {watchedShowAdvancedOptions && (
-            <>
-              {mode === "create" && <Spacer />}
-              <Row align="flex-start">
-                <Col>
-                  <Text>⌛ Tip expiry</Text>
-                  <Text
-                    small
-                    css={{ mt: 6, lineHeight: 1.2, display: "inline-block" }}
-                  >
-                    Days until the tip returns back to you.
-                  </Text>
-                </Col>
-                <Col css={{ ta: "right" }}>
-                  <Controller
-                    name="expiresIn"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        aria-label="Tip expires in"
-                        {...field}
-                        {...register("expiresIn", {
-                          valueAsNumber: true,
-                        })}
-                        min={1}
-                        style={{
-                          textAlign: "center",
-                        }}
-                        width="100px"
-                        type="number"
-                        inputMode="decimal"
-                        bordered
-                        color="primary"
-                      />
-                    )}
-                  />
-                </Col>
-              </Row>
-              <Spacer />
-              <Row align="flex-start">
-                <Col>
-                  <Text css={{ whiteSpace: "nowrap" }}>⏭️ Skip onboarding</Text>
-                </Col>
-                <Col css={{ ta: "right" }}>
-                  <Controller
-                    name="skipOnboarding"
-                    control={control}
-                    render={({ field }) => (
-                      <Switch
-                        {...field}
-                        checked={field.value}
-                        color={watchedSkipOnboarding ? "warning" : undefined}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                      />
-                    )}
-                  />
-                </Col>
-              </Row>
-              <Text
-                small
-                css={{ mt: 0, mb: 6, lineHeight: 1.2, display: "inline-block" }}
-              >
-                Allow your recipient to directly withraw without logging in.
-              </Text>
-              <Divider />
-              <Controller
-                name="tippeeName"
-                control={control}
-                render={({ field }) =>
-                  watchedQuantity > 1 ? (
-                    <Col>
-                      <Row align="center" justify="space-between">
-                        <Row>
-                          <Text>Recipient names</Text>
-                        </Row>
-                        <Row align="flex-start" justify="flex-end">
-                          <Text size="small">Individual Names</Text>
-                          <Spacer x={0.5} />
-                          <Switch
-                            size="xs"
-                            checked={watchedEnterIndividualNames}
-                            onChange={(e) =>
-                              setValue("enterIndividualNames", e.target.checked)
-                            }
-                          />
-                        </Row>
-                      </Row>
-                      <Spacer y={0.5} />
-                      {watchedEnterIndividualNames && (
-                        <Text size="small">
-                          Entered{" "}
-                          {watchedTippeeName?.split("\n").filter((name) => name)
-                            .length || 0}
-                          &nbsp;/&nbsp;{watchedQuantity} names
-                        </Text>
-                      )}
-                      <Textarea
-                        {...field}
-                        aria-label={"Recipient names"}
-                        placeholder={
-                          watchedEnterIndividualNames
-                            ? `Hal Finney
-Micheal Saylor`
-                            : "Recipient {{index}}"
-                        }
-                        fullWidth
-                        bordered
-                        rows={
-                          watchedEnterIndividualNames
-                            ? watchedQuantity
-                            : undefined
-                        }
-                      />
-                    </Col>
-                  ) : (
-                    <Input
-                      {...field}
-                      label="Recipient name"
-                      placeholder="Hal Finney"
-                      maxLength={255}
-                      fullWidth
-                      bordered
-                    />
-                  )
-                }
-              />
-              <Spacer />
-              <Controller
-                name="note"
-                control={control}
-                render={({ field }) => (
-                  <Textarea
-                    {...field}
-                    label={
-                      watchedQuantity > 1
-                        ? "Note to recipients"
-                        : "Note to recipient"
-                    }
-                    placeholder={
-                      watchedQuantity > 1
-                        ? "Thank you {{name}} for your amazing service!"
-                        : "Thank you for your amazing service!"
-                    }
-                    maxLength={255}
-                    fullWidth
-                    bordered
-                  />
-                )}
-              />
-              <Spacer />
-              <Text>Recipient Language</Text>
-              <Text size="small">
-                {
-                  "Your recipient's language is autodetected, but you can explictly set it if needed."
-                }
-              </Text>
-              <Spacer y={0.5} />
-              <CustomSelect
-                options={tippeeLocaleSelectOptions}
-                isClearable
-                value={watchedTippeeLocale}
-                onChange={setDropdownSelectedTippeeLocale}
-                width="100px"
-              />
-            </>
-          )}
-        </Card.Body>
-      </Card>
+      {mode === "create" ? (
+        <Collapse
+          css={{
+            width: "100%",
+            dropShadow: "$sm",
+            border: "none",
+            px: "$10",
+            ":last-child": {
+              overflow: "visible", // fix nextui collapse content getting cut off
+            },
+          }}
+          title={<Text>Advanced Options</Text>}
+          expanded={watchedShowAdvancedOptions}
+          onChange={(_, __, value) => setValue("showAdvancedOptions", !!value)}
+          shadow
+        >
+          {advancedOptions}
+        </Collapse>
+      ) : (
+        <Card css={{ dropShadow: "$sm" }}>
+          <Card.Body>{advancedOptions}</Card.Body>
+        </Card>
+      )}
       <Spacer />
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? (
