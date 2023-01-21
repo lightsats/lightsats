@@ -14,5 +14,5 @@ export type TipFormData = {
   skipOnboarding: boolean;
   enterIndividualNames: boolean;
   showAdvancedOptions: boolean;
-  suggestedWalletId: string | undefined;
+  recommendedWalletId: string | undefined;
 };

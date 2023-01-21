@@ -141,7 +141,7 @@ model Tip {
   group TipGroup? @relation(fields: [groupId], references: [id])
   groupTipIndex Int?
   claimedFromPrintedCard Boolean @default(false)
-  suggestedWalletId String?
+  recommendedWalletId String?
 }
 
 model LnbitsWallet {

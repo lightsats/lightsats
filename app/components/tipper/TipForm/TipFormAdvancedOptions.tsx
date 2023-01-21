@@ -27,10 +27,12 @@ const tippeeLocaleSelectOptions: SelectOption[] = locales.map((locale) => ({
   label: getNativeLanguageName(locale),
 }));
 
-const suggestedWalletSelectOptions: SelectOption[] = wallets.map((wallet) => ({
-  value: wallet.id,
-  label: wallet.name,
-}));
+const recommendedWalletSelectOptions: SelectOption[] = wallets.map(
+  (wallet) => ({
+    value: wallet.id,
+    label: wallet.name,
+  })
+);
 
 type TipFormAdvancedOptionsProps = {
   mode: "create" | "update";
@@ -50,7 +52,7 @@ export function TipFormAdvancedOptions({
   quantity,
 }: TipFormAdvancedOptionsProps) {
   const watchedTippeeLocale = watch("tippeeLocale");
-  const watchedSuggestedWalletId = watch("suggestedWalletId");
+  const watchedrecommendedWalletId = watch("recommendedWalletId");
   const watchedTippeeName = watch("tippeeName");
   const watchedSkipOnboarding = watch("skipOnboarding");
   const watchedEnterIndividualNames = watch("enterIndividualNames");
@@ -62,9 +64,9 @@ export function TipFormAdvancedOptions({
     [setValue]
   );
 
-  const setSuggestedWalletId = React.useCallback(
-    (suggestedWalletId: string) => {
-      setValue("suggestedWalletId", suggestedWalletId);
+  const setrecommendedWalletId = React.useCallback(
+    (recommendedWalletId: string) => {
+      setValue("recommendedWalletId", recommendedWalletId);
     },
     [setValue]
   );
@@ -234,10 +236,10 @@ Micheal Saylor`
       </Text>
       <Spacer y={0.5} />
       <CustomSelect
-        options={suggestedWalletSelectOptions}
+        options={recommendedWalletSelectOptions}
         isClearable
-        value={watchedSuggestedWalletId}
-        onChange={setSuggestedWalletId}
+        value={watchedrecommendedWalletId}
+        onChange={setrecommendedWalletId}
         width="100px"
       />
     </>
