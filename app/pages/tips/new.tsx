@@ -1,7 +1,10 @@
 import { Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
-import { TipForm, TipFormSubmitData } from "components/tipper/TipForm/TipForm";
-import { add } from "date-fns";
+import { TipForm } from "components/tipper/TipForm/TipForm";
+import {
+  getSharedTipFormRequestFields,
+  TipFormSubmitData,
+} from "components/tipper/TipForm/TipFormData";
 import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -18,15 +21,9 @@ const NewTip: NextPage = () => {
     async (data: TipFormSubmitData) => {
       try {
         const createTipRequest: CreateTipRequest = {
+          ...getSharedTipFormRequestFields(data),
           amount: data.satsAmount,
           quantity: data.quantity,
-          currency: data.currency,
-          expiry: add(new Date(), {
-            [data.expiryUnit]: data.expiresIn,
-          }),
-          skipOnboarding: data.skipOnboarding,
-          tippeeLocale: data.tippeeLocale,
-          note: data.note,
           tippeeName: data.tippeeName,
           tippeeNames: data.tippeeName?.split("\n"),
         };

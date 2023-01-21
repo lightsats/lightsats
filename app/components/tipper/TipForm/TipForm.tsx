@@ -17,7 +17,10 @@ import { Divider } from "components/Divider";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
 import { TipFormAdvancedOptions } from "components/tipper/TipForm/TipFormAdvancedOptions";
-import { TipFormData } from "components/tipper/TipForm/TipFormData";
+import {
+  TipFormData,
+  TipFormSubmitData,
+} from "components/tipper/TipForm/TipFormData";
 import { useExchangeRates } from "hooks/useExchangeRates";
 import { useTips } from "hooks/useTips";
 import {
@@ -37,13 +40,6 @@ import {
 } from "lib/utils";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-
-export type TipFormSubmitData = Omit<
-  TipFormData,
-  "enterIndividualNames" | "showAdvancedOptions"
-> & {
-  satsAmount: number;
-};
 
 type InputMethod = "fiat" | "sats";
 

@@ -4,6 +4,7 @@ import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
+import { getSharedUpdateTipFields } from "pages/api/tipper/tips/[id]";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 import { TipRequestBase, UpdateTipsRequest } from "types/TipRequest";
 
@@ -56,10 +57,7 @@ async function updateTips(
       groupId: tipGroup.id,
     },
     data: {
-      expiry: updateTipsRequest.expiry,
-      currency: updateTipsRequest.currency || null,
-      tippeeLocale: updateTipsRequest.tippeeLocale || null,
-      skipOnboarding: updateTipsRequest.skipOnboarding ?? false,
+      ...getSharedUpdateTipFields(updateTipsRequest),
     },
   });
 

@@ -6,6 +6,7 @@ export type TipRequestBase = {
   tippeeLocale: string;
   note?: string;
   tippeeNames?: string[]; // bulk tips only
+  recommendedWalletId?: string;
 };
 
 export type CreateTipRequest = TipRequestBase & {

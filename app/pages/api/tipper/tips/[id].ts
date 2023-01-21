@@ -7,7 +7,7 @@ import { regenerateExpiredTipInvoice } from "lib/regenerateExpiredTipInvoice";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
-import { UpdateTipRequest } from "types/TipRequest";
+import { TipRequestBase, UpdateTipRequest } from "types/TipRequest";
 
 export default async function handler(
   req: NextApiRequest,
@@ -102,14 +102,21 @@ async function updateTip(
       id: tip.id,
     },
     data: {
-      expiry: updateTipRequest.expiry,
-      currency: updateTipRequest.currency || null,
+      ...getSharedUpdateTipFields(updateTipRequest),
       note: updateTipRequest.note || null,
       tippeeName: updateTipRequest.tippeeName || null,
-      tippeeLocale: updateTipRequest.tippeeLocale || null,
-      skipOnboarding: updateTipRequest.skipOnboarding ?? false,
     },
   });
 
   res.json(updatedTip);
+}
+
+export function getSharedUpdateTipFields(updateTipRequest: TipRequestBase) {
+  return {
+    expiry: updateTipRequest.expiry,
+    currency: updateTipRequest.currency || null,
+    tippeeLocale: updateTipRequest.tippeeLocale || null,
+    skipOnboarding: updateTipRequest.skipOnboarding,
+    recommendedWalletId: updateTipRequest.recommendedWalletId || null,
+  };
 }

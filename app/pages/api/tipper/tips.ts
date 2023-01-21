@@ -129,6 +129,7 @@ async function handlePostTip(
     note: createTipRequest.note || null,
     tippeeName: createTipRequest.tippeeName,
     tippeeLocale: createTipRequest.tippeeLocale,
+    recommendedWalletId: createTipRequest.recommendedWalletId,
     version: 1 /* 0=all tips in same bucket, 1=one wallet per tip */,
   };
 

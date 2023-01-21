@@ -1,4 +1,4 @@
-import { Spacer, Text } from "@nextui-org/react";
+import { Loading, Spacer, Text } from "@nextui-org/react";
 import { ItemsList } from "components/items/ItemsList";
 import { MyBitcoinJourneyContent } from "components/tippee/MyBitcoinJourneyContent";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
@@ -29,11 +29,16 @@ const SelectWalletPage: NextPage = () => {
         ? receivedTips.map((tip) => tip.amount).reduce((a, b) => a + b)
         : 0,
       recommendedLimit: 1,
+      recommendedItemId: receivedTips?.[0]?.recommendedWalletId ?? undefined,
     }),
     [receivedTips]
   );
 
   const { t } = useTranslation("journey");
+
+  if (!tips) {
+    return <Loading />;
+  }
 
   return (
     <>

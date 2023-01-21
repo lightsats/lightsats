@@ -11,7 +11,8 @@ export type CategoryFilterOptions = {
   lnurlAuthCapable?: boolean;
   recommendedLimit?: number;
   filterOtherItems?: boolean;
-  shadow?: boolean;
+  recommendedItemId?: string;
+  shadow?: boolean; // TODO: move somewhere else
 };
 
 type ScoringFunction = (item: Item) => number;
@@ -40,8 +41,9 @@ export function getRecommendedItems(
   const categoryItems = catalog[category];
   let recommendedItems = categoryItems.filter(
     (item) =>
-      item.languageCodes.indexOf(locale) > -1 &&
-      osMatches(item, devicePlatform, false)
+      (options.recommendedItemId && item.id === options.recommendedItemId) ||
+      (item.languageCodes.indexOf(locale) > -1 &&
+        osMatches(item, devicePlatform, false))
   );
   recommendedItems =
     categoryFilterFunctions[category]?.(recommendedItems, options) ??
@@ -51,7 +53,8 @@ export function getRecommendedItems(
     recommendedItems,
     categoryScoringFuncs[category],
     locale,
-    devicePlatform
+    devicePlatform,
+    options
   );
   const limit =
     category === "wallets" && !options.lnurlAuthCapable ? 1 : undefined;
@@ -73,7 +76,13 @@ export function getOtherItems(
     otherItems =
       categoryFilterFunctions[category]?.(otherItems, options) ?? otherItems;
   }
-  sortItems(otherItems, categoryScoringFuncs[category], locale, devicePlatform);
+  sortItems(
+    otherItems,
+    categoryScoringFuncs[category],
+    locale,
+    devicePlatform,
+    options
+  );
   return otherItems;
 }
 
@@ -95,12 +104,13 @@ export function sortItems(
   items: Item[],
   scoringFunc: ScoringFunction | undefined,
   locale: string,
-  devicePlatform: DevicePlatform
+  devicePlatform: DevicePlatform,
+  options: CategoryFilterOptions
 ) {
   items.sort(
     (a, b) =>
-      getItemScore(b, scoringFunc, locale, devicePlatform) -
-      getItemScore(a, scoringFunc, locale, devicePlatform)
+      getItemScore(b, scoringFunc, locale, devicePlatform, options) -
+      getItemScore(a, scoringFunc, locale, devicePlatform, options)
   );
 }
 
@@ -108,7 +118,8 @@ function getItemScore(
   item: Item,
   scoringFunc: ScoringFunction | undefined,
   locale: string,
-  devicePlatform: DevicePlatform
+  devicePlatform: DevicePlatform,
+  options: CategoryFilterOptions
 ) {
   let score = 0;
   if (item.lightsatsRecommended) {
@@ -122,6 +133,10 @@ function getItemScore(
 
   if (osMatches(item, devicePlatform, true)) {
     score += 5;
+  }
+
+  if (options.recommendedItemId && item.id === options.recommendedItemId) {
+    score += 999999;
   }
 
   if (scoringFunc) {

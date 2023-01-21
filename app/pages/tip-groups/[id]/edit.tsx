@@ -1,8 +1,12 @@
 import { Loading, Spacer, Text } from "@nextui-org/react";
 import { Alert } from "components/Alert";
-import { TipForm, TipFormSubmitData } from "components/tipper/TipForm/TipForm";
-import { TipFormData } from "components/tipper/TipForm/TipFormData";
-import { add, differenceInHours } from "date-fns";
+import { TipForm } from "components/tipper/TipForm/TipForm";
+import {
+  getSharedTipFormRequestFields,
+  TipFormData,
+  TipFormSubmitData,
+} from "components/tipper/TipForm/TipFormData";
+import { differenceInHours } from "date-fns";
 import { ApiRoutes } from "lib/ApiRoutes";
 import { DEFAULT_FIAT_CURRENCY, DEFAULT_NAME } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
@@ -76,6 +80,7 @@ const EditTipGroup: NextPage = () => {
       tippeeName,
       skipOnboarding: firstTip.skipOnboarding,
       enterIndividualNames,
+      recommendedWalletId: firstTip.recommendedWalletId || undefined,
       showAdvancedOptions: true,
     };
     return defaultValues;
@@ -85,16 +90,10 @@ const EditTipGroup: NextPage = () => {
     async (data: TipFormSubmitData) => {
       try {
         const updateTipGroupTipsRequest: UpdateTipsRequest = {
-          currency: data.currency,
-          note: data.note?.length ? data.note : undefined,
-          expiry: add(new Date(), {
-            [data.expiryUnit]: data.expiresIn,
-          }),
+          ...getSharedTipFormRequestFields(data),
           tippeeNames: data.tippeeName?.length
             ? data.tippeeName.split("\n")
             : undefined,
-          tippeeLocale: data.tippeeLocale,
-          skipOnboarding: data.skipOnboarding,
         };
         const result = await fetch(`/api/tipGroups/${id}/tips`, {
           method: "PUT",
