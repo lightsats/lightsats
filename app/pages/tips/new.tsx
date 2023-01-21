@@ -1,6 +1,6 @@
 import { Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
-import { TipForm, TipFormSubmitData } from "components/TipForm";
+import { TipForm, TipFormSubmitData } from "components/tipper/TipForm/TipForm";
 import { add } from "date-fns";
 import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";

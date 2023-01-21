@@ -12,6 +12,7 @@ export type ItemCategory =
   | "learn";
 
 export type Item = {
+  id?: string;
   name: string;
   link: string;
   slogan: string;

@@ -9,15 +9,15 @@ import {
   Loading,
   Row,
   Spacer,
-  Switch,
   Text,
-  Textarea,
   Tooltip,
 } from "@nextui-org/react";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Divider } from "components/Divider";
 import { FiatPrice } from "components/FiatPrice";
 import { Icon } from "components/Icon";
+import { TipFormAdvancedOptions } from "components/tipper/TipForm/TipFormAdvancedOptions";
+import { TipFormData } from "components/tipper/TipForm/TipFormData";
 import { useExchangeRates } from "hooks/useExchangeRates";
 import { useTips } from "hooks/useTips";
 import {
@@ -29,8 +29,6 @@ import {
   MIN_TIP_SATS,
   USE_PREV_TIP_PROPERTIES,
 } from "lib/constants";
-import { getNativeLanguageName } from "lib/i18n/iso6391";
-import { locales } from "lib/i18n/locales";
 import {
   calculateFee,
   getFiatAmount,
@@ -39,28 +37,6 @@ import {
 } from "lib/utils";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-
-export const ExpiryUnitValues = ["minutes", "hours", "days"] as const;
-export type ExpiryUnit = typeof ExpiryUnitValues[number];
-const tippeeLocaleSelectOptions: SelectOption[] = locales.map((locale) => ({
-  value: locale,
-  label: getNativeLanguageName(locale),
-}));
-
-export type TipFormData = {
-  amount: number;
-  quantity: number;
-  amountString: string;
-  currency: string;
-  note: string | undefined;
-  expiresIn: number;
-  expiryUnit: ExpiryUnit;
-  tippeeName: string | undefined;
-  tippeeLocale: string;
-  skipOnboarding: boolean;
-  enterIndividualNames: boolean;
-  showAdvancedOptions: boolean;
-};
 
 export type TipFormSubmitData = Omit<
   TipFormData,
@@ -139,10 +115,6 @@ export function TipForm({
     watchedQuantity = quantity;
   }
   const watchedCurrency = watch("currency");
-  const watchedTippeeLocale = watch("tippeeLocale");
-  const watchedTippeeName = watch("tippeeName");
-  const watchedSkipOnboarding = watch("skipOnboarding");
-  const watchedEnterIndividualNames = watch("enterIndividualNames");
   const watchedShowAdvancedOptions = watch("showAdvancedOptions");
   const watchedExchangeRate = exchangeRates?.[watchedCurrency];
   const watchedAmountFee = watchedExchangeRate
@@ -191,13 +163,6 @@ export function TipForm({
     [setValue]
   );
 
-  const setDropdownSelectedTippeeLocale = React.useCallback(
-    (locale: string) => {
-      setValue("tippeeLocale", locale);
-    },
-    [setValue]
-  );
-
   const onSubmit = React.useCallback(
     (data: TipFormData) => {
       if (!watchedExchangeRate) {
@@ -238,168 +203,15 @@ export function TipForm({
     [watchedExchangeRate, isSubmitting, inputMethod, mode, onSubmitProp]
   );
 
-  // TODO: move to a separate component
   const advancedOptions = watchedShowAdvancedOptions && (
-    <>
-      {mode === "create" && <Spacer />}
-      <Row align="flex-start">
-        <Col>
-          <Text>⌛ Tip expiry</Text>
-          <Text small css={{ mt: 6, lineHeight: 1.2, display: "inline-block" }}>
-            Days until the tip returns back to you.
-          </Text>
-        </Col>
-        <Col css={{ ta: "right" }}>
-          <Controller
-            name="expiresIn"
-            control={control}
-            render={({ field }) => (
-              <Input
-                aria-label="Tip expires in"
-                {...field}
-                {...register("expiresIn", {
-                  valueAsNumber: true,
-                })}
-                min={1}
-                style={{
-                  textAlign: "center",
-                }}
-                width="100px"
-                type="number"
-                inputMode="decimal"
-                bordered
-                color="primary"
-              />
-            )}
-          />
-        </Col>
-      </Row>
-      <Spacer />
-      <Row align="flex-start">
-        <Col>
-          <Text css={{ whiteSpace: "nowrap" }}>⏭️ Skip onboarding</Text>
-        </Col>
-        <Col css={{ ta: "right" }}>
-          <Controller
-            name="skipOnboarding"
-            control={control}
-            render={({ field }) => (
-              <Switch
-                {...field}
-                checked={field.value}
-                color={watchedSkipOnboarding ? "warning" : undefined}
-                onChange={(e) => field.onChange(e.target.checked)}
-              />
-            )}
-          />
-        </Col>
-      </Row>
-      <Text
-        small
-        css={{
-          mt: 0,
-          mb: 6,
-          lineHeight: 1.2,
-          display: "inline-block",
-        }}
-      >
-        Allow your recipient to directly withraw without logging in.
-      </Text>
-      <Divider />
-      <Controller
-        name="tippeeName"
-        control={control}
-        render={({ field }) =>
-          watchedQuantity > 1 ? (
-            <Col>
-              <Row align="center" justify="space-between">
-                <Row>
-                  <Text>Recipient names</Text>
-                </Row>
-                <Row align="flex-start" justify="flex-end">
-                  <Text size="small">Individual Names</Text>
-                  <Spacer x={0.5} />
-                  <Switch
-                    size="xs"
-                    checked={watchedEnterIndividualNames}
-                    onChange={(e) =>
-                      setValue("enterIndividualNames", e.target.checked)
-                    }
-                  />
-                </Row>
-              </Row>
-              <Spacer y={0.5} />
-              {watchedEnterIndividualNames && (
-                <Text size="small">
-                  Entered{" "}
-                  {watchedTippeeName?.split("\n").filter((name) => name)
-                    .length || 0}
-                  &nbsp;/&nbsp;{watchedQuantity} names
-                </Text>
-              )}
-              <Textarea
-                {...field}
-                aria-label={"Recipient names"}
-                placeholder={
-                  watchedEnterIndividualNames
-                    ? `Hal Finney
-Micheal Saylor`
-                    : "Recipient {{index}}"
-                }
-                fullWidth
-                bordered
-                rows={watchedEnterIndividualNames ? watchedQuantity : undefined}
-              />
-            </Col>
-          ) : (
-            <Input
-              {...field}
-              label="Recipient name"
-              placeholder="Hal Finney"
-              maxLength={255}
-              fullWidth
-              bordered
-            />
-          )
-        }
-      />
-      <Spacer />
-      <Controller
-        name="note"
-        control={control}
-        render={({ field }) => (
-          <Textarea
-            {...field}
-            label={
-              watchedQuantity > 1 ? "Note to recipients" : "Note to recipient"
-            }
-            placeholder={
-              watchedQuantity > 1
-                ? "Thank you {{name}} for your amazing service!"
-                : "Thank you for your amazing service!"
-            }
-            maxLength={255}
-            fullWidth
-            bordered
-          />
-        )}
-      />
-      <Spacer />
-      <Text>Recipient Language</Text>
-      <Text size="small">
-        {
-          "Your recipient's language is autodetected, but you can explictly set it if needed."
-        }
-      </Text>
-      <Spacer y={0.5} />
-      <CustomSelect
-        options={tippeeLocaleSelectOptions}
-        isClearable
-        value={watchedTippeeLocale}
-        onChange={setDropdownSelectedTippeeLocale}
-        width="100px"
-      />
-    </>
+    <TipFormAdvancedOptions
+      mode={mode}
+      register={register}
+      control={control}
+      setValue={setValue}
+      watch={watch}
+      quantity={watchedQuantity}
+    />
   );
 
   return (

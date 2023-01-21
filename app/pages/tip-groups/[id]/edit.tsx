@@ -1,6 +1,7 @@
 import { Loading, Spacer, Text } from "@nextui-org/react";
 import { Alert } from "components/Alert";
-import { TipForm, TipFormData, TipFormSubmitData } from "components/TipForm";
+import { TipForm, TipFormSubmitData } from "components/tipper/TipForm/TipForm";
+import { TipFormData } from "components/tipper/TipForm/TipFormData";
 import { add, differenceInHours } from "date-fns";
 import { ApiRoutes } from "lib/ApiRoutes";
 import { DEFAULT_FIAT_CURRENCY, DEFAULT_NAME } from "lib/constants";

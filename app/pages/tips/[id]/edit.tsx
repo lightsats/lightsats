@@ -1,6 +1,7 @@
 import { Loading, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
-import { TipForm, TipFormData, TipFormSubmitData } from "components/TipForm";
+import { TipForm, TipFormSubmitData } from "components/tipper/TipForm/TipForm";
+import { TipFormData } from "components/tipper/TipForm/TipFormData";
 import { add, differenceInHours } from "date-fns";
 import { useTip } from "hooks/useTip";
 import { DEFAULT_FIAT_CURRENCY } from "lib/constants";

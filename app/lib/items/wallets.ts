@@ -2,6 +2,7 @@ import { getLanguageCode } from "lib/i18n/iso6391";
 import { Wallet } from "types/Wallet";
 
 const wos: Wallet = {
+  id: "wos",
   category: "wallets",
   features: ["lnurl-withdraw", "lightning address"],
   minBalance: 0,
@@ -40,6 +41,7 @@ const wos: Wallet = {
 };
 //
 const muun: Wallet = {
+  id: "muun",
   category: "wallets",
   features: ["lnurl-withdraw", "non-custodial"],
   minBalance: 0,
@@ -54,6 +56,7 @@ const muun: Wallet = {
 };
 
 const breez: Wallet = {
+  id: "breez",
   features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   lightsatsRecommended: true,
   category: "wallets",
@@ -76,6 +79,7 @@ const breez: Wallet = {
 };
 
 const blue: Wallet = {
+  id: "blue",
   features: ["lnurl-auth", "lnurl-withdraw"],
   category: "wallets",
   minBalance: 0,
@@ -129,6 +133,7 @@ const blue: Wallet = {
 };
 
 const alby: Wallet = {
+  id: "alby",
   features: [
     "lnurl-auth",
     "lnurl-withdraw",
@@ -152,6 +157,7 @@ const alby: Wallet = {
   platforms: ["desktop"],
 };
 const phoenix: Wallet = {
+  id: "phoenix",
   features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   category: "wallets",
   minBalance: 10000,
@@ -165,6 +171,7 @@ const phoenix: Wallet = {
   platforms: ["mobile"],
 };
 const lntips: Wallet = {
+  id: "lntips",
   features: [],
   category: "wallets",
   minBalance: 0,
@@ -178,6 +185,7 @@ const lntips: Wallet = {
   platforms: ["mobile"],
 };
 const lntxbot: Wallet = {
+  id: "lntxbot",
   features: ["lightning address"],
   category: "wallets",
   minBalance: 0,
@@ -191,6 +199,7 @@ const lntxbot: Wallet = {
   platforms: ["mobile"],
 };
 const obw: Wallet = {
+  id: "obw",
   features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   category: "wallets",
   minBalance: 0,
@@ -205,6 +214,7 @@ const obw: Wallet = {
   platforms: ["android-only"],
 };
 const bbw: Wallet = {
+  id: "bbw",
   features: ["lnurl-auth", "lnurl-withdraw", "lightning address"],
   lightsatsRecommended: true,
   category: "wallets",
@@ -227,6 +237,7 @@ const bbw: Wallet = {
   platforms: ["mobile"],
 };
 const zeus: Wallet = {
+  id: "zeus",
   features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   lightsatsRecommended: true,
   category: "wallets",
@@ -249,6 +260,7 @@ const zeus: Wallet = {
   platforms: ["mobile"],
 };
 const zebedee: Wallet = {
+  id: "zebedee",
   features: ["lightning address"],
   category: "wallets",
   minBalance: 0,
@@ -263,6 +275,7 @@ const zebedee: Wallet = {
   platforms: ["mobile"],
 };
 const blixt: Wallet = {
+  id: "blixt",
   features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
   category: "wallets",
   minBalance: 0,
@@ -277,6 +290,7 @@ const blixt: Wallet = {
   platforms: ["android-only"],
 };
 const strike: Wallet = {
+  id: "strike",
   features: ["lnurl-withdraw"],
   category: "wallets",
   minBalance: 0,
@@ -291,6 +305,7 @@ const strike: Wallet = {
   platforms: ["mobile", "desktop"],
 };
 const cashapp: Wallet = {
+  id: "cashapp",
   features: ["lnurl-withdraw"],
   category: "wallets",
   minBalance: 0,
@@ -305,6 +320,7 @@ const cashapp: Wallet = {
   platforms: ["mobile"],
 };
 const pouch: Wallet = {
+  id: "pouch",
   features: ["lnurl-withdraw"],
   category: "wallets",
   minBalance: 0,

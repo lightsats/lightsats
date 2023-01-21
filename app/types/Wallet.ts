@@ -7,6 +7,7 @@ type WalletFeature =
   | "lightning address";
 
 export type Wallet = Item & {
+  id: string;
   minBalance: number;
   features: WalletFeature[];
 };
