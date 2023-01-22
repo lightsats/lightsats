@@ -242,6 +242,36 @@ Micheal Saylor`
         onChange={setrecommendedWalletId}
         width="100px"
       />
+      <Divider />
+      <Row align="flex-start">
+        <Col>
+          <Text css={{ whiteSpace: "nowrap" }}>👤 Anonymous Tipper</Text>
+        </Col>
+        <Col css={{ ta: "right" }}>
+          <Controller
+            name="anonymousTipper"
+            control={control}
+            render={({ field }) => (
+              <Switch
+                {...field}
+                checked={field.value}
+                onChange={(e) => field.onChange(e.target.checked)}
+              />
+            )}
+          />
+        </Col>
+      </Row>
+      <Text
+        small
+        css={{
+          mt: 0,
+          mb: 6,
+          lineHeight: 1.2,
+          display: "inline-block",
+        }}
+      >
+        Hide your info from your recipient
+      </Text>
     </>
   );
 }

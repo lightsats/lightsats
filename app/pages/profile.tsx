@@ -425,9 +425,15 @@ function UpdateProfileForm({ mutateUser, user }: ProfileInternalProps) {
                           <EyeIcon />
                         </Icon>
                         <Spacer x={0.5} />
-                        <Text weight="medium">
-                          Anonymise my info on scoreboard & public profile
-                        </Text>
+                        <Col>
+                          <Text weight="medium">
+                            Anonymise my info on scoreboard & public profile
+                          </Text>
+                          <Text size="small">
+                            Note: Your info on created tips will not be
+                            anonymized
+                          </Text>
+                        </Col>
                         <Spacer />
                         <Controller
                           name="isAnonymous"

@@ -143,6 +143,7 @@ model Tip {
   groupTipIndex Int?
   claimedFromPrintedCard Boolean @default(false)
   recommendedWalletId String?
+  anonymousTipper Boolean @default(false)
 }
 
 model LnbitsWallet {

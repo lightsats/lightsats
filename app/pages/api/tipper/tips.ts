@@ -131,6 +131,7 @@ async function handlePostTip(
     tippeeLocale: createTipRequest.tippeeLocale,
     recommendedWalletId: createTipRequest.recommendedWalletId,
     version: 1 /* 0=all tips in same bucket, 1=one wallet per tip */,
+    anonymousTipper: createTipRequest.anonymousTipper,
   };
 
   if (createTipRequest.quantity > 1) {

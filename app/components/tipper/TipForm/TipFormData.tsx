@@ -17,6 +17,7 @@ export type TipFormData = {
   enterIndividualNames: boolean;
   showAdvancedOptions: boolean;
   recommendedWalletId: string | undefined;
+  anonymousTipper: boolean;
 };
 
 export type TipFormSubmitData = Omit<
@@ -36,5 +37,6 @@ export function getSharedTipFormRequestFields(data: TipFormSubmitData) {
     tippeeLocale: data.tippeeLocale,
     note: data.note?.length ? data.note : undefined,
     recommendedWalletId: data.recommendedWalletId,
+    anonymousTipper: data.anonymousTipper,
   };
 }

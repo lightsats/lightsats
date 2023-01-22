@@ -118,5 +118,6 @@ export function getSharedUpdateTipFields(updateTipRequest: TipRequestBase) {
     tippeeLocale: updateTipRequest.tippeeLocale || null,
     skipOnboarding: updateTipRequest.skipOnboarding,
     recommendedWalletId: updateTipRequest.recommendedWalletId || null,
+    anonymousTipper: updateTipRequest.anonymousTipper,
   };
 }

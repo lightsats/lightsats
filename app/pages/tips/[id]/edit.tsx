@@ -45,6 +45,7 @@ const EditTip: NextPage = () => {
       tippeeName: tip.tippeeName || undefined,
       skipOnboarding: tip.skipOnboarding,
       recommendedWalletId: tip.recommendedWalletId || undefined,
+      anonymousTipper: tip.anonymousTipper,
       showAdvancedOptions: true,
     };
     return defaultValues;

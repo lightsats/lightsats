@@ -13,12 +13,19 @@ export function mapTipToPublicTip(
     currency: tip.currency,
     note: tip.note,
     tippeeId: tip.tippeeId,
-    tipper: {
-      name: tip.tipper.name,
-      twitterUsername: tip.tipper.twitterUsername,
-      avatarURL: tip.tipper.avatarURL,
-      fallbackAvatarId: getFallbackAvatarId(tip.tipper),
-    },
+    tipper: tip.anonymousTipper
+      ? {
+          name: null,
+          avatarURL: null,
+          twitterUsername: null,
+          fallbackAvatarId: undefined,
+        }
+      : {
+          name: tip.tipper.name,
+          twitterUsername: tip.tipper.twitterUsername,
+          avatarURL: tip.tipper.avatarURL,
+          fallbackAvatarId: getFallbackAvatarId(tip.tipper),
+        },
     tippee: tip.tippee
       ? {
           inJourney: tip.tippee.inJourney,

@@ -1,4 +1,7 @@
-import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowsRightLeftIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/solid";
 import {
   Badge,
   Button,
@@ -70,6 +73,7 @@ export function TipForm({
     tippeeLocale: undefined,
     enterIndividualNames: false,
     showAdvancedOptions: false,
+    anonymousTipper: false,
   },
   mode,
   quantity = 1,
@@ -266,9 +270,22 @@ export function TipForm({
                               auto
                               css={{
                                 px: "4px",
+                                position: "relative",
                               }}
                               onClick={toggleInputMethod}
                             >
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  top: 2,
+                                  right: 2,
+                                  display: "flex",
+                                }}
+                              >
+                                <Icon width={8} height={8} color="white">
+                                  <ArrowsRightLeftIcon />
+                                </Icon>
+                              </div>
                               <div style={{ width: "20px" }}>
                                 {inputMethod === "fiat"
                                   ? getSymbolFromCurrencyWithFallback(

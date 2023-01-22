@@ -7,6 +7,7 @@ export type TipRequestBase = {
   note?: string;
   tippeeNames?: string[]; // bulk tips only
   recommendedWalletId?: string;
+  anonymousTipper: boolean;
 };
 
 export type CreateTipRequest = TipRequestBase & {

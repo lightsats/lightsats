@@ -81,6 +81,7 @@ const EditTipGroup: NextPage = () => {
       skipOnboarding: firstTip.skipOnboarding,
       enterIndividualNames,
       recommendedWalletId: firstTip.recommendedWalletId || undefined,
+      anonymousTipper: firstTip.anonymousTipper,
       showAdvancedOptions: true,
     };
     return defaultValues;
