@@ -448,7 +448,7 @@ function LeaderboardUser({ user, theme }: LeaderboardUserProps) {
             style={{ position: "absolute", top: -21, left: 1, zIndex: 10000 }}
           >
             <NextImage
-              src={`/leaderboards/${theme}/hat.png`}
+              src={`/leaderboards/${theme.toLowerCase()}/hat.png`}
               width={60}
               height={60}
             />
