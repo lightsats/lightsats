@@ -13,6 +13,6 @@
   "copy": "Copiar",
   "copiedToClipboard": "Copiado al portapapeles",
   "createdAgo": "creado hace {{distance}}",
-  "amountInSats": "{{amount}} Sats",
+  "amountInSats": "{{amount}} satoshis",
   "alternativeWaysToSignIn": "Formas alternativas de iniciar sesión"
 }
