@@ -85,10 +85,19 @@ export function LeaderboardTable({
 
   const hasStarted = !startDate || startDate.getTime() < Date.now();
   const hasEnded = endDate && endDate.getTime() < Date.now();
+  const showTitle = !theme; // TODO: make this a leaderboard setting
 
   return (
     <>
-      <Text h2>{title}</Text>
+      {showTitle && <Text h2>{title}</Text>}
+      {theme && (
+        <NextImage
+          src={`/leaderboards/${theme.toLowerCase()}/logo.png`}
+          width={300}
+          height={200}
+          objectFit="contain"
+        />
+      )}
       {creator && (
         <>
           {startDate && (

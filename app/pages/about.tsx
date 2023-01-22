@@ -121,6 +121,14 @@ const AboutPage: NextPage = () => {
           </a>
         </Text>
       </Row>
+      <Row>
+        <Text>
+          -{" "}
+          <a href="https://www.seekpng.com/ipng/u2q8w7u2t4w7r5u2_transparent-background-merry-christmas-gold-png/">
+            Transparent Background Merry Christmas Gold Png @seekpng.com
+          </a>
+        </Text>
+      </Row>
       <Spacer />
       <h3>Links</h3>
       <Grid.Container gap={1} justify="center">
