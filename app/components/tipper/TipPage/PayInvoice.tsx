@@ -7,7 +7,6 @@ import copy from "copy-to-clipboard";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import toast from "react-hot-toast";
-import { requestProvider } from "webln";
 
 type PayInvoiceProps = {
   invoice: string;
@@ -19,12 +18,16 @@ export function PayInvoice({ variant, invoice }: PayInvoiceProps) {
   React.useEffect(() => {
     if (invoice) {
       (async () => {
-        try {
-          console.log("Launching webln");
-          const webln = await requestProvider();
-          webln.sendPayment(invoice);
-        } catch (error) {
-          console.error("Failed to load webln", error);
+        if (window.webln) {
+          try {
+            console.log("Launching webln");
+            const result = await window.webln.enable();
+            if (result.enabled) {
+              window.webln.sendPayment(invoice);
+            }
+          } catch (error) {
+            console.error("Failed to load webln", error);
+          }
         }
       })();
     }

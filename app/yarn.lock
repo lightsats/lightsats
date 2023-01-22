@@ -1308,25 +1308,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/chrome@^0.0.74":
-  version "0.0.74"
-  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.74.tgz#f69827c48fcf7fecc90c96089807661749a5a5e3"
-  integrity sha512-hzosS5CkQcIKCgxcsV2AzbJ36KNxG/Db2YEN/erEu7Boprg+KpMDLBQqKFmSo+JkQMGqRcicUyqCowJpuT+C6A==
-  dependencies:
-    "@types/filesystem" "*"
-
-"@types/filesystem@*":
-  version "0.0.32"
-  resolved "https://registry.yarnpkg.com/@types/filesystem/-/filesystem-0.0.32.tgz#307df7cc084a2293c3c1a31151b178063e0a8edf"
-  integrity sha512-Yuf4jR5YYMR2DVgwuCiP11s0xuVRyPKmz8vo6HBY3CGdeMj8af93CFZX+T82+VD1+UqHOxTq31lO7MI7lepBtQ==
-  dependencies:
-    "@types/filewriter" "*"
-
-"@types/filewriter@*":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@types/filewriter/-/filewriter-0.0.29.tgz#a48795ecadf957f6c0d10e0c34af86c098fa5bee"
-  integrity sha512-BsPXH/irW0ht0Ji6iw/jJaK8Lj3FJemon2gvEqHKpCdDCeemHa+rI3WBGq5z7cDMZgoLjY40oninGxqk+8NzNQ==
-
 "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
@@ -1542,6 +1523,11 @@
   dependencies:
     "@typescript-eslint/types" "5.40.1"
     eslint-visitor-keys "^3.3.0"
+
+"@webbtc/webln-types@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@webbtc/webln-types/-/webln-types-1.0.10.tgz#03e41779df6ba9bdca57635ca6b5a70c7233c8c6"
+  integrity sha512-Cy9+uNqvRct3yHB+bs5hJ3idf4VEmnyKxwMpe1/lWpOXbbdi/h7GgAB1JMsnblwN74QKSBEnOPvURoA+RAG9qg==
 
 abbrev@^1.0.0:
   version "1.1.1"
@@ -6005,13 +5991,6 @@ webidl-conversions@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
   integrity sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==
-
-webln@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/webln/-/webln-0.3.0.tgz#acb0afbe7c1a48eda67f9fd2ae7c6bcd646added"
-  integrity sha512-QMLGIQtHzSVwYldhREjJsVGfVZ37q+hkBpi9KiruxI8FJwD0UocshrP9sbtd1H5N96uAAq53aywesy3/sw+YOA==
-  dependencies:
-    "@types/chrome" "^0.0.74"
 
 "webpack-sources@^2.0.0 || ^3.0.0":
   version "3.2.3"

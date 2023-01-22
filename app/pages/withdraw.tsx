@@ -38,7 +38,6 @@ import Countdown from "react-countdown";
 import toast from "react-hot-toast";
 import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
-import { requestProvider } from "webln";
 
 type WithdrawProps = {
   flow: WithdrawalFlow;
@@ -220,18 +219,22 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
   React.useEffect(() => {
     if (availableBalance > 0) {
       (async () => {
-        try {
-          if (!hasLaunchedWebln) {
-            console.log("Launching webln");
-            setLaunchedWebln(true);
-            const webln = await requestProvider();
-            const makeInvoiceResponse = await webln.makeInvoice({
-              amount: availableBalance,
-            });
-            executeWithdrawal(makeInvoiceResponse.paymentRequest, true);
+        if (window.webln) {
+          try {
+            if (!hasLaunchedWebln) {
+              setLaunchedWebln(true);
+              console.log("Launching webln");
+              const result = await window.webln.enable();
+              if (result.enabled) {
+                const makeInvoiceResponse = await window.webln.makeInvoice({
+                  amount: availableBalance,
+                });
+                executeWithdrawal(makeInvoiceResponse.paymentRequest, true);
+              }
+            }
+          } catch (error) {
+            console.error("Failed to load webln", error);
           }
-        } catch (error) {
-          console.error("Failed to load webln", error);
         }
       })();
     }

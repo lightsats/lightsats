@@ -81,7 +81,6 @@
     "twilio": "^3.83.1",
     "use-count-up": "^3.0.1",
     "uuid": "^9.0.0",
-    "webln": "^0.3.0",
     "zustand": "^4.1.4"
   },
   "devDependencies": {
@@ -93,6 +92,7 @@
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "@typescript-eslint/parser": "^5.40.1",
+    "@webbtc/webln-types": "^1.0.10",
     "cli-confirm": "^1.0.1",
     "dotenv-cli": "^6.0.0",
     "eslint": "8.25.0",
