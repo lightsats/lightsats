@@ -72,6 +72,18 @@ export const spend: Item[] = [
   },
   {
     category: "spend",
+    image: "shamory.jpeg",
+    languageCodes: [getLanguageCode("English")],
+    link: "https://lgt.st/shamory",
+    placeholderDataUrl:
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAALklEQVR4nGNgYGBgYWERFxdnZmZmYGBgePPmzb9//0AsTk7O3bt329jYgDjIAAAHRwkZ5bhLBwAAAABJRU5ErkJggg==",
+    name: "SHAmory",
+    slogan:
+      "Buy SHAmory, the Bitcoin card game for kids 5+ and adults, as well as Goodnight Bitcoin and products ideal for Bitcoin babies, kids and parents	",
+    platforms: ["desktop"],
+  },
+  {
+    category: "spend",
     image: "sparkwallet.png",
     languageCodes: [getLanguageCode("English")],
     link: "https://lgt.st/spark",
