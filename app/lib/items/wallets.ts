@@ -184,20 +184,6 @@ const lntips: Wallet = {
   languageCodes: [getLanguageCode("English")],
   platforms: ["mobile"],
 };
-const lntxbot: Wallet = {
-  id: "lntxbot",
-  features: ["lightning address"],
-  category: "wallets",
-  minBalance: 0,
-  link: "https://lgt.st/lntxbot",
-  image: "lntxbot.jpeg",
-  placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nB3JoRUAIAhFUXZgLkmsYvuL0ohG2qsevfUasD/AujszY8XMGODukt5UlaTzXTx1IMR3DRAKAAAAAElFTkSuQmCC",
-  name: "lntxbot (Telegram)",
-  slogan: "A Bitcoin Lightning wallet on Telegram.",
-  languageCodes: [getLanguageCode("English")],
-  platforms: ["mobile"],
-};
 const obw: Wallet = {
   id: "obw",
   features: ["lnurl-auth", "lnurl-withdraw", "non-custodial"],
@@ -342,7 +328,6 @@ export const wallets: Wallet[] = [
   alby,
   phoenix,
   lntips,
-  lntxbot,
   obw,
   bbw,
   zeus,
