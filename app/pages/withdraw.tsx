@@ -253,8 +253,12 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
       tippeeBalance: availableBalance,
       recommendedLimit: 1,
       shadow: false,
+      recommendedItemId:
+        flow === "anonymous"
+          ? withdrawableTips?.[0]?.recommendedWalletId ?? undefined
+          : undefined,
     }),
-    [availableBalance]
+    [availableBalance, flow, withdrawableTips]
   );
 
   const wasRecentlyWithdrawn =
@@ -371,7 +375,18 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
           {!isSubmitting && !wasRecentlyWithdrawn && (
             <>
               <Spacer y={1} />
-              <Collapse shadow title={<Text b>Manual withdrawal</Text>}>
+              {flow === "anonymous" && (
+                <>
+                  <Collapse shadow title={<Text b>👛 Need a wallet?</Text>}>
+                    <ItemsList
+                      category="wallets"
+                      options={walletCategoryFilterOptions}
+                    />
+                  </Collapse>
+                  <Spacer />
+                </>
+              )}
+              <Collapse shadow title={<Text b>🧾 Manual withdrawal</Text>}>
                 <Text>
                   Create an invoice for exactly&nbsp;
                   <strong>{availableBalance} sats</strong> and paste the invoice
@@ -398,17 +413,6 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
                   Withdraw
                 </Button>
               </Collapse>
-              {flow === "anonymous" && (
-                <>
-                  <Spacer />
-                  <Collapse shadow title={<Text b>Need a wallet?</Text>}>
-                    <ItemsList
-                      category="wallets"
-                      options={walletCategoryFilterOptions}
-                    />
-                  </Collapse>
-                </>
-              )}
             </>
           )}
         </div>

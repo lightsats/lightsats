@@ -230,7 +230,7 @@ Micheal Saylor`
         width="100px"
       />
       <Spacer />
-      <Text>Suggested Wallet ID</Text>
+      <Text>Recommended Wallet ID</Text>
       <Text size="small">
         {"The recipient will always be recommended this wallet."}
       </Text>
