@@ -2,6 +2,7 @@ import {
   LnbitsWallet,
   SentReminder,
   Tip,
+  TipStatus,
   User,
   Withdrawal,
   WithdrawalError,
@@ -57,4 +58,8 @@ export type AdminExtendedWithdrawal = Withdrawal & {
 export type AdminExtendedWithdrawalError = WithdrawalError & {
   user: User | null;
   tip: Tip | null;
+};
+
+export type AdminTipChangeStatusRequest = {
+  status: TipStatus;
 };

@@ -1,5 +1,6 @@
 import {
   Badge,
+  Button,
   Card,
   Link,
   Loading,
@@ -7,7 +8,7 @@ import {
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { User } from "@prisma/client";
+import { Tip, TipStatus, User } from "@prisma/client";
 import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
 import { AdminTipCardContents } from "components/admin/AdminTipCardContents";
 import { AdminTipGroupCard } from "components/admin/AdminTipGroupCard";
@@ -15,12 +16,14 @@ import { AdminUserCard } from "components/admin/AdminUserCard";
 import { AdminWithdrawalCard } from "components/admin/AdminWithdrawalCard";
 import { AdminWithdrawalErrorsList } from "components/admin/AdminWithdrawalErrorsList";
 import { formatDistance } from "date-fns";
+import { ApiRoutes } from "lib/ApiRoutes";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 import useSWR from "swr";
-import { AdminExtendedTip } from "types/Admin";
+import { AdminExtendedTip, AdminTipChangeStatusRequest } from "types/Admin";
 
 const AdminTipPage: NextPage = () => {
   const router = useRouter();
@@ -114,6 +117,10 @@ const AdminTipPage: NextPage = () => {
       <h2>Withdrawal Errors</h2>
       <AdminWithdrawalErrorsList withdrawalErrors={tip.withdrawalErrors} />
       <Spacer />
+      <Button color="error" onClick={() => changeTipStatus(tip)}>
+        Change Tip status
+      </Button>
+      <Spacer />
       <AdminJSONDumpCard entity={tip} />
     </>
   );
@@ -134,3 +141,35 @@ function AdminTipUser({ title, user }: AdminTipUserProps) {
 }
 
 export default AdminTipPage;
+
+async function changeTipStatus(tip: Tip) {
+  const status = window.prompt(
+    "Enter one of " + Object.values(TipStatus).join(", "),
+    tip.status
+  ) as TipStatus;
+  if (Object.values(TipStatus).indexOf(status) > -1) {
+    const changeStatusRequest: AdminTipChangeStatusRequest = {
+      status,
+    };
+    const result = await fetch(
+      `${ApiRoutes.adminTips}/${tip.id}/changeStatus`,
+      {
+        body: JSON.stringify(changeStatusRequest),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    if (!result.ok) {
+      toast.error(
+        "Failed to change tip status: " +
+          result.statusText +
+          ". Please try again."
+      );
+    } else {
+      toast.success("Tip status changed to " + status);
+      window.location.reload();
+    }
+  } else if (status) {
+    alert("Invalid status: " + status);
+  }
+}
