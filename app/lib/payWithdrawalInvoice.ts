@@ -40,16 +40,6 @@ export async function payWithdrawalInvoice(
   ) {
     const errorMessage =
       "Your last withdrawal attempt was less than a minute ago. Please wait before trying again.";
-    await prisma.withdrawalError.create({
-      data: {
-        message: errorMessage,
-        userId,
-        tipId,
-        withdrawalFlow,
-        withdrawalMethod,
-        withdrawalInvoice: invoice,
-      },
-    });
     throw new Error(errorMessage);
   }
 
@@ -89,16 +79,7 @@ export async function payWithdrawalInvoice(
   ) {
     const errorMessage =
       "Your last withdrawal attempt was less than a minute ago. Please wait a full minute before trying again. (Transaction)";
-    await prisma.withdrawalError.create({
-      data: {
-        message: errorMessage,
-        userId,
-        tipId,
-        withdrawalFlow,
-        withdrawalMethod,
-        withdrawalInvoice: invoice,
-      },
-    });
+
     throw new Error(errorMessage);
   }
 
@@ -119,17 +100,6 @@ export async function payWithdrawalInvoice(
 
   if (!tips.length) {
     const errorMessage = "No tips are available to withdraw";
-    // no tips to claim
-    await prisma.withdrawalError.create({
-      data: {
-        message: errorMessage,
-        userId,
-        tipId,
-        withdrawalFlow,
-        withdrawalMethod,
-        withdrawalInvoice: invoice,
-      },
-    });
 
     throw new Error(errorMessage);
   }
@@ -138,16 +108,6 @@ export async function payWithdrawalInvoice(
 
   if (withdrawalInvoicePriceInSats !== amount) {
     const errorMessage = "Withdrawal request does not match user/tip balance";
-    await prisma.withdrawalError.create({
-      data: {
-        message: errorMessage,
-        userId,
-        tipId,
-        withdrawalFlow,
-        withdrawalMethod,
-        withdrawalInvoice: invoice,
-      },
-    });
 
     throw new Error(errorMessage);
   }
@@ -180,17 +140,6 @@ export async function payWithdrawalInvoice(
       " " +
       (JSON.stringify(payInvoiceResponseBody) ?? "Unknown error");
 
-    await prisma.withdrawalError.create({
-      data: {
-        message: errorMessage,
-        userId,
-        tipId,
-        withdrawalFlow,
-        withdrawalInvoice: invoice,
-        withdrawalMethod,
-      },
-    });
-
     throw new Error(errorMessage);
   } else {
     const payment = await getPayment(
@@ -200,17 +149,6 @@ export async function payWithdrawalInvoice(
     if (!payment.paid) {
       const errorMessage =
         "Outgoing payment was not paid: " + payInvoiceResponseBody.checking_id;
-
-      await prisma.withdrawalError.create({
-        data: {
-          message: errorMessage,
-          userId,
-          tipId,
-          withdrawalFlow,
-          withdrawalMethod,
-          withdrawalInvoice: invoice,
-        },
-      });
 
       throw new Error(errorMessage);
     }

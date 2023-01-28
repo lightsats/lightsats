@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { payWithdrawalInvoice } from "lib/payWithdrawalInvoice";
 
+import prisma from "lib/prismadb";
 import { checkWithdrawalFlow } from "lib/withdrawal";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
@@ -29,25 +30,41 @@ async function handlePayInvoice(req: NextApiRequest, res: NextApiResponse) {
   const userId =
     withdrawalRequest.flow === "anonymous" ? undefined : session?.user.id;
 
+  const withdrawalMethod = isWebln === "true" ? "webln" : "invoice";
+
   try {
     await payWithdrawalInvoice(
       withdrawalRequest.flow,
       withdrawalRequest.invoice,
       userId,
       withdrawalRequest.tipId,
-      isWebln === "true" ? "webln" : "invoice",
+      withdrawalMethod,
       undefined
     );
     return res.status(StatusCodes.NO_CONTENT).end();
   } catch (error) {
-    console.error(
+    const errorMessage =
       "Failed to pay manual invoice " +
-        withdrawalRequest.invoice +
-        (withdrawalRequest.flow === "anonymous"
-          ? " tipId " + withdrawalRequest.tipId
-          : " userId " + userId) +
-        error
-    );
+      withdrawalRequest.invoice +
+      (withdrawalRequest.flow === "anonymous"
+        ? " tipId " + withdrawalRequest.tipId
+        : " userId " + userId) +
+      ": " +
+      JSON.stringify(error, Object.getOwnPropertyNames(error));
+
+    console.error(errorMessage, error);
+
+    await prisma.withdrawalError.create({
+      data: {
+        message: errorMessage,
+        userId,
+        tipId: withdrawalRequest.tipId,
+        withdrawalFlow: withdrawalRequest.flow,
+        withdrawalMethod,
+        withdrawalInvoice: withdrawalRequest.invoice,
+      },
+    });
+
     return res.status(500).json((error as Error).message);
   }
 }

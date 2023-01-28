@@ -104,7 +104,7 @@ export async function stageTip(
       undefined
     );
 
-    const { payInvoiceResponse } = await payInvoice(
+    const { payInvoiceResponse, payInvoiceResponseBody } = await payInvoice(
       invoice,
       fromWalletAdminKey
     );
@@ -113,7 +113,13 @@ export async function stageTip(
         "Failed to move tip " +
           tip.id +
           " to staging wallet. Withdrawal flow = " +
-          flow
+          flow +
+          ": " +
+          payInvoiceResponse.status +
+          " " +
+          payInvoiceResponse.statusText +
+          " " +
+          JSON.stringify(payInvoiceResponseBody)
       );
     }
   } catch (error) {

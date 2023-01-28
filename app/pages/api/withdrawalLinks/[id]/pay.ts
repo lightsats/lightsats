@@ -67,18 +67,31 @@ async function initiatePayWithdrawalLink(
       status: "OK",
     });
   } catch (error) {
-    console.error(
-      "Failed to pay withdrawal invoice " +
-        invoice +
-        " withdrawalLink " +
-        withdrawalLink.id,
-      error
-    );
+    const errorMessage =
+      "Failed to pay lnurlw invoice " +
+      invoice +
+      (withdrawalLink.withdrawalFlow === "anonymous"
+        ? " tipId " + withdrawalLink.tipId
+        : " userId " + withdrawalLink.userId) +
+      " withdrawalLink " +
+      withdrawalLink.id +
+      ": " +
+      JSON.stringify(error, Object.getOwnPropertyNames(error));
+    console.error(errorMessage, error);
+    await prisma.withdrawalError.create({
+      data: {
+        message: errorMessage,
+        userId: withdrawalLink.userId ?? undefined,
+        tipId: withdrawalLink.tipId ?? undefined,
+        withdrawalFlow: withdrawalLink.withdrawalFlow,
+        withdrawalMethod: "lnurlw",
+        withdrawalInvoice: invoice as string,
+      },
+    });
+
     res.json({
       status: "ERROR",
-      reason:
-        "Payment failed - " +
-        JSON.stringify(error, Object.getOwnPropertyNames(error)),
+      reason: (error as Error).message,
     });
   }
 }
