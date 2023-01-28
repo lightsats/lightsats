@@ -9,6 +9,7 @@ import {
   Row,
   Spacer,
   Text,
+  Tooltip,
 } from "@nextui-org/react";
 import { ExpiryBadge } from "components/ExpiryBadge";
 import { FiatPrice } from "components/FiatPrice";
@@ -162,23 +163,55 @@ export function ClaimedTipCard({
               color={progressColor}
             />
             <Spacer y={0.5} />
-            <Row justify="space-between" align="flex-start">
-              <div>
-                <Text color="white" size="small" b>
-                  Status
-                </Text>
-                {publicTip.status === "CLAIMED" ? (
-                  <>
-                    <Text color="white" size="small" transform="uppercase">
-                      Step {journeyStep} of {bitcoinJourneyPages.length}{" "}
-                    </Text>
-                  </>
-                ) : undefined}
-              </div>
-              <div>
-                <TipStatusBadge tip={publicTip} />
-              </div>
-            </Row>
+            {expirableTipStatuses.indexOf(publicTip.status) > -1 ? (
+              <Row justify="space-between" align="flex-start">
+                <div>
+                  <Text color="white" size="small" b>
+                    Status
+                  </Text>
+                  {publicTip.status === "CLAIMED" ? (
+                    <>
+                      <Text color="white" size="small" transform="uppercase">
+                        Step {journeyStep} of {bitcoinJourneyPages.length}{" "}
+                      </Text>
+                    </>
+                  ) : undefined}
+                </div>
+                <div>
+                  <TipStatusBadge tip={publicTip} />
+                </div>
+              </Row>
+            ) : (
+              <Row justify="flex-start" align="flex-start">
+                <Tooltip
+                  content={new Date(
+                    publicTip.lastWithdrawal ?? publicTip.updated
+                  ).toString()}
+                >
+                  <Text color="white" size="small" b>
+                    {publicTip.lastWithdrawal ? (
+                      publicTip.status === "WITHDRAWN" ||
+                      publicTip.status === "REFUNDED" ? (
+                        <>
+                          {publicTip.status[0] +
+                            publicTip.status.substring(1).toLowerCase()}
+                        </>
+                      ) : (
+                        <>Last withdrawal attempt</>
+                      )
+                    ) : (
+                      <>Last updated</>
+                    )}
+                    &nbsp;
+                    {formatDistanceStrict(
+                      Date.now(),
+                      new Date(publicTip.lastWithdrawal ?? publicTip.updated)
+                    )}{" "}
+                    ago
+                  </Text>
+                </Tooltip>
+              </Row>
+            )}
             <Row>
               {publicTip.status === "CLAIMED" ? (
                 <>

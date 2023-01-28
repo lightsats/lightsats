@@ -17,6 +17,7 @@ export type PublicTip = Pick<
   | "tippeeLocale"
   | "skipOnboarding"
   | "lastWithdrawal"
+  | "updated"
 > & {
   hasClaimed: boolean;
   tipper: Pick<User, "name" | "twitterUsername" | "avatarURL"> & {

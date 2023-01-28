@@ -44,5 +44,6 @@ export function mapTipToPublicTip(
     tippeeLocale: tip.tippeeLocale,
     skipOnboarding: tip.skipOnboarding,
     lastWithdrawal: tip.lastWithdrawal,
+    updated: tip.updated,
   };
 }
