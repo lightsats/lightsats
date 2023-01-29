@@ -135,7 +135,6 @@ model Tip {
   numSmsTokens Int @default(0) // to allow new user signups using SMS
   sentReminders SentReminder[]
   onboardingFlow OnboardingFlow @default(DEFAULT)
-  skipOnboarding Boolean @default(false)
   withdrawalLinks WithdrawalLink[]
   withdrawalErrors WithdrawalError[]
   lastWithdrawal DateTime?
