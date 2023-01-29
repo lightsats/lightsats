@@ -11,12 +11,7 @@ import { TipGroupWithTips } from "types/TipGroupWithTips";
 
 export type AdminDashboard = {
   adminUsers: User[];
-  users: User[];
   lnbitsDashboardUrl: string;
-  tips: Tip[];
-  tipGroups: TipGroupWithTips[];
-  withdrawals: AdminExtendedWithdrawal[];
-  withdrawalErrors: AdminExtendedWithdrawalError[];
   walletBalance: number;
   smsForSatsAccountBalance: number;
 };

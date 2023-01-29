@@ -4,14 +4,14 @@ import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import Head from "next/head";
 import useSWR from "swr";
-import { AdminDashboard } from "types/Admin";
+import { AdminExtendedWithdrawal } from "types/Admin";
 
 const AdminWithdrawalsPage: NextPage = () => {
-  const { data: adminDashboard } = useSWR<AdminDashboard>(
-    "/api/admin",
+  const { data: withdrawals } = useSWR<AdminExtendedWithdrawal[]>(
+    "/api/admin/withdrawals",
     defaultFetcher
   );
-  if (!adminDashboard) {
+  if (!withdrawals) {
     return <Loading color="currentColor" size="sm" />;
   }
 
@@ -21,7 +21,7 @@ const AdminWithdrawalsPage: NextPage = () => {
         <title>Lightsats⚡ - Admin - Withdrawals</title>
       </Head>
       <h1>Admin/Withdrawals</h1>
-      <AdminWithdrawalsList withdrawals={adminDashboard.withdrawals} />
+      <AdminWithdrawalsList withdrawals={withdrawals} />
     </>
   );
 };

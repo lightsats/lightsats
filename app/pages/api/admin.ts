@@ -60,38 +60,8 @@ async function handleGetAdminDashboard(
         },
       },
     }),
-    tips: await prisma.tip.findMany({
-      orderBy: {
-        created: "desc",
-      },
-    }),
-    withdrawals: await prisma.withdrawal.findMany({
-      include: {
-        tips: true,
-        user: true,
-      },
-      orderBy: {
-        created: "desc",
-      },
-    }),
-    withdrawalErrors: await prisma.withdrawalError.findMany({
-      include: {
-        user: true,
-        tip: true,
-      },
-      orderBy: {
-        created: "desc",
-      },
-    }),
     lnbitsDashboardUrl: `${process.env.LNBITS_URL}/wallet?usr=${process.env.LNBITS_USER_ID}`,
-    users: await prisma.user.findMany(),
     walletBalance,
     smsForSatsAccountBalance,
-    tipGroups: await prisma.tipGroup.findMany({
-      include: {
-        tips: true,
-        tipper: true,
-      },
-    }),
   });
 }

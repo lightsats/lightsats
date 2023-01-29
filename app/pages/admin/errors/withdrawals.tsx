@@ -4,14 +4,14 @@ import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import Head from "next/head";
 import useSWR from "swr";
-import { AdminDashboard } from "types/Admin";
+import { AdminExtendedWithdrawalError } from "types/Admin";
 
 const AdminWithdrawalsPage: NextPage = () => {
-  const { data: adminDashboard } = useSWR<AdminDashboard>(
-    "/api/admin",
+  const { data: withdrawalErrors } = useSWR<AdminExtendedWithdrawalError[]>(
+    "/api/admin/errors/withdrawals",
     defaultFetcher
   );
-  if (!adminDashboard) {
+  if (!withdrawalErrors) {
     return <Loading color="currentColor" size="sm" />;
   }
 
@@ -21,9 +21,7 @@ const AdminWithdrawalsPage: NextPage = () => {
         <title>Lightsats⚡ - Admin - Withdrawal Errors</title>
       </Head>
       <h1>Admin/Withdrawal Errors</h1>
-      <AdminWithdrawalErrorsList
-        withdrawalErrors={adminDashboard.withdrawalErrors}
-      />
+      <AdminWithdrawalErrorsList withdrawalErrors={withdrawalErrors} />
     </>
   );
 };

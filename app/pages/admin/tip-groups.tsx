@@ -4,14 +4,14 @@ import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import Head from "next/head";
 import useSWR from "swr";
-import { AdminDashboard } from "types/Admin";
+import { TipGroupWithTips } from "types/TipGroupWithTips";
 
 const AdminTipGroupsPage: NextPage = () => {
-  const { data: adminDashboard } = useSWR<AdminDashboard>(
-    "/api/admin",
+  const { data: tipGroups } = useSWR<TipGroupWithTips[]>(
+    "/api/admin/tip-groups",
     defaultFetcher
   );
-  if (!adminDashboard) {
+  if (!tipGroups) {
     return <Loading color="currentColor" size="sm" />;
   }
 
@@ -21,7 +21,7 @@ const AdminTipGroupsPage: NextPage = () => {
         <title>Lightsats⚡ - Admin - Tip Groups</title>
       </Head>
       <h1>Admin/TipGroups</h1>
-      <AdminTipGroupsList tipGroups={adminDashboard.tipGroups} />
+      <AdminTipGroupsList tipGroups={tipGroups} />
     </>
   );
 };

@@ -1,29 +1,29 @@
 import { Grid, Loading } from "@nextui-org/react";
+import { User } from "@prisma/client";
 import { AdminUserCard } from "components/admin/AdminUserCard";
 import { Paginated } from "components/Paginated";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import Head from "next/head";
 import useSWR from "swr";
-import { AdminDashboard } from "types/Admin";
 
 const AdminUsersPage: NextPage = () => {
-  const { data: adminDashboard } = useSWR<AdminDashboard>(
-    "/api/admin",
+  const { data: adminDashboard } = useSWR<User[]>(
+    "/api/admin/users",
     defaultFetcher
   );
 
   if (!adminDashboard) {
     return <Loading color="currentColor" size="sm" />;
   }
-  return <AdminPageInternal adminDashboard={adminDashboard} />;
+  return <AdminPageInternal users={adminDashboard} />;
 };
 
 type AdminPageInternalProps = {
-  adminDashboard: AdminDashboard;
+  users: User[];
 };
 
-function AdminPageInternal({ adminDashboard }: AdminPageInternalProps) {
+function AdminPageInternal({ users }: AdminPageInternalProps) {
   return (
     <>
       <Head>
@@ -31,7 +31,7 @@ function AdminPageInternal({ adminDashboard }: AdminPageInternalProps) {
       </Head>
       <h1>Admin/Users</h1>
       <Paginated
-        items={adminDashboard.users}
+        items={users}
         Render={({ pageItems }) => (
           <Grid.Container justify="center" gap={1}>
             {pageItems.map((user) => (

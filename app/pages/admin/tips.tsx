@@ -1,17 +1,14 @@
 import { Loading } from "@nextui-org/react";
+import { Tip } from "@prisma/client";
 import { AdminTipsList } from "components/admin/AdminTipsList";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import Head from "next/head";
 import useSWR from "swr";
-import { AdminDashboard } from "types/Admin";
 
 const AdminTipsPage: NextPage = () => {
-  const { data: adminDashboard } = useSWR<AdminDashboard>(
-    "/api/admin",
-    defaultFetcher
-  );
-  if (!adminDashboard) {
+  const { data: tips } = useSWR<Tip[]>("/api/admin/tips", defaultFetcher);
+  if (!tips) {
     return <Loading color="currentColor" size="sm" />;
   }
 
@@ -21,7 +18,7 @@ const AdminTipsPage: NextPage = () => {
         <title>Lightsats⚡ - Admin - Tips</title>
       </Head>
       <h1>Admin/Tips</h1>
-      <AdminTipsList tips={adminDashboard.tips} />
+      <AdminTipsList tips={tips} />
     </>
   );
 };
