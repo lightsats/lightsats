@@ -15,7 +15,7 @@ export function AdminTipGroupCardContents({
         <Text b>{tipGroup.id}</Text>
         <Text>{tipGroup.status}</Text>
         {tipGroup.status === "FUNDED" &&
-          tipGroup.tips.some((tip) => tip.status === "UNCLAIMED") && (
+          tipGroup.tips.some((tip) => tip.status === "UNFUNDED") && (
             <Text>Not ready yet</Text>
           )}
       </Row>
