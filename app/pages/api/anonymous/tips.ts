@@ -24,7 +24,7 @@ async function getTips(req: NextApiRequest, res: NextApiResponse<Tip[]>) {
     },
   });
 
-  if (!tip || !tip.skipOnboarding) {
+  if (!tip || tip.onboardingFlow !== "SKIP") {
     return res.status(StatusCodes.NOT_FOUND).end();
   }
 

@@ -41,7 +41,7 @@ export function getWithdrawableTipsQuery(
           },
         }
       : {
-          skipOnboarding: true,
+          onboardingFlow: "SKIP",
           id: {
             equals: tipId,
           },

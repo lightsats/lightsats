@@ -413,6 +413,6 @@ enum LeaderboardTheme {
 
 enum OnboardingFlow {
   DEFAULT // claim then onboard
-  SKIP // withdraw without claim
-  LIGHTNING // show wallets then only allow claim using lnurl-auth
+  SKIP // withdraw instantly without claiming or seeing onboarding
+  LIGHTNING // show wallets first then only allow claim using lnurl-auth
 }

@@ -15,7 +15,7 @@ export type PublicTip = Pick<
   | "claimLinkViewed"
   | "created"
   | "tippeeLocale"
-  | "skipOnboarding"
+  | "onboardingFlow"
   | "lastWithdrawal"
   | "updated"
 > & {

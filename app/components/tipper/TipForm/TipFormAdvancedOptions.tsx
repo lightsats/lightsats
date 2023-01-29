@@ -1,12 +1,14 @@
 import {
   Col,
   Input,
+  Radio,
   Row,
   Spacer,
   Switch,
   Text,
   Textarea,
 } from "@nextui-org/react";
+import { OnboardingFlow } from "@prisma/client";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Divider } from "components/Divider";
 import { TipFormData } from "components/tipper/TipForm/TipFormData";
@@ -21,18 +23,12 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
+import { toast } from "react-hot-toast";
 
 const tippeeLocaleSelectOptions: SelectOption[] = locales.map((locale) => ({
   value: locale,
   label: getNativeLanguageName(locale),
 }));
-
-const recommendedWalletSelectOptions: SelectOption[] = wallets.map(
-  (wallet) => ({
-    value: wallet.id,
-    label: wallet.name,
-  })
-);
 
 type TipFormAdvancedOptionsProps = {
   mode: "create" | "update";
@@ -52,10 +48,32 @@ export function TipFormAdvancedOptions({
   quantity,
 }: TipFormAdvancedOptionsProps) {
   const watchedTippeeLocale = watch("tippeeLocale");
-  const watchedrecommendedWalletId = watch("recommendedWalletId");
+  const watchedRecommendedWalletId = watch("recommendedWalletId");
   const watchedTippeeName = watch("tippeeName");
-  const watchedSkipOnboarding = watch("skipOnboarding");
+  const watchedOnboardingFlow = watch("onboardingFlow");
   const watchedEnterIndividualNames = watch("enterIndividualNames");
+
+  const recommendedWalletSelectOptions: SelectOption[] = React.useMemo(
+    () =>
+      wallets
+        .filter(
+          (wallet) =>
+            watchedOnboardingFlow !== "LIGHTNING" ||
+            wallet.features.indexOf("lnurl-auth") >= 0
+        )
+        .map((wallet) => ({
+          value: wallet.id,
+          label: wallet.name,
+        })),
+    [watchedOnboardingFlow]
+  );
+
+  const setOnboardingFlow = React.useCallback(
+    (onboardingFlow: OnboardingFlow) => {
+      setValue("onboardingFlow", onboardingFlow);
+    },
+    [setValue]
+  );
 
   const setTippeeLocale = React.useCallback(
     (locale: string) => {
@@ -64,12 +82,30 @@ export function TipFormAdvancedOptions({
     [setValue]
   );
 
-  const setrecommendedWalletId = React.useCallback(
-    (recommendedWalletId: string) => {
+  const setRecommendedWalletId = React.useCallback(
+    (recommendedWalletId: string | undefined) => {
       setValue("recommendedWalletId", recommendedWalletId);
     },
     [setValue]
   );
+
+  React.useEffect(() => {
+    if (
+      watchedRecommendedWalletId &&
+      watchedOnboardingFlow === "LIGHTNING" &&
+      (
+        wallets.find((wallet) => wallet.id === watchedRecommendedWalletId)
+          ?.features ?? []
+      ).indexOf("lnurl-auth") < 0
+    ) {
+      setRecommendedWalletId(undefined);
+      toast.error("Removed recommended wallet (lnurl-auth not supported)");
+    }
+  }, [
+    watchedRecommendedWalletId,
+    watchedOnboardingFlow,
+    setRecommendedWalletId,
+  ]);
 
   return (
     <>
@@ -106,37 +142,31 @@ export function TipFormAdvancedOptions({
           />
         </Col>
       </Row>
-      <Spacer />
-      <Row align="flex-start">
-        <Col>
-          <Text css={{ whiteSpace: "nowrap" }}>⏭️ Skip onboarding</Text>
-        </Col>
-        <Col css={{ ta: "right" }}>
-          <Controller
-            name="skipOnboarding"
-            control={control}
-            render={({ field }) => (
-              <Switch
-                {...field}
-                checked={field.value}
-                color={watchedSkipOnboarding ? "warning" : undefined}
-                onChange={(e) => field.onChange(e.target.checked)}
-              />
-            )}
-          />
-        </Col>
-      </Row>
-      <Text
-        small
-        css={{
-          mt: 0,
-          mb: 6,
-          lineHeight: 1.2,
-          display: "inline-block",
-        }}
+      <Divider />
+      <Radio.Group
+        label="Onboarding Flow"
+        defaultValue="1"
+        value={watchedOnboardingFlow}
+        size="sm"
+        onChange={(e) => setOnboardingFlow(e as OnboardingFlow)}
       >
-        Allow your recipient to directly withraw without logging in.
-      </Text>
+        {Object.values(OnboardingFlow).map((value) => (
+          <Radio
+            key={value}
+            value={value}
+            description={
+              <Text small>{getOnboardingFlowDescription(value)}</Text>
+            }
+          >
+            {value === "DEFAULT"
+              ? "🦔 Standard"
+              : value === "SKIP"
+              ? "⏭️ Skip"
+              : "⚡ Lightning"}
+          </Radio>
+        ))}
+      </Radio.Group>
+
       <Divider />
       <Controller
         name="tippeeName"
@@ -236,10 +266,13 @@ Micheal Saylor`
       </Text>
       <Spacer y={0.5} />
       <CustomSelect
+        key={
+          watchedRecommendedWalletId /* for some reason cannot clear programatically without this */
+        }
         options={recommendedWalletSelectOptions}
         isClearable
-        value={watchedrecommendedWalletId}
-        onChange={setrecommendedWalletId}
+        value={watchedRecommendedWalletId}
+        onChange={setRecommendedWalletId}
         width="100px"
       />
       <Divider />
@@ -274,4 +307,15 @@ Micheal Saylor`
       </Text>
     </>
   );
+}
+
+function getOnboardingFlowDescription(flow: OnboardingFlow): string {
+  switch (flow) {
+    case "DEFAULT":
+      return "Recipient will claim with any login method, and then will go through a short onboarding before being able to withdraw their tip.";
+    case "SKIP":
+      return "Allow your recipient to directly withraw without logging in.";
+    case "LIGHTNING":
+      return "Suggest a lnurl-auth compatible Lightning wallet, then only allow claiming with Lightning.";
+  }
 }

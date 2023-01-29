@@ -60,7 +60,7 @@ const ClaimTipPage: NextPage = () => {
 
   const canClaim =
     publicTip &&
-    !publicTip.skipOnboarding &&
+    publicTip.onboardingFlow !== "SKIP" &&
     publicTip.status === "UNCLAIMED" &&
     session &&
     !isTipper &&
@@ -147,7 +147,9 @@ const ClaimTipPage: NextPage = () => {
           (session && session.user.id !== publicTip.tippeeId)) ? (
         <>
           <Text>This tip is no longer available.</Text>
-          <UnavailableTipActions skipOnboarding={publicTip.skipOnboarding} />
+          <UnavailableTipActions
+            skipOnboarding={publicTip.onboardingFlow === "SKIP"}
+          />
 
           <Spacer />
           <HomeButton />
@@ -221,7 +223,7 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
       )}
       <ClaimedTipCard publicTip={publicTip} viewing="tipper" />
       <Spacer y={3} />
-      {publicTip.skipOnboarding ? (
+      {publicTip.onboardingFlow === "SKIP" ? (
         <Withdraw flow="anonymous" tipId={publicTip.id} />
       ) : (
         <>
@@ -232,7 +234,14 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
             submitText={t("claim:claim")}
             callbackUrl={getCurrentUrl(router)}
             tipId={publicTip.id}
-            defaultLoginMethod="phone"
+            defaultLoginMethod={
+              publicTip.onboardingFlow === "LIGHTNING" ? "lightning" : "phone"
+            }
+            allowedLoginMethods={
+              publicTip.onboardingFlow === "LIGHTNING"
+                ? ["lightning"]
+                : undefined
+            }
           />
         </>
       )}

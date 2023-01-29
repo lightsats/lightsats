@@ -125,7 +125,7 @@ async function handlePostTip(
     status: "UNFUNDED",
     expiry,
     currency: createTipRequest.currency,
-    skipOnboarding: createTipRequest.skipOnboarding,
+    onboardingFlow: createTipRequest.onboardingFlow,
     note: createTipRequest.note || null,
     tippeeName: createTipRequest.tippeeName,
     tippeeLocale: createTipRequest.tippeeLocale,

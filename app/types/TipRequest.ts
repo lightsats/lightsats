@@ -1,7 +1,9 @@
+import { OnboardingFlow } from "@prisma/client";
+
 export type TipRequestBase = {
   currency: string;
   expiry: Date;
-  skipOnboarding: boolean;
+  onboardingFlow: OnboardingFlow;
   tippeeName?: string;
   tippeeLocale: string;
   note?: string;
