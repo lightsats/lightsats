@@ -14,6 +14,7 @@ import { useTranslation } from "next-i18next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { SelectWalletPageContent } from "pages/journey/wallet";
 import { Withdraw } from "pages/withdraw";
 import React from "react";
 import toast from "react-hot-toast";
@@ -25,7 +26,7 @@ const ClaimTipPage: NextPage = () => {
   const { t } = useTranslation("claim");
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
-  const { id, printed: isPrinted } = router.query;
+  const { id, printed: isPrinted, walletInstalled } = router.query;
   const { data: publicTip, mutate: mutatePublicTip } = useSWR<PublicTip>(
     id ? `/api/tippee/tips/${id}` : null,
     defaultFetcher
@@ -194,7 +195,10 @@ const ClaimTipPage: NextPage = () => {
           <HomeButton />
         </>
       ) : (
-        <ClaimTipView publicTip={publicTip} />
+        <ClaimTipView
+          publicTip={publicTip}
+          walletInstalled={walletInstalled === "true"}
+        />
       )}
     </>
   );
@@ -204,11 +208,19 @@ export default ClaimTipPage;
 
 type ClaimTipViewProps = {
   publicTip: PublicTip;
+  walletInstalled?: boolean;
 };
 
-function ClaimTipView({ publicTip }: ClaimTipViewProps) {
+function ClaimTipView({ publicTip, walletInstalled }: ClaimTipViewProps) {
   const { t } = useTranslation("claim");
   const router = useRouter();
+  const [selectWalletNextPageHref, setSelectWalletNextPageHref] =
+    React.useState<string | undefined>(undefined);
+  React.useEffect(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.append("walletInstalled", "true");
+    setSelectWalletNextPageHref(url.toString());
+  }, []);
 
   return (
     <>
@@ -225,6 +237,13 @@ function ClaimTipView({ publicTip }: ClaimTipViewProps) {
       <Spacer y={3} />
       {publicTip.onboardingFlow === "SKIP" ? (
         <Withdraw flow="anonymous" tipId={publicTip.id} />
+      ) : publicTip.onboardingFlow === "LIGHTNING" && !walletInstalled ? (
+        <SelectWalletPageContent
+          receivedTips={[publicTip]}
+          lnurlAuthCapable
+          nextUp={t("claim")}
+          href={selectWalletNextPageHref}
+        />
       ) : (
         <>
           <Login

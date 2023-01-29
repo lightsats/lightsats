@@ -314,7 +314,7 @@ function getOnboardingFlowDescription(flow: OnboardingFlow): string {
     case "DEFAULT":
       return "Recipient will claim with any login method, and then will go through a short onboarding before being able to withdraw their tip.";
     case "SKIP":
-      return "Allow your recipient to directly withraw without logging in.";
+      return "Allow your recipient to directly withdraw without logging in.";
     case "LIGHTNING":
       return "Suggest a lnurl-auth compatible Lightning wallet, then only allow claiming with Lightning.";
   }

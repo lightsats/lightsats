@@ -44,6 +44,7 @@ export function mapTipToPublicTip(
     tippeeLocale: tip.tippeeLocale,
     onboardingFlow: tip.onboardingFlow,
     lastWithdrawal: tip.lastWithdrawal,
+    recommendedWalletId: tip.recommendedWalletId,
     updated: tip.updated,
   };
 }

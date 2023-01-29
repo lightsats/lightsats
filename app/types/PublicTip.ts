@@ -18,6 +18,7 @@ export type PublicTip = Pick<
   | "onboardingFlow"
   | "lastWithdrawal"
   | "updated"
+  | "recommendedWalletId"
 > & {
   hasClaimed: boolean;
   tipper: Pick<User, "name" | "twitterUsername" | "avatarURL"> & {
