@@ -134,7 +134,7 @@ model Tip {
   claimLinkViewed Boolean @default(false)
   numSmsTokens Int @default(0) // to allow new user signups using SMS
   sentReminders SentReminder[]
-  skipOnboarding Boolean @default(false)
+  onboardingFlow OnboardingFlow @default(DEFAULT)
   withdrawalLinks WithdrawalLink[]
   withdrawalErrors WithdrawalError[]
   lastWithdrawal DateTime?
@@ -409,4 +409,10 @@ enum UserType {
 
 enum LeaderboardTheme {
   CHRISTMAS
+}
+
+enum OnboardingFlow {
+  DEFAULT // claim then onboard
+  SKIP // withdraw instantly without claiming or seeing onboarding
+  LIGHTNING // show wallets first then only allow claim using lnurl-auth
 }

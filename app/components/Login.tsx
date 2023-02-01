@@ -12,6 +12,7 @@ type LoginProps = {
   callbackUrl?: string;
   tipId?: string;
   defaultLoginMethod: LoginMethod;
+  allowedLoginMethods?: LoginMethod[];
 };
 
 export function Login({
@@ -20,10 +21,19 @@ export function Login({
   instructionsText,
   tipId,
   defaultLoginMethod,
+  allowedLoginMethods,
 }: LoginProps) {
   const { t } = useTranslation(["common", "login"]);
   const [loginMethod, setLoginMethod] =
     useState<LoginMethod>(defaultLoginMethod);
+
+  const alternativeMethods = React.useMemo(
+    () =>
+      (allowedLoginMethods || loginMethods).filter(
+        (method) => method !== loginMethod
+      ),
+    [allowedLoginMethods, loginMethod]
+  );
 
   return (
     <>
@@ -48,31 +58,33 @@ export function Login({
           <LnurlAuthSignIn callbackUrl={callbackUrl} />
         </>
       )}
-      <Spacer y={1.5} />
-      <Text color="$gray800" size="$sm">
-        {t(`common:alternativeWaysToSignIn`)}
-      </Text>
-      <Spacer y={0.5} />
-      {loginMethods
-        .filter((method) => method !== loginMethod)
-        .map((method) => {
-          return (
-            <React.Fragment key={method}>
-              <Row justify="center" align="center">
-                <Button
-                  bordered
-                  css={{
-                    margin: "$5",
-                    width: "100%",
-                  }}
-                  onClick={() => setLoginMethod(method)}
-                >
-                  {t(`common:${method}`)}
-                </Button>
-              </Row>
-            </React.Fragment>
-          );
-        })}
+      {alternativeMethods.length > 0 && (
+        <>
+          <Spacer y={1.5} />
+          <Text color="$gray800" size="$sm">
+            {t(`common:alternativeWaysToSignIn`)}
+          </Text>
+          <Spacer y={0.5} />
+          {alternativeMethods.map((method) => {
+            return (
+              <React.Fragment key={method}>
+                <Row justify="center" align="center">
+                  <Button
+                    bordered
+                    css={{
+                      margin: "$5",
+                      width: "100%",
+                    }}
+                    onClick={() => setLoginMethod(method)}
+                  >
+                    {t(`common:${method}`)}
+                  </Button>
+                </Row>
+              </React.Fragment>
+            );
+          })}
+        </>
+      )}
     </>
   );
 }

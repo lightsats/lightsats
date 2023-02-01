@@ -1,3 +1,4 @@
+import { OnboardingFlow } from "@prisma/client";
 import { add } from "date-fns";
 
 export const ExpiryUnitValues = ["minutes", "hours", "days"] as const;
@@ -13,7 +14,7 @@ export type TipFormData = {
   expiryUnit: ExpiryUnit;
   tippeeName: string | undefined;
   tippeeLocale: string;
-  skipOnboarding: boolean;
+  onboardingFlow: OnboardingFlow;
   enterIndividualNames: boolean;
   showAdvancedOptions: boolean;
   recommendedWalletId: string | undefined;
@@ -33,7 +34,7 @@ export function getSharedTipFormRequestFields(data: TipFormSubmitData) {
     expiry: add(new Date(), {
       [data.expiryUnit]: data.expiresIn,
     }),
-    skipOnboarding: data.skipOnboarding,
+    onboardingFlow: data.onboardingFlow,
     tippeeLocale: data.tippeeLocale,
     note: data.note?.length ? data.note : undefined,
     recommendedWalletId: data.recommendedWalletId,

@@ -56,8 +56,7 @@ export function getRecommendedItems(
     devicePlatform,
     options
   );
-  const limit =
-    category === "wallets" && !options.lnurlAuthCapable ? 1 : undefined;
+  const limit = options.recommendedLimit;
   return recommendedItems.slice(0, limit);
 }
 

@@ -78,7 +78,7 @@ const EditTipGroup: NextPage = () => {
       tippeeLocale: firstTip.tippeeLocale || undefined,
       note,
       tippeeName,
-      skipOnboarding: firstTip.skipOnboarding,
+      onboardingFlow: firstTip.onboardingFlow,
       enterIndividualNames,
       recommendedWalletId: firstTip.recommendedWalletId || undefined,
       anonymousTipper: firstTip.anonymousTipper,

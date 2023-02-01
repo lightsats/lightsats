@@ -116,7 +116,7 @@ export function getSharedUpdateTipFields(updateTipRequest: TipRequestBase) {
     expiry: updateTipRequest.expiry,
     currency: updateTipRequest.currency || null,
     tippeeLocale: updateTipRequest.tippeeLocale || null,
-    skipOnboarding: updateTipRequest.skipOnboarding,
+    onboardingFlow: updateTipRequest.onboardingFlow,
     recommendedWalletId: updateTipRequest.recommendedWalletId || null,
     anonymousTipper: updateTipRequest.anonymousTipper,
   };

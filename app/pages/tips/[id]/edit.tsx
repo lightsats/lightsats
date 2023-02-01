@@ -43,7 +43,7 @@ const EditTip: NextPage = () => {
       tippeeLocale: tip.tippeeLocale || undefined,
       note: tip.note || undefined,
       tippeeName: tip.tippeeName || undefined,
-      skipOnboarding: tip.skipOnboarding,
+      onboardingFlow: tip.onboardingFlow,
       recommendedWalletId: tip.recommendedWalletId || undefined,
       anonymousTipper: tip.anonymousTipper,
       showAdvancedOptions: true,
