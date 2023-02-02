@@ -61,8 +61,18 @@ export async function createInvoice(
   );
 
   if (!createInvoiceResponse.ok) {
+    let body;
+    try {
+      body = await createInvoiceResponse.text();
+    } catch (e) {
+      console.error("Failed to read create invoice response body", e);
+      body = "unknown";
+    }
     throw new Error(
-      "Unable to create invoice: " + createInvoiceResponse.statusText
+      "Unable to create invoice: " +
+        createInvoiceResponse.statusText +
+        ": " +
+        body
     );
   }
 
