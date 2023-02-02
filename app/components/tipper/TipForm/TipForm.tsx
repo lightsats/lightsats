@@ -43,6 +43,7 @@ import {
 } from "lib/utils";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 
 type InputMethod = "fiat" | "sats";
 
@@ -165,34 +166,44 @@ export function TipForm({
 
   const onSubmit = React.useCallback(
     (data: TipFormData) => {
-      if (!watchedExchangeRate) {
-        throw new Error("Exchange rates not loaded");
-      }
-      if (isSubmitting) {
-        throw new Error("Already submitting");
-      }
-      const satsAmount =
-        inputMethod === "fiat"
-          ? getSatsAmount(data.amount, watchedExchangeRate)
-          : data.amount;
+      let satsAmount = 0;
+      try {
+        if (!watchedExchangeRate) {
+          throw new Error("Exchange rates not loaded");
+        }
+        if (isSubmitting) {
+          throw new Error("Already submitting");
+        }
+        satsAmount =
+          inputMethod === "fiat"
+            ? getSatsAmount(data.amount, watchedExchangeRate)
+            : data.amount;
 
-      if (mode === "create") {
-        if (isNaN(satsAmount)) {
-          throw new Error("Invalid tip amount");
+        if (mode === "create") {
+          if (isNaN(satsAmount)) {
+            throw new Error("Invalid tip amount");
+          }
+          if (isNaN(data.quantity) || data.quantity < 1) {
+            throw new Error("Invalid tip quantity");
+          }
+          if (satsAmount < MIN_TIP_SATS) {
+            throw new Error("Tip amount is too small");
+          }
+          if (satsAmount * data.quantity > MAX_TIP_SATS) {
+            throw new Error(
+              "Tip amount is too large. Please use a value no more than " +
+                MAX_TIP_SATS +
+                " satoshis"
+            );
+          }
+          if (Math.round(satsAmount) !== satsAmount) {
+            throw new Error("sat amount must be a whole value");
+          }
         }
-        if (satsAmount < MIN_TIP_SATS) {
-          throw new Error("Tip amount is too small");
-        }
-        if (satsAmount > MAX_TIP_SATS) {
-          throw new Error(
-            "Tip amount is too large. Please use a value no more than " +
-              MAX_TIP_SATS +
-              " satoshis"
-          );
-        }
-        if (Math.round(satsAmount) !== satsAmount) {
-          throw new Error("sat amount must be a whole value");
-        }
+      } catch (error) {
+        console.error(error);
+        toast.error((error as Error).message);
+        return;
       }
       setSubmitting(true);
       (async () => {
