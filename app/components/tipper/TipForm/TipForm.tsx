@@ -189,11 +189,12 @@ export function TipForm({
           if (satsAmount < MIN_TIP_SATS) {
             throw new Error("Tip amount is too small");
           }
-          if (satsAmount * data.quantity > MAX_TIP_SATS) {
+          if (
+            (satsAmount + calculateFee(satsAmount)) * data.quantity >
+            MAX_TIP_SATS
+          ) {
             throw new Error(
-              "Tip amount is too large. Please use a value no more than " +
-                MAX_TIP_SATS +
-                " satoshis"
+              "The total amount must not exceed " + MAX_TIP_SATS + " satoshis"
             );
           }
           if (Math.round(satsAmount) !== satsAmount) {
