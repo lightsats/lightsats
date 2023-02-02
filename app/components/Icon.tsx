@@ -6,6 +6,7 @@ const defaultIconProps: IconProps = {
   width: 24,
   height: 24,
   fill: "currentColor",
+  style: { flexShrink: 0 },
 };
 
 export const Icon = ({
