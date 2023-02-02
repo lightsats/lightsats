@@ -238,7 +238,7 @@ Micheal Saylor`
                 ? "Thank you {{name}} for your amazing service!"
                 : "Thank you for your amazing service!"
             }
-            maxLength={255}
+            maxLength={1000}
             fullWidth
             bordered
           />

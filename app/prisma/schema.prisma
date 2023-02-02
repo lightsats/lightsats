@@ -126,7 +126,7 @@ model Tip {
   expiry DateTime
   copiedClaimUrl DateTime?
   currency String?
-  note String? @db.VarChar(255)
+  note String? @db.VarChar(1000)
   version Int @default(0)
   withdrawalLinkTip WithdrawalLinkTip[]
   withdrawalId String?
