@@ -1,5 +1,6 @@
 import {
-  ArrowsRightLeftIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 import {
@@ -18,6 +19,7 @@ import {
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Divider } from "components/Divider";
 import { FiatPrice } from "components/FiatPrice";
+import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { TipFormAdvancedOptions } from "components/tipper/TipForm/TipFormAdvancedOptions";
 import {
@@ -255,7 +257,89 @@ export function TipForm({
                   </Text>
                 </Col>
                 <Col>
-                  <Row justify="flex-end">
+                  <Row justify="flex-end" align="center" css={{ gap: "$5" }}>
+                    <FlexBox
+                      style={{
+                        flexDirection: "row",
+                        gap: "5px",
+                        overflow: "visible",
+                        position: "relative",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "40px",
+                          height: "36px",
+                          position: "absolute",
+                          border: "1px solid black",
+                          background: "rgba(0,0,0, 0.2)",
+                          borderRadius: "50%",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          zIndex: -1,
+                        }}
+                      >
+                        <Icon
+                          width={12}
+                          height={12}
+                          color="black"
+                          style={{
+                            position: "absolute",
+                            top: -6,
+                            left: 8,
+                            rotate: "-15deg",
+                          }}
+                        >
+                          <ChevronRightIcon />
+                        </Icon>
+                        <Icon
+                          width={12}
+                          height={12}
+                          color="black"
+                          style={{
+                            position: "absolute",
+                            bottom: -6,
+                            right: 8,
+                            rotate: "-15deg",
+                          }}
+                        >
+                          <ChevronLeftIcon />
+                        </Icon>
+                      </div>
+                      <Button
+                        size="xs"
+                        auto
+                        css={{
+                          px: "4px",
+                          position: "relative",
+                          background:
+                            inputMethod !== "sats" ? "$accents1" : undefined,
+                          border: "1px solid black",
+                        }}
+                        onClick={toggleInputMethod}
+                      >
+                        <div style={{ width: "16px" }}>{"⚡"}</div>
+                      </Button>
+                      <Button
+                        size="xs"
+                        auto
+                        css={{
+                          px: "4px",
+                          position: "relative",
+                          background:
+                            inputMethod !== "fiat" ? "$accents1" : undefined,
+                          color:
+                            inputMethod !== "fiat" ? "$accents8" : undefined,
+                          border: "1px solid black",
+                        }}
+                        onClick={toggleInputMethod}
+                      >
+                        <div style={{ width: "16px" }}>
+                          {getSymbolFromCurrencyWithFallback(watchedCurrency)}
+                        </div>
+                      </Button>
+                    </FlexBox>
                     <Controller
                       name="amountString"
                       control={control}
@@ -276,37 +360,6 @@ export function TipForm({
                           fullWidth
                           bordered
                           autoFocus
-                          contentLeft={
-                            <Button
-                              size="xs"
-                              auto
-                              css={{
-                                px: "4px",
-                                position: "relative",
-                              }}
-                              onClick={toggleInputMethod}
-                            >
-                              <div
-                                style={{
-                                  position: "absolute",
-                                  top: 2,
-                                  right: 2,
-                                  display: "flex",
-                                }}
-                              >
-                                <Icon width={8} height={8} color="white">
-                                  <ArrowsRightLeftIcon />
-                                </Icon>
-                              </div>
-                              <div style={{ width: "20px" }}>
-                                {inputMethod === "fiat"
-                                  ? getSymbolFromCurrencyWithFallback(
-                                      watchedCurrency
-                                    )
-                                  : "⚡"}
-                              </div>
-                            </Button>
-                          }
                         />
                       )}
                     />
