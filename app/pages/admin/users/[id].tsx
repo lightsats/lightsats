@@ -1,19 +1,21 @@
-import { Link, Loading, Row, Spacer, Text } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
+import { Button, Link, Loading, Row, Spacer, Text } from "@nextui-org/react";
+import { Tip, User } from "@prisma/client";
 import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
 import { AdminTipGroupsList } from "components/admin/AdminTipGroupsList";
 import { AdminTipsList } from "components/admin/AdminTipsList";
 import { AdminWithdrawalErrorsList } from "components/admin/AdminWithdrawalErrorsList";
 import { AdminWithdrawalsList } from "components/admin/AdminWithdrawalsList";
 import { NextUIUser } from "components/NextUIUser";
+import { ApiRoutes } from "lib/ApiRoutes";
 import { DEFAULT_NAME } from "lib/constants";
 import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 import useSWR from "swr";
-import { AdminExtendedUser } from "types/Admin";
+import { AdminExtendedUser, AdminUserChangeEmailRequest } from "types/Admin";
 
 const AdminUserPage: NextPage = () => {
   const router = useRouter();
@@ -67,6 +69,10 @@ const AdminUserPage: NextPage = () => {
       <h2>Withdrawal Errors</h2>
       <AdminWithdrawalErrorsList withdrawalErrors={user.withdrawalErrors} />
       <Spacer />
+      <Button color="error" onClick={() => updateUserEmailAddress(user)}>
+        Update user email
+      </Button>
+      <Spacer />
       <AdminJSONDumpCard entity={user} />
     </>
   );
@@ -87,3 +93,31 @@ function AdminUserTips({ title, tips }: AdminUserTipsProps) {
 }
 
 export default AdminUserPage;
+
+async function updateUserEmailAddress(user: User) {
+  const email = window.prompt("Enter new email address", user.email || "");
+  if (email) {
+    const changeEmailRequest: AdminUserChangeEmailRequest = {
+      email,
+    };
+
+    const result = await fetch(
+      `${ApiRoutes.adminUsers}/${user.id}/changeEmail`,
+      {
+        body: JSON.stringify(changeEmailRequest),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    if (!result.ok) {
+      toast.error(
+        "Failed to change user email: " +
+          result.statusText +
+          ". Please try again."
+      );
+    } else {
+      toast.success("User email changed to " + email);
+      window.location.reload();
+    }
+  }
+}

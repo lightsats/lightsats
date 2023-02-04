@@ -8,6 +8,7 @@ import { getApiI18n } from "lib/i18n/api";
 import prisma from "lib/prismadb";
 
 import { sendSms } from "lib/sms/sendSms";
+import { withErrorMessage } from "lib/withErrorMessage";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -30,7 +31,10 @@ export default async function handler(
         })
       ) {
         // account already exists
-        return res.status(StatusCodes.CONFLICT).end();
+        return withErrorMessage(
+          res.status(StatusCodes.CONFLICT),
+          "Email address in use"
+        );
       }
     } else {
       throw new Error("Unsupported link account type");

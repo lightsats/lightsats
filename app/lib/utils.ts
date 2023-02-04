@@ -168,3 +168,14 @@ export function isTipGroupActive(tipGroup: TipGroupWithTips) {
     (tip) => refundableTipStatuses.indexOf(tip.status) > -1
   );
 }
+
+export async function tryGetErrorMessage(response: Response) {
+  let errorMessage = "Something went wrong. Please try again.";
+  try {
+    errorMessage = (await response.json()).errorMessage;
+  } catch (error) {
+    // unable to parse response body
+    console.error("Unable to parse response body for " + response.url);
+  }
+  return errorMessage;
+}

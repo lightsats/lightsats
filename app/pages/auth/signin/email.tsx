@@ -11,6 +11,7 @@ import {
 import { getStaticProps } from "lib/i18n/i18next";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import { PageRoutes } from "lib/PageRoutes";
+import { tryGetErrorMessage } from "lib/utils";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -84,10 +85,12 @@ export default function EmailSignIn({
             headers: { "Content-Type": "application/json" },
           });
           if (!result.ok) {
+            const errorMessage = await tryGetErrorMessage(result);
             console.error(
-              "Failed to create email login link: " + result.status
+              "Failed to create email login link: " + result.status,
+              errorMessage
             );
-            toast.error("Something went wrong. Please try again.");
+            toast.error(errorMessage);
           } else {
             router.push(PageRoutes.checkEmail);
           }
