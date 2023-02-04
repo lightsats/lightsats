@@ -58,3 +58,7 @@ export type AdminExtendedWithdrawalError = WithdrawalError & {
 export type AdminTipChangeStatusRequest = {
   status: TipStatus;
 };
+
+export type AdminUserChangeEmailRequest = {
+  email: string;
+};

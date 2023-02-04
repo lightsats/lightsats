@@ -4,7 +4,7 @@ import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
-import { AdminExtendedTip, AdminTipChangeStatusRequest } from "types/Admin";
+import { AdminExtendedTip, AdminUserChangeEmailRequest } from "types/Admin";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,24 +21,24 @@ export default async function handler(
 
   switch (req.method) {
     case "POST":
-      return handleChangeTipStatus(req, res);
+      return handleChangeUserEmail(req, res);
     default:
       return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 
-async function handleChangeTipStatus(
+async function handleChangeUserEmail(
   req: NextApiRequest,
   res: NextApiResponse<never>
 ) {
   const { id } = req.query;
-  const changeStatusRequest = req.body as AdminTipChangeStatusRequest;
-  await prisma.tip.update({
+  const changeEmailRequest = req.body as AdminUserChangeEmailRequest;
+  await prisma.user.update({
     where: {
       id: id as string,
     },
     data: {
-      status: changeStatusRequest.status,
+      email: changeEmailRequest.email,
     },
   });
 
