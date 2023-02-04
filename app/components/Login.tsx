@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, Row, Spacer, Text } from "@nextui-org/react";
 import { useTranslation } from "next-i18next";
 import EmailSignIn from "pages/auth/signin/email";
@@ -56,7 +57,7 @@ export function Login({
           .filter((method) => method !== loginMethod)
           .map((method, i) => {
             return (
-              <>
+              <React.Fragment key={i}>
                 <Button
                   light
                   auto
@@ -67,7 +68,7 @@ export function Login({
                   {t(`common:${method}`)}
                 </Button>
                 {i === 0 && <Text>&nbsp;{t("common:or")}&nbsp;</Text>}
-              </>
+              </React.Fragment>
             );
           })}
         <Text>&nbsp; {t("login:instead")}</Text>
