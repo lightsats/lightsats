@@ -120,12 +120,12 @@ export function TipForm({
   const watchedCurrency = watch("currency");
   const watchedShowAdvancedOptions = watch("showAdvancedOptions");
   const watchedExchangeRate = exchangeRates?.[watchedCurrency];
-  const watchedAmountFee = watchedExchangeRate
-    ? calculateFee(
-        inputMethod === "fiat"
-          ? getSatsAmount(watchedAmount, watchedExchangeRate)
-          : watchedAmount
-      )
+  const watchedAmountInSats =
+    inputMethod === "fiat" && watchedExchangeRate
+      ? getSatsAmount(watchedAmount, watchedExchangeRate)
+      : watchedAmount;
+  const watchedFeeInSats = watchedExchangeRate
+    ? calculateFee(watchedAmountInSats)
     : 0;
 
   React.useEffect(() => {
@@ -225,6 +225,7 @@ export function TipForm({
       setValue={setValue}
       watch={watch}
       quantity={watchedQuantity}
+      satsAmount={watchedAmountInSats}
     />
   );
 
@@ -431,8 +432,8 @@ export function TipForm({
                       <Text>
                         <FiatPrice
                           sats={
-                            !isNaN(watchedAmountFee)
-                              ? watchedAmountFee * watchedQuantity
+                            !isNaN(watchedFeeInSats)
+                              ? watchedFeeInSats * watchedQuantity
                               : 0
                           }
                           currency={watchedCurrency}
@@ -440,8 +441,8 @@ export function TipForm({
                         />
                       </Text>
                       <Text small css={{ position: "relative", top: "-5px" }}>
-                        {!isNaN(watchedAmountFee)
-                          ? watchedAmountFee * watchedQuantity
+                        {!isNaN(watchedFeeInSats)
+                          ? watchedFeeInSats * watchedQuantity
                           : 0}
                         {" sats"}
                       </Text>
@@ -470,7 +471,7 @@ export function TipForm({
                                     watchedExchangeRate
                                   )
                                 : watchedAmount) +
-                                watchedAmountFee) *
+                                watchedFeeInSats) *
                               watchedQuantity
                             : 0
                         }
@@ -480,7 +481,7 @@ export function TipForm({
                       {((inputMethod === "sats"
                         ? watchedAmount
                         : getSatsAmount(watchedAmount, watchedExchangeRate)) +
-                        watchedAmountFee) *
+                        watchedFeeInSats) *
                         watchedQuantity}{" "}
                       sats
                     </Text>

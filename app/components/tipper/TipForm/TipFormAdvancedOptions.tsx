@@ -14,6 +14,7 @@ import { Divider } from "components/Divider";
 import { TipFormData } from "components/tipper/TipForm/TipFormData";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { locales } from "lib/i18n/locales";
+import { getRecommendedWallets } from "lib/items/getRecommendedItems";
 import { wallets } from "lib/items/wallets";
 import React from "react";
 import {
@@ -37,6 +38,7 @@ type TipFormAdvancedOptionsProps = {
   setValue: UseFormSetValue<TipFormData>;
   watch: UseFormWatch<TipFormData>;
   quantity: number;
+  satsAmount: number;
 };
 
 export function TipFormAdvancedOptions({
@@ -46,6 +48,7 @@ export function TipFormAdvancedOptions({
   watch,
   setValue,
   quantity,
+  satsAmount,
 }: TipFormAdvancedOptionsProps) {
   const watchedTippeeLocale = watch("tippeeLocale");
   const watchedRecommendedWalletId = watch("recommendedWalletId");
@@ -55,17 +58,16 @@ export function TipFormAdvancedOptions({
 
   const recommendedWalletSelectOptions: SelectOption[] = React.useMemo(
     () =>
-      wallets
-        .filter(
-          (wallet) =>
-            watchedOnboardingFlow !== "LIGHTNING" ||
-            wallet.features.indexOf("lnurl-auth") >= 0
-        )
-        .map((wallet) => ({
-          value: wallet.id,
-          label: wallet.name,
-        })),
-    [watchedOnboardingFlow]
+      getRecommendedWallets(wallets, {
+        checkTippeeBalance: true,
+        filterOtherItems: true,
+        lnurlAuthCapable: watchedOnboardingFlow === "LIGHTNING",
+        tippeeBalance: satsAmount,
+      }).map((wallet) => ({
+        value: wallet.id,
+        label: wallet.name,
+      })),
+    [satsAmount, watchedOnboardingFlow]
   );
 
   const setOnboardingFlow = React.useCallback(
@@ -275,6 +277,35 @@ Micheal Saylor`
         onChange={setRecommendedWalletId}
         width="100px"
       />
+      {recommendedWalletSelectOptions.length < wallets.length && (
+        <Col>
+          <Text size="x-small">
+            {wallets.length - recommendedWalletSelectOptions.length} wallets
+            hidden:
+          </Text>
+          {wallets
+            .filter(
+              (wallet) =>
+                !recommendedWalletSelectOptions.some(
+                  (recommendedWallet) => recommendedWallet.value === wallet.id
+                )
+            )
+            .map((wallet) => (
+              <Text key={wallet.id} size="x-small">
+                {wallet.name} (
+                {[
+                  ...(wallet.minBalance
+                    ? [`${wallet.minBalance} min sats`]
+                    : []),
+                  ...(wallet.features.indexOf("lnurl-auth") < 0
+                    ? [`lnurl-auth not supported`]
+                    : []),
+                ].join(", ")}
+                )
+              </Text>
+            ))}
+        </Col>
+      )}
       <Divider />
       <Row align="flex-start">
         <Col>
