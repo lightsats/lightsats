@@ -177,7 +177,7 @@ export async function tryGetErrorMessage(response: Response) {
     // unable to parse response body
     console.error("Unable to parse response body for " + response.url);
   }
-  return errorMessage;
+  return `${errorMessage}\n${response.status} ${response.statusText}`;
 }
 
 export function getRedeemUrl(excludeHttp = false): string {
