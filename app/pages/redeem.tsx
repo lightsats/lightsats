@@ -28,7 +28,7 @@ const RedeemPage: NextPage = () => {
     (event: React.FormEvent) => {
       event.preventDefault();
       const passphrase = [...new Array(numWords)]
-        .map((_, index) => values[index].toLowerCase())
+        .map((_, index) => values[index].toLowerCase().trim())
         .join(" ");
       if (passphrase.split(" ").some((word) => bip0039.indexOf(word) < 0)) {
         alert("One or more words are invalid.");
@@ -115,7 +115,7 @@ const RedeemPage: NextPage = () => {
                   css={{
                     background: "$accents2",
                   }}
-                  pattern="[a-zA-Z]+"
+                  pattern="[a-zA-Z ]+"
                   required
                 />
               ))}
