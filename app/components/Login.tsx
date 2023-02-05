@@ -57,7 +57,7 @@ export function Login({
           .filter((method) => method !== loginMethod)
           .map((method, i) => {
             return (
-              <React.Fragment key={i}>
+              <React.Fragment key={method}>
                 <Button
                   light
                   auto
