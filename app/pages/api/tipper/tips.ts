@@ -1,6 +1,11 @@
 import { Tip, TipGroupStatus } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
-import { MAX_TIP_GROUP_QUANTITY } from "lib/constants";
+import { bip0039 } from "lib/bip0039";
+import {
+  MAX_TIP_GROUP_QUANTITY,
+  MAX_TIP_PASSPHRASE_LENGTH,
+  MIN_TIP_PASSPHRASE_LENGTH,
+} from "lib/constants";
 import { createAchievement } from "lib/createAchievement";
 import { prepareFundingWallet } from "lib/prepareFundingWallet";
 import prisma from "lib/prismadb";
@@ -134,6 +139,23 @@ async function handlePostTip(
     anonymousTipper: createTipRequest.anonymousTipper,
   };
 
+  const generatePassphrase = (): string | undefined => {
+    if (!createTipRequest.generatePassphrase) {
+      return undefined;
+    }
+    if (
+      isNaN(createTipRequest.passphraseLength) ||
+      createTipRequest.passphraseLength < MIN_TIP_PASSPHRASE_LENGTH ||
+      createTipRequest.passphraseLength > MAX_TIP_PASSPHRASE_LENGTH
+    ) {
+      throw new Error("Invalid tip passphrase length");
+    }
+
+    return [...new Array(createTipRequest.passphraseLength)]
+      .map(() => bip0039[Math.floor(Math.random() * bip0039.length)])
+      .join(" ");
+  };
+
   if (createTipRequest.quantity > 1) {
     let tipGroup = await prisma.tipGroup.create({
       data: {
@@ -146,6 +168,7 @@ async function handlePostTip(
               ...createTipData,
               groupTipIndex: index,
               ...getTemplatedGroupTipProperties(createTipRequest, index),
+              passphrase: generatePassphrase(),
             })),
           },
         },
@@ -176,7 +199,7 @@ async function handlePostTip(
     res.json(tipGroup);
   } else {
     let tip = await prisma.tip.create({
-      data: createTipData,
+      data: { ...createTipData, passphrase: generatePassphrase() },
     });
 
     let lnbitsWalletAdminKey: string;

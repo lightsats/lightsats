@@ -26,6 +26,8 @@ const NewTip: NextPage = () => {
           quantity: data.quantity,
           tippeeName: data.tippeeName,
           tippeeNames: data.tippeeName?.split("\n"),
+          passphraseLength: data.passphraseLength,
+          generatePassphrase: data.generatePassphrase,
         };
         const result = await fetch("/api/tipper/tips", {
           method: "POST",

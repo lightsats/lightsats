@@ -19,6 +19,8 @@ export type TipFormData = {
   showAdvancedOptions: boolean;
   recommendedWalletId: string | undefined;
   anonymousTipper: boolean;
+  passphraseLength: number;
+  generatePassphrase: boolean;
 };
 
 export type TipFormSubmitData = Omit<

@@ -179,3 +179,10 @@ export async function tryGetErrorMessage(response: Response) {
   }
   return errorMessage;
 }
+
+export function getRedeemUrl(excludeHttp = false): string {
+  const redeemUrl = `${getAppUrl()}/redeem`;
+  return excludeHttp
+    ? redeemUrl.substring(redeemUrl.indexOf("//") + 2)
+    : redeemUrl;
+}

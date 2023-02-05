@@ -15,6 +15,8 @@ export type TipRequestBase = {
 export type CreateTipRequest = TipRequestBase & {
   amount: number;
   quantity: number;
+  generatePassphrase: boolean;
+  passphraseLength: number;
 };
 export type UpdateTipRequest = TipRequestBase;
 

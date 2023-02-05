@@ -30,6 +30,7 @@ import { useExchangeRates } from "hooks/useExchangeRates";
 import { useTips } from "hooks/useTips";
 import {
   appName,
+  DEFAULT_TIP_PASSPHRASE_LENGTH,
   FEE_PERCENT,
   MAX_TIP_GROUP_QUANTITY,
   MAX_TIP_SATS,
@@ -77,6 +78,7 @@ export function TipForm({
     enterIndividualNames: false,
     showAdvancedOptions: false,
     anonymousTipper: false,
+    passphraseLength: DEFAULT_TIP_PASSPHRASE_LENGTH,
   },
   mode,
   quantity = 1,

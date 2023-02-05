@@ -4,4 +4,5 @@ export enum ApiRoutes {
   admin = "/api/admin",
   adminTips = "/api/admin/tips",
   adminUsers = "/api/admin/users",
+  tippeeTips = "/api/tippee/tips",
 }

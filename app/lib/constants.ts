@@ -17,6 +17,9 @@ export const USE_PREV_TIP_PROPERTIES = true;
 export const DEFAULT_LEADERBOARD_ID = "default";
 export const LIGHTSATS_INCEPTION = new Date("2022-10-01");
 export const WITHDRAWAL_RETRY_DELAY = 30000;
+export const DEFAULT_TIP_PASSPHRASE_LENGTH = 3;
+export const MIN_TIP_PASSPHRASE_LENGTH = 3;
+export const MAX_TIP_PASSPHRASE_LENGTH = 6;
 
 export const refundableTipStatuses: TipStatus[] = [
   "UNCLAIMED",
