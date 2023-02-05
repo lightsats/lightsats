@@ -15,22 +15,22 @@ export default async function handler(
   res: NextApiResponse<Tip[] | PublicTip[] | ErrorResponse>
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) {
-    return res.status(StatusCodes.UNAUTHORIZED).end();
-  }
   const { publicTip, passphrase } = req.query;
 
   switch (req.method) {
     case "GET":
-      if (publicTip === "true") {
-        return getPublicTips(session, req, res);
-      }
       if (passphrase) {
         return getTipsByPassphrase(
           decodeURIComponent(passphrase as string),
           req,
           res
         );
+      }
+      if (!session) {
+        return res.status(StatusCodes.UNAUTHORIZED).end();
+      }
+      if (publicTip === "true") {
+        return getPublicTips(session, req, res);
       }
       return getTips(session, req, res);
     default:
