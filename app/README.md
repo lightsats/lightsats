@@ -4,6 +4,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 1. Run yarn install both in this directory and the parent directory
 2. Run `yarn docker:start`
+
+If you experience any issues with posgres, make sure you do not already have a postgres service running locally outside of docker.
+
 3. Add .env.local (see .env.example)
 4. yarn db:migrate:local
 
