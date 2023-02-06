@@ -3,10 +3,11 @@ import { Button, Collapse, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { placeholderDataUrl as defaultPlaceholderDataUrl } from "lib/constants";
-import { getItemImageLocation } from "lib/utils";
+import { getItemImageLocation, isMobile } from "lib/utils";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import NextImage from "next/image";
+import QRCode from "react-qr-code";
 import { Item } from "types/Item";
 
 type ItemCardProps = {
@@ -127,7 +128,15 @@ export function ItemCard({ item, expanded }: ItemCardProps) {
       <Spacer y={1} />
       <NextLink href={itemLink} passHref>
         <a target="_blank" rel="noreferrer noopener">
-          <Row justify="flex-end">
+          <Row justify="flex-end" align="center">
+            {!isMobile() &&
+              (item.platforms.indexOf("mobile") > -1 ||
+                item.platforms.indexOf("desktop") === -1) && (
+                <>
+                  <QRCode value={itemLink} size={48} />
+                  <Spacer />
+                </>
+              )}
             <Button auto>
               <Icon>
                 <ArrowTopRightOnSquareIcon />
