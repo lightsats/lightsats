@@ -2,15 +2,16 @@ import { Loading, Spacer, Text } from "@nextui-org/react";
 import { Alert } from "components/Alert";
 import { TipForm } from "components/tipper/TipForm/TipForm";
 import {
+  getSharedTipFormDefaultValues,
   getSharedTipFormRequestFields,
   TipFormData,
   TipFormSubmitData,
 } from "components/tipper/TipForm/TipFormData";
-import { differenceInHours } from "date-fns";
 import { ApiRoutes } from "lib/ApiRoutes";
-import { DEFAULT_FIAT_CURRENCY, DEFAULT_NAME } from "lib/constants";
+import { DEFAULT_NAME } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
+import { tryGetErrorMessage } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -41,11 +42,6 @@ const EditTipGroup: NextPage = () => {
       );
     }
 
-    const expiresIn = Math.max(
-      Math.ceil(differenceInHours(new Date(firstTip.expiry), new Date()) / 24),
-      1
-    );
-
     let note: string | undefined;
     if (firstTip.note) {
       note = firstTip.note.replaceAll(
@@ -72,17 +68,10 @@ const EditTipGroup: NextPage = () => {
     }
 
     const defaultValues: Partial<TipFormData> = {
-      currency: firstTip.currency || DEFAULT_FIAT_CURRENCY,
-      expiresIn,
-      expiryUnit: "days",
-      tippeeLocale: firstTip.tippeeLocale || undefined,
+      ...getSharedTipFormDefaultValues(firstTip),
       note,
       tippeeName,
-      onboardingFlow: firstTip.onboardingFlow,
       enterIndividualNames,
-      recommendedWalletId: firstTip.recommendedWalletId || undefined,
-      anonymousTipper: firstTip.anonymousTipper,
-      showAdvancedOptions: true,
     };
     return defaultValues;
   }, [tipGroup]);
@@ -107,7 +96,9 @@ const EditTipGroup: NextPage = () => {
           mutateTipGroup(updatedTipGroup);
           router.push(`${PageRoutes.tipGroups}/${updatedTipGroup.id}`);
         } else {
-          toast.error("Failed to update tips: " + result.statusText);
+          toast.error(
+            "Failed to update tips: " + (await tryGetErrorMessage(result))
+          );
         }
       } catch (error) {
         console.error(error);

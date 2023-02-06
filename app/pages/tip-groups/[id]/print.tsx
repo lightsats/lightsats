@@ -12,6 +12,7 @@ import {
 import { Tip } from "@prisma/client";
 import { SelectOption } from "components/CustomSelect";
 import { NextUIUser } from "components/NextUIUser";
+import { Passphrase } from "components/tipper/Passphrase";
 import { PrintDesignPicker } from "components/tipper/PrintDesignPicker";
 import { useDevPrintPreview } from "hooks/useDevPrintPreview";
 import { useUser } from "hooks/useUser";
@@ -305,7 +306,16 @@ export function BulkTipGiftCardContents({
             alignItems: "center",
           }}
         >
-          <QRCode value={getClaimUrl(tip, true)} />
+          {tip.passphrase ? (
+            <Passphrase
+              passphrase={tip.passphrase}
+              width={256}
+              height={256}
+              showInstructions
+            />
+          ) : (
+            <QRCode value={getClaimUrl(tip, true)} />
+          )}
         </div>
       </Row>
     </div>

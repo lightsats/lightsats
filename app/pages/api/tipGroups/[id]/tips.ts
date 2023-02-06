@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { DEFAULT_NAME } from "lib/constants";
 import prisma from "lib/prismadb";
+import { getUpdatedPassphrase } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -66,7 +67,13 @@ async function updateTips(
       where: {
         id: tipGroup.tips[i].id,
       },
-      data: getTemplatedGroupTipProperties(updateTipsRequest, i),
+      data: {
+        ...getTemplatedGroupTipProperties(updateTipsRequest, i),
+        passphrase: getUpdatedPassphrase(
+          tipGroup.tips[i].passphrase,
+          updateTipsRequest
+        ),
+      },
     });
   }
 
