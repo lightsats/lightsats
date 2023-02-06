@@ -201,7 +201,7 @@ const obw: Wallet = {
 };
 const bbw: Wallet = {
   id: "bbw",
-  features: ["lnurl-auth", "lnurl-withdraw", "lightning address"],
+  features: ["lnurl-withdraw", "lightning address"],
   lightsatsRecommended: true,
   category: "wallets",
   minBalance: 0,
