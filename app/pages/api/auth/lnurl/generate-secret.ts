@@ -42,10 +42,7 @@ export default async function handler(
     tag: "login",
   });
 
-  const protocol = process.env.LNURL_CALLBACK_PROTOCOL || 'https:';
-  const callbackUrl = `${protocol}//${
-    req.headers.host
-  }/api/auth/lnurl/do-login?${params.toString()}`;
+  const callbackUrl = `${process.env.APP_URL}/api/auth/lnurl/do-login?${params.toString()}`;
 
   const encoded = lnurl.encode(callbackUrl).toUpperCase();
 
