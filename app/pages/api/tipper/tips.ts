@@ -1,6 +1,5 @@
 import { Tip, TipGroupStatus } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
-import { bip0039 } from "lib/bip0039";
 import {
   MAX_TIP_GROUP_QUANTITY,
   MAX_TIP_PASSPHRASE_LENGTH,
@@ -11,7 +10,7 @@ import { prepareFundingWallet } from "lib/prepareFundingWallet";
 import prisma from "lib/prismadb";
 import { recreateTipFundingInvoice } from "lib/recreateTipFundingInvoice";
 import { recreateTipGroupFundingInvoice } from "lib/recreateTipGroupFundingInvoice";
-import { calculateFee } from "lib/utils";
+import { calculateFee, generatePassphrase } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -139,7 +138,7 @@ async function handlePostTip(
     anonymousTipper: createTipRequest.anonymousTipper,
   };
 
-  const generatePassphrase = (): string | undefined => {
+  const generatePassphraseFromRequest = (): string | undefined => {
     if (!createTipRequest.generatePassphrase) {
       return undefined;
     }
@@ -151,9 +150,7 @@ async function handlePostTip(
       throw new Error("Invalid tip passphrase length");
     }
 
-    return [...new Array(createTipRequest.passphraseLength)]
-      .map(() => bip0039[Math.floor(Math.random() * bip0039.length)])
-      .join(" ");
+    return generatePassphrase(createTipRequest.passphraseLength);
   };
 
   if (createTipRequest.quantity > 1) {
@@ -168,7 +165,7 @@ async function handlePostTip(
               ...createTipData,
               groupTipIndex: index,
               ...getTemplatedGroupTipProperties(createTipRequest, index),
-              passphrase: generatePassphrase(),
+              passphrase: generatePassphraseFromRequest(),
             })),
           },
         },
@@ -199,7 +196,7 @@ async function handlePostTip(
     res.json(tipGroup);
   } else {
     let tip = await prisma.tip.create({
-      data: { ...createTipData, passphrase: generatePassphrase() },
+      data: { ...createTipData, passphrase: generatePassphraseFromRequest() },
     });
 
     let lnbitsWalletAdminKey: string;

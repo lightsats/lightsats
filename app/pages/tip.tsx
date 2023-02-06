@@ -3,18 +3,15 @@ import { Tip } from "@prisma/client";
 import { FlexBox } from "components/FlexBox";
 import { ApiRoutes } from "lib/ApiRoutes";
 import { bip0039 } from "lib/bip0039";
-import {
-  DEFAULT_TIP_PASSPHRASE_LENGTH,
-  MAX_TIP_PASSPHRASE_LENGTH,
-  MIN_TIP_PASSPHRASE_LENGTH,
-} from "lib/constants";
+import { DEFAULT_TIP_PASSPHRASE_LENGTH } from "lib/constants";
 import { getClaimUrl, tryGetErrorMessage } from "lib/utils";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+import { toast } from "react-hot-toast";
 
-const RedeemPage: NextPage = () => {
+const RedeemTipPage: NextPage = () => {
   const [numWords, setNumWords] = React.useState(DEFAULT_TIP_PASSPHRASE_LENGTH);
   const [values, setValues] = React.useState<{ [index: string]: string }>({});
   const [isLoaded, setLoaded] = React.useState(false);
@@ -31,7 +28,7 @@ const RedeemPage: NextPage = () => {
         .map((_, index) => values[index].toLowerCase().trim())
         .join(" ");
       if (passphrase.split(" ").some((word) => bip0039.indexOf(word) < 0)) {
-        alert("One or more words are invalid.");
+        toast.error("One or more words are invalid.");
       } else {
         (async () => {
           setSubmitting(true);
@@ -55,7 +52,7 @@ const RedeemPage: NextPage = () => {
               throw new Error("Tip not found");
             }
           } catch (error) {
-            alert((error as Error).message);
+            toast.error((error as Error).message);
             setSubmitting(false);
           }
         })();
@@ -73,8 +70,8 @@ const RedeemPage: NextPage = () => {
       {isLoaded && (
         <>
           <Text>
-            Enter your &nbsp;
-            <Input
+            Enter your magic words below to claim your bitcoin 👇
+            {/* &nbsp; <Input
               initialValue={numWords.toString()}
               onChange={(e) =>
                 e.target.value &&
@@ -91,8 +88,7 @@ const RedeemPage: NextPage = () => {
               type="number"
               width="60px"
               bordered
-            />
-            &nbsp; magic words below to claim your bitcoin 👇
+            /> */}
           </Text>
           <Spacer />
           <form
@@ -131,4 +127,4 @@ const RedeemPage: NextPage = () => {
   );
 };
 
-export default RedeemPage;
+export default RedeemTipPage;

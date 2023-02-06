@@ -6,6 +6,7 @@ import {
   TipFormSubmitData,
 } from "components/tipper/TipForm/TipFormData";
 import { PageRoutes } from "lib/PageRoutes";
+import { tryGetErrorMessage } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -49,7 +50,9 @@ const NewTip: NextPage = () => {
             router.push(`${PageRoutes.tips}/${tip.id}`);
           }
         } else {
-          toast.error("Failed to create tip: " + result.statusText);
+          toast.error(
+            "Failed to create tip: " + (await tryGetErrorMessage(result))
+          );
         }
       } catch (error) {
         console.error(error);

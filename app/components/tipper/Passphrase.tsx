@@ -52,10 +52,10 @@ export function Passphrase({
             fontSize: width * 0.3 * sizeMultiplier + "px",
             lineHeight: width * 0.45 * sizeMultiplier + "px",
             backgroundColor: "$accents2",
-            width: width * 0.9,
+            width: width * (showInstructions ? 0.9 : 1.2),
             height: width * 0.5 * sizeMultiplier,
             textAlign: "center",
-            borderRadius: width * 0.05,
+            borderRadius: width * (showInstructions ? 0.05 : 0.1),
           }}
           key={index}
         >

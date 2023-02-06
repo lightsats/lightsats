@@ -4,6 +4,7 @@ import { checkTipHasBeenFunded } from "lib/checkTipHasBeenFunded";
 import { deleteLnbitsUser } from "lib/lnbits/deleteLnbitsUser";
 import prisma from "lib/prismadb";
 import { regenerateExpiredTipInvoice } from "lib/regenerateExpiredTipInvoice";
+import { getUpdatedPassphrase } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -105,6 +106,7 @@ async function updateTip(
       ...getSharedUpdateTipFields(updateTipRequest),
       note: updateTipRequest.note || null,
       tippeeName: updateTipRequest.tippeeName || null,
+      passphrase: getUpdatedPassphrase(tip.passphrase, updateTipRequest),
     },
   });
 

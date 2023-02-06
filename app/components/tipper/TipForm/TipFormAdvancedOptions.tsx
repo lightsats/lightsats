@@ -13,13 +13,9 @@ import { OnboardingFlow } from "@prisma/client";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Divider } from "components/Divider";
 import { TipFormData } from "components/tipper/TipForm/TipFormData";
-import {
-  MAX_TIP_PASSPHRASE_LENGTH,
-  MIN_TIP_PASSPHRASE_LENGTH,
-} from "lib/constants";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { locales } from "lib/i18n/locales";
-import { getRecommendedWallets } from "lib/items/getRecommendedItems";
+import { getRecommendedItems } from "lib/items/getRecommendedItems";
 import { wallets } from "lib/items/wallets";
 import { getRedeemUrl } from "lib/utils";
 import React from "react";
@@ -61,15 +57,16 @@ export function TipFormAdvancedOptions({
   const watchedTippeeName = watch("tippeeName");
   const watchedOnboardingFlow = watch("onboardingFlow");
   const watchedEnterIndividualNames = watch("enterIndividualNames");
-  const watchedGeneratePassphrase = watch("generatePassphrase");
+  // const watchedGeneratePassphrase = watch("generatePassphrase");
 
   const recommendedWalletSelectOptions: SelectOption[] = React.useMemo(
     () =>
-      getRecommendedWallets(wallets, {
+      getRecommendedItems("wallets", undefined, undefined, {
         checkTippeeBalance: true,
         filterOtherItems: true,
         lnurlAuthCapable: watchedOnboardingFlow === "LIGHTNING",
         tippeeBalance: satsAmount,
+        sortAlphabetically: true,
       }).map((wallet) => ({
         value: wallet.id,
         label: wallet.name,
@@ -362,7 +359,7 @@ Micheal Saylor`
           />
         </Col>
       </Row>
-      {watchedGeneratePassphrase && (
+      {/*watchedGeneratePassphrase && (
         <>
           <Row justify="space-between" align="center">
             <Text>Passphrase Length</Text>
@@ -388,7 +385,7 @@ Micheal Saylor`
           </Row>
           <Spacer y={0.5} />
         </>
-      )}
+                )*/}
       <Text
         small
         css={{
@@ -403,7 +400,7 @@ Micheal Saylor`
           {getRedeemUrl()}
         </Link>
         . You can use this option for printed tips for recipients who cannot
-        scan a QR code. Warning: this is more likely to be brute forced.
+        scan a QR code.
       </Text>
     </>
   );

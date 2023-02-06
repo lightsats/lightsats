@@ -48,8 +48,6 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
-type InputMethod = "fiat" | "sats";
-
 const formStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
@@ -79,12 +77,12 @@ export function TipForm({
     showAdvancedOptions: false,
     anonymousTipper: false,
     passphraseLength: DEFAULT_TIP_PASSPHRASE_LENGTH,
+    inputMethod: "fiat",
   },
   mode,
   quantity = 1,
 }: TipFormProps) {
   const [isSubmitting, setSubmitting] = React.useState(false);
-  const [inputMethod, setInputMethod] = React.useState<InputMethod>("fiat");
   const { data: tips } = useTips(
     USE_PREV_TIP_PROPERTIES ? "tipper" : undefined
   );
@@ -119,11 +117,12 @@ export function TipForm({
   if (isNaN(watchedQuantity)) {
     watchedQuantity = quantity;
   }
+  const watchedInputMethod = watch("inputMethod");
   const watchedCurrency = watch("currency");
   const watchedShowAdvancedOptions = watch("showAdvancedOptions");
   const watchedExchangeRate = exchangeRates?.[watchedCurrency];
   const watchedAmountInSats =
-    inputMethod === "fiat" && watchedExchangeRate
+    watchedInputMethod === "fiat" && watchedExchangeRate
       ? getSatsAmount(watchedAmount, watchedExchangeRate)
       : watchedAmount;
   const watchedFeeInSats = watchedExchangeRate
@@ -139,10 +138,10 @@ export function TipForm({
 
   const toggleInputMethod = React.useCallback(() => {
     if (watchedExchangeRate) {
-      setInputMethod(inputMethod === "fiat" ? "sats" : "fiat");
+      setValue("inputMethod", watchedInputMethod === "fiat" ? "sats" : "fiat");
       setValue(
         "amountString",
-        (inputMethod === "fiat"
+        (watchedInputMethod === "fiat"
           ? getSatsAmount(watchedAmount, watchedExchangeRate)
           : Math.round(
               getFiatAmount(watchedAmount, watchedExchangeRate) * 100
@@ -150,7 +149,7 @@ export function TipForm({
         ).toString()
       );
     }
-  }, [watchedAmount, watchedExchangeRate, inputMethod, setValue]);
+  }, [watchedAmount, watchedExchangeRate, watchedInputMethod, setValue]);
 
   const exchangeRateSelectOptions: SelectOption[] | undefined = React.useMemo(
     () =>
@@ -179,7 +178,7 @@ export function TipForm({
           throw new Error("Already submitting");
         }
         satsAmount =
-          inputMethod === "fiat"
+          watchedInputMethod === "fiat"
             ? getSatsAmount(data.amount, watchedExchangeRate)
             : data.amount;
 
@@ -216,7 +215,7 @@ export function TipForm({
         setSubmitting(false);
       })();
     },
-    [watchedExchangeRate, isSubmitting, inputMethod, mode, onSubmitProp]
+    [watchedExchangeRate, isSubmitting, watchedInputMethod, mode, onSubmitProp]
   );
 
   const advancedOptions = watchedShowAdvancedOptions && (
@@ -256,7 +255,10 @@ export function TipForm({
                   Amount
                   <br />
                   <Text small css={{ position: "relative", top: "-5px" }}>
-                    in {inputMethod === "fiat" ? watchedCurrency : inputMethod}
+                    in{" "}
+                    {watchedInputMethod === "fiat"
+                      ? watchedCurrency
+                      : watchedInputMethod}
                   </Text>
                 </Col>
                 <Col>
@@ -317,7 +319,9 @@ export function TipForm({
                           px: "4px",
                           position: "relative",
                           background:
-                            inputMethod !== "sats" ? "$accents1" : undefined,
+                            watchedInputMethod !== "sats"
+                              ? "$accents1"
+                              : undefined,
                           border: "1px solid black",
                         }}
                         onClick={toggleInputMethod}
@@ -331,9 +335,13 @@ export function TipForm({
                           px: "4px",
                           position: "relative",
                           background:
-                            inputMethod !== "fiat" ? "$accents1" : undefined,
+                            watchedInputMethod !== "fiat"
+                              ? "$accents1"
+                              : undefined,
                           color:
-                            inputMethod !== "fiat" ? "$accents8" : undefined,
+                            watchedInputMethod !== "fiat"
+                              ? "$accents8"
+                              : undefined,
                           border: "1px solid black",
                         }}
                         onClick={toggleInputMethod}
@@ -354,7 +362,7 @@ export function TipForm({
                           // }) causes iOS decimal input bug, resetting field value }
                           min={0}
                           max={MAX_TIP_SATS}
-                          step={inputMethod === "fiat" ? 0.01 : 1}
+                          step={watchedInputMethod === "fiat" ? 0.01 : 1}
                           type="number"
                           inputMode="decimal"
                           aria-label="amount"
@@ -467,7 +475,7 @@ export function TipForm({
                         exchangeRate={exchangeRates[watchedCurrency]}
                         sats={
                           !isNaN(watchedAmount)
-                            ? ((inputMethod === "fiat"
+                            ? ((watchedInputMethod === "fiat"
                                 ? getSatsAmount(
                                     watchedAmount,
                                     watchedExchangeRate
@@ -480,7 +488,7 @@ export function TipForm({
                       />
                     </Text>
                     <Text small css={{ position: "relative", top: "-5px" }}>
-                      {((inputMethod === "sats"
+                      {((watchedInputMethod === "sats"
                         ? watchedAmount
                         : getSatsAmount(watchedAmount, watchedExchangeRate)) +
                         watchedFeeInSats) *

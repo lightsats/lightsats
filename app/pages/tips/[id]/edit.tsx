@@ -2,14 +2,14 @@ import { Loading, Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { TipForm } from "components/tipper/TipForm/TipForm";
 import {
+  getSharedTipFormDefaultValues,
   getSharedTipFormRequestFields,
   TipFormData,
   TipFormSubmitData,
 } from "components/tipper/TipForm/TipFormData";
-import { differenceInHours } from "date-fns";
 import { useTip } from "hooks/useTip";
-import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
+import { tryGetErrorMessage } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -31,22 +31,10 @@ const EditTip: NextPage = () => {
       return undefined;
     }
 
-    const expiresIn = Math.max(
-      Math.ceil(differenceInHours(new Date(tip.expiry), new Date()) / 24),
-      1
-    );
-
     const defaultValues: Partial<TipFormData> = {
-      currency: tip.currency || DEFAULT_FIAT_CURRENCY,
-      expiresIn,
-      expiryUnit: "days",
-      tippeeLocale: tip.tippeeLocale || undefined,
+      ...getSharedTipFormDefaultValues(tip),
       note: tip.note || undefined,
       tippeeName: tip.tippeeName || undefined,
-      onboardingFlow: tip.onboardingFlow,
-      recommendedWalletId: tip.recommendedWalletId || undefined,
-      anonymousTipper: tip.anonymousTipper,
-      showAdvancedOptions: true,
     };
     return defaultValues;
   }, [tip]);
@@ -69,7 +57,9 @@ const EditTip: NextPage = () => {
           mutateTip(updatedTip);
           router.push(`${PageRoutes.tips}/${updatedTip.id}`);
         } else {
-          toast.error("Failed to update tip: " + result.statusText);
+          toast.error(
+            "Failed to update tip: " + (await tryGetErrorMessage(result))
+          );
         }
       } catch (error) {
         console.error(error);
