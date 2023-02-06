@@ -1,12 +1,16 @@
 import { Tip, TipGroupStatus } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
-import { MAX_TIP_GROUP_QUANTITY } from "lib/constants";
+import {
+  MAX_TIP_GROUP_QUANTITY,
+  MAX_TIP_PASSPHRASE_LENGTH,
+  MIN_TIP_PASSPHRASE_LENGTH,
+} from "lib/constants";
 import { createAchievement } from "lib/createAchievement";
 import { prepareFundingWallet } from "lib/prepareFundingWallet";
 import prisma from "lib/prismadb";
 import { recreateTipFundingInvoice } from "lib/recreateTipFundingInvoice";
 import { recreateTipGroupFundingInvoice } from "lib/recreateTipGroupFundingInvoice";
-import { calculateFee } from "lib/utils";
+import { calculateFee, generatePassphrase } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -134,6 +138,21 @@ async function handlePostTip(
     anonymousTipper: createTipRequest.anonymousTipper,
   };
 
+  const generatePassphraseFromRequest = (): string | undefined => {
+    if (!createTipRequest.generatePassphrase) {
+      return undefined;
+    }
+    if (
+      isNaN(createTipRequest.passphraseLength) ||
+      createTipRequest.passphraseLength < MIN_TIP_PASSPHRASE_LENGTH ||
+      createTipRequest.passphraseLength > MAX_TIP_PASSPHRASE_LENGTH
+    ) {
+      throw new Error("Invalid tip passphrase length");
+    }
+
+    return generatePassphrase(createTipRequest.passphraseLength);
+  };
+
   if (createTipRequest.quantity > 1) {
     let tipGroup = await prisma.tipGroup.create({
       data: {
@@ -146,6 +165,7 @@ async function handlePostTip(
               ...createTipData,
               groupTipIndex: index,
               ...getTemplatedGroupTipProperties(createTipRequest, index),
+              passphrase: generatePassphraseFromRequest(),
             })),
           },
         },
@@ -176,7 +196,7 @@ async function handlePostTip(
     res.json(tipGroup);
   } else {
     let tip = await prisma.tip.create({
-      data: createTipData,
+      data: { ...createTipData, passphrase: generatePassphraseFromRequest() },
     });
 
     let lnbitsWalletAdminKey: string;

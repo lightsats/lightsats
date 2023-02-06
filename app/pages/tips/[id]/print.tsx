@@ -14,6 +14,7 @@ import { Tip } from "@prisma/client";
 import { SelectOption } from "components/CustomSelect";
 import { FlexBox } from "components/FlexBox";
 import { NextUIUser } from "components/NextUIUser";
+import { Passphrase } from "components/tipper/Passphrase";
 import { PrintDesignPicker } from "components/tipper/PrintDesignPicker";
 import { format } from "date-fns";
 import { useDevPrintPreview } from "hooks/useDevPrintPreview";
@@ -24,6 +25,7 @@ import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import {
   getClaimUrl,
   getDefaultGiftCardTheme,
+  getRedeemUrl,
   getUserAvatarUrl,
 } from "lib/utils";
 import type { NextPage } from "next";
@@ -278,7 +280,7 @@ const InsidePage = ({ tip, theme }: InsidePageProps) => {
             }}
           >
             <Text
-              b
+              b={!tip.passphrase}
               css={{
                 fontSize: "48px",
                 textAlign: "center",
@@ -286,7 +288,14 @@ const InsidePage = ({ tip, theme }: InsidePageProps) => {
                 lineHeight: "1.25em",
               }}
             >
-              Scan this code to claim your bitcoin 👇
+              {tip.passphrase ? (
+                <>
+                  Enter these magic words at{" "}
+                  <strong>{getRedeemUrl(true)}</strong> to claim your bitcoin 👇
+                </>
+              ) : (
+                <>Scan this code to claim your bitcoin 👇</>
+              )}
             </Text>
             <div
               style={{
@@ -297,7 +306,19 @@ const InsidePage = ({ tip, theme }: InsidePageProps) => {
                 borderRadius: "32px",
               }}
             >
-              <QRCode width={500} height={500} value={getClaimUrl(tip, true)} />
+              {tip.passphrase ? (
+                <Passphrase
+                  passphrase={tip.passphrase}
+                  width={250}
+                  height={250}
+                />
+              ) : (
+                <QRCode
+                  width={500}
+                  height={500}
+                  value={getClaimUrl(tip, true)}
+                />
+              )}
             </div>
 
             <Text

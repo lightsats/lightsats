@@ -7,6 +7,8 @@ import {
   Button,
   Card,
   Col,
+  Link,
+  Loading,
   Row,
   Spacer,
   Text,
@@ -15,9 +17,16 @@ import {
 import { Tip } from "@prisma/client";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
+import { Passphrase } from "components/tipper/Passphrase";
 import copy from "copy-to-clipboard";
+import { ApiRoutes } from "lib/ApiRoutes";
 import { PageRoutes } from "lib/PageRoutes";
-import { getClaimUrl, getDefaultGiftCardTheme } from "lib/utils";
+import {
+  getClaimUrl,
+  getDefaultGiftCardTheme,
+  getRedeemUrl,
+  tryGetErrorMessage,
+} from "lib/utils";
 import React from "react";
 import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
@@ -29,6 +38,34 @@ type ShareUnclaimedTipProps = {
 
 export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
   const claimUrl = getClaimUrl(tip);
+  const [mode, setMode] = React.useState<"QR" | "passphrase">("QR");
+  const [isGeneratingPassphrase, setGeneratingPassphrase] =
+    React.useState(false);
+
+  const generatePassphrase = React.useCallback(() => {
+    (async () => {
+      setGeneratingPassphrase(true);
+      const result = await fetch(
+        `${ApiRoutes.tipperTips}/${tip.id}/generatePassphrase`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (!result.ok) {
+        toast.error(
+          "Failed to generate passphrase: " + (await tryGetErrorMessage(result))
+        );
+        setGeneratingPassphrase(false);
+      }
+    })();
+  }, [tip.id]);
+
+  React.useEffect(() => {
+    if (isGeneratingPassphrase && tip.passphrase) {
+      setGeneratingPassphrase(false);
+    }
+  }, [isGeneratingPassphrase, tip]);
 
   const copyClaimUrl = React.useCallback(() => {
     if (claimUrl) {
@@ -39,74 +76,157 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
 
   return (
     <>
-      <Card css={{ dropShadow: "$sm" }}>
-        <Card.Header>
-          <Col>
-            <Row justify="center" align="center">
-              <Text size={18} b>
-                👇 Let them scan this QR code
-              </Text>
-              &nbsp;
-              <Tooltip
-                content="Ask the tippee to scan the below code using their camera app or a QR
+      <Row justify="center">
+        <Button
+          size="xs"
+          auto
+          css={{
+            width: "60px",
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
+          }}
+          bordered={mode !== "QR"}
+          onClick={() => setMode("QR")}
+        >
+          QR code
+        </Button>
+        <Button
+          size="xs"
+          auto
+          css={{
+            width: "60px",
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
+          }}
+          bordered={mode !== "passphrase"}
+          onClick={() => setMode("passphrase")}
+        >
+          Redeem
+        </Button>
+      </Row>
+      <Spacer />
+      {mode === "QR" ? (
+        <Card css={{ dropShadow: "$sm" }}>
+          <Card.Header>
+            <Col>
+              <Row justify="center" align="center">
+                <Text size={18} b>
+                  👇 Let them scan this QR code
+                </Text>
+                &nbsp;
+                <Tooltip
+                  content="Ask the tippee to scan the below code using their camera app or a QR
             code scanner app. You can also copy the URL to send via a message or
             email."
-                color="primary"
-                css={{ minWidth: "50%" }}
-                placement="left"
-              >
-                <Text color="primary">
-                  <Icon>
-                    <InformationCircleIcon />
-                  </Icon>
-                </Text>
-              </Tooltip>
-            </Row>
+                  color="primary"
+                  css={{ minWidth: "50%" }}
+                  placement="left"
+                >
+                  <Text color="primary">
+                    <Icon>
+                      <InformationCircleIcon />
+                    </Icon>
+                  </Text>
+                </Tooltip>
+              </Row>
+              <Row justify="center">
+                <NextLink href={`${PageRoutes.tips}/${tip.id}/qr`}>
+                  <a>
+                    <Button size="sm" bordered>
+                      Open in fullscreen
+                    </Button>
+                  </a>
+                </NextLink>
+                <Spacer />
+              </Row>
+            </Col>
+          </Card.Header>
+          <Card.Divider />
+          <Card.Body>
             <Row justify="center">
-              <NextLink href={`${PageRoutes.tips}/${tip.id}/qr`}>
+              <NextLink href={claimUrl}>
                 <a>
-                  <Button size="sm" bordered>
-                    Open in fullscreen
+                  <QRCode value={claimUrl} />
+                </a>
+              </NextLink>
+            </Row>
+          </Card.Body>
+          <Card.Divider />
+          <Card.Footer>
+            <Row justify="space-between">
+              <Button color="secondary" auto onClick={copyClaimUrl}>
+                <Icon>
+                  <ClipboardDocumentIcon />
+                </Icon>
+                &nbsp;Copy URL
+              </Button>
+              <NextLink href={claimUrl}>
+                <a target="_blank">
+                  <Button auto>
+                    <Icon>
+                      <ArrowTopRightOnSquareIcon />
+                    </Icon>
+                    &nbsp;Preview
                   </Button>
                 </a>
               </NextLink>
-              <Spacer />
             </Row>
-          </Col>
-        </Card.Header>
-        <Card.Divider />
-        <Card.Body>
-          <Row></Row>
-          <Row justify="center">
-            <NextLink href={claimUrl}>
-              <a>
-                <QRCode value={claimUrl} />
-              </a>
-            </NextLink>
-          </Row>
-        </Card.Body>
-        <Card.Divider />
-        <Card.Footer>
-          <Row justify="space-between">
-            <Button color="secondary" auto onClick={copyClaimUrl}>
-              <Icon>
-                <ClipboardDocumentIcon />
-              </Icon>
-              &nbsp;Copy URL
-            </Button>
-            <NextLink href={claimUrl}>
-              <a target="_blank">
-                <Button auto>
-                  <Icon>
-                    <ArrowTopRightOnSquareIcon />
-                  </Icon>
-                  &nbsp;Preview
-                </Button>
-              </a>
-            </NextLink>
-          </Row>
-        </Card.Footer>
-      </Card>
+          </Card.Footer>
+        </Card>
+      ) : (
+        <Card css={{ dropShadow: "$sm" }}>
+          <Card.Header>
+            <Col>
+              <Row justify="center">
+                <Text size={18}>Ask them to enter these magic words at</Text>
+              </Row>
+              <Row justify="center">
+                <Link
+                  css={{ fontWeight: "bold" }}
+                  href={getRedeemUrl()}
+                  target="_blank"
+                >
+                  {getRedeemUrl(true)}
+                </Link>
+              </Row>
+            </Col>
+          </Card.Header>
+          <Card.Divider />
+          <Card.Body>
+            {tip.passphrase ? (
+              <Row justify="center">
+                <Passphrase
+                  passphrase={tip.passphrase}
+                  width={128}
+                  height={128}
+                />
+              </Row>
+            ) : (
+              <>
+                <Spacer />
+                <Row justify="center">
+                  <Text>No passphrase set</Text>
+                </Row>
+                <Spacer />
+                <Row justify="center">
+                  <Button
+                    onClick={generatePassphrase}
+                    auto
+                    disabled={isGeneratingPassphrase}
+                  >
+                    {isGeneratingPassphrase ? (
+                      <Loading size="sm" />
+                    ) : (
+                      <>Generate</>
+                    )}
+                  </Button>
+                </Row>
+                <Spacer />
+              </>
+            )}
+          </Card.Body>
+        </Card>
+      )}
       <Spacer />
       <PrintCard tip={tip} />
       <Spacer />

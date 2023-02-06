@@ -1,6 +1,7 @@
 import { Tip, User } from "@prisma/client";
 import getSymbolFromCurrency from "currency-symbol-map";
 import { format, isAfter } from "date-fns";
+import { bip0039 } from "lib/bip0039";
 import {
   expirableTipStatuses,
   FEE_PERCENT,
@@ -18,6 +19,7 @@ import { Item } from "types/Item";
 import { PublicTip } from "types/PublicTip";
 import { PublicUser } from "types/PublicUser";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
+import { UpdateTipRequest } from "types/TipRequest";
 
 export function getSatsAmount(fiat: number, exchangeRate: number) {
   return Math.ceil((fiat / exchangeRate) * SATS_TO_BTC);
@@ -177,5 +179,36 @@ export async function tryGetErrorMessage(response: Response) {
     // unable to parse response body
     console.error("Unable to parse response body for " + response.url);
   }
-  return errorMessage;
+  return `${errorMessage}\n${response.status} ${response.statusText}`;
+}
+
+export function getRedeemUrl(excludeHttp = false): string {
+  const redeemUrl = `${getAppUrl()}/tip`;
+  return excludeHttp
+    ? redeemUrl.substring(redeemUrl.indexOf("//") + 2)
+    : redeemUrl;
+}
+
+export function generatePassphrase(length: number) {
+  const words: string[] = [];
+  const availableWords = bip0039.slice();
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * availableWords.length);
+    const [nextWord] = availableWords.splice(randomIndex, 1);
+    words.push(nextWord);
+  }
+
+  return words.join(" ");
+}
+export function getUpdatedPassphrase(
+  existingPassphrase: string | null,
+  updateTipRequest: UpdateTipRequest
+): string | null {
+  return updateTipRequest.generatePassphrase
+    ? existingPassphrase?.split(" ").length ===
+      updateTipRequest.passphraseLength
+      ? existingPassphrase
+      : generatePassphrase(updateTipRequest.passphraseLength)
+    : null;
 }

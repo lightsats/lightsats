@@ -1,8 +1,13 @@
-import { OnboardingFlow } from "@prisma/client";
-import { add } from "date-fns";
+import { OnboardingFlow, Tip } from "@prisma/client";
+import { add, differenceInHours } from "date-fns";
+import {
+  DEFAULT_FIAT_CURRENCY,
+  DEFAULT_TIP_PASSPHRASE_LENGTH,
+} from "lib/constants";
 
 export const ExpiryUnitValues = ["minutes", "hours", "days"] as const;
 export type ExpiryUnit = typeof ExpiryUnitValues[number];
+type InputMethod = "fiat" | "sats";
 
 export type TipFormData = {
   amount: number;
@@ -19,11 +24,14 @@ export type TipFormData = {
   showAdvancedOptions: boolean;
   recommendedWalletId: string | undefined;
   anonymousTipper: boolean;
+  passphraseLength: number;
+  generatePassphrase: boolean;
+  inputMethod: InputMethod;
 };
 
 export type TipFormSubmitData = Omit<
   TipFormData,
-  "enterIndividualNames" | "showAdvancedOptions"
+  "enterIndividualNames" | "showAdvancedOptions" | "inputMethod"
 > & {
   satsAmount: number;
 };
@@ -39,5 +47,28 @@ export function getSharedTipFormRequestFields(data: TipFormSubmitData) {
     note: data.note?.length ? data.note : undefined,
     recommendedWalletId: data.recommendedWalletId,
     anonymousTipper: data.anonymousTipper,
+    passphraseLength: data.passphraseLength,
+    generatePassphrase: data.generatePassphrase,
+  };
+}
+export function getSharedTipFormDefaultValues(tip: Tip) {
+  const expiresIn = Math.max(
+    Math.ceil(differenceInHours(new Date(tip.expiry), new Date()) / 24),
+    1
+  );
+  return {
+    currency: tip.currency || DEFAULT_FIAT_CURRENCY,
+    expiresIn,
+    expiryUnit: "days" as const,
+    tippeeLocale: tip.tippeeLocale || undefined,
+    onboardingFlow: tip.onboardingFlow,
+    recommendedWalletId: tip.recommendedWalletId || undefined,
+    anonymousTipper: tip.anonymousTipper,
+    showAdvancedOptions: true,
+    generatePassphrase: !!tip.passphrase,
+    passphraseLength:
+      tip.passphrase?.split(" ").length ?? DEFAULT_TIP_PASSPHRASE_LENGTH,
+    amount: tip.amount,
+    inputMethod: "sats" as const,
   };
 }

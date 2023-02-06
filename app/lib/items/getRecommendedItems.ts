@@ -12,6 +12,7 @@ export type CategoryFilterOptions = {
   recommendedLimit?: number;
   filterOtherItems?: boolean;
   recommendedItemId?: string;
+  sortAlphabetically?: boolean;
   shadow?: boolean; // TODO: move somewhere else
 };
 
@@ -31,19 +32,19 @@ const categoryScoringFuncs: Partial<Record<ItemCategory, ScoringFunction>> = {
 
 export function getRecommendedItems(
   category: ItemCategory,
-  locale: string,
-  devicePlatform: DevicePlatform,
+  locale: string | undefined,
+  devicePlatform: DevicePlatform | undefined,
   options: CategoryFilterOptions
 ): Item[] {
-  if (!validateLanguageCode(locale)) {
+  if (locale && !validateLanguageCode(locale)) {
     throw new Error("Unsupported locale: " + locale);
   }
   const categoryItems = catalog[category];
   let recommendedItems = categoryItems.filter(
     (item) =>
       (options.recommendedItemId && item.id === options.recommendedItemId) ||
-      (item.languageCodes.indexOf(locale) > -1 &&
-        osMatches(item, devicePlatform, false))
+      ((!locale || item.languageCodes.indexOf(locale) > -1) &&
+        (!devicePlatform || osMatches(item, devicePlatform, false)))
   );
   recommendedItems =
     categoryFilterFunctions[category]?.(recommendedItems, options) ??
@@ -102,35 +103,39 @@ export function getRecommendedWallets(
 export function sortItems(
   items: Item[],
   scoringFunc: ScoringFunction | undefined,
-  locale: string,
-  devicePlatform: DevicePlatform,
+  locale: string | undefined,
+  devicePlatform: DevicePlatform | undefined,
   options: CategoryFilterOptions
 ) {
-  items.sort(
-    (a, b) =>
-      getItemScore(b, scoringFunc, locale, devicePlatform, options) -
-      getItemScore(a, scoringFunc, locale, devicePlatform, options)
-  );
+  if (options.sortAlphabetically) {
+    items.sort((a, b) => a.name.localeCompare(b.name));
+  } else {
+    items.sort(
+      (a, b) =>
+        getItemScore(b, scoringFunc, locale, devicePlatform, options) -
+        getItemScore(a, scoringFunc, locale, devicePlatform, options)
+    );
+  }
 }
 
 function getItemScore(
   item: Item,
   scoringFunc: ScoringFunction | undefined,
-  locale: string,
-  devicePlatform: DevicePlatform,
+  locale: string | undefined,
+  devicePlatform: DevicePlatform | undefined,
   options: CategoryFilterOptions
 ) {
   let score = 0;
   if (item.lightsatsRecommended) {
     ++score;
   }
-  if (item.languageCodes.indexOf(locale) > -1) {
+  if (locale && item.languageCodes.indexOf(locale) > -1) {
     score += 5;
   } else if (item.languageCodes.indexOf(DEFAULT_LOCALE) > -1) {
     score += 2;
   }
 
-  if (osMatches(item, devicePlatform, true)) {
+  if (devicePlatform && osMatches(item, devicePlatform, true)) {
     score += 5;
   }
 

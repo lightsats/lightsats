@@ -1,6 +1,7 @@
 import {
   Col,
   Input,
+  Link,
   Radio,
   Row,
   Spacer,
@@ -14,8 +15,9 @@ import { Divider } from "components/Divider";
 import { TipFormData } from "components/tipper/TipForm/TipFormData";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { locales } from "lib/i18n/locales";
-import { getRecommendedWallets } from "lib/items/getRecommendedItems";
+import { getRecommendedItems } from "lib/items/getRecommendedItems";
 import { wallets } from "lib/items/wallets";
+import { getRedeemUrl } from "lib/utils";
 import React from "react";
 import {
   Control,
@@ -55,14 +57,16 @@ export function TipFormAdvancedOptions({
   const watchedTippeeName = watch("tippeeName");
   const watchedOnboardingFlow = watch("onboardingFlow");
   const watchedEnterIndividualNames = watch("enterIndividualNames");
+  // const watchedGeneratePassphrase = watch("generatePassphrase");
 
   const recommendedWalletSelectOptions: SelectOption[] = React.useMemo(
     () =>
-      getRecommendedWallets(wallets, {
+      getRecommendedItems("wallets", undefined, undefined, {
         checkTippeeBalance: true,
         filterOtherItems: true,
         lnurlAuthCapable: watchedOnboardingFlow === "LIGHTNING",
         tippeeBalance: satsAmount,
+        sortAlphabetically: true,
       }).map((wallet) => ({
         value: wallet.id,
         label: wallet.name,
@@ -335,6 +339,68 @@ Micheal Saylor`
         }}
       >
         Hide your info from your recipient
+      </Text>
+      <Divider />
+      <Row align="flex-start">
+        <Col>
+          <Text css={{ whiteSpace: "nowrap" }}>🆒 Generate Passphrase</Text>
+        </Col>
+        <Col css={{ ta: "right" }}>
+          <Controller
+            name="generatePassphrase"
+            control={control}
+            render={({ field }) => (
+              <Switch
+                {...field}
+                checked={field.value}
+                onChange={(e) => field.onChange(e.target.checked)}
+              />
+            )}
+          />
+        </Col>
+      </Row>
+      {/*watchedGeneratePassphrase && (
+        <>
+          <Row justify="space-between" align="center">
+            <Text>Passphrase Length</Text>
+            <Controller
+              name="passphraseLength"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  {...register("passphraseLength", {
+                    valueAsNumber: true,
+                  })}
+                  aria-label="Passphrase Length"
+                  min={MIN_TIP_PASSPHRASE_LENGTH}
+                  max={MAX_TIP_PASSPHRASE_LENGTH}
+                  type="number"
+                  inputMode="numeric"
+                  bordered
+                  width="100px"
+                />
+              )}
+            />
+          </Row>
+          <Spacer y={0.5} />
+        </>
+                )*/}
+      <Text
+        small
+        css={{
+          mt: 0,
+          mb: 6,
+          lineHeight: 1.2,
+          display: "inline-block",
+        }}
+      >
+        Generate a passphrase your recipient can enter at{" "}
+        <Link href={getRedeemUrl()} target="_blank" css={{ display: "inline" }}>
+          {getRedeemUrl()}
+        </Link>
+        . You can use this option for printed tips for recipients who cannot
+        scan a QR code.
       </Text>
     </>
   );

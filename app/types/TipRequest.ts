@@ -10,6 +10,8 @@ export type TipRequestBase = {
   tippeeNames?: string[]; // bulk tips only
   recommendedWalletId?: string;
   anonymousTipper: boolean;
+  generatePassphrase: boolean;
+  passphraseLength: number;
 };
 
 export type CreateTipRequest = TipRequestBase & {
