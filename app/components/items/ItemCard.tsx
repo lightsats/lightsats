@@ -2,8 +2,9 @@ import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
 import { Button, Collapse, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
+import { useIsMobile } from "hooks/useIsMobile";
 import { placeholderDataUrl as defaultPlaceholderDataUrl } from "lib/constants";
-import { getItemImageLocation, isMobile } from "lib/utils";
+import { getItemImageLocation } from "lib/utils";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import NextImage from "next/image";
@@ -90,6 +91,7 @@ export function ItemCard({ item, expanded }: ItemCardProps) {
   //   [item, router.locale, t]
   // );
   const { data: session } = useSession();
+  const isMobile = useIsMobile();
 
   const itemLink = item.link.replace(/{{userId}}/g, session?.user.id ?? "");
 
@@ -129,7 +131,7 @@ export function ItemCard({ item, expanded }: ItemCardProps) {
       <NextLink href={itemLink} passHref>
         <a target="_blank" rel="noreferrer noopener">
           <Row justify="flex-end" align="center">
-            {!isMobile() &&
+            {!isMobile &&
               (item.platforms.indexOf("mobile") > -1 ||
                 item.platforms.indexOf("desktop") === -1) && (
                 <>

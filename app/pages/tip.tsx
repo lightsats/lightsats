@@ -12,7 +12,7 @@ import React from "react";
 import { toast } from "react-hot-toast";
 
 const RedeemTipPage: NextPage = () => {
-  const [numWords, setNumWords] = React.useState(DEFAULT_TIP_PASSPHRASE_LENGTH);
+  const [numWords] = React.useState(DEFAULT_TIP_PASSPHRASE_LENGTH);
   const [values, setValues] = React.useState<{ [index: string]: string }>({});
   const [isLoaded, setLoaded] = React.useState(false);
   const [isSubmitting, setSubmitting] = React.useState(false);
