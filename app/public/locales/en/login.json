@@ -7,5 +7,6 @@
     "use": "Use",
     "instead": "instead",
     "link_account_not_unique": "This Lightning account is already used by a different user.",
-    "login_error_default_prefix": "Unexpected login result: "
+    "login_error_default_prefix": "Unexpected login result: ",
+    "login_error_default": "Login failed."
 }

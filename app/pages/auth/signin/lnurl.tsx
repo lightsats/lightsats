@@ -86,11 +86,25 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
             throw new Error(result?.error);
           }
         } catch (error) {
-          handleSignInError(error);
+          console.error(error);
+
+          let message;
+          if (error instanceof Error) {
+            if (error?.message === "link_account_not_unique") {
+              message = t("login:link_account_not_unique");
+              router.push("/profile");
+            } else {
+              message = t("login:login_error_default_prefix") + error?.message;
+            }
+          } else {
+            message = t("login:login_error_default");
+          }
+
+          toast.error(message);
         }
       })();
     }
-  }, [callbackUrlWithFallback, qr, router, status]);
+  }, [callbackUrlWithFallback, qr, router, status, t]);
 
   const copyQr = React.useCallback(() => {
     if (qr) {
@@ -103,19 +117,6 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
     () => ({ lnurlAuthCapable: true, filterOtherItems: true, shadow: false }),
     []
   );
-
-  const handleSignInError = (error) => {
-    console.error(error);
-
-    let message = t("login:login_error_default_prefix") + error?.message;
-
-    if (error?.message === "link_account_not_unique") {
-      message = t("login:link_account_not_unique");
-      router.push("/profile");
-    }
-
-    toast.error(message);
-  }
 
   return (
     <>

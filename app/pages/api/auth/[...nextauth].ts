@@ -44,7 +44,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         // let's check if this account is already in use
-        let lnAccountUser = await prisma.user.findUnique({
+        const lnAccountUser = await prisma.user.findUnique({
           where: {
             lnurlPublicKey: authKey.key,
           },
