@@ -5,5 +5,7 @@
     "scanQrCode": "Scan this code or copy and paste it to your Lightning wallet. Or click to log in with your web browser's wallet.",
     "clickToConnect": "Click to connect",
     "use": "Use",
-    "instead": "instead"
+    "instead": "instead",
+    "link_account_not_unique": "This Lightning account is already used by a different user.",
+    "login_error_default_prefix": "Unexpected login result: "
 }

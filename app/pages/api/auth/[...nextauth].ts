@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (lnAccountUser) {
-          throw new Error("ln_account_not_unique");
+          throw new Error("link_account_not_unique");
         }
 
         let user;

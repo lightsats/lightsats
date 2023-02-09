@@ -107,10 +107,10 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   const handleSignInError = (error) => {
     console.error(error);
 
-    let message = "Unexpected login result: " + error?.message;
+    let message = t("login:login_error_default_prefix") + error?.message;
 
-    if (error?.message === "ln_account_not_unique") {
-      message = "This Lightning account is already used by a different user.";
+    if (error?.message === "link_account_not_unique") {
+      message = t("login:link_account_not_unique");
       router.push("/profile");
     }
 
