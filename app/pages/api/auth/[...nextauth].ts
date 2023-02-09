@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
 
         const authKey = await getAuthKey(credentials.k1);
         // console.log("AUTH KEY", authKey);
-        if (!authKey || !authKey.key) {
+        if (!authKey?.key) {
           return null;
         }
         // auth key has been used already, so delete it
@@ -43,42 +43,48 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
-        let user = await prisma.user.findUnique({
+        // let's check if this account is already in use
+        let lnAccountUser = await prisma.user.findUnique({
           where: {
             lnurlPublicKey: authKey.key,
           },
         });
 
-        if (!user) {
-          if (authKey.linkUserId) {
-            user = await prisma.user.findUnique({
-              where: {
-                id: authKey.linkUserId,
-              },
-            });
-            if (!user) {
-              throw new Error(
-                "User to link does not exist: " + authKey.linkUserId
-              );
-            } else {
-              await prisma.user.update({
-                where: {
-                  id: user.id,
-                },
-                data: {
-                  lnurlPublicKey: authKey.key,
-                },
-              });
-            }
-          } else {
-            user = await prisma.user.create({
-              data: {
-                lnurlPublicKey: authKey.key,
-                locale: credentials.locale,
-              },
-            });
-          }
+        if (lnAccountUser) {
+          throw new Error("ln_account_not_unique");
         }
+
+        let user;
+
+        if (authKey.linkUserId) {
+          user = await prisma.user.findUnique({
+            where: {
+              id: authKey.linkUserId,
+            },
+          });
+
+          if (!user) {
+            throw new Error("User to link does not exist: " + authKey.linkUserId);
+          }
+
+          await prisma.user.update({
+            where: {
+              id: user.id,
+            },
+            data: {
+              lnurlPublicKey: authKey.key,
+            },
+          });
+
+        } else {
+          user = await prisma.user.create({
+            data: {
+              lnurlPublicKey: authKey.key,
+              locale: credentials.locale,
+            },
+          });
+        }
+
         return user;
       },
     }),

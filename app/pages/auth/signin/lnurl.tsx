@@ -83,11 +83,10 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
           if (result && result.ok && result.url) {
             router.push(result.url);
           } else {
-            throw new Error("Unexpected login result: " + result?.error);
+            throw new Error(result?.error);
           }
         } catch (error) {
-          console.error(error);
-          toast.error("login failed");
+          handleSignInError(error);
         }
       })();
     }
@@ -104,6 +103,19 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
     () => ({ lnurlAuthCapable: true, filterOtherItems: true, shadow: false }),
     []
   );
+
+  const handleSignInError = (error) => {
+    console.error(error);
+
+    let message = "Unexpected login result: " + error?.message;
+
+    if (error?.message === "ln_account_not_unique") {
+      message = "This Lightning account is already used by a different user.";
+      router.push("/profile");
+    }
+
+    toast.error(message);
+  }
 
   return (
     <>
