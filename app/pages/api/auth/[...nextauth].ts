@@ -64,7 +64,9 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (!user) {
-            throw new Error("User to link does not exist: " + authKey.linkUserId);
+            throw new Error(
+              "User to link does not exist: " + authKey.linkUserId
+            );
           }
 
           await prisma.user.update({
@@ -75,7 +77,6 @@ export const authOptions: NextAuthOptions = {
               lnurlPublicKey: authKey.key,
             },
           });
-
         } else {
           user = await prisma.user.create({
             data: {
