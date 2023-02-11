@@ -151,7 +151,6 @@ export function TipFormAdvancedOptions({
       <Divider />
       <Radio.Group
         label="Onboarding Flow"
-        defaultValue={OnboardingFlow.DEFAULT}
         value={watchedOnboardingFlow}
         size="sm"
         onChange={(e) => setOnboardingFlow(e as OnboardingFlow)}

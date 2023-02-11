@@ -78,6 +78,7 @@ export function TipForm({
     anonymousTipper: false,
     passphraseLength: DEFAULT_TIP_PASSPHRASE_LENGTH,
     inputMethod: "fiat",
+    onboardingFlow: "DEFAULT",
   },
   mode,
   quantity = 1,
