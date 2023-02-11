@@ -3,10 +3,11 @@ import { getAuthKey } from "lib/lnurl/getAuthKey";
 import prisma from "lib/prismadb";
 import * as lnurl from "lnurl";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { LNURLResponse } from "types/LNURLResponse";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<LNURLResponse>
 ) {
   const { k1, sig, key } = req.query;
 
@@ -22,7 +23,23 @@ export default async function handler(
       key as string
     )
   ) {
-    return res.status(StatusCodes.BAD_REQUEST).end();
+    return res.json({ status: "ERROR", reason: "Invalid signature" });
+  }
+
+  // check if this key is already being used (cannot link to a wallet that is linked to another account)
+  if (authKey.linkUserId) {
+    if (
+      await prisma.user.findUnique({
+        where: {
+          lnurlPublicKey: key as string,
+        },
+      })
+    ) {
+      return res.json({
+        status: "ERROR",
+        reason: "This wallet is already connected to another account",
+      });
+    }
   }
 
   await prisma.lnurlAuthKey.update({

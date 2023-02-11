@@ -3,19 +3,11 @@ import { StatusCodes } from "http-status-codes";
 import { payWithdrawalInvoice } from "lib/payWithdrawalInvoice";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-type InitiatePayWithdrawalLinkResponse =
-  | {
-      status: "ERROR";
-      reason: string;
-    }
-  | {
-      status: "OK";
-    };
+import { LNURLResponse } from "types/LNURLResponse";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<InitiatePayWithdrawalLinkResponse>
+  res: NextApiResponse<LNURLResponse>
 ) {
   const { id } = req.query;
   const withdrawalLink = await prisma.withdrawalLink.findUnique({
@@ -37,7 +29,7 @@ export default async function handler(
 async function initiatePayWithdrawalLink(
   withdrawalLink: WithdrawalLink,
   req: NextApiRequest,
-  res: NextApiResponse<InitiatePayWithdrawalLinkResponse>
+  res: NextApiResponse<LNURLResponse>
 ) {
   if (withdrawalLink.used) {
     return res.json({
