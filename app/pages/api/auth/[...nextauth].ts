@@ -185,7 +185,7 @@ export const authOptions: NextAuthOptions = {
     },
     jwt: async ({ token, user }) => {
       if (user) {
-        // on new user creation
+        // on login / new user creation
         token.user = user;
       }
       return token;
