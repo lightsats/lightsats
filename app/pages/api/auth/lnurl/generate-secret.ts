@@ -29,7 +29,7 @@ export default async function handler(
 
   const k1 = generateSecret();
 
-  if (!isPreview) {
+  if (isPreview !== "true") {
     // store the random secret in the DB so it can only be used once
     await prisma.lnurlAuthKey.create({
       data: {
