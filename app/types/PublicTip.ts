@@ -12,7 +12,6 @@ export type PublicTip = Pick<
   | "status"
   | "expiry"
   | "tippeeName"
-  | "claimLinkViewed"
   | "created"
   | "tippeeLocale"
   | "onboardingFlow"

@@ -40,7 +40,6 @@ export function mapTipToPublicTip(
     created: tip.created,
     expiry: tip.expiry,
     tippeeName: tip.tippeeName,
-    claimLinkViewed: tip.claimLinkViewed,
     tippeeLocale: tip.tippeeLocale,
     onboardingFlow: tip.onboardingFlow,
     lastWithdrawal: tip.lastWithdrawal,

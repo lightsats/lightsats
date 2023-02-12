@@ -36,9 +36,13 @@ const useLnurlStatusConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 type LnurlAuthSignInProps = {
   callbackUrl?: string;
+  isPreview?: boolean;
 };
 
-export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
+export default function LnurlAuthSignIn({
+  callbackUrl,
+  isPreview,
+}: LnurlAuthSignInProps) {
   const router = useRouter();
   const { t } = useTranslation(["common", "login"]);
   const linkExistingAccount = router.query["link"] === "true";
@@ -51,7 +55,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
     PageRoutes.dashboard;
   // only retrieve the qr code once
   const { data: qr, mutate: fetchNewQR } = useSWRImmutable<LnurlAuthLoginInfo>(
-    `/api/auth/lnurl/generate-secret?linkExistingAccount=${linkExistingAccount}`,
+    `/api/auth/lnurl/generate-secret?linkExistingAccount=${linkExistingAccount}&isPreview=${isPreview}}`,
     defaultFetcher
   );
 
@@ -62,11 +66,18 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
   );
 
   React.useEffect(() => {
-    if (status?.used && !status.verified && !isRedirecting) {
+    if (status?.used && !status.verified && !isRedirecting && !isPreview) {
       toast.error("Generating new QR code");
       fetchNewQR();
     }
-  }, [fetchNewQR, isRedirecting, status?.used, status?.verified]);
+  }, [fetchNewQR, isRedirecting, status?.used, status?.verified, isPreview]);
+
+  React.useEffect(() => {
+    if (isPreview) {
+      toast.error("Cannot login while previewing a tip");
+      return;
+    }
+  }, [isPreview]);
 
   React.useEffect(() => {
     if (qr && status?.verified) {
@@ -91,7 +102,7 @@ export default function LnurlAuthSignIn({ callbackUrl }: LnurlAuthSignInProps) {
         }
       })();
     }
-  }, [callbackUrlWithFallback, qr, router, status]);
+  }, [callbackUrlWithFallback, isPreview, qr, router, status]);
 
   const copyQr = React.useCallback(() => {
     if (qr) {

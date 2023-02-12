@@ -11,7 +11,7 @@ export function getWithdrawalInitialTipStatus(flow: WithdrawalFlow) {
     ? "CLAIMED"
     : flow === "tipper"
     ? "RECLAIMED"
-    : "UNCLAIMED";
+    : "SEEN";
 }
 
 export function getWithdrawableTipsQuery(

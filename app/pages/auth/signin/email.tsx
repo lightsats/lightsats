@@ -34,6 +34,7 @@ type EmailFormData = {
 type EmailSignInProps = {
   callbackUrl?: string;
   submitText?: React.ReactNode;
+  isPreview?: boolean;
 };
 
 // type TokenFormData = {
@@ -43,6 +44,7 @@ type EmailSignInProps = {
 export default function EmailSignIn({
   callbackUrl,
   submitText,
+  isPreview,
 }: EmailSignInProps) {
   const { t } = useTranslation("common");
   const { control, handleSubmit, setFocus } = useForm<EmailFormData>();
@@ -67,6 +69,10 @@ export default function EmailSignIn({
       }
       if (!data.email) {
         toast.error("Please enter a valid email address");
+        return;
+      }
+      if (isPreview) {
+        toast.error("Cannot login while previewing a tip");
         return;
       }
       setSubmitting(true);
@@ -102,7 +108,13 @@ export default function EmailSignIn({
         setSubmitting(false);
       })();
     },
-    [callbackUrlWithFallback, isSubmitting, linkExistingAccount, router]
+    [
+      callbackUrlWithFallback,
+      isPreview,
+      isSubmitting,
+      linkExistingAccount,
+      router,
+    ]
   );
 
   return (

@@ -13,6 +13,7 @@ type LoginProps = {
   tipId?: string;
   defaultLoginMethod: LoginMethod;
   allowedLoginMethods?: LoginMethod[];
+  isPreview?: boolean;
 };
 
 export function Login({
@@ -22,6 +23,7 @@ export function Login({
   tipId,
   defaultLoginMethod,
   allowedLoginMethods,
+  isPreview,
 }: LoginProps) {
   const { t } = useTranslation(["common", "login"]);
   const [loginMethod, setLoginMethod] =
@@ -48,14 +50,19 @@ export function Login({
           callbackUrl={callbackUrl}
           submitText={submitText}
           tipId={tipId}
+          isPreview={isPreview}
         />
       )}
       {loginMethod === "email" && (
-        <EmailSignIn callbackUrl={callbackUrl} submitText={submitText} />
+        <EmailSignIn
+          callbackUrl={callbackUrl}
+          submitText={submitText}
+          isPreview={isPreview}
+        />
       )}
       {loginMethod === "lightning" && (
         <>
-          <LnurlAuthSignIn callbackUrl={callbackUrl} />
+          <LnurlAuthSignIn callbackUrl={callbackUrl} isPreview={isPreview} />
         </>
       )}
       {alternativeMethods.length > 0 && (

@@ -27,8 +27,10 @@ function getTitle(status: TipStatus) {
       return "You did it 🎉";
     case "UNFUNDED":
       return "You're almost there 👍";
-    case "UNCLAIMED":
+    case "UNSEEN":
       return "Your tip is ready for takeoff ✈️";
+    case "SEEN":
+      return "Your tip has been seen 👀";
     default:
       return "Nice work 👍";
   }
@@ -39,7 +41,9 @@ function getSubtitle(status: TipStatus) {
       return "Your recipient has withdrawn their sats!";
     case "UNFUNDED":
       return "You'll need to fund your tip before it can be sent";
-    case "UNCLAIMED":
+    case "UNSEEN":
+      return "Your tip hasn't been seen yet";
+    case "SEEN":
       return "Your tip hasn't been claimed yet";
     default:
       return "Your recipient is on their 🍊💊 journey!";

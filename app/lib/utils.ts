@@ -98,8 +98,8 @@ export const getItemImageLocation = (item: Item) =>
 export const getLocalePath = (locale = DEFAULT_LOCALE) =>
   locale !== DEFAULT_LOCALE ? `/${locale}` : "";
 
-export const getAppUrl = () =>
-  global.window ? window.location.origin : process.env.APP_URL;
+export const getAppUrl = (): string =>
+  global.window ? window.location.origin : (process.env.APP_URL as string);
 
 export const getCurrentUrl = (router: NextRouter) => {
   return global.window

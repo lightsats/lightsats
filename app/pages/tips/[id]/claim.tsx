@@ -4,6 +4,7 @@ import { ClaimedTipCard } from "components/ClaimedTipCard";
 import { HomeButton } from "components/HomeButton";
 import { Login } from "components/Login";
 import { UnavailableTipActions } from "components/UnavailableTipActions";
+import { unclaimedTipStatuses } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
@@ -41,7 +42,7 @@ const ClaimTipPage: NextPage = () => {
   React.useEffect(() => {
     if (
       publicTip &&
-      !publicTip.claimLinkViewed &&
+      publicTip.status === "UNSEEN" &&
       ((!session && sessionStatus !== "loading") ||
         (session && session.user.id !== publicTip.tipperId))
     ) {
@@ -62,7 +63,7 @@ const ClaimTipPage: NextPage = () => {
   const canClaim =
     publicTip &&
     publicTip.onboardingFlow !== "SKIP" &&
-    publicTip.status === "UNCLAIMED" &&
+    publicTip.status === "SEEN" &&
     session &&
     !isTipper &&
     !hasExpired;
@@ -130,6 +131,7 @@ const ClaimTipPage: NextPage = () => {
 
   const isLoading =
     !publicTip ||
+    (publicTip.status === "UNSEEN" && !isTipper) ||
     sessionStatus === "loading" ||
     (session && canClaim) ||
     isClaiming;
@@ -143,7 +145,7 @@ const ClaimTipPage: NextPage = () => {
         <>
           <Loading color="currentColor" size="sm" />
         </>
-      ) : publicTip.status !== "UNCLAIMED" &&
+      ) : unclaimedTipStatuses.indexOf(publicTip.status) === -1 &&
         (publicTip.status !== "CLAIMED" ||
           (session && session.user.id !== publicTip.tippeeId)) ? (
         <>
@@ -170,6 +172,7 @@ const ClaimTipPage: NextPage = () => {
                 callbackUrl={getCurrentUrl(router)}
                 tipId={publicTip.id}
                 defaultLoginMethod="phone"
+                isPreview={!!isTipper}
               />
             </>
           </Collapse>
@@ -185,7 +188,7 @@ const ClaimTipPage: NextPage = () => {
             <Link href={`${PageRoutes.tips}/${id}`}>Go to Tip</Link>
           </Alert>
           <Spacer />
-          <ClaimTipView publicTip={publicTip} />
+          <ClaimTipView publicTip={publicTip} isTipper />
         </>
       ) : hasExpired ? (
         <>
@@ -209,9 +212,14 @@ export default ClaimTipPage;
 type ClaimTipViewProps = {
   publicTip: PublicTip;
   walletInstalled?: boolean;
+  isTipper?: boolean;
 };
 
-function ClaimTipView({ publicTip, walletInstalled }: ClaimTipViewProps) {
+function ClaimTipView({
+  publicTip,
+  walletInstalled,
+  isTipper,
+}: ClaimTipViewProps) {
   const { t } = useTranslation("claim");
   const router = useRouter();
   const [selectWalletNextPageHref, setSelectWalletNextPageHref] =
@@ -236,7 +244,7 @@ function ClaimTipView({ publicTip, walletInstalled }: ClaimTipViewProps) {
       <ClaimedTipCard publicTip={publicTip} viewing="tipper" />
       <Spacer y={3} />
       {publicTip.onboardingFlow === "SKIP" ? (
-        <Withdraw flow="anonymous" tipId={publicTip.id} />
+        <Withdraw flow="anonymous" tipId={publicTip.id} isPreview={isTipper} />
       ) : publicTip.onboardingFlow === "LIGHTNING" && !walletInstalled ? (
         <SelectWalletPageContent
           receivedTips={[publicTip]}
@@ -261,6 +269,7 @@ function ClaimTipView({ publicTip, walletInstalled }: ClaimTipViewProps) {
                 ? ["lightning"]
                 : undefined
             }
+            isPreview={!!isTipper}
           />
         </>
       )}

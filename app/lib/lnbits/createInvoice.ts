@@ -16,16 +16,11 @@ export async function createFundingInvoice(
   amount: number,
   adminKey: string
 ): Promise<{ invoice: string; invoiceId: string }> {
-  // if (!process.env.LNBITS_WEBHOOK_SECRET_KEY) {
-  //   throw new Error("No LNBITS_WEBHOOK_SECRET_KEY provided");
-  // }
-
   return createInvoice(
     amount,
     adminKey,
     `${appName} tip`,
     undefined // webhook no longer used (unreliable)
-    // `${process.env.APP_URL}/api/webhooks/invoices?key=${process.env.LNBITS_WEBHOOK_SECRET_KEY}`
   );
 }
 

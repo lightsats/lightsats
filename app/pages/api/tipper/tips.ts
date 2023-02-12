@@ -97,9 +97,6 @@ async function handlePostTip(
   if (!process.env.LNBITS_API_KEY) {
     throw new Error("No LNBITS_API_KEY provided");
   }
-  // if (!process.env.LNBITS_WEBHOOK_SECRET_KEY) {
-  //   throw new Error("No LNBITS_WEBHOOK_SECRET_KEY provided");
-  // }
   if (!process.env.LNBITS_USER_ID) {
     throw new Error("No LNBITS_USER_ID provided");
   }

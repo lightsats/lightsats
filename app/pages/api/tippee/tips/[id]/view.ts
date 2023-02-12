@@ -17,12 +17,13 @@ export default async function handler(
 
 async function handleViewTip(req: NextApiRequest, res: NextApiResponse<Tip>) {
   const { id } = req.query;
-  await prisma.tip.update({
+  await prisma.tip.updateMany({
     where: {
       id: id as string,
+      status: "UNSEEN",
     },
     data: {
-      claimLinkViewed: true,
+      status: "SEEN",
     },
   });
 

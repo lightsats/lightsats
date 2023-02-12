@@ -23,7 +23,7 @@ import { add } from "date-fns";
 import { usePublicTip } from "hooks/usePublicTip";
 import { useTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
-import { WITHDRAWAL_RETRY_DELAY } from "lib/constants";
+import { unclaimedTipStatuses, WITHDRAWAL_RETRY_DELAY } from "lib/constants";
 import { getStaticProps } from "lib/i18n/i18next";
 import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
 import { PageRoutes } from "lib/PageRoutes";
@@ -42,9 +42,10 @@ import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
 type WithdrawProps = {
   flow: WithdrawalFlow;
   tipId?: string;
+  isPreview?: boolean;
 };
 // TODO: move to separate file
-export function Withdraw({ flow, tipId }: WithdrawProps) {
+export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
   const { t } = useTranslation(["common", "withdraw"]);
   const { data: session } = useSession();
   const router = useRouter();
@@ -66,8 +67,13 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
 
   const executeWithdrawal = React.useCallback(
     (invoice: string, isWebln: boolean) => {
+      if (isPreview) {
+        toast.error("You cannot withdraw your own tip");
+        return;
+      }
       if (isSubmitting) {
-        throw new Error("Already submitting");
+        toast.error("Already submitting");
+        return;
       }
       setSubmitting(true);
 
@@ -100,7 +106,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
         setSubmitting(false);
       })();
     },
-    [isSubmitting, flow, tipId]
+    [isPreview, isSubmitting, flow, tipId]
   );
 
   const submitForm = React.useCallback(() => {
@@ -119,7 +125,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
             !hasTipExpired(tip)) ||
           (flow === "tipper" && tip.status === "RECLAIMED") ||
           (flow === "anonymous" &&
-            tip.status === "UNCLAIMED" &&
+            unclaimedTipStatuses.indexOf(tip.status) > -1 &&
             !hasTipExpired(tip))
       ),
     [flow, tips]
@@ -181,7 +187,13 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
   ]);
 
   React.useEffect(() => {
-    if (availableBalance > 0) {
+    if (isPreview) {
+      // just use a non-existent withdraw url as a demo
+      setWithdrawalLinkLnurl(
+        "lnurl1dp68gurn8ghj7mrfva58gumpw3ejucm0d5hkzurf9amkjargv3exzampd3xxjmntwvhkummw94jhs6tnw3jkuaqjn6jlg"
+      );
+    }
+    if (availableBalance > 0 && !isPreview) {
       (async () => {
         const withdrawalRequest: LnurlWithdrawalRequest = {
           amount: availableBalance,
@@ -203,7 +215,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
         }
       })();
     }
-  }, [availableBalance, flow, tipId]);
+  }, [availableBalance, flow, tipId, isPreview]);
 
   React.useEffect(() => {
     if (
@@ -219,7 +231,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
   React.useEffect(() => {
     if (availableBalance > 0) {
       (async () => {
-        if (window.webln) {
+        if (window.webln && !isPreview) {
           try {
             if (!hasLaunchedWebln) {
               setLaunchedWebln(true);
@@ -238,7 +250,7 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
         }
       })();
     }
-  }, [availableBalance, executeWithdrawal, flow, hasLaunchedWebln]);
+  }, [availableBalance, executeWithdrawal, flow, hasLaunchedWebln, isPreview]);
 
   const copyWithdrawLinkUrl = React.useCallback(() => {
     if (withdrawalLinkLnurl) {
@@ -409,9 +421,11 @@ export function Withdraw({ flow, tipId }: WithdrawProps) {
                   onChange={(event) => setInvoiceFieldValue(event.target.value)}
                 />
                 <Spacer />
-                <Button onClick={submitForm} disabled={!invoiceFieldValue}>
-                  Withdraw
-                </Button>
+                <Row justify="center">
+                  <Button onClick={submitForm} disabled={!invoiceFieldValue}>
+                    Withdraw
+                  </Button>
+                </Row>
               </Collapse>
             </>
           )}

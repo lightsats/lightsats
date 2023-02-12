@@ -2,7 +2,7 @@ import { Prisma, Tip } from "@prisma/client";
 import { createInvoice } from "lib/lnbits/createInvoice";
 import { getWalletBalance } from "lib/lnbits/getWalletBalance";
 import { payInvoice } from "lib/lnbits/payInvoice";
-import { markTipAsUnclaimed } from "lib/markTipAsUnclaimed";
+import { markTipAsUnseen } from "lib/markTipAsUnseen";
 import { prepareFundingWallet } from "lib/prepareFundingWallet";
 import prisma from "lib/prismadb";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
@@ -128,5 +128,5 @@ async function prepareTipGroupTip(tipGroup: TipGroupWithTips, tip: Tip) {
         JSON.stringify(payInvoiceResponseBody)
     );
   }
-  await markTipAsUnclaimed(tip);
+  await markTipAsUnseen(tip);
 }
