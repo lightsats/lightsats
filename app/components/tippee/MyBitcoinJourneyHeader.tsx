@@ -28,8 +28,8 @@ export function MyBitcoinJourneyHeader() {
   React.useEffect(() => {
     if (
       userId &&
-      userJourneyStep !== undefined &&
-      userJourneyStep < progressIndex
+      userJourneyStep !== undefined /* &&
+      userJourneyStep < progressIndex*/
     ) {
       (async () => {
         const updateUserJourneyRequest: UpdateUserJourneyRequest = {

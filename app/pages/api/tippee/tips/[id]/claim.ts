@@ -53,7 +53,7 @@ async function handleClaimTip(
   if (
     tip.tippeeId ||
     session.user.id === tip.tipperId ||
-    tip.status !== "UNCLAIMED" ||
+    tip.status !== "SEEN" ||
     hasExpired
   ) {
     // already claimed or trying to claim their own tip

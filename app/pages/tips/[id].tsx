@@ -9,7 +9,11 @@ import { ShareUnclaimedTip } from "components/tipper/TipPage/ShareUnclaimedTip";
 import { TipPageStatusHeader } from "components/tipper/TipPage/TipPageStatusHeader";
 import { useLeaderboardPosition } from "hooks/useLeaderboardPosition";
 import { useTip } from "hooks/useTip";
-import { expirableTipStatuses, refundableTipStatuses } from "lib/constants";
+import {
+  expirableTipStatuses,
+  refundableTipStatuses,
+  unclaimedTipStatuses,
+} from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
@@ -59,7 +63,7 @@ const TipPage: NextPage = () => {
   const tipStatus = tip?.status;
 
   React.useEffect(() => {
-    if (prevTipStatus === "UNFUNDED" && tipStatus === "UNCLAIMED") {
+    if (prevTipStatus === "UNFUNDED" && tipStatus === "UNSEEN") {
       toast.success("Tip funded");
     }
     setPrevTipStatus(tipStatus);
@@ -136,7 +140,9 @@ const TipPage: NextPage = () => {
                 <Spacer />
               </>
             )}
-            {tip.status === "UNCLAIMED" && <ShareUnclaimedTip tip={tip} />}
+            {unclaimedTipStatuses.indexOf(tip.status) > -1 && (
+              <ShareUnclaimedTip tip={tip} />
+            )}
           </>
         )}
 

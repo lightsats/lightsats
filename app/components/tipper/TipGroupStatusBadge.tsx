@@ -22,14 +22,6 @@ export function TipGroupStatusBadge({
   ) {
     color = "success";
   }
-  /*: (status === "UNCLAIMED" && !tip.claimLinkViewed) ||
-        status === "RECLAIMED"
-      ? "warning"
-      : status === "CLAIMED" || (status === "UNCLAIMED" && tip.claimLinkViewed)
-      ? "primary"
-      : status === "WITHDRAWN"
-      ? "success"
-      : "default";*/
   return (
     <Badge
       variant="flat"
