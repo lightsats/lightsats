@@ -212,3 +212,10 @@ export function getUpdatedPassphrase(
       : generatePassphrase(updateTipRequest.passphraseLength)
     : null;
 }
+
+export function truncate(text: string, length: number, suffix = "...") {
+  if (text.length > length) {
+    text = text.substring(0, length) + suffix;
+  }
+  return text;
+}

@@ -24,6 +24,7 @@ import {
   getClaimUrl,
   getDefaultBulkGiftCardTheme,
   getUserAvatarUrl,
+  truncate,
 } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -275,8 +276,9 @@ export function BulkTipGiftCardContents({
           size="lg"
           css={{
             transform: "scale(2,2)",
+            transformOrigin: "center left",
             pb: "14px",
-            pl: "49px",
+            pl: "0px",
             ".nextui-user-avatar": {
               padding: "4px",
             },
@@ -290,7 +292,7 @@ export function BulkTipGiftCardContents({
           }}
           name={
             <Text b color="white" css={{ fontSize: "20px" }}>
-              {user.name ?? DEFAULT_NAME}
+              {truncate(user.name ?? DEFAULT_NAME, 21)}
             </Text>
           }
           src={getUserAvatarUrl(user)}
