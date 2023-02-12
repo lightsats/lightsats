@@ -43,6 +43,7 @@ type PhoneSignInProps = {
   callbackUrl?: string;
   submitText?: React.ReactNode;
   tipId?: string;
+  isPreview?: boolean;
 };
 
 type MyIp = { country: Country; ip: string };
@@ -51,6 +52,7 @@ export default function PhoneSignIn({
   callbackUrl,
   submitText,
   tipId,
+  isPreview,
 }: PhoneSignInProps) {
   const { data: myIp } = useSWR<MyIp>("https://api.country.is", defaultFetcher);
   const { t } = useTranslation("common");
@@ -71,6 +73,10 @@ export default function PhoneSignIn({
   const onSubmit = React.useCallback(
     (data: PhoneFormData) => {
       if (isSubmitting) {
+        return;
+      }
+      if (isPreview) {
+        toast.error("Cannot login while previewing a tip");
         return;
       }
       if (!data.phone) {
@@ -114,7 +120,7 @@ export default function PhoneSignIn({
         setSubmitting(false);
       })();
     },
-    [callbackUrlWithFallback, isSubmitting, router, tipId]
+    [callbackUrlWithFallback, isPreview, isSubmitting, router, tipId]
   );
 
   return (

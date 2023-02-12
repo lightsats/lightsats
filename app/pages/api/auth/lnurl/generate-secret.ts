@@ -15,7 +15,7 @@ export default async function handler(
     throw new Error("No host in request headers");
   }
 
-  const { linkExistingAccount } = req.query;
+  const { linkExistingAccount, isPreview } = req.query;
 
   let linkUserId: string | undefined;
 
@@ -29,13 +29,15 @@ export default async function handler(
 
   const k1 = generateSecret();
 
-  // store the random secret in the DB so it can only be used once
-  await prisma.lnurlAuthKey.create({
-    data: {
-      k1,
-      linkUserId: linkUserId || null,
-    },
-  });
+  if (!isPreview) {
+    // store the random secret in the DB so it can only be used once
+    await prisma.lnurlAuthKey.create({
+      data: {
+        k1,
+        linkUserId: linkUserId || null,
+      },
+    });
+  }
 
   const params = new URLSearchParams({
     k1,

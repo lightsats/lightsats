@@ -172,6 +172,7 @@ const ClaimTipPage: NextPage = () => {
                 callbackUrl={getCurrentUrl(router)}
                 tipId={publicTip.id}
                 defaultLoginMethod="phone"
+                isPreview={!!isTipper}
               />
             </>
           </Collapse>
@@ -268,6 +269,7 @@ function ClaimTipView({
                 ? ["lightning"]
                 : undefined
             }
+            isPreview={!!isTipper}
           />
         </>
       )}
