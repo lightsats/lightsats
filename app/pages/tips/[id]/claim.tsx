@@ -42,7 +42,7 @@ const ClaimTipPage: NextPage = () => {
   React.useEffect(() => {
     if (
       publicTip &&
-      !publicTip.claimLinkViewed &&
+      publicTip.status === "UNSEEN" &&
       ((!session && sessionStatus !== "loading") ||
         (session && session.user.id !== publicTip.tipperId))
     ) {

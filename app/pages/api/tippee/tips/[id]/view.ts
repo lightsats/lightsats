@@ -23,7 +23,6 @@ async function handleViewTip(req: NextApiRequest, res: NextApiResponse<Tip>) {
       status: "UNSEEN",
     },
     data: {
-      claimLinkViewed: true,
       status: "SEEN",
     },
   });

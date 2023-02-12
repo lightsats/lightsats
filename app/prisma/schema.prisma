@@ -131,7 +131,6 @@ model Tip {
   withdrawalLinkTip WithdrawalLinkTip[]
   withdrawalId String?
   withdrawal Withdrawal? @relation(fields: [withdrawalId], references: [id])
-  claimLinkViewed Boolean @default(false)
   numSmsTokens Int @default(0) // to allow new user signups using SMS
   sentReminders SentReminder[]
   onboardingFlow OnboardingFlow @default(DEFAULT)
