@@ -51,7 +51,7 @@ export default async function handler(
   const encoded = lnurl.encode(callbackUrl).toUpperCase();
 
   res.json({
-    encoded,
+    lnurl_auth: encoded,
     k1,
   });
 }

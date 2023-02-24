@@ -1,5 +1,4 @@
-import jwt from "jsonwebtoken";
-import { LOGIN_LINK_EXPIRATION_DAYS } from "lib/constants";
+import { generateJWTAuthToken } from "lib/generateJWTAuthToken";
 import { PageRoutes } from "lib/PageRoutes";
 import { getLocalePath } from "lib/utils";
 import { TwoFactorAuthToken } from "types/TwoFactorAuthToken";
@@ -11,10 +10,6 @@ export function generateAuthLink(
   callbackUrl: string,
   linkUserId?: string
 ) {
-  if (!process.env.NEXTAUTH_SECRET) {
-    throw new Error("No NEXTAUTH_SECRET set");
-  }
-
   const twoFactorAuthToken: TwoFactorAuthToken = {
     email,
     phoneNumber,
@@ -22,10 +17,10 @@ export function generateAuthLink(
     linkUserId,
     locale,
   };
-  const token = jwt.sign(twoFactorAuthToken, process.env.NEXTAUTH_SECRET, {
-    expiresIn: LOGIN_LINK_EXPIRATION_DAYS + " days",
-  });
+  const token = generateJWTAuthToken(twoFactorAuthToken);
 
+  // TODO: change to appUrl?token=${token} to match breez
+  // (would require a redirect from this URL for backward compatibility)
   return `${process.env.APP_URL}${getLocalePath(locale)}${
     PageRoutes.verifySignin
   }/${token}`;

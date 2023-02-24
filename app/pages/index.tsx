@@ -1,4 +1,13 @@
-import { Avatar, Button, Card, Grid, Spacer, Text } from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Card,
+  Grid,
+  Loading,
+  Spacer,
+  Text,
+} from "@nextui-org/react";
+import { FlexBox } from "components/FlexBox";
 import { NextImage } from "components/NextImage";
 import { NextLink } from "components/NextLink";
 import { useLeaderboardContents } from "hooks/useLeaderboardContents";
@@ -56,6 +65,7 @@ function Homepage() {
   const [pageLoaded, setPageLoaded] = React.useState(false);
   const { status: sessionStatus } = useSession();
   const router = useRouter();
+  const { token } = router.query;
 
   React.useEffect(() => {
     const onPageLoad = () => {
@@ -74,6 +84,21 @@ function Homepage() {
       router.push(PageRoutes.dashboard);
     }
   }, [router, sessionStatus]);
+
+  React.useEffect(() => {
+    if (token) {
+      // breez jwt token
+      router.replace(`${PageRoutes.verifySignin}/${token}`);
+    }
+  }, [router, token]);
+
+  if (!router || !router.isReady || token) {
+    return (
+      <FlexBox style={{ height: "100%", justifyContent: "center" }}>
+        <Loading />
+      </FlexBox>
+    );
+  }
 
   return (
     <>

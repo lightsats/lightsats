@@ -54,13 +54,16 @@ export default function LnurlAuthSignIn({
     (router.query["callbackUrl"] as string) ||
     PageRoutes.dashboard;
   // only retrieve the qr code once
-  const { data: qr, mutate: fetchNewQR } = useSWRImmutable<LnurlAuthLoginInfo>(
-    `/api/auth/lnurl/generate-secret?linkExistingAccount=${linkExistingAccount}&isPreview=${isPreview}}`,
-    defaultFetcher
-  );
+  const { data: lnurlAuthLoginInfo, mutate: fetchNewQR } =
+    useSWRImmutable<LnurlAuthLoginInfo>(
+      `/api/auth/lnurl/generate-secret?linkExistingAccount=${linkExistingAccount}&isPreview=${isPreview}}`,
+      defaultFetcher
+    );
 
   const { data: status } = useSWR<LnurlAuthStatus>(
-    qr ? `/api/auth/lnurl/status?k1=${qr.k1}` : null,
+    lnurlAuthLoginInfo
+      ? `/api/auth/lnurl/status?k1=${lnurlAuthLoginInfo.k1}`
+      : null,
     defaultFetcher,
     useLnurlStatusConfig
   );
@@ -80,12 +83,12 @@ export default function LnurlAuthSignIn({
   }, [isPreview]);
 
   React.useEffect(() => {
-    if (qr && status?.verified) {
+    if (lnurlAuthLoginInfo && status?.verified) {
       setRedirecting(true);
       (async () => {
         try {
           const result = await signIn("lnurl", {
-            k1: qr.k1,
+            k1: lnurlAuthLoginInfo.k1,
             callbackUrl: callbackUrlWithFallback,
             locale: router.locale || DEFAULT_LOCALE,
             redirect: false,
@@ -102,14 +105,14 @@ export default function LnurlAuthSignIn({
         }
       })();
     }
-  }, [callbackUrlWithFallback, isPreview, qr, router, status]);
+  }, [callbackUrlWithFallback, isPreview, lnurlAuthLoginInfo, router, status]);
 
   const copyQr = React.useCallback(() => {
-    if (qr) {
-      copy(qr.encoded);
+    if (lnurlAuthLoginInfo) {
+      copy(lnurlAuthLoginInfo.lnurl_auth);
       toast.success(t("common:copiedToClipboard"));
     }
-  }, [qr, t]);
+  }, [lnurlAuthLoginInfo, t]);
 
   const categoryFilterOptions: CategoryFilterOptions = React.useMemo(
     () => ({ lnurlAuthCapable: true, filterOtherItems: true, shadow: false }),
@@ -130,11 +133,11 @@ export default function LnurlAuthSignIn({
         <Divider />
         <Card.Body>
           <Row justify="center">
-            {qr ? (
+            {lnurlAuthLoginInfo ? (
               <>
-                <NextLink href={`lightning:${qr.encoded}`}>
+                <NextLink href={`lightning:${lnurlAuthLoginInfo.lnurl_auth}`}>
                   <a>
-                    <LightningQRCode value={qr.encoded} />
+                    <LightningQRCode value={lnurlAuthLoginInfo.lnurl_auth} />
                   </a>
                 </NextLink>
               </>
@@ -176,7 +179,7 @@ export default function LnurlAuthSignIn({
             </Modal.Body>
           </Modal>
         </Card.Body>
-        {qr && (
+        {lnurlAuthLoginInfo && (
           <>
             <Card.Divider />
             <Card.Footer>
@@ -187,7 +190,7 @@ export default function LnurlAuthSignIn({
                   </Icon>
                   &nbsp; {t("common:copy")}
                 </Button>
-                <NextLink href={`lightning:${qr.encoded}`}>
+                <NextLink href={`lightning:${lnurlAuthLoginInfo.lnurl_auth}`}>
                   <a>
                     <Button>{t("login:clickToConnect")}</Button>
                   </a>

@@ -133,6 +133,11 @@ export function AppNavbar() {
     />
   );
 
+  if (router.query["token"]) {
+    // JWT auth from index page
+    return null;
+  }
+
   return (
     <Navbar
       variant="sticky"

@@ -162,6 +162,22 @@ export const authOptions: NextAuthOptions = {
               });
             }
             return user;
+          } else if (decoded.lnurlPublicKey) {
+            let user = await prisma.user.findUnique({
+              where: {
+                lnurlPublicKey: decoded.lnurlPublicKey,
+              },
+            });
+
+            if (!user) {
+              user = await prisma.user.create({
+                data: {
+                  lnurlPublicKey: decoded.lnurlPublicKey,
+                  locale: decoded.locale,
+                },
+              });
+            }
+            return user;
           } else {
             throw new Error(
               "Unsupported two factor authentication type:" +
