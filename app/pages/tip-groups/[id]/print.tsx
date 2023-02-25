@@ -337,6 +337,7 @@ export function BulkTipGiftCardContents({
             fontWeight: "bold",
             letterSpacing: "$wider",
             lineHeight: "50px",
+            textShadow: "0px 0px 8px #000",
           }}
         >
           Bitcoin Giftcard
