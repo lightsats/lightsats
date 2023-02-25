@@ -4,12 +4,13 @@ import {
   Button,
   Card,
   Collapse,
+  Input,
   Loading,
   Row,
   Spacer,
   Text,
 } from "@nextui-org/react";
-import { Tip } from "@prisma/client";
+import { OnboardingFlow, Tip, TipGroupStatus, TipStatus } from "@prisma/client";
 import { SelectOption } from "components/CustomSelect";
 import { NextUIUser } from "components/NextUIUser";
 import { Passphrase } from "components/tipper/Passphrase";
@@ -45,8 +46,9 @@ const themeSelectOptions: SelectOption[] = Object.values(
 const PrintTipCardsPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: tipGroup } = useSWR<TipGroupWithTips>(
-    `${ApiRoutes.tipGroups}/${id}`,
+  const isEmptyPrint = id === "empty";
+  let { data: tipGroup } = useSWR<TipGroupWithTips>(
+    id && !isEmptyPrint ? `${ApiRoutes.tipGroups}/${id}` : undefined,
     defaultFetcher
   );
   const { data: user } = useUser();
@@ -58,21 +60,79 @@ const PrintTipCardsPage: NextPage = () => {
 
   useDevPrintPreview();
 
+  const cardsPerPage = 9;
   const [theme, setTheme] = React.useState(getDefaultBulkGiftCardTheme());
+  const [customNumPages, setCustomNumPages] = React.useState(1);
   const [backgroundUrl, setBackgroundUrl] = React.useState("");
+  if (isEmptyPrint) {
+    tipGroup = {
+      tips: [...new Array(customNumPages * cardsPerPage)].map((_, index) => ({
+        amount: 0,
+        anonymousTipper: false,
+        claimed: null,
+        claimedFromPrintedCard: false,
+        copiedClaimUrl: null,
+        created: new Date(),
+        currency: null,
+        expiry: new Date(),
+        fee: 0,
+        groupId: null,
+        groupTipIndex: null,
+        id: "",
+        invoice: null,
+        invoiceId: null,
+        passphrase: " ".repeat(2), // generates 3 empty words
+        lastWithdrawal: null,
+        note: null,
+        numSmsTokens: 0,
+        onboardingFlow: OnboardingFlow.DEFAULT,
+        preparationInvoice: null,
+        preparationInvoiceId: null,
+        recommendedWalletId: null,
+        status: TipStatus.UNSEEN,
+        tippeeId: null,
+        tippeeLocale: null,
+        tippeeName: null,
+        tipperId: "",
+        updated: new Date(),
+        version: 1,
+        withdrawalId: null,
+      })),
+      name: "",
+      created: new Date(),
+      id: "",
+      status: TipGroupStatus.FUNDED,
+      quantity: customNumPages * cardsPerPage,
+      invoice: null,
+      invoiceId: null,
+      tipperId: "",
+      updated: new Date(),
+    };
+  }
 
   if (!tipGroup || !user) {
     return <Loading />;
   }
 
-  const cardsPerPage = 9;
-  const numPages = Math.ceil(tipGroup.tips.length / cardsPerPage);
+  const numPages = isEmptyPrint
+    ? customNumPages
+    : Math.ceil(tipGroup.tips.length / cardsPerPage);
   const pages = [...new Array(numPages)].map((_, index) => index);
   const firstTip = tipGroup.tips[0];
 
   return (
     <>
       <Text h3>DIY Bitcoin Gift Cards</Text>
+      {isEmptyPrint && (
+        <>
+          <Text>
+            Print cards in advance for tips that using the 🆒{" "}
+            <strong>Generate passphrase</strong> option. Write down the 3 magic
+            words from the tip passphrase on the card before you hand it out.
+          </Text>
+          <Spacer />
+        </>
+      )}
       <PrintDesignPicker
         themeSelectOptions={themeSelectOptions}
         theme={theme}
@@ -80,7 +140,28 @@ const PrintTipCardsPage: NextPage = () => {
         backgroundUrl={backgroundUrl}
         setBackgroundUrl={setBackgroundUrl}
       />
-
+      {isEmptyPrint && (
+        <>
+          <Spacer />
+          <Card>
+            <Card.Body>
+              <Row justify="space-between" align="center">
+                <Text>Number of pages (9 cards per page)</Text>
+                <Input
+                  initialValue={numPages.toString()}
+                  onChange={(e) =>
+                    e.target.value &&
+                    setCustomNumPages(Math.max(parseInt(e.target.value), 1))
+                  }
+                  type="number"
+                  width="100px"
+                  bordered
+                />
+              </Row>
+            </Card.Body>
+          </Card>
+        </>
+      )}
       <Spacer />
       <Card css={{ dropShadow: "$sm" }}>
         <BulkTipGiftCardContentsPreview
@@ -143,52 +224,57 @@ const PrintTipCardsPage: NextPage = () => {
         }}
       >
         <div ref={printRef}>
-          {pages.map((index) => (
-            <PrintablePage key={index}>
-              <img
-                alt=""
-                width="100%"
-                height="100%"
-                src="/tip-groups/printed-cards/guide.png"
-                style={{ position: "absolute", zIndex: 1 }}
-              />
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  padding: "8.05% 7%",
-                  //background: "red",
-                }}
-              >
+          {pages.map((index) => {
+            if (!tipGroup) {
+              throw new Error("tipGroup not set");
+            }
+            return (
+              <PrintablePage key={index}>
+                <img
+                  alt=""
+                  width="100%"
+                  height="100%"
+                  src="/tip-groups/printed-cards/guide.png"
+                  style={{ position: "absolute", zIndex: 1 }}
+                />
                 <div
                   style={{
                     width: "100%",
                     height: "100%",
-                    //background: "green",
+                    padding: "8.05% 7%",
+                    //background: "red",
                   }}
                 >
-                  {tipGroup.tips
-                    .slice(index * cardsPerPage, (index + 1) * cardsPerPage)
-                    .map((tip) => (
-                      <div
-                        key={tip.id}
-                        style={{
-                          width: "calc(100% / 3)",
-                          height: "calc(100% / 3)",
-                          display: "inline-block",
-                        }}
-                      >
-                        <BulkTipGiftCardContents
-                          theme={theme}
-                          tip={tip}
-                          backgroundUrl={backgroundUrl}
-                        />
-                      </div>
-                    ))}
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      //background: "green",
+                    }}
+                  >
+                    {tipGroup.tips
+                      .slice(index * cardsPerPage, (index + 1) * cardsPerPage)
+                      .map((tip) => (
+                        <div
+                          key={tip.id}
+                          style={{
+                            width: "calc(100% / 3)",
+                            height: "calc(100% / 3)",
+                            display: "inline-block",
+                          }}
+                        >
+                          <BulkTipGiftCardContents
+                            theme={theme}
+                            tip={tip}
+                            backgroundUrl={backgroundUrl}
+                          />
+                        </div>
+                      ))}
+                  </div>
                 </div>
-              </div>
-            </PrintablePage>
-          ))}
+              </PrintablePage>
+            );
+          })}
         </div>
       </div>
     </>
