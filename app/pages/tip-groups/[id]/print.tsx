@@ -102,7 +102,7 @@ const PrintTipCardsPage: NextPage = () => {
       {isEmptyPrint && (
         <>
           <Text>
-            Print cards in advance for tips that using the 🆒{" "}
+            Print cards in advance for tips created using the 🆒{" "}
             <strong>Generate passphrase</strong> option. Write down the 3 magic
             words from the tip passphrase on the card before you hand it out.
           </Text>
