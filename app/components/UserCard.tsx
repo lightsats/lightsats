@@ -25,7 +25,7 @@ import { useLeaderboardPosition } from "hooks/useLeaderboardPosition";
 import { usePublicUser } from "hooks/usePublicUser";
 import { DEFAULT_NAME } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
-import { getAppUrl, getUserAvatarUrl } from "lib/utils";
+import { getPublicProfileUrl, getUserAvatarUrl } from "lib/utils";
 import React from "react";
 import toast from "react-hot-toast";
 
@@ -43,7 +43,7 @@ export function UserCard({
   showAchievements,
 }: Props) {
   const { data: publicUser } = usePublicUser(userId, forceAnonymous);
-  const publicProfileUrl = getAppUrl() + `${PageRoutes.users}/${userId}`;
+  const publicProfileUrl = getPublicProfileUrl(userId);
 
   const shareProfile = React.useCallback(() => {
     (async () => {

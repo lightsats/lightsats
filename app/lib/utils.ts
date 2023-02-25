@@ -2,6 +2,7 @@ import { Tip, User } from "@prisma/client";
 import getSymbolFromCurrency from "currency-symbol-map";
 import { format, isAfter } from "date-fns";
 import { bip0039 } from "lib/bip0039";
+import { bulkGiftCardThemes } from "lib/bulkGiftCardThemes";
 import {
   expirableTipStatuses,
   FEE_PERCENT,
@@ -162,7 +163,7 @@ export function getDefaultGiftCardTheme(): GiftCardTheme {
 }
 
 export function getDefaultBulkGiftCardTheme(): BulkGiftCardTheme {
-  return "sunset";
+  return bulkGiftCardThemes[0];
 }
 
 export function isTipGroupActive(tipGroup: TipGroupWithTips) {
@@ -218,4 +219,8 @@ export function truncate(text: string, length: number, suffix = "...") {
     text = text.substring(0, length) + suffix;
   }
   return text;
+}
+
+export function getPublicProfileUrl(userId: string) {
+  return getAppUrl() + `${PageRoutes.users}/${userId}`;
 }
