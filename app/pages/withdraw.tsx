@@ -343,7 +343,26 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
                   </Card.Header>
                   <Card.Divider />
                   <Card.Body>
-                    <FlexBox style={{ alignItems: "center" }}>
+                    <FlexBox
+                      style={{ alignItems: "center", position: "relative" }}
+                    >
+                      {isPreview && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            zIndex: 10,
+                            bottom: "10px",
+                          }}
+                        >
+                          <Alert>
+                            <Text b>
+                              Example QR
+                              <br />
+                              Do not withdraw
+                            </Text>
+                          </Alert>
+                        </div>
+                      )}
                       <NextLink href={`lightning:${withdrawalLinkLnurl}`}>
                         <a>
                           <LightningQRCode value={withdrawalLinkLnurl} />
