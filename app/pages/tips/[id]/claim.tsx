@@ -19,9 +19,11 @@ import { SelectWalletPageContent } from "pages/journey/wallet";
 import { Withdraw } from "pages/withdraw";
 import React from "react";
 import toast from "react-hot-toast";
-import useSWR from "swr";
+import useSWR, { SWRConfiguration } from "swr";
 import { ClaimTipRequest } from "types/ClaimTipRequest";
 import { PublicTip } from "types/PublicTip";
+
+const pollPublicTipConfig: SWRConfiguration = { refreshInterval: 1000 };
 
 const ClaimTipPage: NextPage = () => {
   const { t } = useTranslation("claim");
@@ -30,7 +32,8 @@ const ClaimTipPage: NextPage = () => {
   const { id, printed: isPrinted, walletInstalled } = router.query;
   const { data: publicTip, mutate: mutatePublicTip } = useSWR<PublicTip>(
     id ? `/api/tippee/tips/${id}` : null,
-    defaultFetcher
+    defaultFetcher,
+    pollPublicTipConfig
   );
   const isTipper =
     session && publicTip && session.user.id === publicTip.tipperId;
@@ -47,12 +50,12 @@ const ClaimTipPage: NextPage = () => {
         (session && session.user.id !== publicTip.tipperId))
     ) {
       (async () => {
-        const result = await fetch(`/api/tippee/tips/${id}/view`, {
+        const result = await fetch(`/api/tippee/tips/${id}/markSeen`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
         });
         if (!result.ok) {
-          console.error("Failed to mark tip as viewed: " + result.status);
+          console.error("Failed to mark tip as seen: " + result.status);
         }
       })();
     }
