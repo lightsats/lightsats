@@ -45,7 +45,9 @@ const Dashboard: NextPage = () => {
             <>
               <Row justify="center" align="center">
                 <NewTipButton />
-                <Spacer />
+              </Row>
+              <Spacer y={0.5} />
+              <Row justify="center" align="center">
                 <NextLink href={`${PageRoutes.tipGroups}/empty/print`}>
                   <a>
                     <Button bordered size="sm">
