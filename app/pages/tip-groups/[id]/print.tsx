@@ -4,16 +4,18 @@ import {
   Button,
   Card,
   Collapse,
+  Input,
   Loading,
   Row,
   Spacer,
   Text,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
-import { SelectOption } from "components/CustomSelect";
 import { NextUIUser } from "components/NextUIUser";
+import { BulkPrintDesignPicker } from "components/tipper/BulkPrintDesignPicker";
 import { Passphrase } from "components/tipper/Passphrase";
-import { PrintDesignPicker } from "components/tipper/PrintDesignPicker";
+import { UserCard } from "components/UserCard";
+import { UserDonateWidget } from "components/UserDonateWidget";
 import { useDevPrintPreview } from "hooks/useDevPrintPreview";
 import { useUser } from "hooks/useUser";
 import { ApiRoutes } from "lib/ApiRoutes";
@@ -29,58 +31,113 @@ import {
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
+import { toast } from "react-hot-toast";
 import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 import useSWR from "swr";
-import { BulkGiftCardTheme, BulkGiftCardThemes } from "types/BulkGiftCardTheme";
+import { BulkGiftCardTheme } from "types/BulkGiftCardTheme";
+import { PublicTip } from "types/PublicTip";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 
-const themeSelectOptions: SelectOption[] = Object.values(
-  BulkGiftCardThemes
-).map((key) => ({
-  value: key,
-  label: key,
-}));
+export type BulkPrintableTip =
+  | Tip
+  | PublicTip
+  | { id: string; passphrase: string };
 
 const PrintTipCardsPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: tipGroup } = useSWR<TipGroupWithTips>(
-    `${ApiRoutes.tipGroups}/${id}`,
+  const isEmptyPrint = id === "empty";
+  const { data: _tipGroup } = useSWR<TipGroupWithTips>(
+    id && !isEmptyPrint ? `${ApiRoutes.tipGroups}/${id}` : undefined,
     defaultFetcher
   );
   const { data: user } = useUser();
   const printRef = React.useRef(null);
 
-  const print = useReactToPrint({
-    content: () => printRef.current,
-  });
-
   useDevPrintPreview();
 
+  const cardsPerPage = 9;
   const [theme, setTheme] = React.useState(getDefaultBulkGiftCardTheme());
+  const [customNumPages, setCustomNumPages] = React.useState(1);
   const [backgroundUrl, setBackgroundUrl] = React.useState("");
+
+  const print = useReactToPrint({
+    content: () => printRef.current,
+    onAfterPrint: () => {
+      if (!backgroundUrl) {
+        toast.success(
+          "Scroll to the bottom of the page to support the artist who designed this card!",
+          {
+            duration: 10000,
+          }
+        );
+      }
+    },
+  });
+
+  let tipGroup: { tips: BulkPrintableTip[] } | undefined = _tipGroup;
+  if (isEmptyPrint) {
+    tipGroup = {
+      tips: [...new Array(customNumPages * cardsPerPage)].map((_, index) => ({
+        id: index.toString(),
+        passphrase: " ".repeat(2), // generates 3 empty words
+      })),
+    };
+  }
 
   if (!tipGroup || !user) {
     return <Loading />;
   }
 
-  const cardsPerPage = 9;
-  const numPages = Math.ceil(tipGroup.tips.length / cardsPerPage);
+  const numPages = isEmptyPrint
+    ? customNumPages
+    : Math.ceil(tipGroup.tips.length / cardsPerPage);
   const pages = [...new Array(numPages)].map((_, index) => index);
   const firstTip = tipGroup.tips[0];
 
   return (
     <>
       <Text h3>DIY Bitcoin Gift Cards</Text>
-      <PrintDesignPicker
-        themeSelectOptions={themeSelectOptions}
-        theme={theme}
+      {isEmptyPrint && (
+        <>
+          <Text>
+            Print cards in advance for tips created using the 🆒{" "}
+            <strong>Generate passphrase</strong> option. Write down the 3 magic
+            words from the tip passphrase on the card before you hand it out.
+          </Text>
+          <Spacer />
+        </>
+      )}
+      <BulkPrintDesignPicker
+        tip={tipGroup.tips[0]}
+        selectedTheme={theme}
         setTheme={setTheme}
         backgroundUrl={backgroundUrl}
         setBackgroundUrl={setBackgroundUrl}
       />
-
+      {isEmptyPrint && (
+        <>
+          <Spacer />
+          <Card>
+            <Card.Body>
+              <Row justify="space-between" align="center">
+                <Text>Number of pages (9 cards per page)</Text>
+                <Input
+                  initialValue={numPages.toString()}
+                  onChange={(e) =>
+                    e.target.value &&
+                    setCustomNumPages(Math.max(parseInt(e.target.value), 1))
+                  }
+                  type="number"
+                  width="100px"
+                  bordered
+                />
+              </Row>
+            </Card.Body>
+          </Card>
+        </>
+      )}
       <Spacer />
       <Card css={{ dropShadow: "$sm" }}>
         <BulkTipGiftCardContentsPreview
@@ -133,8 +190,24 @@ const PrintTipCardsPage: NextPage = () => {
             4) Enjoy your beautiful cards, you are ready to gift bitcoin with
             style! 🥳
           </Text>
+          {theme.userId && !backgroundUrl && (
+            <>
+              <Spacer />
+              <Text>5) Consider supporting the artist! </Text>
+            </>
+          )}
         </Card.Body>
       </Card>
+      {theme.userId && !backgroundUrl && (
+        <>
+          <Spacer y={2} />
+          <Row>
+            <Text h4>Support the Artist</Text>
+          </Row>
+          <UserCard userId={theme.userId} />
+          <UserDonateWidget userId={theme.userId} />
+        </>
+      )}
       <Spacer />
       <div
         style={{
@@ -143,52 +216,57 @@ const PrintTipCardsPage: NextPage = () => {
         }}
       >
         <div ref={printRef}>
-          {pages.map((index) => (
-            <PrintablePage key={index}>
-              <img
-                alt=""
-                width="100%"
-                height="100%"
-                src="/tip-groups/printed-cards/guide.png"
-                style={{ position: "absolute", zIndex: 1 }}
-              />
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  padding: "8.05% 7%",
-                  //background: "red",
-                }}
-              >
+          {pages.map((index) => {
+            if (!tipGroup) {
+              throw new Error("tipGroup not set");
+            }
+            return (
+              <PrintablePage key={index}>
+                <img
+                  alt=""
+                  width="100%"
+                  height="100%"
+                  src="/tip-groups/printed-cards/guide.png"
+                  style={{ position: "absolute", zIndex: 1 }}
+                />
                 <div
                   style={{
                     width: "100%",
                     height: "100%",
-                    //background: "green",
+                    padding: "8.05% 7%",
+                    //background: "red",
                   }}
                 >
-                  {tipGroup.tips
-                    .slice(index * cardsPerPage, (index + 1) * cardsPerPage)
-                    .map((tip) => (
-                      <div
-                        key={tip.id}
-                        style={{
-                          width: "calc(100% / 3)",
-                          height: "calc(100% / 3)",
-                          display: "inline-block",
-                        }}
-                      >
-                        <BulkTipGiftCardContents
-                          theme={theme}
-                          tip={tip}
-                          backgroundUrl={backgroundUrl}
-                        />
-                      </div>
-                    ))}
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      //background: "green",
+                    }}
+                  >
+                    {tipGroup.tips
+                      .slice(index * cardsPerPage, (index + 1) * cardsPerPage)
+                      .map((tip) => (
+                        <div
+                          key={tip.id}
+                          style={{
+                            width: "calc(100% / 3)",
+                            height: "calc(100% / 3)",
+                            display: "inline-block",
+                          }}
+                        >
+                          <BulkTipGiftCardContents
+                            theme={theme}
+                            tip={tip}
+                            backgroundUrl={backgroundUrl}
+                          />
+                        </div>
+                      ))}
+                  </div>
                 </div>
-              </div>
-            </PrintablePage>
-          ))}
+              </PrintablePage>
+            );
+          })}
         </div>
       </div>
     </>
@@ -215,7 +293,7 @@ const PrintablePage = ({ children }: React.PropsWithChildren) => {
 };
 
 type BulkTipGiftCardContentsProps = {
-  tip: Tip;
+  tip: BulkPrintableTip;
   theme: BulkGiftCardTheme;
   backgroundUrl?: string;
   width?: string | number;
@@ -237,7 +315,8 @@ export function BulkTipGiftCardContents({
     <div
       style={{
         backgroundImage: `url(${
-          backgroundUrl || `/tip-groups/printed-cards/${theme}/background.png`
+          backgroundUrl ||
+          `/tip-groups/printed-cards/${theme.filename}/background.png`
         })`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
@@ -258,6 +337,7 @@ export function BulkTipGiftCardContents({
             fontWeight: "bold",
             letterSpacing: "$wider",
             lineHeight: "50px",
+            textShadow: "0px 0px 8px #000",
           }}
         >
           Bitcoin Giftcard
@@ -308,7 +388,7 @@ export function BulkTipGiftCardContents({
             alignItems: "center",
           }}
         >
-          {tip.passphrase ? (
+          {"passphrase" in tip && tip.passphrase ? (
             <Passphrase
               passphrase={tip.passphrase}
               width={256}
@@ -316,7 +396,7 @@ export function BulkTipGiftCardContents({
               showInstructions
             />
           ) : (
-            <QRCode value={getClaimUrl(tip, true)} />
+            <QRCode value={getClaimUrl(tip as Tip, true)} />
           )}
         </div>
       </Row>

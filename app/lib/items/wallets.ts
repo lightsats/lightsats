@@ -78,7 +78,8 @@ const breez: Wallet = {
   platforms: ["mobile"],
 };
 
-const blue: Wallet = {
+// blue temporarily disabled since they are stopping their lndhub service
+/*const blue: Wallet = {
   id: "blue",
   features: ["lnurl-auth", "lnurl-withdraw"],
   category: "wallets",
@@ -130,7 +131,7 @@ const blue: Wallet = {
     getLanguageCode("Xhosa"),
   ],
   platforms: ["mobile"],
-};
+};*/
 
 const alby: Wallet = {
   id: "alby",
@@ -322,7 +323,7 @@ const pouch: Wallet = {
 };
 export const wallets: Wallet[] = [
   wos,
-  blue,
+  // blue,
   muun,
   breez,
   alby,

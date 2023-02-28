@@ -1,4 +1,7 @@
-import { Container, Loading, Spacer } from "@nextui-org/react";
+import { PrinterIcon } from "@heroicons/react/24/solid";
+import { Button, Container, Loading, Row, Spacer } from "@nextui-org/react";
+import { Icon } from "components/Icon";
+import { NextLink } from "components/NextLink";
 import { TipHistory } from "components/TipHistory";
 import { TippeeSuggestions } from "components/tippee/TippeeSuggestions";
 import { NewTipButton } from "components/tipper/NewTipButton";
@@ -6,6 +9,7 @@ import { ReturnedTips } from "components/tipper/ReturnedTips";
 import { UserCard } from "components/UserCard";
 import { useUser } from "hooks/useUser";
 import { getStaticProps } from "lib/i18n/i18next";
+import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
@@ -39,7 +43,20 @@ const Dashboard: NextPage = () => {
           <Spacer />
           {user?.userType === "tipper" ? (
             <>
-              <NewTipButton />
+              <Row justify="center" align="center">
+                <NewTipButton />
+                <Spacer />
+                <NextLink href={`${PageRoutes.tipGroups}/empty/print`}>
+                  <a>
+                    <Button bordered size="sm">
+                      <Icon>
+                        <PrinterIcon />
+                      </Icon>
+                      &nbsp;Print Cards
+                    </Button>
+                  </a>
+                </NextLink>
+              </Row>
               <Spacer />
               <ReturnedTips />
             </>

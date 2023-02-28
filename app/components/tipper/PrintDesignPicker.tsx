@@ -36,7 +36,6 @@ export function PrintDesignPicker<T>({
             }}
           />
         </Row>
-        <Row></Row>
         <Spacer />
         <Input
           fullWidth

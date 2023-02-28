@@ -9,6 +9,7 @@ processes = []
   dockerfile = "Dockerfile.staging"
   [build.args]
     NEXT_PUBLIC_SENTRY_DSN = "https://ce332bce7d8743b8a2fceba4d74da275@o4504142039416832.ingest.sentry.io/4504196710137856"
+    NEXT_PUBLIC_OVERRIDE_THEME_USERID = "cl97vjfam0000iaf662tt3em8"
 
 [env]
   PORT = "8080"

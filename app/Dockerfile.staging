@@ -25,6 +25,7 @@ RUN yarn db:migrate:deploy:staging
 # Example:
 # ARG NEXT_PUBLIC_EXAMPLE="value here"
 ARG NEXT_PUBLIC_SENTRY_DSN
+ARG NEXT_PUBLIC_OVERRIDE_THEME_USERID
 
 RUN yarn build
 
