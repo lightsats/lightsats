@@ -41,6 +41,30 @@ export const bulkGiftCardThemes: BulkGiftCardTheme[] = [
     filename: "lsd-elephant",
     userId: "cle8sc7cn01m1jtf7zvhsipns",
   },
+  {
+    filename: "votord",
+    userId: "clewahajg013wfef7pinb266g",
+  },
+  {
+    filename: "bulbazoor",
+    userId: "clewahajg013wfef7pinb266g",
+  },
+  {
+    filename: "dragonbyte",
+    userId: "clewahajg013wfef7pinb266g",
+  },
+  {
+    filename: "flaremander",
+    userId: "clewahajg013wfef7pinb266g",
+  },
+  {
+    filename: "hashking",
+    userId: "clewahajg013wfef7pinb266g",
+  },
+  {
+    filename: "sqwerty",
+    userId: "clewahajg013wfef7pinb266g",
+  },
 ];
 
 const overrideUserId = process.env.NEXT_PUBLIC_OVERRIDE_THEME_USERID;
