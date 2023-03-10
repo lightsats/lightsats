@@ -115,9 +115,6 @@ async function createLnurlPayInvoice(lightningAddress: string, amount: number) {
   // fetch the LNURL data
   await ln.fetch();
 
-  // get the LNURL-pay data:
-  console.log(ln.lnurlpData); // returns a [LNURLPayPesponse](https://github.com/getAlby/alby-tools/blob/master/src/types.ts#L1-L15)
-
   const invoice = (
     await ln.requestInvoice({
       satoshi: amount,
