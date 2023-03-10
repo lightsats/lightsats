@@ -4,6 +4,7 @@ import {
   MAX_TIP_GROUP_QUANTITY,
   MAX_TIP_PASSPHRASE_LENGTH,
   MIN_TIP_PASSPHRASE_LENGTH,
+  refundableTipStatuses,
 } from "lib/constants";
 import { createAchievement } from "lib/createAchievement";
 import { prepareFundingWallet } from "lib/prepareFundingWallet";
@@ -23,32 +24,52 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Tip | Tip[] | TipGroupWithTips | TipWithGroup[]>
 ) {
+  const { apiKey } = req.query;
+  const validApiKey = !!(process.env.API_KEY && apiKey === process.env.API_KEY);
+
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) {
-    return res.status(StatusCodes.UNAUTHORIZED).end();
-  }
 
   switch (req.method) {
     case "POST":
+      if (!session) {
+        return res.status(StatusCodes.UNAUTHORIZED).end();
+      }
       return handlePostTip(session, req, res);
     case "GET":
+      if (!session && !validApiKey) {
+        return res.status(StatusCodes.UNAUTHORIZED).end();
+      }
       return getTips(session, req, res);
     default:
       return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
 async function getTips(
-  session: Session,
+  session: Session | null,
   req: NextApiRequest,
   res: NextApiResponse<Tip[] | TipWithGroup[]>
 ) {
-  const { withGroups } = req.query;
+  const { withGroups, expired, reclaimable } = req.query;
 
   const tips = await prisma.tip.findMany({
     where: {
-      tipperId: {
-        equals: session.user.id,
-      },
+      ...(session
+        ? {
+            tipperId: {
+              equals: session.user.id,
+            },
+          }
+        : {}),
+      ...(reclaimable && expired
+        ? {
+            status: {
+              in: refundableTipStatuses,
+            },
+            expiry: {
+              lt: new Date(),
+            },
+          }
+        : {}),
       ...(withGroups
         ? {
             OR: [

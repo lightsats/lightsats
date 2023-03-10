@@ -92,7 +92,7 @@ function Homepage() {
     }
   }, [router, token]);
 
-  if (!router || !router.isReady || token) {
+  if (!router || !router.isReady || token || !pageLoaded) {
     return (
       <FlexBox style={{ height: "100%", justifyContent: "center" }}>
         <Loading />
