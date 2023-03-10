@@ -1153,6 +1153,11 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
   integrity sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==
 
+"@scure/base@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.1.1.tgz#ebb651ee52ff84f420097055f4bf46cfba403938"
+  integrity sha512-ZxOhsSyxYwLJj3pLZCefNitxsj093tb2vq90mp2txoYeBqbcjDjqFhyM8eUjq/uFm6zJ+mUuqxlS2FkuSY1MTA==
+
 "@sentry/browser@7.20.0":
   version "7.20.0"
   resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-7.20.0.tgz#e917cab48d3bba2fe8a2e3a8987b0bd9b9149db8"
@@ -1586,12 +1591,14 @@ ajv@^6.10.0, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-alby-tools@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/alby-tools/-/alby-tools-1.1.1.tgz#3e8efa7378078167a3350537e0bfa9ad9eb89a5f"
-  integrity sha512-eslYkB0gpVE3Tn2n1mCLIuEfRmMJKUJzaprTxZVIwBjn+buK0mRW0at1wQCOfooweosAntT2IJBMR8Zrb1QwLQ==
+alby-tools@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/alby-tools/-/alby-tools-1.2.0.tgz#495fa6c92555cdce8ca53e405a6fb947f21ee7a6"
+  integrity sha512-Pl2Zx6TXv5hYMfWb9pNidboWTdzD7C9VPOeY9+e8ZIjC69nW3GrZu5kw9d6n4k+rQgjSkDekmBRNe9cYoZ3Q3A==
   dependencies:
     cross-fetch "^3.1.5"
+    crypto-js "^4.1.1"
+    light-bolt11-decoder "^3.0.0"
 
 ansi-colors@^4.1.1:
   version "4.1.3"
@@ -2293,6 +2300,11 @@ cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
+
+crypto-js@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.1.1.tgz#9e485bcf03521041bd85844786b83fb7619736cf"
+  integrity sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==
 
 css-select@^4.3.0:
   version "4.3.0"
@@ -3853,6 +3865,13 @@ lie@3.1.1:
   integrity sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==
   dependencies:
     immediate "~3.0.5"
+
+light-bolt11-decoder@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/light-bolt11-decoder/-/light-bolt11-decoder-3.0.0.tgz#f644576120426c9ef65621bde254f11016055044"
+  integrity sha512-AKvOigD2pmC8ktnn2TIqdJu0K0qk6ukUmTvHwF3JNkm8uWCqt18Ijn33A/a7gaRZ4PghJ59X+8+MXrzLKdBTmQ==
+  dependencies:
+    "@scure/base" "1.1.1"
 
 lightning-backends@1.5.1:
   version "1.5.1"
