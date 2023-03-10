@@ -44,6 +44,8 @@ function isNotificationTypeRepeatable(type: NotificationType) {
     case "TIP_CLAIMED":
     case "TIP_WITHDRAWN":
     case "ACHIEVEMENT_UNLOCKED":
+    case "TIP_RECLAIMED":
+    case "AUTOMATIC_REFUND":
       return true;
   }
 }

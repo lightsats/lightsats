@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { refundableTipStatuses } from "lib/constants";
+import { createNotification } from "lib/createNotification";
 import { sendEmail } from "lib/email/sendEmail";
 import prisma from "lib/prismadb";
 import { reclaimTip } from "lib/reclaimTip";
@@ -56,21 +57,28 @@ async function handleReclaimTip(
   }
 
   await reclaimTip(tip);
-  if (validApiKey && tip.tipper.email && !tip.groupTipIndex) {
+  if (validApiKey && !tip.groupTipIndex) {
     try {
-      await sendEmail({
-        to: tip.tipper.email,
-        subject: "Lightsats Tip Reclaimed",
-        html: `Your tip wasn't withdrawn in time and has been automatically reclaimed. See your tip: <a href="${getTipUrl(
-          tip,
-          tip.tipper.locale
-        )}">click here</a><br/><br/>${
-          tip.tipper.lightningAddress
-            ? `Your sats will be automatically refunded to ${tip.tipper.lightningAddress}.`
-            : `Set a lightning address in your <a href="${getAppUrl()}/profile">Lightsats profile</a> to receive automatic refunds.`
-        }`,
-        from: `Lightsats <${process.env.EMAIL_FROM}>`,
-      });
+      await createNotification(tip.tipper.id, "TIP_RECLAIMED", tip.id);
+    } catch (error) {
+      console.error("Failed to create tip reclaim notification", error);
+    }
+    try {
+      if (tip.tipper.email) {
+        await sendEmail({
+          to: tip.tipper.email,
+          subject: "Lightsats Tip Reclaimed",
+          html: `Your tip wasn't withdrawn in time and has been automatically reclaimed. See your tip: <a href="${getTipUrl(
+            tip,
+            tip.tipper.locale
+          )}">click here</a><br/><br/>${
+            tip.tipper.lightningAddress
+              ? `Your sats will be automatically returned to ${tip.tipper.lightningAddress}.`
+              : `Set a lightning address in your <a href="${getAppUrl()}/profile">Lightsats profile</a> to get your sats automatically returned to you.`
+          }`,
+          from: `Lightsats <${process.env.EMAIL_FROM}>`,
+        });
+      }
     } catch (error) {
       console.error("Failed to send tip reclaim email");
     }

@@ -44,6 +44,7 @@
     "@nextui-org/react": "^1.0.0-beta.10",
     "@prisma/client": "4.4.0",
     "@sentry/nextjs": "^7.20.0",
+    "alby-tools": "^1.1.1",
     "bolt11": "^1.4.0",
     "chart.js": "^3.9.1",
     "copy-to-clipboard": "^3.3.2",

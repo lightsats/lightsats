@@ -9,6 +9,7 @@ if (!appUrl || !appApiKey) {
 
 type Reminder = {}; // fields exist, but are not required to be read by the scheduler.
 type Tip = { id: string }; // fields exist, but are not required to be read by the scheduler.
+type User = { id: string }; // fields exist, but are not required to be read by the scheduler.
 
 async function getExpiredTips(): Promise<Tip[]> {
   const requestHeaders = new Headers();
@@ -48,6 +49,28 @@ async function getReminders(): Promise<Reminder[]> {
     );
   }
 }
+
+async function getUsersWithRefundableTips(): Promise<User[]> {
+  const requestHeaders = new Headers();
+  requestHeaders.append("Accept", "application/json");
+
+  const response = await fetch(
+    `${appUrl}/api/users?refundable=true&hasLightningAddress=true&apiKey=${appApiKey}`,
+    {
+      method: "GET",
+      headers: requestHeaders,
+    }
+  );
+  if (response.ok) {
+    const responseData = (await response.json()) as User[];
+    return responseData;
+  } else {
+    throw new Error(
+      "Get reminders returned unexpected HTTP status: " + response.status
+    );
+  }
+}
+
 async function sendReminder(reminder: Reminder) {
   const requestHeaders = new Headers();
   requestHeaders.append("Accept", "application/json");
@@ -82,11 +105,30 @@ async function reclaimTip(tip: Tip) {
   }
 }
 
+async function processRefund(user: User) {
+  const requestHeaders = new Headers();
+  requestHeaders.append("Accept", "application/json");
+
+  const response = await fetch(
+    `${appUrl}/api/users/${user.id}/refundToLightningAddress?apiKey=${appApiKey}`,
+    {
+      method: "POST",
+      headers: requestHeaders,
+    }
+  );
+  if (!response.ok) {
+    throw new Error(
+      "Reclaim tip returned unexpected HTTP status: " + response.status
+    );
+  }
+}
+
 console.log("Lightsats scheduler - connecting to " + appUrl);
 
 (async () => {
   await processReminders();
   await processExpiredTips();
+  await processRefunds();
   console.log("Done");
 })();
 
@@ -122,4 +164,25 @@ async function processExpiredTips() {
   console.log(
     "Lightsats scheduler - reclaimed " + tipsReclaimed + " expired tips"
   );
+}
+
+async function processRefunds() {
+  const users = await getUsersWithRefundableTips();
+  let usersRefunded = 0;
+  console.log(
+    "Found " +
+      users.length +
+      " users with lightning address and refundable tips"
+  );
+  for (const user of users) {
+    try {
+      await processRefund(user);
+      process.stdout.write(".");
+      usersRefunded++;
+      break;
+    } catch (error) {
+      console.error("Failed to refund user", user, error);
+    }
+  }
+  console.log("Lightsats scheduler - refunded " + usersRefunded + " users");
 }

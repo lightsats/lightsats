@@ -2,6 +2,7 @@ import {
   CheckIcon,
   ClipboardIcon,
   EyeIcon,
+  InformationCircleIcon,
   LinkIcon,
   TrashIcon,
   XMarkIcon,
@@ -291,6 +292,7 @@ function UpdateProfileForm({ mutateUser, user }: ProfileInternalProps) {
   }, [setFocus]);
 
   const watchedLocale = watch("locale");
+  const watchedLightningAddress = watch("lightningAddress");
 
   const setDropdownSelectedLocale = React.useCallback(
     (locale: string) => {
@@ -408,7 +410,7 @@ function UpdateProfileForm({ mutateUser, user }: ProfileInternalProps) {
                     <Input
                       {...field}
                       label="Lightning Address"
-                      placeholder="you@example.com"
+                      placeholder="you@getalby.com"
                       fullWidth
                       bordered
                       type="email"
@@ -416,6 +418,28 @@ function UpdateProfileForm({ mutateUser, user }: ProfileInternalProps) {
                     />
                   )}
                 />
+                {!watchedLightningAddress && (
+                  <>
+                    <Spacer y={0.5} />
+                    <Row align="center">
+                      <Icon style={{ color: "$primary" }}>
+                        <InformationCircleIcon />
+                      </Icon>
+                      <Spacer x={0.25} />
+                      <Text size="small">
+                        {"Don't have a lightning address yet? Get one with"}
+                        &nbsp;
+                        <Link
+                          css={{ display: "inline" }}
+                          target="_blank"
+                          href="https://getalby.com"
+                        >
+                          Alby
+                        </Link>
+                      </Text>
+                    </Row>
+                  </>
+                )}
                 <Spacer />
                 <Row>
                   <Card variant="bordered">
