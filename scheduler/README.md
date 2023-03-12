@@ -15,20 +15,28 @@ This app will be run as a fly machine on a schedule to manage things such as sen
 
 - `yarn machines:init`
 - Create a .env file and add _MACHINES_APP_ID_ (see .env.example)
-- `yarn deploy`
+- `yarn deploy:staging`
 - Add _APP_IMAGE_ID_ to .env (see .env.example)
-- `yarn machines:create`
+- `yarn machines:create:scheduled:staging`
 - `yarn machines:list`
 - Add _$MACHINE_ID_ to .env
 - `yarn machines:start`
 
 ## Further Deployments
 
-- `yarn deploy`
-- Update _APP_IMAGE_ID_ in .env
-- `yarn machines:update:imageid`
+### Staging
+
+- `yarn deploy:staging`
+- Update _APP_IMAGE_ID_ in .env.staging
+- `yarn machines:update:imageid:staging`
 - Open the fly.dev dashboard and go to the machine page → “machines” in the sidebar → your machine name → monitoring
-- `yarn machines:start`
+
+### Production
+
+- `yarn deploy:production`
+- Update _APP_IMAGE_ID_ in .env.production
+- `yarn machines:update:imageid:production`
+- Open the fly.dev dashboard and go to the machine page → “machines” in the sidebar → your machine name → monitoring
 
 ## Scheduling
 
