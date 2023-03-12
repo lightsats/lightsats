@@ -2,6 +2,7 @@ import { InformationCircleIcon, WalletIcon } from "@heroicons/react/24/solid";
 import {
   Button,
   Card,
+  Link,
   Loading,
   Row,
   Spacer,
@@ -80,13 +81,44 @@ export function ReturnedTips() {
               </Row>
               <Spacer />
               <Row justify="center">
+                <Text
+                  size={16}
+                  css={{
+                    maxWidth: 400,
+                    textAlign: "center",
+                    color: "$white",
+                  }}
+                >
+                  {user?.lightningAddress ? (
+                    <>
+                      Your sats will automatically be refunded to
+                      <br />
+                      <b>{user.lightningAddress}</b>
+                    </>
+                  ) : (
+                    <>
+                      Set a{" "}
+                      <Link
+                        underline
+                        href={PageRoutes.profile}
+                        css={{ display: "inline", color: "$blue200" }}
+                      >
+                        lightning address
+                      </Link>{" "}
+                      to enable automatic refunds
+                    </>
+                  )}
+                </Text>
+              </Row>
+              <Spacer />
+              <Row justify="center">
                 <NextLink href={PageRoutes.tipperWithdraw}>
                   <a>
                     <Button auto color="secondary">
                       <Icon>
                         <WalletIcon />
                       </Icon>
-                      &nbsp;Withdraw
+                      &nbsp;Withdraw now
                     </Button>
                   </a>
                 </NextLink>

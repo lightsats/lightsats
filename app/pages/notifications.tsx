@@ -176,6 +176,20 @@ function getNotificationCardProps(
         description: t(`${notification.achievementType}.description`),
         href: PageRoutes.profile,
       };
+    case "TIP_RECLAIMED":
+      return {
+        title: "Your tip was automatically reclaimed",
+        description:
+          "Your tip expired without being withdrawn. Your sats have been returned back to you.",
+        href: `${PageRoutes.tips}/${notification.tipId}`,
+      };
+    case "AUTOMATIC_REFUND":
+      return {
+        title: "Sats returned",
+        description:
+          "Sats from reclaimed tips were sent to your lightning address.",
+        href: PageRoutes.profile,
+      };
     default:
       throw new Error("Unsupported notification type: " + notification.type);
   }

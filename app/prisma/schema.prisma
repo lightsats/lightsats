@@ -362,6 +362,8 @@ enum NotificationType {
   TIP_CLAIMED
   TIP_WITHDRAWN
   ACHIEVEMENT_UNLOCKED
+  TIP_RECLAIMED
+  AUTOMATIC_REFUND
 }
 
 enum ReminderType {
@@ -398,6 +400,7 @@ enum WithdrawalMethod {
   lnurlw
   invoice
   webln
+  lightning_address
 }
 
 enum RoleType {

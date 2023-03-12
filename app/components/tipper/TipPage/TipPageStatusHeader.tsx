@@ -31,6 +31,10 @@ function getTitle(status: TipStatus) {
       return "Your tip is ready for takeoff ✈️";
     case "SEEN":
       return "Your tip has been seen 👀";
+    case "RECLAIMED":
+      return "Tip Reclaimed ✅";
+    case "REFUNDED":
+      return "Tip returned ✌️";
     default:
       return "Nice work 👍";
   }
@@ -45,6 +49,10 @@ function getSubtitle(status: TipStatus) {
       return "Your tip hasn't been seen yet";
     case "SEEN":
       return "Your tip hasn't been claimed yet";
+    case "RECLAIMED":
+      return "Your tip has been reclaimed and can now be sent back to your wallet";
+    case "REFUNDED":
+      return "Your sats have been returned back to your wallet";
     default:
       return "Your recipient is on their 🍊💊 journey!";
   }
