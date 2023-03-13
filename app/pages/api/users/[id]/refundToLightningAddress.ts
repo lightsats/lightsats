@@ -53,11 +53,17 @@ export default async function handler(
 
   const amount = tips.map((tip) => tip.amount).reduce((a, b) => a + b);
 
-  let invoice: string | undefined;
+  let paymentRequest: string | undefined;
 
   try {
-    invoice = await createLnurlPayInvoice(user.lightningAddress, amount);
-    if (!invoice) {
+    const result = await createLnurlPayInvoice(user.lightningAddress, amount);
+    if (!result.validAmount) {
+      // can't pay the invoice (maybe the service doesn't support the amount - either too small or too large)
+      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).end();
+    }
+    paymentRequest = result.paymentRequest;
+
+    if (!paymentRequest) {
       throw new Error(
         "No lnurlPay invoice created for lightning address " +
           user.lightningAddress
@@ -66,7 +72,7 @@ export default async function handler(
 
     await payWithdrawalInvoice(
       withdrawalFlow,
-      invoice,
+      paymentRequest,
       user.id,
       undefined,
       withdrawalMethod,
@@ -98,7 +104,7 @@ export default async function handler(
         userId: user.id,
         withdrawalFlow,
         withdrawalMethod,
-        withdrawalInvoice: invoice,
+        withdrawalInvoice: paymentRequest,
       },
     });
 
@@ -109,17 +115,33 @@ export default async function handler(
   }
 }
 
-async function createLnurlPayInvoice(lightningAddress: string, amount: number) {
+async function createLnurlPayInvoice(
+  lightningAddress: string,
+  amount: number
+): Promise<{ validAmount: boolean; paymentRequest: string | undefined }> {
   const ln = new LightningAddress(lightningAddress, { proxy: "" });
-
+  const amount_msat = amount * 1000;
   // fetch the LNURL data
   await ln.fetch();
-
-  const invoice = (
-    await ln.requestInvoice({
+  if (
+    ln.lnurlpData.minSendable &&
+    ln.lnurlpData.maxSendable &&
+    amount_msat >= ln.lnurlpData.minSendable &&
+    amount_msat <= ln.lnurlpData.maxSendable
+  ) {
+    const invoice = await ln.requestInvoice({
       satoshi: amount,
       comment: "Lightsats reclaimed sats",
-    })
-  ).paymentRequest;
-  return invoice;
+    });
+    return { paymentRequest: invoice.paymentRequest, validAmount: true };
+  } else {
+    console.warn(
+      "Warn: cannot create an lnurlp invoice as amount in millisats is out of bounds",
+      amount_msat,
+      ln.lnurlpData.minSendable,
+      ln.lnurlpData.maxSendable,
+      lightningAddress
+    );
+    return { paymentRequest: undefined, validAmount: false };
+  }
 }
