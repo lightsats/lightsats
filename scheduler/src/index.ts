@@ -179,7 +179,6 @@ async function processRefunds() {
       await processRefund(user);
       process.stdout.write(".");
       usersRefunded++;
-      break;
     } catch (error) {
       console.error("Failed to refund user", user, error);
     }
