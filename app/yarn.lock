@@ -1591,10 +1591,10 @@ ajv@^6.10.0, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-alby-tools@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/alby-tools/-/alby-tools-1.2.0.tgz#495fa6c92555cdce8ca53e405a6fb947f21ee7a6"
-  integrity sha512-Pl2Zx6TXv5hYMfWb9pNidboWTdzD7C9VPOeY9+e8ZIjC69nW3GrZu5kw9d6n4k+rQgjSkDekmBRNe9cYoZ3Q3A==
+alby-tools@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/alby-tools/-/alby-tools-1.2.1.tgz#6cffe0c9f35b9b2a6b8653f3ae13699d753164e1"
+  integrity sha512-JvUwZMle7SFZR4ToRobXI0LV0QlVmjcXozmuBB6UwdZlRMZvVt1lVwOhQSA7hdAzwXoUU6M150m9ozNqh9l7ug==
   dependencies:
     cross-fetch "^3.1.5"
     crypto-js "^4.1.1"
