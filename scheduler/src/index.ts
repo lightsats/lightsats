@@ -82,7 +82,10 @@ async function sendReminder(reminder: Reminder) {
   });
   if (!response.ok) {
     throw new Error(
-      "Post reminders returned unexpected HTTP status: " + response.status
+      "Post reminder returned unexpected HTTP status: " +
+        response.status +
+        " " +
+        JSON.stringify(reminder)
     );
   }
 }
@@ -100,7 +103,10 @@ async function reclaimTip(tip: Tip) {
   );
   if (!response.ok) {
     throw new Error(
-      "Reclaim tip returned unexpected HTTP status: " + response.status
+      "Reclaim tip " +
+        tip.id +
+        " returned unexpected HTTP status: " +
+        response.status
     );
   }
 }
@@ -116,9 +122,16 @@ async function processRefund(user: User) {
       headers: requestHeaders,
     }
   );
-  if (!response.ok) {
+  if (
+    !response.ok &&
+    response.status !==
+      422 /* UNPROCESSABLE_ENTITY - lightning address doesn't support amount requested */
+  ) {
     throw new Error(
-      "Reclaim tip returned unexpected HTTP status: " + response.status
+      "Process refund for user " +
+        user.id +
+        " returned unexpected HTTP status: " +
+        response.status
     );
   }
 }
@@ -183,5 +196,11 @@ async function processRefunds() {
       console.error("Failed to refund user", user, error);
     }
   }
-  console.log("Lightsats scheduler - refunded " + usersRefunded + " users");
+  console.log(
+    "Lightsats scheduler - refunded " +
+      usersRefunded +
+      "/" +
+      users.length +
+      " users"
+  );
 }
