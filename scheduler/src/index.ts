@@ -9,7 +9,7 @@ if (!appUrl || !appApiKey) {
 
 type Reminder = {}; // fields exist, but are not required to be read by the scheduler.
 type Tip = { id: string }; // fields exist, but are not required to be read by the scheduler.
-type User = { id: string }; // fields exist, but are not required to be read by the scheduler.
+type User = { id: string; lightningAddress: string }; // fields exist, but are not required to be read by the scheduler.
 
 async function getExpiredTips(): Promise<Tip[]> {
   const requestHeaders = new Headers();
@@ -188,6 +188,10 @@ async function processRefunds() {
       " users with lightning address and refundable tips"
   );
   for (const user of users) {
+    if (!user.lightningAddress?.trim().length) {
+      console.log("Skipped " + user.id + " (invalid lightning address)");
+      continue;
+    }
     try {
       await processRefund(user);
       process.stdout.write(".");

@@ -122,7 +122,9 @@ async function updateUser(
       name: updateUserRequest.name ?? null,
       twitterUsername: updateUserRequest.twitterUsername ?? null,
       avatarURL: updateUserRequest.avatarURL ?? null,
-      lightningAddress: updateUserRequest.lightningAddress ?? null,
+      lightningAddress: updateUserRequest.lightningAddress?.trim().length
+        ? updateUserRequest.lightningAddress
+        : null,
       isAnonymous: updateUserRequest.isAnonymous,
       locale: updateUserRequest.locale ?? DEFAULT_LOCALE,
     },

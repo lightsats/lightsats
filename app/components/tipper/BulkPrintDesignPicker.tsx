@@ -20,7 +20,7 @@ type BulkPrintDesignPickerProps = {
   setBackgroundUrl(backgroundUrl: string): void;
 };
 
-export function BulkPrintDesignPicker<T>({
+export function BulkPrintDesignPicker({
   tip,
   selectedTheme,
   setTheme,
