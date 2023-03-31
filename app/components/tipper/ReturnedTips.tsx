@@ -21,7 +21,7 @@ export function ReturnedTips() {
   const { data: session, status: sessionStatus } = useSession();
   const { data: user } = useUser();
 
-  const { data: tips } = useSentTips();
+  const { data: tips } = useSentTips(true);
   const reclaimedTips = tips?.filter((tip) => tip.status === "RECLAIMED");
 
   if (sessionStatus === "loading" || (session && !user)) {

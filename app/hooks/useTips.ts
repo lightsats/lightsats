@@ -30,8 +30,8 @@ export function useSentTipsWithGroups(poll = false) {
   );
 }
 
-export function useSentTips() {
-  return useTips("tipper");
+export function useSentTips(poll?: boolean) {
+  return useTips("tipper", poll);
 }
 
 export function useReceivedTips() {
