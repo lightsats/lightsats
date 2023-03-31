@@ -87,6 +87,15 @@ model User {
   achievements Achievement[]
   leaderboardsCreated Leaderboard[] @relation("leaderboardsCreated")
   leaderboardUsers LeaderboardUser[]
+
+  apiKeys UserAPIKey[]
+}
+
+model UserAPIKey {
+  id String @id
+  created DateTime @default(now())
+  userId String
+  user User @relation(fields: [userId], references: [id])
 }
 
 model TipGroup {
