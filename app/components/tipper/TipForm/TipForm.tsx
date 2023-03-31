@@ -151,6 +151,15 @@ export function TipForm({
     }
   }, [watchedAmount, watchedExchangeRate, watchedInputMethod, setValue]);
 
+  React.useEffect(() => {
+    // automatically change to enter in sats if the user selects "BTC" as the fiat currency
+    // normally we are onboarding users who only use fiat, but for this special case it's
+    // difficult to enter the amount in BTC.
+    if (watchedCurrency === "BTC") {
+      setValue("inputMethod", "sats");
+    }
+  }, [setValue, watchedCurrency]);
+
   const exchangeRateSelectOptions: SelectOption[] | undefined = React.useMemo(
     () =>
       exchangeRates
