@@ -13,10 +13,19 @@ import { PageRoutes } from "lib/PageRoutes";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import React from "react";
 
 const Dashboard: NextPage = () => {
   const { data: session, status: sessionStatus } = useSession();
   const { data: user } = useUser();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (sessionStatus === "unauthenticated") {
+      router.push(PageRoutes.home);
+    }
+  }, [router, sessionStatus]);
 
   if (sessionStatus === "loading" || (session && !user)) {
     return <Loading color="currentColor" size="sm" />;
