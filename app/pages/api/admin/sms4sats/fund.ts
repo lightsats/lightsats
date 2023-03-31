@@ -1,15 +1,14 @@
 import { StatusCodes } from "http-status-codes";
 import { isAdmin } from "lib/admin/isAdmin";
+import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
 import { fundSmsForSatsAccountBalance } from "lib/sms/SmsForSatsAccountProvider";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string>
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getLightsatsServerSession(req, res);
   if (!session) {
     return res.status(StatusCodes.UNAUTHORIZED).end();
   }

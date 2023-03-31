@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
 import { refundableTipStatuses } from "lib/constants";
 import { createNotification } from "lib/createNotification";
 import { sendEmail } from "lib/email/sendEmail";
@@ -6,14 +7,13 @@ import prisma from "lib/prismadb";
 import { reclaimTip } from "lib/reclaimTip";
 import { getAppUrl, getTipUrl } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import { Session } from "next-auth";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<never>
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getLightsatsServerSession(req, res);
 
   const { apiKey } = req.query;
   const validApiKey = !!(process.env.API_KEY && apiKey === process.env.API_KEY);
@@ -31,7 +31,7 @@ export default async function handler(
 }
 
 async function handleReclaimTip(
-  session: Session | null,
+  session: Session | undefined,
   validApiKey: boolean,
   req: NextApiRequest,
   res: NextApiResponse<never>

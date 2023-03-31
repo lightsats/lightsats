@@ -1,5 +1,6 @@
 import { Tip } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
 import { createAchievement } from "lib/createAchievement";
 import { createNotification } from "lib/createNotification";
 import { sendEmail } from "lib/email/sendEmail";
@@ -7,15 +8,14 @@ import prisma from "lib/prismadb";
 import { stageTip } from "lib/stageTip";
 import { getClaimWebhookContent, getTipUrl, hasTipExpired } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import { Session } from "next-auth";
 import { ClaimTipRequest } from "types/ClaimTipRequest";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Tip | Tip[]>
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getLightsatsServerSession(req, res);
   if (!session) {
     return res.status(StatusCodes.UNAUTHORIZED).end();
   }

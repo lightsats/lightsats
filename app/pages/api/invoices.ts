@@ -1,11 +1,10 @@
 import { StatusCodes } from "http-status-codes";
 import { payWithdrawalInvoice } from "lib/payWithdrawalInvoice";
 
+import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
 import prisma from "lib/prismadb";
 import { checkWithdrawalFlow } from "lib/withdrawal";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
 import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 
 export default async function handler(
@@ -25,7 +24,7 @@ async function handlePayInvoice(req: NextApiRequest, res: NextApiResponse) {
   const withdrawalRequest = req.body as InvoiceWithdrawalRequest;
   checkWithdrawalFlow(withdrawalRequest.flow);
 
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getLightsatsServerSession(req, res);
 
   const userId =
     withdrawalRequest.flow === "anonymous" ? undefined : session?.user.id;
