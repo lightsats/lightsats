@@ -12,6 +12,7 @@ export type TipRequestBase = {
   anonymousTipper: boolean;
   generatePassphrase: boolean;
   passphraseLength: number;
+  claimWebhookUrl?: string;
 };
 
 export type CreateTipRequest = TipRequestBase & {

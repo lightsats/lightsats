@@ -144,6 +144,7 @@ model Tip {
   recommendedWalletId String?
   anonymousTipper Boolean @default(false)
   passphrase String? @unique
+  claimWebhookUrl String?
 }
 
 model LnbitsWallet {

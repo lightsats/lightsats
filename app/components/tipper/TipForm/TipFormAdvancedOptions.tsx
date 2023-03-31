@@ -17,7 +17,7 @@ import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { locales } from "lib/i18n/locales";
 import { getRecommendedItems } from "lib/items/getRecommendedItems";
 import { wallets } from "lib/items/wallets";
-import { getRedeemUrl } from "lib/utils";
+import { getClaimWebhookContent, getRedeemUrl } from "lib/utils";
 import React from "react";
 import {
   Control,
@@ -401,6 +401,51 @@ Micheal Saylor`
         . You can use this option for printed tips for recipients who cannot
         scan a QR code.
       </Text>
+      <Divider />
+      <Row align="flex-start">
+        <Text css={{ whiteSpace: "nowrap" }}>🪝 Claim Webhook URL</Text>
+      </Row>
+      <Text
+        small
+        css={{
+          mt: 0,
+          lineHeight: 1.2,
+          display: "inline-block",
+        }}
+      >
+        Send a webhook notification in the following format when your tip is
+        claimed:
+      </Text>
+      <Text
+        small
+        blockquote
+        css={{
+          whiteSpace: "pre-wrap",
+          mt: 10,
+          mb: 10,
+          lineHeight: 1.2,
+          p: 10,
+          small: {
+            fontFamily: "monospace",
+          },
+        }}
+      >
+        {JSON.stringify(getClaimWebhookContent(satsAmount), null, 2)}
+      </Text>
+      <Row>
+        <Controller
+          name="claimWebhookUrl"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              placeholder="https://discord.com/api/webhooks/..."
+              fullWidth
+              bordered
+            />
+          )}
+        />
+      </Row>
     </>
   );
 }

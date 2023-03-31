@@ -121,5 +121,6 @@ export function getSharedUpdateTipFields(updateTipRequest: TipRequestBase) {
     onboardingFlow: updateTipRequest.onboardingFlow,
     recommendedWalletId: updateTipRequest.recommendedWalletId || null,
     anonymousTipper: updateTipRequest.anonymousTipper,
+    claimWebhookUrl: updateTipRequest.claimWebhookUrl || null,
   };
 }

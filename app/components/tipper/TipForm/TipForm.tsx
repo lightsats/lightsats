@@ -4,7 +4,6 @@ import {
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 import {
-  Badge,
   Button,
   Card,
   Col,
@@ -387,10 +386,6 @@ export function TipForm({
                   >
                     <Text>Quantity</Text>
                   </Tooltip>
-                  <Spacer x={0.125} />
-                  <Badge size="sm" color="warning">
-                    BETA
-                  </Badge>
                 </Row>
                 <Col>
                   <Row justify="flex-end">

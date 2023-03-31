@@ -224,3 +224,9 @@ export function truncate(text: string, length: number, suffix = "...") {
 export function getPublicProfileUrl(userId: string) {
   return getAppUrl() + `${PageRoutes.users}/${userId}`;
 }
+
+export function getClaimWebhookContent(satsAmount: number) {
+  return {
+    content: `${satsAmount} sats have been claimed!`,
+  };
+}

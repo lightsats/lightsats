@@ -27,6 +27,7 @@ export type TipFormData = {
   passphraseLength: number;
   generatePassphrase: boolean;
   inputMethod: InputMethod;
+  claimWebhookUrl: string | undefined;
 };
 
 export type TipFormSubmitData = Omit<
@@ -49,6 +50,7 @@ export function getSharedTipFormRequestFields(data: TipFormSubmitData) {
     anonymousTipper: data.anonymousTipper,
     passphraseLength: data.passphraseLength,
     generatePassphrase: data.generatePassphrase,
+    claimWebhookUrl: data.claimWebhookUrl,
   };
 }
 export function getSharedTipFormDefaultValues(tip: Tip) {
@@ -70,5 +72,6 @@ export function getSharedTipFormDefaultValues(tip: Tip) {
       tip.passphrase?.split(" ").length ?? DEFAULT_TIP_PASSPHRASE_LENGTH,
     amount: tip.amount,
     inputMethod: "sats" as const,
+    claimWebhookUrl: tip.claimWebhookUrl || undefined,
   };
 }

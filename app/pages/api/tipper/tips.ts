@@ -154,6 +154,7 @@ async function handlePostTip(
     recommendedWalletId: createTipRequest.recommendedWalletId,
     version: 1 /* 0=all tips in same bucket, 1=one wallet per tip */,
     anonymousTipper: createTipRequest.anonymousTipper,
+    claimWebhookUrl: createTipRequest.claimWebhookUrl,
   };
 
   const generatePassphraseFromRequest = (): string | undefined => {

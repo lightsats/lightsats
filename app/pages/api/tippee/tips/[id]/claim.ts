@@ -5,7 +5,7 @@ import { createNotification } from "lib/createNotification";
 import { sendEmail } from "lib/email/sendEmail";
 import prisma from "lib/prismadb";
 import { stageTip } from "lib/stageTip";
-import { getTipUrl, hasTipExpired } from "lib/utils";
+import { getClaimWebhookContent, getTipUrl, hasTipExpired } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
@@ -113,6 +113,20 @@ async function handleClaimTip(
       console.error(
         "Failed to send claimed notification email. Tip: " + tip.id
       );
+    }
+  }
+  if (tip.claimWebhookUrl) {
+    try {
+      const result = await fetch(tip.claimWebhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(getClaimWebhookContent(tip.amount)),
+      });
+      if (!result.ok) {
+        throw new Error(result.status + " " + (await result.text()));
+      }
+    } catch (error) {
+      console.error("Failed to post webhook for tip " + tip.id, error);
     }
   }
   return res.status(StatusCodes.NO_CONTENT).end();
