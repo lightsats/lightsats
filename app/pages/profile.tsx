@@ -770,6 +770,14 @@ function UserAPIKeys() {
       <Row>
         <Text b>Developer API Keys</Text>
       </Row>
+      <Row>
+        <Link
+          href="https://lightsats.github.io/Lightsats-API-docs"
+          target="_blank"
+        >
+          View API Documentation
+        </Link>
+      </Row>
       {apiKeys.map((apiKey) => (
         <Col
           key={apiKey.id}
