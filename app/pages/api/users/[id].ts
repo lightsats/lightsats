@@ -6,14 +6,13 @@ import {
   User,
 } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
 import { createAchievement } from "lib/createAchievement";
 import { createNotification } from "lib/createNotification";
 import { DEFAULT_LOCALE } from "lib/i18n/locales";
 import prisma from "lib/prismadb";
 import { getFallbackAvatarId } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
 import { PublicUser } from "types/PublicUser";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
 
@@ -27,7 +26,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<User | PublicUser | never>
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getLightsatsServerSession(req, res);
 
   const { id, publicProfile, forceAnonymous, isPWA } = req.query;
 

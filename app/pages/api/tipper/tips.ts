@@ -1,5 +1,6 @@
 import { Tip, TipGroupStatus } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
 import {
   MAX_TIP_GROUP_QUANTITY,
   MAX_TIP_PASSPHRASE_LENGTH,
@@ -13,8 +14,7 @@ import { recreateTipFundingInvoice } from "lib/recreateTipFundingInvoice";
 import { recreateTipGroupFundingInvoice } from "lib/recreateTipGroupFundingInvoice";
 import { calculateFee, generatePassphrase } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import { Session } from "next-auth";
 import { getTemplatedGroupTipProperties } from "pages/api/tipGroups/[id]/tips";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 import { CreateTipRequest } from "types/TipRequest";
@@ -27,7 +27,7 @@ export default async function handler(
   const { apiKey } = req.query;
   const validApiKey = !!(process.env.API_KEY && apiKey === process.env.API_KEY);
 
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getLightsatsServerSession(req, res);
 
   switch (req.method) {
     case "POST":
@@ -45,7 +45,7 @@ export default async function handler(
   }
 }
 async function getTips(
-  session: Session | null,
+  session: Session | undefined,
   req: NextApiRequest,
   res: NextApiResponse<Tip[] | TipWithGroup[]>
 ) {

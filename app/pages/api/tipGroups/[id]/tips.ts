@@ -1,10 +1,9 @@
 import { StatusCodes } from "http-status-codes";
+import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
 import { DEFAULT_NAME } from "lib/constants";
 import prisma from "lib/prismadb";
 import { getUpdatedPassphrase } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
 import { getSharedUpdateTipFields } from "pages/api/tipper/tips/[id]";
 import { TipGroupWithTips } from "types/TipGroupWithTips";
 import { TipRequestBase, UpdateTipsRequest } from "types/TipRequest";
@@ -13,7 +12,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<TipGroupWithTips>
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getLightsatsServerSession(req, res);
   if (!session) {
     return res.status(StatusCodes.UNAUTHORIZED).end();
   }

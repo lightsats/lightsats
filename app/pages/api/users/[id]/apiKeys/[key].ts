@@ -9,44 +9,42 @@ export default async function handler(
   res: NextApiResponse<never>
 ) {
   const session = await getLightsatsServerSession(req, res);
+
   if (!session) {
     return res.status(StatusCodes.UNAUTHORIZED).end();
   }
 
-  switch (req.method) {
-    case "POST":
-      return handleMarkTipCopied(session, req, res);
-    default:
-      return res.status(StatusCodes.NOT_FOUND).end();
+  const { id } = req.query;
+  if (session.user.id !== id) {
+    return res.status(StatusCodes.FORBIDDEN).end();
   }
+
+  if (req.method === "DELETE") {
+    return deleteApiKey(session, req, res);
+  }
+  return res.status(StatusCodes.NOT_FOUND).end();
 }
 
-async function handleMarkTipCopied(
+async function deleteApiKey(
   session: Session,
   req: NextApiRequest,
   res: NextApiResponse<never>
 ) {
-  const { id } = req.query;
-  const tip = await prisma.tip.findUnique({
+  const { key } = req.query;
+
+  const apiKey = await prisma.userAPIKey.findUnique({
     where: {
-      id: id as string,
+      id: key as string,
     },
   });
-  if (!tip) {
+  if (!apiKey || session.user.id !== apiKey.userId) {
     return res.status(StatusCodes.NOT_FOUND).end();
   }
-  if (session.user.id !== tip.tipperId) {
-    return res.status(StatusCodes.FORBIDDEN).end();
-  }
 
-  await prisma.tip.update({
+  await prisma.userAPIKey.delete({
     where: {
-      id: tip.id,
-    },
-    data: {
-      copiedClaimUrl: new Date(),
+      id: key as string,
     },
   });
-
   return res.status(StatusCodes.NO_CONTENT).end();
 }

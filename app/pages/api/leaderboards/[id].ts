@@ -1,17 +1,17 @@
 import { Leaderboard } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import { isAdmin } from "lib/admin/isAdmin";
+import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import { Session } from "next-auth";
 import { UpdateLeaderboardRequest } from "types/LeaderboardRequest";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Leaderboard | Leaderboard[]>
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getLightsatsServerSession(req, res);
 
   switch (req.method) {
     case "GET":
@@ -44,7 +44,7 @@ async function getLeaderboard(
 }
 
 async function deleteLeaderboard(
-  session: Session | null,
+  session: Session | undefined,
   req: NextApiRequest,
   res: NextApiResponse<never>
 ) {
@@ -62,7 +62,7 @@ async function deleteLeaderboard(
 }
 
 async function updateLeaderboard(
-  session: Session | null,
+  session: Session | undefined,
   req: NextApiRequest,
   res: NextApiResponse<Leaderboard>
 ) {

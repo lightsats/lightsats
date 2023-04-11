@@ -1,20 +1,19 @@
 import { Tip, TipStatus } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
 import { checkTipHasBeenFunded } from "lib/checkTipHasBeenFunded";
 import { deleteLnbitsUser } from "lib/lnbits/deleteLnbitsUser";
 import prisma from "lib/prismadb";
 import { regenerateExpiredTipInvoice } from "lib/regenerateExpiredTipInvoice";
 import { getUpdatedPassphrase } from "lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
 import { TipRequestBase, UpdateTipRequest } from "types/TipRequest";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Tip>
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getLightsatsServerSession(req, res);
   if (!session) {
     return res.status(StatusCodes.UNAUTHORIZED).end();
   }

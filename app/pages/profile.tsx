@@ -4,6 +4,7 @@ import {
   EyeIcon,
   InformationCircleIcon,
   LinkIcon,
+  PlusCircleIcon,
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
@@ -22,7 +23,7 @@ import {
   Text,
 } from "@nextui-org/react";
 
-import { User } from "@prisma/client";
+import { User, UserAPIKey } from "@prisma/client";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Divider } from "components/Divider";
 import { Icon } from "components/Icon";
@@ -38,6 +39,7 @@ import { getStaticProps } from "lib/i18n/i18next";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { DEFAULT_LOCALE, locales } from "lib/i18n/locales";
 import { PageRoutes } from "lib/PageRoutes";
+import { defaultFetcher } from "lib/swr";
 import { hasTipExpired } from "lib/utils";
 import type { NextPage } from "next";
 import { Session } from "next-auth";
@@ -45,7 +47,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { KeyedMutator } from "swr";
+import useSWR, { KeyedMutator } from "swr";
 import { DeleteLinkedAccountRequest } from "types/DeleteLinkedAccountRequest";
 import { UpdateUserRequest } from "types/UpdateUserRequest";
 
@@ -247,6 +249,7 @@ function ProfileInternal({ mutateUser, session, user }: ProfileInternalProps) {
             </Icon>
           </Button>
         </Row>
+        <UserAPIKeys />
       </Collapse>
     </>
   );
@@ -716,6 +719,133 @@ function CompleteYourProfile({
           <Spacer />
         </>
       )}
+    </>
+  );
+}
+
+function UserAPIKeys() {
+  const { data: session } = useSession();
+  const userId = session?.user.id;
+  const { data: apiKeys, mutate } = useSWR<UserAPIKey[]>(
+    userId ? `/api/users/${userId}/apiKeys` : null,
+    defaultFetcher
+  );
+  const [isSubmitting, setSubmitting] = React.useState(false);
+
+  const removeApiKey = React.useCallback(
+    async (id: string) => {
+      setSubmitting(true);
+      const result = await fetch(`/api/users/${userId}/apiKeys/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (result.ok) {
+        await mutate();
+      } else {
+        toast.error("Failed to delete api key: " + result.statusText);
+      }
+      setSubmitting(false);
+    },
+    [mutate, userId]
+  );
+  const addApiKey = React.useCallback(async () => {
+    setSubmitting(true);
+    const result = await fetch(`/api/users/${userId}/apiKeys`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (result.ok) {
+      await mutate();
+    } else {
+      toast.error("Failed to create api key: " + result.statusText);
+    }
+    setSubmitting(false);
+  }, [mutate, userId]);
+
+  if (!apiKeys) {
+    return null;
+  }
+  return (
+    <>
+      <Row>
+        <Text b>Developer API Keys</Text>
+      </Row>
+      <Row>
+        <Link
+          href="https://lightsats.github.io/Lightsats-API-docs"
+          target="_blank"
+        >
+          View API Documentation
+        </Link>
+      </Row>
+      {apiKeys.map((apiKey) => (
+        <Col
+          key={apiKey.id}
+          css={{ mb: 10, border: "1px solid", borderColor: "$accents0", p: 10 }}
+        >
+          <Row justify="space-between" align="center">
+            <Text>{apiKey.id.substring(0, 10) + "..."}</Text>
+          </Row>
+          <Row justify="space-between" align="center">
+            <Row>
+              <Text size="small">Created {apiKey.created.toString()}</Text>
+            </Row>
+            <Row css={{ flex: 1 }}>
+              <Button
+                color="default"
+                size="sm"
+                auto
+                onClick={() => {
+                  copy(apiKey.id);
+                  toast.success("Copied to clipboard");
+                }}
+              >
+                <>
+                  <Icon>
+                    <ClipboardIcon />
+                  </Icon>
+                  &nbsp;Copy
+                </>
+              </Button>
+              <Spacer x={0.5} />
+              <Button
+                color="error"
+                size="sm"
+                auto
+                onClick={() => removeApiKey(apiKey.id)}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <Loading color="currentColor" size="sm" />
+                ) : (
+                  <>
+                    <Icon>
+                      <TrashIcon />
+                    </Icon>
+                    &nbsp;Delete
+                  </>
+                )}
+              </Button>
+            </Row>
+          </Row>
+        </Col>
+      ))}
+
+      <Row>
+        <Button onClick={addApiKey} disabled={isSubmitting}>
+          {isSubmitting ? (
+            <Loading color="currentColor" size="sm" />
+          ) : (
+            <>
+              <Icon>
+                <PlusCircleIcon />
+              </Icon>
+              &nbsp;
+              {"Add new API key"}
+            </>
+          )}
+        </Button>
+      </Row>
     </>
   );
 }

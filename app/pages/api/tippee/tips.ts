@@ -1,11 +1,11 @@
 import { Tip } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
 import { mapTipToPublicTip } from "lib/mapTipToPublicTip";
 import prisma from "lib/prismadb";
 import { withErrorMessage } from "lib/withErrorMessage";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import { Session } from "next-auth";
 import requestIp from "request-ip";
 import { ErrorResponse } from "types/ErrorResponse";
 import { PublicTip } from "types/PublicTip";
@@ -14,7 +14,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Tip[] | PublicTip[] | ErrorResponse>
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getLightsatsServerSession(req, res);
   const { publicTip, passphrase } = req.query;
 
   switch (req.method) {
