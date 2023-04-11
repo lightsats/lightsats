@@ -10,6 +10,9 @@ Project on Bolt fun: https://makers.bolt.fun/project/Lightsats
 
 Roadmap: https://github.com/orgs/lightsats/projects/1
 
+## Lightsats API
+View the API docs at https://lightsats.github.io/Lightsats-API-docs
+
 ## Contributing
 
 Join our discord channel to stay up to date! https://lgt.st/community
@@ -20,4 +23,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for more info.
 
 ### Translations
 
-We use Weblate for Translations: https://hosted.weblate.org/projects/lightsats/
+~~We use Weblate for Translations: https://hosted.weblate.org/projects/lightsats/~~
+Currently Translations must be done through Github. Please open a pull request with your changes.
