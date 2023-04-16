@@ -71,6 +71,12 @@ async function handleGetReminders(
               status: "CLAIMED", // only send reminders for tips that have been claimed but not withdrawn
             },
             {
+              // TODO: review this check.
+              // currently disabled because the recipient might not have access to the NWC connection string
+              // in order to be able to withdraw the funds.
+              type: "CUSTODIAL", //only send reminders for custodial tips for now
+            },
+            {
               expiry: {
                 gt: new Date(), // cannot withdraw expired tips
               },

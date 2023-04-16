@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "TipType" AS ENUM ('CUSTODIAL', 'NON_CUSTODIAL_NWC');
+
+-- AlterTable
+ALTER TABLE "Tip" ADD COLUMN     "type" "TipType" NOT NULL DEFAULT 'CUSTODIAL';

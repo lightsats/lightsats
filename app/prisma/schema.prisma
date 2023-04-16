@@ -154,6 +154,12 @@ model Tip {
   anonymousTipper Boolean @default(false)
   passphrase String? @unique
   claimWebhookUrl String?
+  type TipType @default(CUSTODIAL)
+}
+
+enum TipType {
+  CUSTODIAL
+  NON_CUSTODIAL_NWC
 }
 
 model LnbitsWallet {
@@ -208,7 +214,7 @@ model Withdrawal {
   userId String?
   tips Tip[]
   routingFee Int
-  withdrawalInvoiceId String
+  withdrawalInvoiceId String? // lnbits withdrawal ID. Undefined for non-custodial withdrawals
   withdrawalInvoice String
   withdrawalFlow WithdrawalFlow
   withdrawalMethod WithdrawalMethod

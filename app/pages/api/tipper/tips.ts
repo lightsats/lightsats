@@ -68,6 +68,9 @@ async function getTips(
             expiry: {
               lt: new Date(),
             },
+            type: {
+              equals: "CUSTODIAL",
+            },
           }
         : {}),
       ...(withGroups
@@ -144,7 +147,8 @@ async function handlePostTip(
     tipperId: session.user.id,
     amount: createTipRequest.amount,
     fee,
-    status: "UNFUNDED",
+    status:
+      createTipRequest.type === "NON_CUSTODIAL_NWC" ? "UNSEEN" : "UNFUNDED",
     expiry,
     currency: createTipRequest.currency,
     onboardingFlow: createTipRequest.onboardingFlow,
@@ -155,6 +159,7 @@ async function handlePostTip(
     version: 1 /* 0=all tips in same bucket, 1=one wallet per tip */,
     anonymousTipper: createTipRequest.anonymousTipper,
     claimWebhookUrl: createTipRequest.claimWebhookUrl,
+    type: createTipRequest.type,
   };
 
   const generatePassphraseFromRequest = (): string | undefined => {

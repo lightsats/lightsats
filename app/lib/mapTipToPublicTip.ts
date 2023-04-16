@@ -7,6 +7,7 @@ export function mapTipToPublicTip(
 ): PublicTip {
   return {
     id: tip.id,
+    type: tip.type,
     amount: tip.amount,
     tipperId: tip.tipperId,
     hasClaimed: !!tip.tippeeId,

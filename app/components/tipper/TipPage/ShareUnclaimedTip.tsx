@@ -7,6 +7,7 @@ import {
   Button,
   Card,
   Col,
+  Input,
   Link,
   Loading,
   Row,
@@ -37,10 +38,13 @@ type ShareUnclaimedTipProps = {
 };
 
 export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
-  const claimUrl = getClaimUrl(tip);
   const [mode, setMode] = React.useState<"QR" | "passphrase">("QR");
   const [isGeneratingPassphrase, setGeneratingPassphrase] =
     React.useState(false);
+  const [nwcConnectionString, setNwcConnectionString] = React.useState<
+    string | undefined
+  >();
+  const claimUrl = getClaimUrl(tip, undefined, nwcConnectionString);
 
   const generatePassphrase = React.useCallback(() => {
     (async () => {
@@ -105,75 +109,129 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
         </Button>
       </Row>
       <Spacer />
-      {mode === "QR" ? (
-        <Card css={{ dropShadow: "$sm" }}>
-          <Card.Header>
-            <Col>
+      {mode === "QR" && tip.type === "NON_CUSTODIAL_NWC" && (
+        <>
+          <Card css={{ dropShadow: "$sm" }}>
+            <Card.Header>
               <Row justify="center" align="center">
                 <Text size={18} b>
-                  👇 Let them scan this QR code
+                  Unlock QR code
                 </Text>
-                &nbsp;
-                <Tooltip
-                  content="Ask the tippee to scan the below code using their camera app or a QR
-            code scanner app. You can also copy the URL to send via a message or
-            email."
-                  color="primary"
-                  css={{ minWidth: "50%" }}
-                  placement="left"
+              </Row>
+            </Card.Header>
+            <Card.Divider />
+            <Card.Body>
+              <Row justify="center">
+                Enter your&nbsp;
+                <Link
+                  href="https://nwc.getalby.com"
+                  target="_blank"
+                  css={{ display: "inline" }}
                 >
-                  <Text color="primary">
-                    <Icon>
-                      <InformationCircleIcon />
-                    </Icon>
-                  </Text>
-                </Tooltip>
+                  NWC
+                </Link>
+                &nbsp;connection string
               </Row>
               <Row justify="center">
-                <NextLink href={`${PageRoutes.tips}/${tip.id}/qr`}>
+                <Text size="small">
+                  This connection string will be passed directly to your
+                  recipient. It will not be stored in Lightsats.
+                </Text>
+              </Row>
+              <Row justify="center">
+                <Text size="small" b>
+                  Warning: only tip users you trust and do not share this tip
+                  link publically as there is currently no limit on how much
+                  funds can be drawn from your wallet.
+                </Text>
+              </Row>
+              <Spacer />
+              <Row>
+                <Input
+                  label="NWC Connection String"
+                  placeholder="nostrwalletconnect://..."
+                  maxLength={255}
+                  fullWidth
+                  bordered
+                  value={nwcConnectionString}
+                  onChange={(e) => setNwcConnectionString(e.target.value)}
+                />
+              </Row>
+            </Card.Body>
+          </Card>
+        </>
+      )}
+      {mode === "QR" ? (
+        tip.type !== "NON_CUSTODIAL_NWC" || nwcConnectionString ? (
+          <Card css={{ dropShadow: "$sm" }}>
+            <Card.Header>
+              <Col>
+                <Row justify="center" align="center">
+                  <Text size={18} b>
+                    👇 Let them scan this QR code
+                  </Text>
+                  &nbsp;
+                  <Tooltip
+                    content="Ask the tippee to scan the below code using their camera app or a QR
+            code scanner app. You can also copy the URL to send via a message or
+            email."
+                    color="primary"
+                    css={{ minWidth: "50%" }}
+                    placement="left"
+                  >
+                    <Text color="primary">
+                      <Icon>
+                        <InformationCircleIcon />
+                      </Icon>
+                    </Text>
+                  </Tooltip>
+                </Row>
+                <Row justify="center">
+                  <NextLink href={`${PageRoutes.tips}/${tip.id}/qr`}>
+                    <a>
+                      <Button size="sm" bordered>
+                        Open in fullscreen
+                      </Button>
+                    </a>
+                  </NextLink>
+                  <Spacer />
+                </Row>
+              </Col>
+            </Card.Header>
+            <Card.Divider />
+            <Card.Body>
+              <Row justify="center">
+                <NextLink href={claimUrl}>
                   <a>
-                    <Button size="sm" bordered>
-                      Open in fullscreen
+                    <QRCode value={claimUrl} />
+                  </a>
+                </NextLink>
+              </Row>
+            </Card.Body>
+            <Card.Divider />
+            <Card.Footer>
+              <Row justify="space-between">
+                <Button color="secondary" auto onClick={copyClaimUrl}>
+                  <Icon>
+                    <ClipboardDocumentIcon />
+                  </Icon>
+                  &nbsp;Copy URL
+                </Button>
+                <NextLink href={claimUrl}>
+                  <a target="_blank">
+                    <Button auto>
+                      <Icon>
+                        <ArrowTopRightOnSquareIcon />
+                      </Icon>
+                      &nbsp;Preview
                     </Button>
                   </a>
                 </NextLink>
-                <Spacer />
               </Row>
-            </Col>
-          </Card.Header>
-          <Card.Divider />
-          <Card.Body>
-            <Row justify="center">
-              <NextLink href={claimUrl}>
-                <a>
-                  <QRCode value={claimUrl} />
-                </a>
-              </NextLink>
-            </Row>
-          </Card.Body>
-          <Card.Divider />
-          <Card.Footer>
-            <Row justify="space-between">
-              <Button color="secondary" auto onClick={copyClaimUrl}>
-                <Icon>
-                  <ClipboardDocumentIcon />
-                </Icon>
-                &nbsp;Copy URL
-              </Button>
-              <NextLink href={claimUrl}>
-                <a target="_blank">
-                  <Button auto>
-                    <Icon>
-                      <ArrowTopRightOnSquareIcon />
-                    </Icon>
-                    &nbsp;Preview
-                  </Button>
-                </a>
-              </NextLink>
-            </Row>
-          </Card.Footer>
-        </Card>
-      ) : (
+            </Card.Footer>
+          </Card>
+        ) : null
+      ) : tip.type === "CUSTODIAL" ? (
         <Card css={{ dropShadow: "$sm" }}>
           <Card.Header>
             <Col>
@@ -226,9 +284,17 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
             )}
           </Card.Body>
         </Card>
+      ) : (
+        <Row justify="center">
+          <Text b>Redeem codes are not supported for non-custodial tips</Text>
+        </Row>
       )}
-      <Spacer />
-      <PrintCard tip={tip} />
+      {tip.type === "CUSTODIAL" && (
+        <>
+          <Spacer />
+          <PrintCard tip={tip} />
+        </>
+      )}
       <Spacer />
     </>
   );

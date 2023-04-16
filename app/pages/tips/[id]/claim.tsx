@@ -42,6 +42,17 @@ const ClaimTipPage: NextPage = () => {
 
   const destinationRoute = PageRoutes.journeyClaimed;
 
+  const { secret } = router.query;
+  const nostrWalletConnectUrl = secret
+    ? decodeURIComponent(secret as string)
+    : undefined;
+
+  React.useEffect(() => {
+    if (nostrWalletConnectUrl) {
+      localStorage.setItem("nostrWalletConnectUrl", nostrWalletConnectUrl);
+    }
+  }, [nostrWalletConnectUrl]);
+
   React.useEffect(() => {
     if (
       publicTip &&
