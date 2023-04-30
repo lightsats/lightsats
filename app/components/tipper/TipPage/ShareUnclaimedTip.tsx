@@ -18,6 +18,7 @@ import {
 import { Tip } from "@prisma/client";
 import { webln } from "alby-js-sdk";
 import { Icon } from "components/Icon";
+import { LightningQRCode } from "components/LightningQRCode";
 import { NextLink } from "components/NextLink";
 import { Passphrase } from "components/tipper/Passphrase";
 import copy from "copy-to-clipboard";
@@ -34,19 +35,48 @@ import React from "react";
 import toast from "react-hot-toast";
 import QRCode from "react-qr-code";
 import { GiftCardTheme } from "types/GiftCardTheme";
+import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
 
 type ShareUnclaimedTipProps = {
   tip: Tip;
 };
 
 export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
-  const [mode, setMode] = React.useState<"QR" | "passphrase">("QR");
+  const [mode, setMode] = React.useState<"QR" | "lnurl" | "passphrase">("QR");
   const [isGeneratingPassphrase, setGeneratingPassphrase] =
     React.useState(false);
   const [nwcConnectionString, setNwcConnectionString] = React.useState<
     string | undefined
   >();
   const claimUrl = getClaimUrl(tip, undefined, nwcConnectionString);
+  const [qrCodeUrl, setQrCodeUrl] = React.useState<string | undefined>();
+  React.useEffect(() => {
+    if (mode === "QR") {
+      setQrCodeUrl(claimUrl);
+    } else if (mode === "lnurl") {
+      setQrCodeUrl(undefined);
+      (async () => {
+        const withdrawalRequest: LnurlWithdrawalRequest = {
+          amount: tip.amount,
+          flow: "anonymous",
+          tipId: tip.id,
+        };
+        const result = await fetch("/api/withdrawalLinks", {
+          method: "POST",
+          body: JSON.stringify(withdrawalRequest),
+          headers: { "Content-Type": "application/json" },
+        });
+        if (result.ok) {
+          setQrCodeUrl(await result.json());
+        } else {
+          const body = await result.text();
+          toast.error(
+            "Failed to create withdraw link: " + result.statusText + `\n${body}`
+          );
+        }
+      })();
+    }
+  }, [claimUrl, mode, tip.amount, tip.id]);
 
   const generatePassphrase = React.useCallback(() => {
     (async () => {
@@ -113,6 +143,22 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
         >
           QR code
         </Button>
+        {tip.onboardingFlow === "SKIP" && tip.type === "CUSTODIAL" && (
+          <Button
+            size="xs"
+            auto
+            css={{
+              width: "60px",
+              borderRadius: 0,
+              borderLeft: "none",
+              borderRight: "none",
+            }}
+            bordered={mode !== "lnurl"}
+            onClick={() => setMode("lnurl")}
+          >
+            LNURL
+          </Button>
+        )}
         <Button
           size="xs"
           auto
@@ -128,6 +174,16 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
         </Button>
       </Row>
       <Spacer />
+      {mode === "lnurl" && (
+        <>
+          <Text small b>
+            This is a direct LNURL code. Only send this to recipients who
+            already have a lightning wallet. The recipient will not be onboarded
+            through Lightsats.
+          </Text>
+          <Spacer />
+        </>
+      )}
       {mode === "QR" &&
         tip.type === "NON_CUSTODIAL_NWC" &&
         !nwcConnectionString && (
@@ -192,7 +248,7 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
             </Card>
           </>
         )}
-      {mode === "QR" ? (
+      {mode === "QR" || mode === "lnurl" ? (
         tip.type !== "NON_CUSTODIAL_NWC" || nwcConnectionString ? (
           <Card css={{ dropShadow: "$sm" }}>
             <Card.Header>
@@ -203,11 +259,15 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
                   </Text>
                   &nbsp;
                   <Tooltip
-                    content="Ask the tippee to scan the below code using their camera app or a QR
+                    content={
+                      mode === "QR"
+                        ? `Ask your recipient to scan the below code using their camera app or a QR
             code scanner app. You can also copy the URL to send via a message or
-            email."
+            email.`
+                        : "Ask your recipient to scan this code with their lightning wallet."
+                    }
                     color="primary"
-                    css={{ minWidth: "50%" }}
+                    css={{ minWidth: mode === "QR" ? "50%" : undefined }}
                     placement="left"
                   >
                     <Text color="primary">
@@ -232,11 +292,21 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
             <Card.Divider />
             <Card.Body>
               <Row justify="center">
-                <NextLink href={claimUrl}>
-                  <a>
-                    <QRCode value={claimUrl} />
-                  </a>
-                </NextLink>
+                {qrCodeUrl ? (
+                  <NextLink
+                    href={mode === "QR" ? qrCodeUrl : `lightning:${qrCodeUrl}`}
+                  >
+                    <a>
+                      {mode === "QR" ? (
+                        <QRCode value={qrCodeUrl} />
+                      ) : (
+                        <LightningQRCode value={qrCodeUrl} />
+                      )}
+                    </a>
+                  </NextLink>
+                ) : (
+                  <Loading />
+                )}
               </Row>
             </Card.Body>
             <Card.Divider />

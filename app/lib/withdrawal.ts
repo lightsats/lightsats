@@ -1,4 +1,4 @@
-import { Prisma, WithdrawalFlow } from "@prisma/client";
+import { Prisma, TipStatus, WithdrawalFlow } from "@prisma/client";
 
 export function checkWithdrawalFlow(flow: WithdrawalFlow) {
   if (flow !== "tippee" && flow !== "tipper" && flow !== "anonymous") {
@@ -6,12 +6,14 @@ export function checkWithdrawalFlow(flow: WithdrawalFlow) {
   }
 }
 
-export function getWithdrawalInitialTipStatus(flow: WithdrawalFlow) {
+export function getWithdrawalInitialTipStatuses(
+  flow: WithdrawalFlow
+): TipStatus[] {
   return flow === "tippee"
-    ? "CLAIMED"
+    ? ["CLAIMED"]
     : flow === "tipper"
-    ? "RECLAIMED"
-    : "SEEN";
+    ? ["RECLAIMED"]
+    : ["UNSEEN", "SEEN"];
 }
 
 export function getWithdrawableTipsQuery(
@@ -19,11 +21,11 @@ export function getWithdrawableTipsQuery(
   userId: string | undefined,
   tipId: string | undefined
 ) {
-  const initialStatus = getWithdrawalInitialTipStatus(flow);
+  const initialStatuses = getWithdrawalInitialTipStatuses(flow);
   // TODO: consider running the below code in a transaction
   const whereQuery: Prisma.TipWhereInput = {
     status: {
-      equals: initialStatus,
+      in: initialStatuses,
     },
     ...(flow === "tippee"
       ? {
