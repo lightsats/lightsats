@@ -18,6 +18,7 @@ import {
   Text,
   Tooltip,
 } from "@nextui-org/react";
+import { Alert } from "components/Alert";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Divider } from "components/Divider";
 import { FiatPrice } from "components/FiatPrice";
@@ -28,6 +29,7 @@ import {
   TipFormData,
   TipFormSubmitData,
 } from "components/tipper/TipForm/TipFormData";
+import { useRecommendedWalletSelectOptions } from "components/tipper/TipForm/useRecommendedWalletSelectOptions";
 import { useExchangeRates } from "hooks/useExchangeRates";
 import { useTips } from "hooks/useTips";
 import {
@@ -40,6 +42,7 @@ import {
   USE_PREV_TIP_PROPERTIES,
   appName,
 } from "lib/constants";
+import { wallets } from "lib/items/wallets";
 import {
   calculateFee,
   getFiatAmount,
@@ -188,6 +191,12 @@ export function TipForm({
   const setDropdownSelectedCurrency = React.useCallback(
     (currency: string) => setValue("currency", currency),
     [setValue]
+  );
+
+  const watchedOnboardingFlow = watch("onboardingFlow");
+  const recommendedWalletSelectOptions = useRecommendedWalletSelectOptions(
+    watchedAmountInSats,
+    watchedOnboardingFlow
   );
 
   const onSubmit = React.useCallback(
@@ -590,23 +599,52 @@ export function TipForm({
       )}
 
       {mode === "create" ? (
-        <Collapse
-          css={{
-            width: "100%",
-            dropShadow: "$sm",
-            border: "none",
-            px: "$10",
-            ":last-child": {
-              overflow: "visible", // fix nextui collapse content getting cut off
-            },
-          }}
-          title={<Text>Advanced Options</Text>}
-          expanded={watchedShowAdvancedOptions}
-          onChange={(_, __, value) => setValue("showAdvancedOptions", !!value)}
-          shadow
-        >
-          {advancedOptions}
-        </Collapse>
+        <>
+          <Collapse
+            css={{
+              width: "100%",
+              dropShadow: "$sm",
+              border: "none",
+              px: "$10",
+              ":last-child": {
+                overflow: "visible", // fix nextui collapse content getting cut off
+              },
+            }}
+            title={<Text>Advanced Options</Text>}
+            expanded={watchedShowAdvancedOptions}
+            onChange={(_, __, value) =>
+              setValue("showAdvancedOptions", !!value)
+            }
+            shadow
+          >
+            {advancedOptions}
+          </Collapse>
+          {recommendedWalletSelectOptions.length < wallets.length && (
+            <>
+              <Spacer />
+              <Row>
+                <Alert>
+                  <Text small>
+                    {wallets
+                      .filter(
+                        (wallet) =>
+                          recommendedWalletSelectOptions.findIndex(
+                            (option) => option.value === wallet.id
+                          ) < 0
+                      )
+                      .map((wallet) => wallet.name)
+                      .reduce(
+                        (text, value, i, array) =>
+                          text + (i < array.length - 1 ? ", " : " and ") + value
+                      )}{" "}
+                    will be hidden from your recipient because the minimum
+                    initial deposit is larger than your tip amount.
+                  </Text>
+                </Alert>
+              </Row>
+            </>
+          )}
+        </>
       ) : (
         <Card css={{ dropShadow: "$sm" }}>
           <Card.Body>{advancedOptions}</Card.Body>

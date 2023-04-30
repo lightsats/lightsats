@@ -13,9 +13,9 @@ import { OnboardingFlow } from "@prisma/client";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Divider } from "components/Divider";
 import { TipFormData } from "components/tipper/TipForm/TipFormData";
+import { useRecommendedWalletSelectOptions } from "components/tipper/TipForm/useRecommendedWalletSelectOptions";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { locales } from "lib/i18n/locales";
-import { getRecommendedItems } from "lib/items/getRecommendedItems";
 import { wallets } from "lib/items/wallets";
 import { getClaimWebhookContent, getRedeemUrl } from "lib/utils";
 import React from "react";
@@ -59,19 +59,9 @@ export function TipFormAdvancedOptions({
   const watchedEnterIndividualNames = watch("enterIndividualNames");
   // const watchedGeneratePassphrase = watch("generatePassphrase");
 
-  const recommendedWalletSelectOptions: SelectOption[] = React.useMemo(
-    () =>
-      getRecommendedItems("wallets", undefined, undefined, {
-        checkTippeeBalance: true,
-        filterOtherItems: true,
-        lnurlAuthCapable: watchedOnboardingFlow === "LIGHTNING",
-        tippeeBalance: satsAmount,
-        sortAlphabetically: true,
-      }).map((wallet) => ({
-        value: wallet.id,
-        label: wallet.name,
-      })),
-    [satsAmount, watchedOnboardingFlow]
+  const recommendedWalletSelectOptions = useRecommendedWalletSelectOptions(
+    satsAmount,
+    watchedOnboardingFlow
   );
 
   const setOnboardingFlow = React.useCallback(
