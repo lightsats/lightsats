@@ -46,6 +46,7 @@ import {
   getSatsAmount,
   getSymbolFromCurrencyWithFallback,
 } from "lib/utils";
+import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -65,8 +66,6 @@ type TipFormProps = {
   mode: "create" | "update";
   quantity?: number;
 };
-
-const NON_CUSTODIAL_TIPS_ENABLED = false;
 
 export function TipForm({
   onSubmit: onSubmitProp,
@@ -96,6 +95,8 @@ export function TipForm({
     [mode, tips]
   );
 
+  const router = useRouter();
+  const NON_CUSTODIAL_TIPS_ENABLED = router.query.experimental === "true";
   const { data: exchangeRates } = useExchangeRates();
 
   const { control, handleSubmit, watch, setValue, setFocus, register } =
