@@ -4,14 +4,17 @@ import {
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 import {
+  Badge,
   Button,
   Card,
   Col,
   Collapse,
   Input,
+  Link,
   Loading,
   Row,
   Spacer,
+  Switch,
   Text,
   Tooltip,
 } from "@nextui-org/react";
@@ -28,7 +31,6 @@ import {
 import { useExchangeRates } from "hooks/useExchangeRates";
 import { useTips } from "hooks/useTips";
 import {
-  appName,
   DEFAULT_TIP_PASSPHRASE_LENGTH,
   FEE_PERCENT,
   MAX_TIP_GROUP_QUANTITY,
@@ -36,6 +38,7 @@ import {
   MINIMUM_FEE_SATS,
   MIN_TIP_SATS,
   USE_PREV_TIP_PROPERTIES,
+  appName,
 } from "lib/constants";
 import {
   calculateFee,
@@ -43,6 +46,7 @@ import {
   getSatsAmount,
   getSymbolFromCurrencyWithFallback,
 } from "lib/utils";
+import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -91,6 +95,8 @@ export function TipForm({
     [mode, tips]
   );
 
+  const router = useRouter();
+  const NON_CUSTODIAL_TIPS_ENABLED = router.query.experimental === "true";
   const { data: exchangeRates } = useExchangeRates();
 
   const { control, handleSubmit, watch, setValue, setFocus, register } =
@@ -112,6 +118,7 @@ export function TipForm({
   }, [mode, prevTip, setValue]);
 
   const watchedAmountString = watch("amountString");
+  const watchedTipType = watch("type");
   const watchedAmount = watch("amount");
   let watchedQuantity = watch("quantity");
   if (isNaN(watchedQuantity)) {
@@ -125,9 +132,10 @@ export function TipForm({
     watchedInputMethod === "fiat" && watchedExchangeRate
       ? getSatsAmount(watchedAmount, watchedExchangeRate)
       : watchedAmount;
-  const watchedFeeInSats = watchedExchangeRate
-    ? calculateFee(watchedAmountInSats)
-    : 0;
+  const watchedFeeInSats =
+    watchedExchangeRate && watchedTipType === "CUSTODIAL"
+      ? calculateFee(watchedAmountInSats)
+      : 0;
 
   React.useEffect(() => {
     const parsedValue = parseFloat(watchedAmountString);
@@ -135,6 +143,12 @@ export function TipForm({
       setValue("amount", parsedValue);
     }
   }, [setValue, watchedAmountString]);
+
+  React.useEffect(() => {
+    if (watchedTipType === "NON_CUSTODIAL_NWC") {
+      setValue("quantity", 1);
+    }
+  }, [setValue, watchedTipType]);
 
   const toggleInputMethod = React.useCallback(() => {
     if (watchedExchangeRate) {
@@ -245,6 +259,51 @@ export function TipForm({
         <>
           <Card css={{ dropShadow: "$sm", w: "100%" }}>
             <Card.Body>
+              {NON_CUSTODIAL_TIPS_ENABLED && (
+                <>
+                  <Row justify="space-between" align="center">
+                    <Row>
+                      <Text>Non-Custodial</Text>
+                      <Spacer x={0.25} />
+                      <Badge color="warning">BETA</Badge>
+                    </Row>
+                    <Spacer x={0.5} />
+                    <Switch
+                      checked={watchedTipType === "NON_CUSTODIAL_NWC"}
+                      onChange={(e) =>
+                        setValue(
+                          "type",
+                          e.target.checked ? "NON_CUSTODIAL_NWC" : "CUSTODIAL"
+                        )
+                      }
+                    />
+                  </Row>
+                  <Row>
+                    <Text size="small">
+                      Retain custody of your unclaimed sats. Only pay routing
+                      fees. Powered by{" "}
+                      <Link
+                        href="https://nwc.getalby.com"
+                        target="_blank"
+                        css={{ display: "inline" }}
+                      >
+                        NWC
+                      </Link>
+                    </Text>
+                  </Row>
+                  {watchedTipType === "NON_CUSTODIAL_NWC" && (
+                    <Row>
+                      <Text size="small" b>
+                        WARNING: non-custodial functionality is very limited and
+                        provides a less user-friendly experience for the
+                        recipient.
+                      </Text>
+                    </Row>
+                  )}
+                  <Divider />
+                  <Spacer />
+                </>
+              )}
               <Row justify="space-between" align="center">
                 <Col>Currency</Col>
                 <Col>
@@ -424,12 +483,23 @@ export function TipForm({
                           fullWidth
                           bordered
                           autoFocus
+                          disabled={watchedTipType === "NON_CUSTODIAL_NWC"}
                         />
                       )}
                     />
                   </Row>
                 </Col>
               </Row>
+              {watchedTipType === "NON_CUSTODIAL_NWC" && (
+                <>
+                  <Spacer y={0.5} />
+                  <Row>
+                    <Text size="small" css={{ color: "$accents7" }}>
+                      Currently non-custodial only supports single tips
+                    </Text>
+                  </Row>
+                </>
+              )}
               <Divider />
               <Row>
                 <Col>
@@ -437,7 +507,11 @@ export function TipForm({
                     Fees &nbsp;
                     <Tooltip
                       placement="right"
-                      content={`The ${FEE_PERCENT}% (minimum ${MINIMUM_FEE_SATS} sats) fee covers outbound routing and ${appName} infrastructure costs`}
+                      content={
+                        watchedTipType === "CUSTODIAL"
+                          ? `The ${FEE_PERCENT}% (minimum ${MINIMUM_FEE_SATS} sats) fee covers outbound routing and ${appName} infrastructure costs`
+                          : "Only pay routing fees for non-custodial tips 💥"
+                      }
                     >
                       <Text color="primary">
                         <Icon width={16} height={16}>

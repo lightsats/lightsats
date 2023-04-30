@@ -1,4 +1,4 @@
-import { OnboardingFlow } from "@prisma/client";
+import { OnboardingFlow, TipType } from "@prisma/client";
 
 export type TipRequestBase = {
   currency: string;
@@ -18,6 +18,7 @@ export type TipRequestBase = {
 export type CreateTipRequest = TipRequestBase & {
   amount: number;
   quantity: number;
+  type?: TipType;
 };
 export type UpdateTipRequest = TipRequestBase;
 

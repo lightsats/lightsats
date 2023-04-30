@@ -18,9 +18,9 @@ export async function completeWithdrawal(
   userId: string | undefined,
   tipId: string | undefined,
   withdrawalFlow: WithdrawalFlow,
-  lnbitsWallet: LnbitsWallet,
+  lnbitsWallet: LnbitsWallet | undefined,
   possiblyNegativeOutboundFeeMsats: number,
-  withdrawalInvoiceId: string,
+  withdrawalInvoiceId: string | undefined,
   withdrawalInvoice: string,
   withdrawalMethod: WithdrawalMethod,
   tips: (Tip & {
@@ -48,22 +48,31 @@ export async function completeWithdrawal(
     }
   }
 
+  const isCustodialWithdrawal = tips.some((tip) => tip.type === "CUSTODIAL");
   const paidRoutingFeeSats = Math.ceil(
     Math.abs(possiblyNegativeOutboundFeeMsats) / 1000
   );
 
-  if (!process.env.LNBITS_API_KEY) {
-    throw new Error("No LNBITS_API_KEY provided");
-  }
-  if (userId && !lnbitsWallet.userId) {
-    throw new Error("User wallet has no user ID: " + lnbitsWallet.id);
-  }
-  if (tipId && !lnbitsWallet.tipId) {
-    throw new Error("Tip wallet has no tip ID: " + lnbitsWallet.id);
-  }
+  if (isCustodialWithdrawal) {
+    if (!process.env.LNBITS_API_KEY) {
+      throw new Error("No LNBITS_API_KEY provided");
+    }
+    if (!lnbitsWallet) {
+      throw new Error("No lnbits wallet provided");
+    }
+    if (!withdrawalInvoiceId || !withdrawalInvoice) {
+      throw new Error("No withdrawal invoice provided");
+    }
+    if (userId && !lnbitsWallet.userId) {
+      throw new Error("User wallet has no user ID: " + lnbitsWallet.id);
+    }
+    if (tipId && !lnbitsWallet.tipId) {
+      throw new Error("Tip wallet has no tip ID: " + lnbitsWallet.id);
+    }
 
-  if (!tips.length) {
-    throw new Error("Cannot complete withdrawal without any tips");
+    if (!tips.length) {
+      throw new Error("Cannot complete withdrawal without any tips");
+    }
   }
 
   try {
@@ -113,61 +122,71 @@ export async function completeWithdrawal(
     throw error;
   }
 
-  try {
-    const tipFees = tips.map((tip) => tip.fee).reduce((a, b) => a + b);
-    const remainingBalance = tipFees - paidRoutingFeeSats;
-    console.log(
-      `Withdrawing tips ${tips
-        .map((tip) => tip.id)
-        .join(
-          ", "
-        )} collected ${remainingBalance}/${tipFees} fees (routing fee of ${paidRoutingFeeSats})`
-    );
-
-    if (remainingBalance > 0) {
-      // move remainingBalance to margin wallet
-      const { invoice } = await createInvoice(
-        remainingBalance,
-        process.env.LNBITS_API_KEY,
-        "withdraw unspent fees",
-        undefined
-      );
-      const { payInvoiceResponse, payInvoiceResponseBody } = await payInvoice(
-        invoice,
-        lnbitsWallet.adminKey
-      );
-      if (!payInvoiceResponse.ok) {
-        throw new Error(
-          "Failed to pay invoice: " +
-            payInvoiceResponse.status +
-            " " +
-            payInvoiceResponse.statusText +
-            " " +
-            JSON.stringify(payInvoiceResponseBody)
-        );
-      }
+  if (isCustodialWithdrawal) {
+    if (!process.env.LNBITS_API_KEY) {
+      throw new Error("No LNBITS_API_KEY provided");
     }
-  } catch (error) {
-    console.error(
-      "Failed to withdraw remaining balance from user " +
-        userId +
-        " staging wallet.",
-      "Tip ids",
-      tips.map((tip) => tip.id).join(", "),
-      error
-    );
-    await prisma.withdrawalError.create({
-      data: {
-        message:
-          "Failed to withdraw remaining balance from user/tip " +
-          JSON.stringify(error, Object.getOwnPropertyNames(error)),
-        userId,
-        tipId,
-        withdrawalFlow,
-        withdrawalMethod,
-      },
-    });
+    if (!lnbitsWallet) {
+      throw new Error("No lnbitsWallet provided");
+    }
+
+    try {
+      const tipFees = tips.map((tip) => tip.fee).reduce((a, b) => a + b);
+      const remainingBalance = tipFees - paidRoutingFeeSats;
+      console.log(
+        `Withdrawing tips ${tips
+          .map((tip) => tip.id)
+          .join(
+            ", "
+          )} collected ${remainingBalance}/${tipFees} fees (routing fee of ${paidRoutingFeeSats})`
+      );
+
+      if (remainingBalance > 0) {
+        // move remainingBalance to margin wallet
+        const { invoice } = await createInvoice(
+          remainingBalance,
+          process.env.LNBITS_API_KEY,
+          "withdraw unspent fees",
+          undefined
+        );
+        const { payInvoiceResponse, payInvoiceResponseBody } = await payInvoice(
+          invoice,
+          lnbitsWallet.adminKey
+        );
+        if (!payInvoiceResponse.ok) {
+          throw new Error(
+            "Failed to pay invoice: " +
+              payInvoiceResponse.status +
+              " " +
+              payInvoiceResponse.statusText +
+              " " +
+              JSON.stringify(payInvoiceResponseBody)
+          );
+        }
+      }
+    } catch (error) {
+      console.error(
+        "Failed to withdraw remaining balance from user " +
+          userId +
+          " staging wallet.",
+        "Tip ids",
+        tips.map((tip) => tip.id).join(", "),
+        error
+      );
+      await prisma.withdrawalError.create({
+        data: {
+          message:
+            "Failed to withdraw remaining balance from user/tip " +
+            JSON.stringify(error, Object.getOwnPropertyNames(error)),
+          userId,
+          tipId,
+          withdrawalFlow,
+          withdrawalMethod,
+        },
+      });
+    }
   }
+
   if (userId) {
     switch (withdrawalMethod) {
       case "invoice":

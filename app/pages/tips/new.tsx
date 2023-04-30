@@ -2,8 +2,8 @@ import { Spacer, Text } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { TipForm } from "components/tipper/TipForm/TipForm";
 import {
-  getSharedTipFormRequestFields,
   TipFormSubmitData,
+  getSharedTipFormRequestFields,
 } from "components/tipper/TipForm/TipFormData";
 import { PageRoutes } from "lib/PageRoutes";
 import { tryGetErrorMessage } from "lib/utils";
@@ -29,6 +29,7 @@ const NewTip: NextPage = () => {
           tippeeNames: data.tippeeName?.split("\n"),
           passphraseLength: data.passphraseLength,
           generatePassphrase: data.generatePassphrase,
+          type: data.type,
         };
         const result = await fetch("/api/tipper/tips", {
           method: "POST",

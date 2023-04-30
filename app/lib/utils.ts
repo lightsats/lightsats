@@ -123,10 +123,20 @@ export const formatAmount = (amount: number, decimals = 2) => {
 export const getTipUrl = (tip: Tip | PublicTip, locale: string | undefined) =>
   `${getAppUrl()}${getLocalePath(locale)}${PageRoutes.tips}/${tip.id}`;
 
-export const getClaimUrl = (tip: Tip | PublicTip, isPrinted = false) =>
-  `${getTipUrl(tip, tip.tippeeLocale ?? undefined)}/claim${
-    isPrinted ? "?printed=true" : ""
-  }`;
+export const getClaimUrl = (
+  tip: Tip | PublicTip,
+  isPrinted = false,
+  nwcConnectionString?: string
+) => {
+  const url = new URL(`${getTipUrl(tip, tip.tippeeLocale ?? undefined)}/claim`);
+  if (isPrinted) {
+    url.searchParams.append("printed", "true");
+  }
+  if (nwcConnectionString) {
+    url.searchParams.append("secret", encodeURIComponent(nwcConnectionString));
+  }
+  return url.toString();
+};
 
 export const switchRouterLocale = (router: NextRouter, nextLocale: string) => {
   const { pathname, asPath, query } = router;
@@ -230,3 +240,11 @@ export function getClaimWebhookContent(satsAmount: number) {
     content: `${satsAmount} sats have been claimed!`,
   };
 }
+
+export const isValidNostrConnectUrl = (url: string) => {
+  return (
+    (url.startsWith("nostrwalletconnect://") ||
+      url.startsWith("nostr+walletconnect://")) &&
+    url.indexOf("&secret=") > 0
+  );
+};

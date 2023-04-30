@@ -10,24 +10,25 @@ import {
   Text,
 } from "@nextui-org/react";
 import { WithdrawalFlow } from "@prisma/client";
+import { webln } from "alby-js-sdk";
 import { Alert } from "components/Alert";
 import { FlexBox } from "components/FlexBox";
 import { HomeButton } from "components/HomeButton";
 import { Icon } from "components/Icon";
-import { ItemsList } from "components/items/ItemsList";
 import { LightningQRCode } from "components/LightningQRCode";
 import { NextLink } from "components/NextLink";
+import { ItemsList } from "components/items/ItemsList";
 import { MyBitcoinJourneyHeader } from "components/tippee/MyBitcoinJourneyHeader";
 import copy from "copy-to-clipboard";
 import { add } from "date-fns";
 import { usePublicTip } from "hooks/usePublicTip";
 import { useTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
-import { unclaimedTipStatuses, WITHDRAWAL_RETRY_DELAY } from "lib/constants";
+import { PageRoutes } from "lib/PageRoutes";
+import { WITHDRAWAL_RETRY_DELAY, unclaimedTipStatuses } from "lib/constants";
 import { getStaticProps } from "lib/i18n/i18next";
 import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
-import { PageRoutes } from "lib/PageRoutes";
-import { hasTipExpired } from "lib/utils";
+import { hasTipExpired, tryGetErrorMessage } from "lib/utils";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "next-i18next";
@@ -38,10 +39,11 @@ import Countdown from "react-countdown";
 import toast from "react-hot-toast";
 import { InvoiceWithdrawalRequest } from "types/InvoiceWithdrawalRequest";
 import { LnurlWithdrawalRequest } from "types/LnurlWithdrawalRequest";
+import { MarkNonCustodialTipWithdrawnRequest } from "types/MarkNonCustodialTipWithdrawnRequest";
 
 type WithdrawProps = {
   flow: WithdrawalFlow;
-  tipId?: string;
+  tipId?: string; // only set for SKIP onboarding flow
   isPreview?: boolean;
 };
 // TODO: move to separate file
@@ -56,6 +58,10 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
   // poll to get updated statuses after withdrawing
   const { data: tips } = useTips(flow, true, tipId);
 
+  const firstTip = tips?.[0];
+  const firstTipType = firstTip?.type;
+  const firstTipId = firstTip?.id;
+
   const [invoiceFieldValue, setInvoiceFieldValue] = React.useState("");
   const [withdrawalLinkLnurl, setWithdrawalLinkLnurl] = React.useState("");
   const [prevWithdrawalLinkLnurl, setPrevWithdrawalLinkLnurl] =
@@ -67,6 +73,10 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
 
   const executeWithdrawal = React.useCallback(
     (invoice: string, isWebln: boolean) => {
+      if (!firstTipType) {
+        toast.error("Withdrawal not ready");
+        return;
+      }
       if (isPreview) {
         toast.error("You cannot withdraw your own tip");
         return;
@@ -79,21 +89,65 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
 
       (async () => {
         try {
-          const withdrawalRequest: InvoiceWithdrawalRequest = {
-            invoice,
-            flow,
-            tipId,
-          };
-          const result = await fetch(`/api/invoices?isWebln=${isWebln}`, {
-            method: "POST",
-            body: JSON.stringify(withdrawalRequest),
-            headers: { "Content-Type": "application/json" },
-          });
-          if (!result.ok) {
-            const body = await result.text();
-            toast.error(
-              "Failed to withdraw: " + result.statusText + `\n${body}`
+          if (firstTipType === "CUSTODIAL") {
+            const withdrawalRequest: InvoiceWithdrawalRequest = {
+              invoice,
+              flow,
+              tipId,
+            };
+            const result = await fetch(`/api/invoices?isWebln=${isWebln}`, {
+              method: "POST",
+              body: JSON.stringify(withdrawalRequest),
+              headers: { "Content-Type": "application/json" },
+            });
+            if (!result.ok) {
+              const body = await result.text();
+              toast.error(
+                "Failed to withdraw: " + result.statusText + `\n${body}`
+              );
+            }
+          } else if (firstTipType === "NON_CUSTODIAL_NWC") {
+            const nostrWalletConnectUrl = localStorage.getItem(
+              "nostrWalletConnectUrl"
             );
+            if (!nostrWalletConnectUrl) {
+              throw new Error("no nostrWalletConnectUrl set");
+            }
+            console.log("Creating noswebln", nostrWalletConnectUrl);
+            const noswebln = new webln.NostrWebLNProvider({
+              nostrWalletConnectUrl,
+            });
+            console.log("Enabling noswebln");
+            await noswebln.enable();
+            console.log("Sending payment");
+            const response = await noswebln.sendPayment(invoice);
+            console.log("Done", response);
+            noswebln.close();
+            localStorage.removeItem("nostrWalletConnectUrl");
+
+            // TODO: is there a better way to mark the tip as withdrawn which doesn't rely on the recipient's client?
+            const request: MarkNonCustodialTipWithdrawnRequest = {
+              invoice,
+              withdrawalMethod: isWebln ? "webln" : "invoice", // TODO: support lnurlw
+            };
+            const result = await fetch(
+              `/api/tippee/tips/${firstTipId}/markWithdrawn`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(request),
+              }
+            );
+            if (!result.ok) {
+              const body = await tryGetErrorMessage(result);
+              toast.error(
+                "Failed to mark tip as withdrawn: " +
+                  result.statusText +
+                  `\n${body}`
+              );
+            }
+          } else {
+            throw new Error("Unsupported tip type: " + firstTipType);
           }
         } catch (error) {
           console.error(error);
@@ -106,7 +160,7 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
         setSubmitting(false);
       })();
     },
-    [isPreview, isSubmitting, flow, tipId]
+    [firstTipType, isPreview, isSubmitting, flow, tipId, firstTipId]
   );
 
   const submitForm = React.useCallback(() => {
@@ -187,6 +241,11 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
   ]);
 
   React.useEffect(() => {
+    if (firstTipType !== "CUSTODIAL") {
+      // TODO: use LNURL-withdraw to request an invoice from the user's wallet and then return it
+      // to the webapp so they don't need to enter it manually
+      return;
+    }
     if (isPreview) {
       // just use a non-existent withdraw url as a demo
       setWithdrawalLinkLnurl(
@@ -215,7 +274,7 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
         }
       })();
     }
-  }, [availableBalance, flow, tipId, isPreview]);
+  }, [availableBalance, flow, tipId, isPreview, firstTipType]);
 
   React.useEffect(() => {
     if (
@@ -398,11 +457,11 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
                 </Card>
               </FlexBox>
             </>
-          ) : (
+          ) : firstTipType === "CUSTODIAL" ? (
             <Row justify="center">
               <Loading />
             </Row>
-          )}
+          ) : null}
           {!isSubmitting && !wasRecentlyWithdrawn && (
             <>
               <Spacer y={1} />

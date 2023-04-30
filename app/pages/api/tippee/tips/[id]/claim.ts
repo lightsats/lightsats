@@ -59,7 +59,9 @@ async function handleClaimTip(
     // already claimed or trying to claim their own tip
     return res.status(StatusCodes.CONFLICT).end();
   }
-  await stageTip(session.user.id, tip, "tippee");
+  if (tip.type === "CUSTODIAL") {
+    await stageTip(session.user.id, tip, "tippee");
+  }
   await prisma.tip.update({
     where: {
       id: id as string,

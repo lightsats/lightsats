@@ -1,4 +1,4 @@
-import { OnboardingFlow, Tip } from "@prisma/client";
+import { OnboardingFlow, Tip, TipType } from "@prisma/client";
 import { add, differenceInHours } from "date-fns";
 import {
   DEFAULT_FIAT_CURRENCY,
@@ -28,6 +28,7 @@ export type TipFormData = {
   generatePassphrase: boolean;
   inputMethod: InputMethod;
   claimWebhookUrl: string | undefined;
+  type: TipType | undefined;
 };
 
 export type TipFormSubmitData = Omit<
@@ -73,5 +74,6 @@ export function getSharedTipFormDefaultValues(tip: Tip) {
     amount: tip.amount,
     inputMethod: "sats" as const,
     claimWebhookUrl: tip.claimWebhookUrl || undefined,
+    type: tip.type,
   };
 }
