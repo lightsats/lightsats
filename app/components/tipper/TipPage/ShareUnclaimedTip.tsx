@@ -120,12 +120,12 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
     }
   }, [isGeneratingPassphrase, tip]);
 
-  const copyClaimUrl = React.useCallback(() => {
-    if (claimUrl) {
-      copy(claimUrl);
+  const copyQRCodeUrl = React.useCallback(() => {
+    if (qrCodeUrl) {
+      copy(qrCodeUrl);
       toast.success("Copied to clipboard");
     }
-  }, [claimUrl]);
+  }, [qrCodeUrl]);
 
   return (
     <>
@@ -318,7 +318,7 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
             <Card.Divider />
             <Card.Footer>
               <Row justify="space-between">
-                <Button color="secondary" auto onClick={copyClaimUrl}>
+                <Button color="secondary" auto onClick={copyQRCodeUrl}>
                   <Icon>
                     <ClipboardDocumentIcon />
                   </Icon>
