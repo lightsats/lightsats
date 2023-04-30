@@ -1,23 +1,38 @@
 import { Button, Card, Row, Spacer, Text } from "@nextui-org/react";
+import { User } from "@prisma/client";
+import { Withdrawals } from "components/Withdrawals";
 import { BecomeATipper } from "components/tippee/BecomeATipper";
 import { ReceivedTips } from "components/tippee/ReceivedTips";
 import { SentTips } from "components/tipper/SentTips";
 import { useReceivedTips, useSentTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
+import { useWithdrawals } from "hooks/useWithdrawals";
 import React from "react";
 
-const historyTabs = ["sent", "received"] as const;
+const historyTabs = ["sent", "received", "withdrawals"] as const;
 type HistoryTab = typeof historyTabs[number];
 
 export function TipHistory() {
   const { data: user } = useUser();
+  if (!user) {
+    return null;
+  }
+  return <TipHistoryInternal user={user} />;
+}
+
+type TipHistoryInternalProps = {
+  user: User;
+};
+
+function TipHistoryInternal({ user }: TipHistoryInternalProps) {
   const [selectedTab, setSelectedTab] = React.useState<HistoryTab>(
     user?.userType === "tipper" ? "sent" : "received"
   );
   const { data: sentTips } = useSentTips();
   const { data: receivedTips } = useReceivedTips();
+  const { data: withdrawals } = useWithdrawals();
 
-  const tipCounts = [sentTips?.length, receivedTips?.length];
+  const counts = [sentTips?.length, receivedTips?.length, withdrawals?.length];
 
   return (
     <>
@@ -40,7 +55,7 @@ export function TipHistory() {
                 key={tab}
                 onClick={() => setSelectedTab(tab)}
               >
-                {tab} ({tipCounts[i] ?? 0})
+                {tab} ({counts[i] ?? 0})
               </Button>
             ))}
           </Row>
@@ -59,6 +74,7 @@ export function TipHistory() {
           </Text>
         </>
       )}
+      {selectedTab === "withdrawals" && <Withdrawals />}
     </>
   );
 }

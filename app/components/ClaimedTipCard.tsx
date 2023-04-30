@@ -205,7 +205,7 @@ export function ClaimedTipCard({
                     &nbsp;
                     {formatDistanceStrict(
                       Date.now(),
-                      new Date(publicTip.lastWithdrawal ?? publicTip.updated)
+                      new Date(publicTip.updated)
                     )}{" "}
                     ago
                   </Text>
