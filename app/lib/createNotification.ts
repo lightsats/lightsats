@@ -10,6 +10,7 @@ export async function createNotification(
   type: NotificationType,
   tipId?: string,
   achievementType?: AchievementType,
+  withdrawalId?: string,
   notifications?: Notification[]
 ) {
   notifications =
@@ -32,6 +33,7 @@ export async function createNotification(
         type,
         achievementType,
         tipId,
+        withdrawalId,
       },
     });
   }

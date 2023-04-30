@@ -188,7 +188,7 @@ function getNotificationCardProps(
         title: "Sats returned",
         description:
           "Sats from reclaimed tips were sent to your lightning address.",
-        href: PageRoutes.profile,
+        href: `${PageRoutes.dashboard}?withdrawalId=${notification.withdrawalId}`,
       };
     default:
       throw new Error("Unsupported notification type: " + notification.type);

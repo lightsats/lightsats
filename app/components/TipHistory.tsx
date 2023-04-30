@@ -7,6 +7,7 @@ import { SentTips } from "components/tipper/SentTips";
 import { useReceivedTips, useSentTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
 import { useWithdrawals } from "hooks/useWithdrawals";
+import { useRouter } from "next/router";
 import React from "react";
 
 const historyTabs = ["sent", "received", "withdrawals"] as const;
@@ -25,8 +26,15 @@ type TipHistoryInternalProps = {
 };
 
 function TipHistoryInternal({ user }: TipHistoryInternalProps) {
+  const router = useRouter();
+  const { withdrawalId } = router.query;
+
   const [selectedTab, setSelectedTab] = React.useState<HistoryTab>(
-    user?.userType === "tipper" ? "sent" : "received"
+    withdrawalId
+      ? "withdrawals"
+      : user?.userType === "tipper"
+      ? "sent"
+      : "received"
   );
   const { data: sentTips } = useSentTips();
   const { data: receivedTips } = useReceivedTips();
@@ -34,9 +42,19 @@ function TipHistoryInternal({ user }: TipHistoryInternalProps) {
 
   const counts = [sentTips?.length, receivedTips?.length, withdrawals?.length];
 
+  React.useEffect(() => {
+    if (withdrawalId) {
+      setTimeout(() => {
+        document
+          .getElementById("history")
+          ?.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+  }, [withdrawalId]);
+
   return (
     <>
-      <Row>
+      <Row id="history">
         <Text h5>History</Text>
       </Row>
       <Card variant="flat" css={{ backgroundColor: "$accents2" }}>

@@ -1,7 +1,6 @@
 import { WithdrawalFlow, WithdrawalMethod } from "@prisma/client";
 import { LightningAddress } from "alby-tools";
 import { StatusCodes } from "http-status-codes";
-import { createNotification } from "lib/createNotification";
 import { payWithdrawalInvoice } from "lib/payWithdrawalInvoice";
 import prisma from "lib/prismadb";
 import { getWithdrawableTipsQuery } from "lib/withdrawal";
@@ -78,16 +77,6 @@ export default async function handler(
       withdrawalMethod,
       undefined
     );
-
-    try {
-      await createNotification(user.id, "AUTOMATIC_REFUND", undefined);
-    } catch (error) {
-      console.error(
-        "Failed to create automatic refund to lightning address notification",
-        error
-      );
-    }
-
     return res.status(StatusCodes.NO_CONTENT).end();
   } catch (error) {
     const errorMessage =

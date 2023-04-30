@@ -151,6 +151,7 @@ async function createUserNotifications(user: ExtendedUser) {
         "LINK_EMAIL",
         undefined,
         undefined,
+        undefined,
         user.notifications
       );
     }
@@ -158,6 +159,7 @@ async function createUserNotifications(user: ExtendedUser) {
       await createNotification(
         user.id,
         "COMPLETE_PROFILE",
+        undefined,
         undefined,
         undefined,
         user.notifications

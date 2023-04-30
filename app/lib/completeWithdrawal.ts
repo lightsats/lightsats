@@ -75,6 +75,8 @@ export async function completeWithdrawal(
     }
   }
 
+  let withdrawalId: string | undefined;
+
   try {
     await prisma.tip.updateMany({
       where: {
@@ -90,7 +92,7 @@ export async function completeWithdrawal(
       },
     });
 
-    await prisma.withdrawal.create({
+    const withdrawal = await prisma.withdrawal.create({
       data: {
         routingFee: paidRoutingFeeSats,
         userId,
@@ -103,6 +105,7 @@ export async function completeWithdrawal(
         },
       },
     });
+    withdrawalId = withdrawal.id;
   } catch (error) {
     console.error("Failed to complete withdrawal", error);
     await prisma.withdrawalError.create({
@@ -198,6 +201,23 @@ export async function completeWithdrawal(
       case "webln":
         await createAchievement(userId, "WEBLN_WITHDRAWN");
         break;
+    }
+  }
+
+  if (withdrawalMethod === "lightning_address") {
+    try {
+      await createNotification(
+        tips[0].tipperId,
+        "AUTOMATIC_REFUND",
+        undefined,
+        undefined,
+        withdrawalId
+      );
+    } catch (error) {
+      console.error(
+        "Failed to create automatic refund to lightning address notification",
+        error
+      );
     }
   }
 

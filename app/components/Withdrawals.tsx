@@ -4,10 +4,13 @@ import { ClaimedTipCard } from "components/ClaimedTipCard";
 import { formatDistance } from "date-fns";
 import { useWithdrawals } from "hooks/useWithdrawals";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export function Withdrawals() {
   const { data: session } = useSession();
   const { data: withdrawals } = useWithdrawals();
+  const router = useRouter();
+  const { withdrawalId } = router.query;
 
   if (!withdrawals) {
     return <Loading />;
@@ -36,10 +39,12 @@ export function Withdrawals() {
                 ":last-child": {
                   overflow: "visible", // fix nextui collapse content getting cut off
                 },
+                backgroundColor:
+                  withdrawal.id === withdrawalId ? "$green100" : undefined,
               }}
               title={
                 <Col>
-                  <Text>
+                  <Text id={`withdrawal-${withdrawal.id}`}>
                     ⚡
                     {withdrawal.tips
                       .map((tip) => tip.amount)

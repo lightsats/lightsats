@@ -263,6 +263,7 @@ model Notification {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   tipId String?
+  withdrawalId String?
   achievementType AchievementType?
   type NotificationType
   created DateTime @default(now())
