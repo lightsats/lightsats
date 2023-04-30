@@ -124,10 +124,11 @@ async function createLnurlPayInvoice(
   // fetch the LNURL data
   await ln.fetch();
   if (
-    ln.lnurlpData.minSendable &&
-    ln.lnurlpData.maxSendable &&
-    amount_msat >= ln.lnurlpData.minSendable &&
-    amount_msat <= ln.lnurlpData.maxSendable
+    ln.lnurlpData &&
+    ln.lnurlpData.min &&
+    ln.lnurlpData.max &&
+    amount_msat >= ln.lnurlpData.min &&
+    amount_msat <= ln.lnurlpData.max
   ) {
     const invoice = await ln.requestInvoice({
       satoshi: amount,
@@ -138,8 +139,8 @@ async function createLnurlPayInvoice(
     console.warn(
       "Warn: cannot create an lnurlp invoice as amount in millisats is out of bounds",
       amount_msat,
-      ln.lnurlpData.minSendable,
-      ln.lnurlpData.maxSendable,
+      ln.lnurlpData?.min,
+      ln.lnurlpData?.max,
       lightningAddress
     );
     return { paymentRequest: undefined, validAmount: false };

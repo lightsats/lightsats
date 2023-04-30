@@ -16,6 +16,7 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
+import { webln } from "alby-js-sdk";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { Passphrase } from "components/tipper/Passphrase";
@@ -26,6 +27,7 @@ import {
   getClaimUrl,
   getDefaultGiftCardTheme,
   getRedeemUrl,
+  isValidNostrConnectUrl,
   tryGetErrorMessage,
 } from "lib/utils";
 import React from "react";
@@ -63,6 +65,23 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
         setGeneratingPassphrase(false);
       }
     })();
+  }, [tip.id]);
+
+  const linkWallet = React.useCallback(async () => {
+    const nwc = webln.NostrWebLNProvider.withNewSecret(
+      process.env.NEXT_PUBLIC_NWC_WALLET_PUBKEY &&
+        process.env.NEXT_PUBLIC_NWC_AUTHORIZATION_URL
+        ? {
+            walletPubkey: process.env.NEXT_PUBLIC_NWC_WALLET_PUBKEY,
+            authorizationUrl: process.env.NEXT_PUBLIC_NWC_AUTHORIZATION_URL,
+          }
+        : undefined
+    );
+    await nwc.initNWC({
+      name: `Lightsats Tip ${tip.id}`,
+    });
+
+    setNwcConnectionString(nwc.getNostrWalletConnectUrl(true));
   }, [tip.id]);
 
   React.useEffect(() => {
@@ -109,58 +128,70 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
         </Button>
       </Row>
       <Spacer />
-      {mode === "QR" && tip.type === "NON_CUSTODIAL_NWC" && (
-        <>
-          <Card css={{ dropShadow: "$sm" }}>
-            <Card.Header>
-              <Row justify="center" align="center">
-                <Text size={18} b>
-                  Unlock QR code
-                </Text>
-              </Row>
-            </Card.Header>
-            <Card.Divider />
-            <Card.Body>
-              <Row justify="center">
-                Enter your&nbsp;
-                <Link
-                  href="https://nwc.getalby.com"
-                  target="_blank"
-                  css={{ display: "inline" }}
-                >
-                  NWC
-                </Link>
-                &nbsp;connection string
-              </Row>
-              <Row justify="center">
-                <Text size="small">
-                  This connection string will be passed directly to your
-                  recipient. It will not be stored in Lightsats.
-                </Text>
-              </Row>
-              <Row justify="center">
-                <Text size="small" b>
-                  Warning: only tip users you trust and do not share this tip
-                  link publically as there is currently no limit on how much
-                  funds can be drawn from your wallet.
-                </Text>
-              </Row>
-              <Spacer />
-              <Row>
-                <Input
-                  label="NWC Connection String"
-                  placeholder="nostrwalletconnect://..."
-                  maxLength={255}
-                  fullWidth
-                  bordered
-                  value={nwcConnectionString}
-                  onChange={(e) => setNwcConnectionString(e.target.value)}
-                />
-              </Row>
-            </Card.Body>
-          </Card>
-        </>
-      )}
+      {mode === "QR" &&
+        tip.type === "NON_CUSTODIAL_NWC" &&
+        !nwcConnectionString && (
+          <>
+            <Card css={{ dropShadow: "$sm" }}>
+              <Card.Header>
+                <Row justify="center" align="center">
+                  <Text size={18} b>
+                    Unlock QR code
+                  </Text>
+                </Row>
+              </Card.Header>
+              <Card.Divider />
+              <Card.Body>
+                <Row justify="center">
+                  <Button onClick={linkWallet}>Link wallet with NWC</Button>
+                </Row>
+                <Spacer />
+                <Row justify="center">or</Row>
+                <Spacer />
+                <Row justify="center">
+                  Enter your&nbsp;
+                  <Link
+                    href="https://nwc.getalby.com"
+                    target="_blank"
+                    css={{ display: "inline" }}
+                  >
+                    NWC
+                  </Link>
+                  &nbsp;connection string
+                </Row>
+                <Row justify="center">
+                  <Text size="small">
+                    This connection string will be passed directly to your
+                    recipient. It will not be stored in Lightsats.
+                  </Text>
+                </Row>
+                <Row justify="center">
+                  <Text size="small" b>
+                    Warning: only tip users you trust and do not share this tip
+                    link publically as there is currently no limit on how much
+                    funds can be drawn from your wallet.
+                  </Text>
+                </Row>
+                <Spacer />
+                <Row>
+                  <Input
+                    label="NWC Connection String"
+                    placeholder="nostrwalletconnect://..."
+                    maxLength={255}
+                    fullWidth
+                    bordered
+                    type="password"
+                    value={nwcConnectionString}
+                    onChange={(e) =>
+                      isValidNostrConnectUrl(e.target.value) &&
+                      setNwcConnectionString(e.target.value)
+                    }
+                  />
+                </Row>
+              </Card.Body>
+            </Card>
+          </>
+        )}
       {mode === "QR" ? (
         tip.type !== "NON_CUSTODIAL_NWC" || nwcConnectionString ? (
           <Card css={{ dropShadow: "$sm" }}>

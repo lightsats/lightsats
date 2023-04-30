@@ -240,3 +240,11 @@ export function getClaimWebhookContent(satsAmount: number) {
     content: `${satsAmount} sats have been claimed!`,
   };
 }
+
+export const isValidNostrConnectUrl = (url: string) => {
+  return (
+    (url.startsWith("nostrwalletconnect://") ||
+      url.startsWith("nostr+walletconnect://")) &&
+    url.indexOf("&secret=") > 0
+  );
+};
