@@ -66,6 +66,8 @@ type TipFormProps = {
   quantity?: number;
 };
 
+const NON_CUSTODIAL_TIPS_ENABLED = false;
+
 export function TipForm({
   onSubmit: onSubmitProp,
   defaultValues = {
@@ -256,46 +258,51 @@ export function TipForm({
         <>
           <Card css={{ dropShadow: "$sm", w: "100%" }}>
             <Card.Body>
-              <Row justify="space-between" align="center">
-                <Row>
-                  <Text>Non-Custodial</Text>
-                  <Spacer x={0.25} />
-                  <Badge color="warning">BETA</Badge>
-                </Row>
-                <Spacer x={0.5} />
-                <Switch
-                  checked={watchedTipType === "NON_CUSTODIAL_NWC"}
-                  onChange={(e) =>
-                    setValue(
-                      "type",
-                      e.target.checked ? "NON_CUSTODIAL_NWC" : "CUSTODIAL"
-                    )
-                  }
-                />
-              </Row>
-              <Row>
-                <Text size="small">
-                  Retain custody of your unclaimed sats. Only pay routing fees.
-                  Powered by{" "}
-                  <Link
-                    href="https://nwc.getalby.com"
-                    target="_blank"
-                    css={{ display: "inline" }}
-                  >
-                    NWC
-                  </Link>
-                </Text>
-              </Row>
-              {watchedTipType === "NON_CUSTODIAL_NWC" && (
-                <Row>
-                  <Text size="small" b>
-                    WARNING: non-custodial functionality is very limited and
-                    provides a less user-friendly experience for the recipient.
-                  </Text>
-                </Row>
+              {NON_CUSTODIAL_TIPS_ENABLED && (
+                <>
+                  <Row justify="space-between" align="center">
+                    <Row>
+                      <Text>Non-Custodial</Text>
+                      <Spacer x={0.25} />
+                      <Badge color="warning">BETA</Badge>
+                    </Row>
+                    <Spacer x={0.5} />
+                    <Switch
+                      checked={watchedTipType === "NON_CUSTODIAL_NWC"}
+                      onChange={(e) =>
+                        setValue(
+                          "type",
+                          e.target.checked ? "NON_CUSTODIAL_NWC" : "CUSTODIAL"
+                        )
+                      }
+                    />
+                  </Row>
+                  <Row>
+                    <Text size="small">
+                      Retain custody of your unclaimed sats. Only pay routing
+                      fees. Powered by{" "}
+                      <Link
+                        href="https://nwc.getalby.com"
+                        target="_blank"
+                        css={{ display: "inline" }}
+                      >
+                        NWC
+                      </Link>
+                    </Text>
+                  </Row>
+                  {watchedTipType === "NON_CUSTODIAL_NWC" && (
+                    <Row>
+                      <Text size="small" b>
+                        WARNING: non-custodial functionality is very limited and
+                        provides a less user-friendly experience for the
+                        recipient.
+                      </Text>
+                    </Row>
+                  )}
+                  <Divider />
+                  <Spacer />
+                </>
               )}
-              <Divider />
-              <Spacer />
               <Row justify="space-between" align="center">
                 <Col>Currency</Col>
                 <Col>
