@@ -1,18 +1,15 @@
 import { Loading } from "@nextui-org/react";
 import { FlexBox } from "components/FlexBox";
-import { useTip } from "hooks/useTip";
-import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
-import { getClaimUrl } from "lib/utils";
+import { LightningQRCode } from "components/LightningQRCode";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import QRCode from "react-qr-code";
 
 const TipQrPage: NextPage = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const { data: tip } = useTip(id as string);
+  const { code, mode } = router.query;
 
-  if (!tip) {
+  if (!code || !mode) {
     return <Loading />;
   }
 
@@ -31,12 +28,16 @@ const TipQrPage: NextPage = () => {
           justifyContent: "center",
         }}
       >
-        <QRCode value={getClaimUrl(tip)} />
+        <FlexBox style={{ maxWidth: "400px" }}>
+          {mode === "QR" ? (
+            <QRCode value={code as string} />
+          ) : (
+            <LightningQRCode value={code as string} />
+          )}
+        </FlexBox>
       </FlexBox>
     </div>
   );
 };
 
 export default TipQrPage;
-
-export { getStaticProps, getStaticPaths };

@@ -278,13 +278,19 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
                   </Tooltip>
                 </Row>
                 <Row justify="center">
-                  <NextLink href={`${PageRoutes.tips}/${tip.id}/qr`}>
-                    <a>
-                      <Button size="sm" bordered>
-                        Open in fullscreen
-                      </Button>
-                    </a>
-                  </NextLink>
+                  {qrCodeUrl && (
+                    <NextLink
+                      href={`${PageRoutes.tips}/qr?code=${encodeURIComponent(
+                        qrCodeUrl
+                      )}&mode=${mode}`}
+                    >
+                      <a>
+                        <Button size="sm" bordered>
+                          Open in fullscreen
+                        </Button>
+                      </a>
+                    </NextLink>
+                  )}
                   <Spacer />
                 </Row>
               </Col>

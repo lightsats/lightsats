@@ -62,7 +62,8 @@ export function AppNavbar() {
   const { data: session, status: sessionStatus } = useSession();
   const { data: user } = useUser();
   const router = useRouter();
-  const hideNavbar = router.pathname.endsWith("/claim"); // || user?.inJourney;
+  const hideNavbarLinks =
+    router.pathname.endsWith("/claim") || router.pathname.endsWith("/qr"); // || user?.inJourney;
   const { data: notifications } = useNotifications();
   const numNotifications =
     router.pathname === PageRoutes.notifications ||
@@ -157,7 +158,7 @@ export function AppNavbar() {
               </Icon>
             </Button>
           )}
-        {!hideNavbar && (
+        {!hideNavbarLinks && (
           <Navbar.Toggle
             aria-label="toggle navigation"
             id={navbarCollapseToggleId}
@@ -167,7 +168,7 @@ export function AppNavbar() {
           <NextLink href={!user ? PageRoutes.home : PageRoutes.dashboard}>
             <a
               onClick={
-                hideNavbar
+                hideNavbarLinks
                   ? (e) => {
                       e.preventDefault();
                     }
@@ -183,14 +184,14 @@ export function AppNavbar() {
             </a>
           </NextLink>
         </Navbar.Brand>
-        {!user && !hideNavbar && (
+        {!user && !hideNavbarLinks && (
           <>
             <Navbar.Link href={PageRoutes.about} hideIn="xs">
               About
             </Navbar.Link>
           </>
         )}
-        {user?.userType === "tipper" && !hideNavbar && (
+        {user?.userType === "tipper" && !hideNavbarLinks && (
           <>
             <Navbar.Link
               hideIn="xs"
@@ -216,7 +217,7 @@ export function AppNavbar() {
         )}
       </Navbar.Content>
 
-      {user && !hideNavbar && (
+      {user && !hideNavbarLinks && (
         <>
           <Navbar.Content
             css={{
@@ -306,7 +307,7 @@ export function AppNavbar() {
       )}
       {!user && (
         <Navbar.Content>
-          {!hideNavbar && !router.pathname.startsWith(PageRoutes.signin) && (
+          {!hideNavbarLinks && !router.pathname.startsWith(PageRoutes.signin) && (
             <Navbar.Item hideIn="xs">
               <NextLink href={PageRoutes.signin} passHref>
                 <a>
