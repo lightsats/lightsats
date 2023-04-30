@@ -322,7 +322,7 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
                   <Icon>
                     <ClipboardDocumentIcon />
                   </Icon>
-                  &nbsp;Copy URL
+                  &nbsp;Copy {mode === "QR" ? "URL" : "LNURL"}
                 </Button>
                 <NextLink href={claimUrl}>
                   <a target="_blank">
