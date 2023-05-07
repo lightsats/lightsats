@@ -24,6 +24,7 @@ import { Divider } from "components/Divider";
 import { FiatPrice } from "components/FiatPrice";
 import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
+import { HiddenWallets } from "components/tipper/TipForm/HiddenWallets";
 import { TipFormAdvancedOptions } from "components/tipper/TipForm/TipFormAdvancedOptions";
 import {
   TipFormData,
@@ -624,22 +625,11 @@ export function TipForm({
               <Spacer />
               <Row>
                 <Alert>
-                  <Text small>
-                    {wallets
-                      .filter(
-                        (wallet) =>
-                          recommendedWalletSelectOptions.findIndex(
-                            (option) => option.value === wallet.id
-                          ) < 0
-                      )
-                      .map((wallet) => wallet.name)
-                      .reduce(
-                        (text, value, i, array) =>
-                          text + (i < array.length - 1 ? ", " : " and ") + value
-                      )}{" "}
-                    will be hidden from your recipient because the minimum
-                    initial deposit is larger than your tip amount.
-                  </Text>
+                  <HiddenWallets
+                    recommendedWalletSelectOptions={
+                      recommendedWalletSelectOptions
+                    }
+                  />
                 </Alert>
               </Row>
             </>

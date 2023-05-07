@@ -12,6 +12,7 @@ import {
 import { OnboardingFlow } from "@prisma/client";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Divider } from "components/Divider";
+import { HiddenWallets } from "components/tipper/TipForm/HiddenWallets";
 import { TipFormData } from "components/tipper/TipForm/TipFormData";
 import { useRecommendedWalletSelectOptions } from "components/tipper/TipForm/useRecommendedWalletSelectOptions";
 import { getNativeLanguageName } from "lib/i18n/iso6391";
@@ -270,35 +271,10 @@ Micheal Saylor`
         onChange={setRecommendedWalletId}
         width="100px"
       />
-      {recommendedWalletSelectOptions.length < wallets.length && (
-        <Col>
-          <Text size="x-small">
-            {wallets.length - recommendedWalletSelectOptions.length} wallets
-            hidden:
-          </Text>
-          {wallets
-            .filter(
-              (wallet) =>
-                !recommendedWalletSelectOptions.some(
-                  (recommendedWallet) => recommendedWallet.value === wallet.id
-                )
-            )
-            .map((wallet) => (
-              <Text key={wallet.id} size="x-small">
-                {wallet.name} (
-                {[
-                  ...(wallet.minBalance
-                    ? [`${wallet.minBalance} min sats`]
-                    : []),
-                  ...(wallet.features.indexOf("lnurl-auth") < 0
-                    ? [`lnurl-auth not supported`]
-                    : []),
-                ].join(", ")}
-                )
-              </Text>
-            ))}
-        </Col>
-      )}
+      <HiddenWallets
+        recommendedWalletSelectOptions={recommendedWalletSelectOptions}
+      />
+
       <Divider />
       <Row align="flex-start">
         <Col>
