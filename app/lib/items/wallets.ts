@@ -4,7 +4,7 @@ import { Wallet } from "types/Wallet";
 const wos: Wallet = {
   id: "wos",
   category: "wallets",
-  features: ["lnurl-withdraw", "lightning address"],
+  features: ["lnurl-withdraw", "lightning address", "lnurl-auth"],
   minBalance: 0,
   link: "https://lgt.st/walletofsatoshi",
   image: "wos.png",
@@ -12,6 +12,8 @@ const wos: Wallet = {
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAPUlEQVR4nGNQVlH6/9kzN0GFgUGeIdRX5f8P7+5KVS1NJQYFJaX1M1QvbNIXk1Jk4BdRDPVVkVdQ4hdRBACfdA3crpCdPAAAAABJRU5ErkJggg==",
   name: "Wallet Of Satoshi",
   slogan: "The world's simplest Bitcoin Lightning Wallet",
+  instructions:
+    "1. Download the Wallet of Satoshi app by clicking the Install ↗️ button below.\n2. Sign up for a Wallet of Satoshi account to enable login with lightning. You will get an email with magic words that you need to use to login to Wallet of Satoshi.\n3. Return to Lightsats to claim your tip.",
   languageCodes: [
     getLanguageCode("Arabic"),
     getLanguageCode("Bulgarian"),

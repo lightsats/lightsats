@@ -116,6 +116,15 @@ export function ItemCard({ item, expanded }: ItemCardProps) {
       title={item.name}
     >
       <Text color="$gray">{item.slogan}</Text>
+      {expanded && item.instructions && (
+        <>
+          <Spacer y={0.5} />
+          <Text>Instructions</Text>
+          <Text color="$gray" css={{ whiteSpace: "pre-line" }}>
+            {item.instructions}
+          </Text>
+        </>
+      )}
       {/*<Spacer y={0.5} />
       <Text color="$gray" size={10} b transform="uppercase">
         {t("features")}

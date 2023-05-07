@@ -22,4 +22,5 @@ export type Item = {
   platforms: Platform[];
   category: ItemCategory;
   lightsatsRecommended?: boolean;
+  instructions?: string;
 };
