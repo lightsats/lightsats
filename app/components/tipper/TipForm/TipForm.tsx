@@ -137,7 +137,7 @@ export function TipForm({
       ? getSatsAmount(watchedAmount, watchedExchangeRate)
       : watchedAmount;
   const watchedFeeInSats =
-    watchedExchangeRate && watchedTipType === "CUSTODIAL"
+    watchedExchangeRate && watchedTipType !== "NON_CUSTODIAL_NWC"
       ? calculateFee(watchedAmountInSats)
       : 0;
 
@@ -518,7 +518,7 @@ export function TipForm({
                     <Tooltip
                       placement="right"
                       content={
-                        watchedTipType === "CUSTODIAL"
+                        watchedTipType !== "NON_CUSTODIAL_NWC"
                           ? `The ${FEE_PERCENT}% (minimum ${MINIMUM_FEE_SATS} sats) fee covers outbound routing and ${appName} infrastructure costs`
                           : "Only pay routing fees for non-custodial tips 💥"
                       }
