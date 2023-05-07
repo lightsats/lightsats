@@ -28,6 +28,9 @@ export type TipFormData = {
   generatePassphrase: boolean;
   inputMethod: InputMethod;
   claimWebhookUrl: string | undefined;
+  withdrawWebhookUrl: string | undefined;
+  advertisementUrl: string | undefined;
+  advertisementImageUrl: string | undefined;
   type: TipType | undefined;
 };
 
@@ -52,6 +55,9 @@ export function getSharedTipFormRequestFields(data: TipFormSubmitData) {
     passphraseLength: data.passphraseLength,
     generatePassphrase: data.generatePassphrase,
     claimWebhookUrl: data.claimWebhookUrl,
+    withdrawWebhookUrl: data.withdrawWebhookUrl,
+    advertisementUrl: data.advertisementUrl,
+    advertisementImageUrl: data.advertisementImageUrl,
   };
 }
 export function getSharedTipFormDefaultValues(tip: Tip) {
@@ -74,6 +80,9 @@ export function getSharedTipFormDefaultValues(tip: Tip) {
     amount: tip.amount,
     inputMethod: "sats" as const,
     claimWebhookUrl: tip.claimWebhookUrl || undefined,
+    withdrawWebhookUrl: tip.withdrawWebhookUrl || undefined,
+    advertisementUrl: tip.advertisementUrl || undefined,
+    advertisementImageUrl: tip.advertisementImageUrl || undefined,
     type: tip.type,
   };
 }

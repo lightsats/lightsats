@@ -154,7 +154,10 @@ model Tip {
   anonymousTipper Boolean @default(false)
   passphrase String? @unique
   claimWebhookUrl String?
+  withdrawWebhookUrl String?
   type TipType @default(CUSTODIAL)
+  advertisementImageUrl String?
+  advertisementUrl String?
 }
 
 enum TipType {

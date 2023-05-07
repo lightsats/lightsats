@@ -61,6 +61,13 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
   const firstTip = tips?.[0];
   const firstTipType = firstTip?.type;
   const firstTipId = firstTip?.id;
+  const [prevFirstTipId, setPrevFirstTipId] = React.useState(firstTipId);
+
+  React.useEffect(() => {
+    if (firstTipId) {
+      setPrevFirstTipId(firstTipId);
+    }
+  }, [firstTipId]);
 
   const [invoiceFieldValue, setInvoiceFieldValue] = React.useState("");
   const [withdrawalLinkLnurl, setWithdrawalLinkLnurl] = React.useState("");
@@ -226,7 +233,9 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
         if (flow === "tipper") {
           router.push(PageRoutes.dashboard);
         } else {
-          router.push(PageRoutes.journeyCongratulations);
+          router.push(
+            `${PageRoutes.journeyCongratulations}?tipId=${prevFirstTipId}`
+          );
         }
       }
     }
@@ -238,6 +247,7 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
     prevAvailableBalance,
     router,
     tippeeWithdrawnTipsCount,
+    prevFirstTipId,
   ]);
 
   React.useEffect(() => {

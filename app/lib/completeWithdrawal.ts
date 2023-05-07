@@ -12,7 +12,7 @@ import { sendEmail } from "lib/email/sendEmail";
 import { createInvoice } from "lib/lnbits/createInvoice";
 import { payInvoice } from "lib/lnbits/payInvoice";
 import prisma from "lib/prismadb";
-import { getTipUrl } from "lib/utils";
+import { getTipUrl, getWithdrawWebhookContent } from "lib/utils";
 
 export async function completeWithdrawal(
   userId: string | undefined,
@@ -223,6 +223,24 @@ export async function completeWithdrawal(
 
   if (withdrawalFlow === "tippee" || withdrawalFlow === "anonymous") {
     for (const tip of tips) {
+      if (tip.withdrawWebhookUrl) {
+        try {
+          const result = await fetch(tip.withdrawWebhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(getWithdrawWebhookContent(tip.amount)),
+          });
+          if (!result.ok) {
+            throw new Error(result.status + " " + (await result.text()));
+          }
+        } catch (error) {
+          console.error(
+            "Failed to post withdraw webhook for tip " + tip.id,
+            error
+          );
+        }
+      }
+
       await createNotification(tip.tipperId, "TIP_WITHDRAWN", tip.id);
       await createAchievement(tip.tipperId, "TIP_WITHDRAWN");
       if (withdrawalFlow === "anonymous") {

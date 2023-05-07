@@ -18,7 +18,11 @@ import { useRecommendedWalletSelectOptions } from "components/tipper/TipForm/use
 import { getNativeLanguageName } from "lib/i18n/iso6391";
 import { locales } from "lib/i18n/locales";
 import { wallets } from "lib/items/wallets";
-import { getClaimWebhookContent, getRedeemUrl } from "lib/utils";
+import {
+  getClaimWebhookContent,
+  getRedeemUrl,
+  getWithdrawWebhookContent,
+} from "lib/utils";
 import React from "react";
 import {
   Control,
@@ -368,8 +372,26 @@ Micheal Saylor`
         scan a QR code.
       </Text>
       <Divider />
+      <WebhookInput
+        fieldName="claimWebhookUrl"
+        control={control}
+        content={getClaimWebhookContent(satsAmount)}
+        title="🪝 Claim Webhook URL"
+        description="Send a webhook notification in the following format when your tip is
+        claimed:"
+      />
+      <Spacer y={0.5} />
+      <WebhookInput
+        fieldName="withdrawWebhookUrl"
+        control={control}
+        content={getWithdrawWebhookContent(satsAmount)}
+        title="🪝 Withdraw Webhook URL"
+        description="Send a webhook notification in the following format when your tip is
+        withdrawn:"
+      />
+      <Divider />
       <Row align="flex-start">
-        <Text css={{ whiteSpace: "nowrap" }}>🪝 Claim Webhook URL</Text>
+        <Text css={{ whiteSpace: "nowrap" }}>↗️ Advertisement</Text>
       </Row>
       <Text
         small
@@ -379,8 +401,74 @@ Micheal Saylor`
           display: "inline-block",
         }}
       >
-        Send a webhook notification in the following format when your tip is
-        claimed:
+        Advertise an external service or website on the congratulations screen.
+        Only shown for Default and Lightning onboarding flows.
+      </Text>
+      <Spacer y={0.5} />
+      <Row>
+        <Controller
+          name={"advertisementUrl"}
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              placeholder="https://www.swanbitcoin.com"
+              fullWidth
+              bordered
+              label="Advertisement URL"
+            />
+          )}
+        />
+      </Row>
+      <Spacer y={0.5} />
+      <Row>
+        <Controller
+          name={"advertisementImageUrl"}
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              placeholder="https://images.pexels.com/photos/14546306/pexels-photo-14546306.jpeg"
+              fullWidth
+              bordered
+              label="Advertisement Image URL"
+            />
+          )}
+        />
+      </Row>
+    </>
+  );
+}
+
+type WebhookInputProps = {
+  fieldName: "claimWebhookUrl" | "withdrawWebhookUrl";
+  control: Control<TipFormData, unknown>;
+  title: string;
+  description: string;
+  content: object;
+};
+
+function WebhookInput({
+  fieldName,
+  control,
+  title,
+  description,
+  content,
+}: WebhookInputProps) {
+  return (
+    <>
+      <Row align="flex-start">
+        <Text css={{ whiteSpace: "nowrap" }}>{title}</Text>
+      </Row>
+      <Text
+        small
+        css={{
+          mt: 0,
+          lineHeight: 1.2,
+          display: "inline-block",
+        }}
+      >
+        {description}
       </Text>
       <Text
         small
@@ -396,11 +484,11 @@ Micheal Saylor`
           },
         }}
       >
-        {JSON.stringify(getClaimWebhookContent(satsAmount), null, 2)}
+        {JSON.stringify(content, null, 2)}
       </Text>
       <Row>
         <Controller
-          name="claimWebhookUrl"
+          name={fieldName}
           control={control}
           render={({ field }) => (
             <Input

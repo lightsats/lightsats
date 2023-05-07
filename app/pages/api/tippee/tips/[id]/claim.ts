@@ -128,7 +128,7 @@ async function handleClaimTip(
         throw new Error(result.status + " " + (await result.text()));
       }
     } catch (error) {
-      console.error("Failed to post webhook for tip " + tip.id, error);
+      console.error("Failed to post claim webhook for tip " + tip.id, error);
     }
   }
   return res.status(StatusCodes.NO_CONTENT).end();

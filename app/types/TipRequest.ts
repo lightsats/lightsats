@@ -13,6 +13,9 @@ export type TipRequestBase = {
   generatePassphrase: boolean;
   passphraseLength: number;
   claimWebhookUrl?: string;
+  withdrawWebhookUrl?: string;
+  advertisementUrl?: string;
+  advertisementImageUrl?: string;
 };
 
 export type CreateTipRequest = TipRequestBase & {

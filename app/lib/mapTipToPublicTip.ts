@@ -46,5 +46,7 @@ export function mapTipToPublicTip(
     lastWithdrawal: tip.lastWithdrawal,
     recommendedWalletId: tip.recommendedWalletId,
     updated: tip.updated,
+    advertisementUrl: tip.advertisementUrl,
+    advertisementImageUrl: tip.advertisementImageUrl,
   };
 }

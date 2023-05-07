@@ -241,6 +241,12 @@ export function getClaimWebhookContent(satsAmount: number) {
   };
 }
 
+export function getWithdrawWebhookContent(satsAmount: number) {
+  return {
+    content: `${satsAmount} sats have been withdrawn!`,
+  };
+}
+
 export const isValidNostrConnectUrl = (url: string) => {
   return (
     (url.startsWith("nostrwalletconnect://") ||

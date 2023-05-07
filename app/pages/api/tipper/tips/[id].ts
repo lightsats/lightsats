@@ -121,5 +121,8 @@ export function getSharedUpdateTipFields(updateTipRequest: TipRequestBase) {
     recommendedWalletId: updateTipRequest.recommendedWalletId || null,
     anonymousTipper: updateTipRequest.anonymousTipper,
     claimWebhookUrl: updateTipRequest.claimWebhookUrl || null,
+    withdrawWebhookUrl: updateTipRequest.withdrawWebhookUrl || null,
+    advertisementUrl: updateTipRequest.advertisementUrl || null,
+    advertisementImageUrl: updateTipRequest.advertisementImageUrl || null,
   };
 }

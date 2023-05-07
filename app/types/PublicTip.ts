@@ -19,6 +19,8 @@ export type PublicTip = Pick<
   | "updated"
   | "recommendedWalletId"
   | "type"
+  | "advertisementUrl"
+  | "advertisementImageUrl"
 > & {
   hasClaimed: boolean;
   tipper: Pick<User, "name" | "twitterUsername" | "avatarURL"> & {
