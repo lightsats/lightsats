@@ -1,4 +1,4 @@
-import { Link, Row, Spacer, Text } from "@nextui-org/react";
+import { Row, Spacer, Text } from "@nextui-org/react";
 import { ConfettiContainer } from "components/ConfettiContainer";
 import { MyBitcoinJourneyContent } from "components/tippee/MyBitcoinJourneyContent";
 import { MyBitcoinJourneyFooter } from "components/tippee/MyBitcoinJourneyFooter";
@@ -29,28 +29,34 @@ const CongratulationsPage: NextPage = () => {
         <h2>{t("congratulations.title")}</h2>
         <Spacer />
         <Text>{t("congratulations.subtitle")}</Text>
-        <Text blockquote>{t("congratulations.quote")}</Text>
         {publicTip?.advertisementUrl && publicTip?.advertisementImageUrl && (
           <>
-            <Spacer y={2} />
+            <Spacer y={1} />
             <Row justify="center">
               <Text color="gray" small>
                 Sponsored by
               </Text>
             </Row>
             <Spacer y={0.5} />
-            <Row justify="center">
-              <Link href={publicTip.advertisementUrl} target="_blank">
+            <Row css={{ width: "100%" }}>
+              <a
+                href={publicTip.advertisementUrl}
+                target="_blank"
+                rel="noreferrer"
+                style={{ width: "100%" }}
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element*/}
                 <img
                   alt="Advertisement Image"
                   style={{ width: "100%", height: "auto" }}
                   src={publicTip.advertisementImageUrl}
                 />
-              </Link>
+              </a>
             </Row>
+            <Spacer y={1} />
           </>
         )}
+        <Text blockquote>{t("congratulations.quote")}</Text>
       </MyBitcoinJourneyContent>
       <MyBitcoinJourneyFooter
         href={PageRoutes.guide}
