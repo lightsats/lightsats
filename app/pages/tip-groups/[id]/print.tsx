@@ -8,6 +8,7 @@ import {
   Loading,
   Row,
   Spacer,
+  Switch,
   Text,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
@@ -60,6 +61,7 @@ const PrintTipCardsPage: NextPage = () => {
   const cardsPerPage = 9;
   const [theme, setTheme] = React.useState(getDefaultBulkGiftCardTheme());
   const [customNumPages, setCustomNumPages] = React.useState(1);
+  const [showSenderAvatar, setShowSenderAvatar] = React.useState(true);
   const [backgroundUrl, setBackgroundUrl] = React.useState("");
 
   const print = useReactToPrint({
@@ -115,12 +117,22 @@ const PrintTipCardsPage: NextPage = () => {
         setTheme={setTheme}
         backgroundUrl={backgroundUrl}
         setBackgroundUrl={setBackgroundUrl}
+        showSenderAvatar={showSenderAvatar}
       />
-      {isEmptyPrint && (
-        <>
-          <Spacer />
-          <Card>
-            <Card.Body>
+      <Spacer />
+      <Card>
+        <Card.Body>
+          <Row justify="space-between" align="center">
+            <Text>Display sender avatar and name on cards</Text>
+            <Spacer x={0.5} />
+            <Switch
+              checked={showSenderAvatar}
+              onChange={(e) => setShowSenderAvatar(e.target.checked)}
+            />
+          </Row>
+          {isEmptyPrint && (
+            <>
+              <Spacer />
               <Row justify="space-between" align="center">
                 <Text>Number of pages (9 cards per page)</Text>
                 <Input
@@ -134,16 +146,17 @@ const PrintTipCardsPage: NextPage = () => {
                   bordered
                 />
               </Row>
-            </Card.Body>
-          </Card>
-        </>
-      )}
+            </>
+          )}
+        </Card.Body>
+      </Card>
       <Spacer />
       <Card css={{ dropShadow: "$sm" }}>
         <BulkTipGiftCardContentsPreview
           backgroundUrl={backgroundUrl}
           theme={theme}
           tip={firstTip}
+          showSenderAvatar={showSenderAvatar}
         />
       </Card>
       <Spacer />
@@ -259,6 +272,7 @@ const PrintTipCardsPage: NextPage = () => {
                             theme={theme}
                             tip={tip}
                             backgroundUrl={backgroundUrl}
+                            showSenderAvatar={showSenderAvatar}
                           />
                         </div>
                       ))}
@@ -298,6 +312,7 @@ type BulkTipGiftCardContentsProps = {
   backgroundUrl?: string;
   width?: string | number;
   height?: string | number;
+  showSenderAvatar?: boolean;
 };
 
 export function BulkTipGiftCardContents({
@@ -306,6 +321,7 @@ export function BulkTipGiftCardContents({
   theme,
   width = "100%",
   height = "100%",
+  showSenderAvatar = true,
 }: BulkTipGiftCardContentsProps) {
   const { data: user } = useUser();
   if (!user) {
@@ -369,6 +385,7 @@ export function BulkTipGiftCardContents({
             ".nextui-avatar-img": {
               border: "none",
             },
+            opacity: showSenderAvatar ? undefined : 0,
           }}
           name={
             <Text b color="white" css={{ fontSize: "20px" }}>

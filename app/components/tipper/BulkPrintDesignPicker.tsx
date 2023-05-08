@@ -18,6 +18,7 @@ type BulkPrintDesignPickerProps = {
   setTheme(theme: BulkGiftCardTheme): void;
   backgroundUrl: string;
   setBackgroundUrl(backgroundUrl: string): void;
+  showSenderAvatar: boolean;
 };
 
 export function BulkPrintDesignPicker({
@@ -26,6 +27,7 @@ export function BulkPrintDesignPicker({
   setTheme,
   backgroundUrl,
   setBackgroundUrl,
+  showSenderAvatar,
 }: BulkPrintDesignPickerProps) {
   const ref = React.useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -70,7 +72,11 @@ export function BulkPrintDesignPicker({
                       }}
                     ></div>
                   )}
-                  <BulkTipGiftCardContentsPreview tip={tip} theme={theme} />
+                  <BulkTipGiftCardContentsPreview
+                    tip={tip}
+                    theme={theme}
+                    showSenderAvatar={showSenderAvatar}
+                  />
                 </div>
                 <BulkTipDesignCredits theme={theme} />
               </Grid>
