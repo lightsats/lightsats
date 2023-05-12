@@ -13,10 +13,10 @@ import {
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
 import { NextUIUser } from "components/NextUIUser";
-import { BulkPrintDesignPicker } from "components/tipper/BulkPrintDesignPicker";
-import { Passphrase } from "components/tipper/Passphrase";
 import { UserCard } from "components/UserCard";
 import { UserDonateWidget } from "components/UserDonateWidget";
+import { BulkPrintDesignPicker } from "components/tipper/BulkPrintDesignPicker";
+import { Passphrase } from "components/tipper/Passphrase";
 import { useDevPrintPreview } from "hooks/useDevPrintPreview";
 import { useUser } from "hooks/useUser";
 import { ApiRoutes } from "lib/ApiRoutes";
@@ -311,7 +311,10 @@ const PrintTipCardsPage: NextPage = () => {
                               variant === "3x3" ? "calc(100% / 3)" : "1012px",
                             height:
                               variant === "3x3" ? "calc(100% / 3)" : "607px",
+                            padding: variant === "3x3" ? undefined : "38px",
                             display: "inline-block",
+                            backgroundColor:
+                              variant === "3x3" ? undefined : "black",
                           }}
                         >
                           <BulkTipGiftCardContents
@@ -462,7 +465,19 @@ export function BulkTipGiftCardContents({
               showInstructions
             />
           ) : (
-            <QRCode value={getClaimUrl(tip as Tip, true)} />
+            <div
+              style={{
+                width: "200px",
+                height: "200px",
+              }}
+            >
+              <QRCode
+                size={256}
+                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                viewBox={`0 0 256 256`}
+                value={getClaimUrl(tip as Tip, true)}
+              />
+            </div>
           )}
         </div>
       </Row>
