@@ -22,6 +22,7 @@ import { useUser } from "hooks/useUser";
 import { ApiRoutes } from "lib/ApiRoutes";
 import { DEFAULT_NAME } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
+import { injectA3PrintStyles, injectStandardPrintStyles } from "lib/printUtils";
 import { defaultFetcher } from "lib/swr";
 import {
   getClaimUrl,
@@ -45,6 +46,8 @@ export type BulkPrintableTip =
   | PublicTip
   | { id: string; passphrase: string };
 
+type BulkPrintVariant = "3x3" | "8x3";
+
 const PrintTipCardsPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -58,11 +61,26 @@ const PrintTipCardsPage: NextPage = () => {
 
   useDevPrintPreview();
 
-  const cardsPerPage = 9;
   const [theme, setTheme] = React.useState(getDefaultBulkGiftCardTheme());
   const [customNumPages, setCustomNumPages] = React.useState(1);
   const [showSenderAvatar, setShowSenderAvatar] = React.useState(true);
-  const [backgroundUrl, setBackgroundUrl] = React.useState("");
+  const [variant, setVariant] = React.useState<BulkPrintVariant>(
+    (process.env.NEXT_PUBLIC_BULK_PRINT_VARIANT as BulkPrintVariant) || "3x3"
+  );
+  const [backgroundUrl, setBackgroundUrl] = React.useState(
+    process.env.NEXT_PUBLIC_BULK_PRINT_IMAGE_URL || ""
+  );
+
+  const rows = variant === "8x3" ? 8 : 3;
+  const cardsPerPage = rows * 3;
+
+  React.useEffect(() => {
+    if (variant === "3x3") {
+      injectStandardPrintStyles();
+    } else {
+      injectA3PrintStyles();
+    }
+  }, [variant]);
 
   const print = useReactToPrint({
     content: () => printRef.current,
@@ -130,6 +148,15 @@ const PrintTipCardsPage: NextPage = () => {
               onChange={(e) => setShowSenderAvatar(e.target.checked)}
             />
           </Row>
+          <Spacer />
+          <Row justify="space-between" align="center">
+            <Text>{'13" * 19"'} Print (8x3 cards per page)</Text>
+            <Spacer x={0.5} />
+            <Switch
+              checked={variant === "8x3"}
+              onChange={(e) => setVariant(e.target.checked ? "8x3" : "3x3")}
+            />
+          </Row>
           {isEmptyPrint && (
             <>
               <Spacer />
@@ -182,8 +209,9 @@ const PrintTipCardsPage: NextPage = () => {
           <Text>1) Insert {numPages} sheets into your printer.</Text>
           <Spacer />
           <Text>
-            2) Press the button below to print your card, using A4 or Letter
-            size.
+            2) Press the button below to print your card. Choose{" "}
+            {'"Save as PDF"'} as the destination, set margins to {'"None"'} and
+            turn on background images.
           </Text>
           <Spacer />
           <Row justify="center">
@@ -234,19 +262,35 @@ const PrintTipCardsPage: NextPage = () => {
               throw new Error("tipGroup not set");
             }
             return (
-              <PrintablePage key={index}>
-                <img
-                  alt=""
-                  width="100%"
-                  height="100%"
-                  src="/tip-groups/printed-cards/guide.png"
-                  style={{ position: "absolute", zIndex: 1 }}
-                />
+              <PrintablePage key={index} variant={variant}>
+                {variant === "3x3" && (
+                  <img
+                    alt=""
+                    width="100%"
+                    height="100%"
+                    src="/tip-groups/printed-cards/guide.png"
+                    style={{ position: "absolute", zIndex: 1 }}
+                  />
+                )}
+                {variant === "8x3" && (
+                  <div
+                    // FIXME: why is this needed? otherwise it prints 2 pages instead of one...
+                    style={{
+                      position: "absolute",
+                      zIndex: 1,
+                      width: "100%",
+                      height: "100%",
+                      border: "1px solid red",
+                      boxSizing: "content-box",
+                    }}
+                  />
+                )}
                 <div
                   style={{
                     width: "100%",
                     height: "100%",
-                    padding: "8.05% 7%",
+                    padding: variant === "3x3" ? "8.05% 7%" : "135px 236px",
+
                     //background: "red",
                   }}
                 >
@@ -263,8 +307,10 @@ const PrintTipCardsPage: NextPage = () => {
                         <div
                           key={tip.id}
                           style={{
-                            width: "calc(100% / 3)",
-                            height: "calc(100% / 3)",
+                            width:
+                              variant === "3x3" ? "calc(100% / 3)" : "1012px",
+                            height:
+                              variant === "3x3" ? "calc(100% / 3)" : "607px",
                             display: "inline-block",
                           }}
                         >
@@ -291,12 +337,15 @@ export default PrintTipCardsPage;
 
 export { getStaticProps, getStaticPaths };
 
-const PrintablePage = ({ children }: React.PropsWithChildren) => {
+const PrintablePage = ({
+  children,
+  variant,
+}: React.PropsWithChildren<{ variant: BulkPrintVariant }>) => {
   return (
     <div
       style={{
-        width: 3508,
-        height: 2480,
+        width: variant === "3x3" ? 3508 : 3508,
+        height: variant === "3x3" ? 2480 : 5127,
         display: "flex",
         position: "relative",
       }}

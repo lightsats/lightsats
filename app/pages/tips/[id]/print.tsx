@@ -22,6 +22,7 @@ import { useTip } from "hooks/useTip";
 import { useUser } from "hooks/useUser";
 import { DEFAULT_NAME } from "lib/constants";
 import { getStaticPaths, getStaticProps } from "lib/i18n/i18next";
+import { injectStandardPrintStyles } from "lib/printUtils";
 import {
   getClaimUrl,
   getDefaultGiftCardTheme,
@@ -64,6 +65,10 @@ const PrintTipCardPage: NextPage = () => {
   });
 
   useDevPrintPreview();
+
+  React.useEffect(() => {
+    injectStandardPrintStyles();
+  }, []);
 
   if (!tip) {
     return <Loading />;
