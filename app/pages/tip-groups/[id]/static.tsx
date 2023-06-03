@@ -8,25 +8,25 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
-import { PublicTip } from "types/PublicTip";
+import { StaticTipRedirect } from "types/StaticTipRedirect";
 
 const StaticTipGroupPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const { data: unclaimedTip, isValidating } = useSWR<PublicTip>(
+  const { data: staticTipRedirect } = useSWR<StaticTipRedirect>(
     id ? `${ApiRoutes.tipGroups}/${id}/static` : undefined,
     defaultFetcher
   );
 
-  const tipId = unclaimedTip?.id;
+  const tipId = staticTipRedirect?.tipId;
   React.useEffect(() => {
     if (tipId) {
-      router.replace(`${PageRoutes.tips}/${tipId}`);
+      router.replace(`${PageRoutes.tips}/${tipId}/claim`);
     }
   }, [router, tipId]);
 
-  if (unclaimedTip || isValidating) {
+  if (!staticTipRedirect || staticTipRedirect.tipId) {
     return <Loading color="currentColor" size="lg" />;
   }
 

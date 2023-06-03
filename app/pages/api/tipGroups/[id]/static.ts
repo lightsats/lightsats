@@ -1,13 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
-import { mapTipToPublicTip } from "lib/mapTipToPublicTip";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PublicTip } from "types/PublicTip";
+import { StaticTipRedirect } from "types/StaticTipRedirect";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<PublicTip>
+  res: NextApiResponse<StaticTipRedirect>
 ) {
   switch (req.method) {
     case "GET":
@@ -16,8 +15,13 @@ export default async function handler(
       return res.status(StatusCodes.NOT_FOUND).end();
   }
 }
-async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
+async function getTip(
+  req: NextApiRequest,
+  res: NextApiResponse<StaticTipRedirect>
+) {
   const session = await getLightsatsServerSession(req, res);
+
+  const result: StaticTipRedirect = {};
 
   const tipGroup = await prisma.tipGroup.findUnique({
     where: {
@@ -33,20 +37,17 @@ async function getTip(req: NextApiRequest, res: NextApiResponse<PublicTip>) {
     },
   });
 
-  if (!tipGroup?.enableStaticLink) {
-    return res.status(StatusCodes.NOT_FOUND).end();
-  }
-  // only allow a tippee to claim at most one tip from the group
-  // prioritize unseen tips, then seen tips
-  const tip =
-    (session &&
-      tipGroup.tips.find((tip) => tip.tippeeId === session.user.id)) ||
-    tipGroup.tips.find((tip) => tip.status === "UNSEEN") ||
-    tipGroup.tips.find((tip) => tip.status === "SEEN");
+  if (tipGroup?.enableStaticLink) {
+    // only allow a tippee to claim at most one tip from the group
+    // prioritize unseen tips, then seen tips
+    const tip =
+      (session &&
+        tipGroup.tips.find((tip) => tip.tippeeId === session.user.id)) ||
+      tipGroup.tips.find((tip) => tip.status === "UNSEEN") ||
+      tipGroup.tips.find((tip) => tip.status === "SEEN");
 
-  if (!tip) {
-    return res.status(StatusCodes.NOT_FOUND).end();
+    result.tipId = tip?.id;
   }
 
-  return res.json(mapTipToPublicTip(tip));
+  return res.json(result);
 }
