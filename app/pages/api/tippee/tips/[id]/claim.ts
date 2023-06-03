@@ -42,6 +42,11 @@ async function handleClaimTip(
     include: {
       lnbitsWallet: true,
       tipper: true,
+      group: {
+        include: {
+          tips: true,
+        },
+      },
     },
   });
   if (!tip) {
@@ -54,7 +59,11 @@ async function handleClaimTip(
     tip.tippeeId ||
     session.user.id === tip.tipperId ||
     tip.status !== "SEEN" ||
-    hasExpired
+    hasExpired ||
+    // only allow same user to claim at most one tip from group
+    // TODO: add a separate option for this
+    (tip.group?.enableStaticLink &&
+      tip.group.tips.some((tip) => tip.tippeeId === session.user.id))
   ) {
     // already claimed or trying to claim their own tip
     return res.status(StatusCodes.CONFLICT).end();

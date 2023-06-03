@@ -22,7 +22,10 @@ export type CreateTipRequest = TipRequestBase & {
   amount: number;
   quantity: number;
   type?: TipType;
+  enableStaticLink?: boolean;
 };
 export type UpdateTipRequest = TipRequestBase;
 
-export type UpdateTipsRequest = TipRequestBase;
+export type UpdateTipsRequest = TipRequestBase & {
+  enableStaticLink?: boolean;
+};

@@ -5,7 +5,7 @@ import { NewTipButton } from "components/tipper/NewTipButton";
 import { useSession } from "next-auth/react";
 
 type UnavailableTipActionsProps = {
-  skipOnboarding: boolean;
+  skipOnboarding?: boolean;
 };
 
 export function UnavailableTipActions({
