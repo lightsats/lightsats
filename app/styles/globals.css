@@ -13,21 +13,3 @@ html,
 body {
   background-color: transparent;
 }
-
-@media print {
-  @page {
-    size: 3508px 2480px;
-    color-adjust: exact;
-  }
-  /* safari */
-  body,
-  html {
-    width: 3508px;
-    height: 2480px;
-  }
-}
-@media print {
-  body {
-    print-color-adjust: exact;
-  }
-}
