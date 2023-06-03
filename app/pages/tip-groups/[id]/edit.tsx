@@ -72,6 +72,7 @@ const EditTipGroup: NextPage = () => {
       note,
       tippeeName,
       enterIndividualNames,
+      enableStaticLink: tipGroup.enableStaticLink ?? undefined,
     };
     return defaultValues;
   }, [tipGroup]);
@@ -84,6 +85,7 @@ const EditTipGroup: NextPage = () => {
           tippeeNames: data.tippeeName?.length
             ? data.tippeeName.split("\n")
             : undefined,
+          enableStaticLink: data.enableStaticLink,
         };
         const result = await fetch(`/api/tipGroups/${id}/tips`, {
           method: "PUT",

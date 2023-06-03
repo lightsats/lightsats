@@ -61,6 +61,7 @@ export function TipFormAdvancedOptions({
   const watchedRecommendedWalletId = watch("recommendedWalletId");
   const watchedTippeeName = watch("tippeeName");
   const watchedOnboardingFlow = watch("onboardingFlow");
+  const watchedTipType = watch("type");
   const watchedEnterIndividualNames = watch("enterIndividualNames");
   // const watchedGeneratePassphrase = watch("generatePassphrase");
 
@@ -371,6 +372,47 @@ Micheal Saylor`
         . You can use this option for printed tips for recipients who cannot
         scan a QR code.
       </Text>
+      {quantity > 1 &&
+        watchedOnboardingFlow !== "SKIP" &&
+        watchedTipType !== "NON_CUSTODIAL_NWC" && (
+          <>
+            <Divider />
+            <Row align="flex-start">
+              <Col>
+                <Text css={{ whiteSpace: "nowrap" }}>🎲 Static Link</Text>
+              </Col>
+              <Col css={{ ta: "right" }}>
+                <Controller
+                  name="enableStaticLink"
+                  control={control}
+                  render={({ field }) => (
+                    <Switch
+                      {...field}
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                    />
+                  )}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Text
+                small
+                css={{
+                  mt: 0,
+                  mb: 6,
+                  lineHeight: 1.2,
+                  display: "inline-block",
+                }}
+              >
+                Enable a static link which will redirect to a randomly unseen or
+                unclaimed tip. Claiming will be limited to one tip per account.
+                NOTE: this can be exploited by an attacker, so only use this
+                option with small amounts and with trusted recipients.
+              </Text>
+            </Row>
+          </>
+        )}
       <Divider />
       <WebhookInput
         fieldName="claimWebhookUrl"

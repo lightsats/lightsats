@@ -52,6 +52,15 @@ async function updateTips(
 ) {
   const updateTipsRequest = req.body as UpdateTipsRequest;
 
+  await prisma.tipGroup.update({
+    where: {
+      id: tipGroup.id,
+    },
+    data: {
+      enableStaticLink: updateTipsRequest.enableStaticLink,
+    },
+  });
+
   await prisma.tip.updateMany({
     where: {
       groupId: tipGroup.id,

@@ -111,6 +111,7 @@ model TipGroup {
   lnbitsWallet LnbitsWallet?
   invoice String?
   invoiceId String?
+  enableStaticLink Boolean?
 }
 
 model Tip {
