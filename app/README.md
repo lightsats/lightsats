@@ -24,16 +24,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Open [http://localhost:8025](http://localhost:8025) to open the development mailbox.
 
-### Webhooks
-
-In order to receive webhook requests, make sure to run a tunnel such as ngrok and update your .env.local file.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/test). This endpoint can be edited in `pages/api/test.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
@@ -53,3 +43,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 6. set NEXTAUTH_SECRET: `flyctl secrets set NEXTAUTH_SECRET=XXXXXXXXXXXXXXXXXXXXX --app lightsats-prod`
 7. add other secrets (see .env.example)
 8. create .sentryclirc (see .sentryclirc.example)
+
+### Automatic Deployments (Main Application)
+
+- Staging deployments (https://lightsats.fly.dev/) will happen on push to `main`
+- Production deployments (https://lightsats.com/) will happen on push to `production`
+
+### Automatic Deployments (Scheduler app)
+
+TODO
