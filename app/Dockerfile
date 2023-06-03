@@ -6,6 +6,7 @@ FROM node:16-alpine3.16 AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY . .
+
 RUN yarn install --frozen-lockfile
 
 # If using npm with a `package-lock.json` comment out above and use below instead
@@ -13,19 +14,26 @@ RUN yarn install --frozen-lockfile
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
-#RUN yarn db:generate:production
-#RUN yarn db:push:production
-#RUN yarn db:migrate:resolve:production
-RUN yarn db:migrate:deploy:production
+RUN --mount=type=secret,id=DATABASE_URL \
+    DATABASE_URL="$(cat /run/secrets/DATABASE_URL)" \
+    yarn db:migrate:deploy
+
 
 # Add `ARG` instructions below if you need `NEXT_PUBLIC_` variables
 # then put the value on your fly.toml
 # Example:
 # ARG NEXT_PUBLIC_EXAMPLE="value here"
+ARG NEXT_PUBLIC_OVERRIDE_THEME_USERID
+ARG NEXT_PUBLIC_SHOW_PRODUCTION_LINK
 
-ARG NEXT_PUBLIC_SENTRY_DSN
-
-RUN yarn build
+RUN --mount=type=secret,id=DATABASE_URL \
+    --mount=type=secret,id=SENTRY_AUTH_TOKEN \
+    --mount=type=secret,id=SENTRY_DSN \
+    DATABASE_URL="$(cat /run/secrets/DATABASE_URL)" \
+    SENTRY_AUTH_TOKEN="$(cat /run/secrets/SENTRY_AUTH_TOKEN)" \
+    SENTRY_DSN="$(cat /run/secrets/SENTRY_DSN)" \
+    NEXT_PUBLIC_SENTRY_DSN="$(cat /run/secrets/SENTRY_DSN)" \
+    yarn build
 
 # If using npm comment out above and use below instead
 # RUN npm run build

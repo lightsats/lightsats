@@ -34,6 +34,8 @@ const sentryWebpackPluginOptions = {
   // https://github.com/getsentry/sentry-webpack-plugin#options.
   disableServerWebpackPlugin: false,
   disableClientWebpackPlugin: false,
+  org: "lightsats",
+  project: "lightsats",
 };
 
 // Make sure adding Sentry options is the last code to run before exporting, to
