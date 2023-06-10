@@ -14,9 +14,11 @@ export function ClaimTipsFaster() {
         <Spacer />
         <Row justify="center">
           <NextLink href={PageRoutes.signin}>
-            <Button auto color="primary">
-              <>{"🚀 Sign in"}</>
-            </Button>
+            <a>
+              <Button auto color="primary">
+                <>{"🚀 Sign in"}</>
+              </Button>
+            </a>
           </NextLink>
         </Row>
       </Card.Body>
