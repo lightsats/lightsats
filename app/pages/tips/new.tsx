@@ -30,6 +30,7 @@ const NewTip: NextPage = () => {
           passphraseLength: data.passphraseLength,
           generatePassphrase: data.generatePassphrase,
           type: data.type,
+          enableStaticLink: data.enableStaticLink,
         };
         const result = await fetch("/api/tipper/tips", {
           method: "POST",

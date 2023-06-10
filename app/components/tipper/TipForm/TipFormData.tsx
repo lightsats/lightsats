@@ -32,6 +32,7 @@ export type TipFormData = {
   advertisementUrl: string | undefined;
   advertisementImageUrl: string | undefined;
   type: TipType | undefined;
+  enableStaticLink: boolean | undefined;
 };
 
 export type TipFormSubmitData = Omit<

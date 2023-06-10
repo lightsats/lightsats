@@ -1,4 +1,5 @@
 import {
+  ClipboardDocumentIcon,
   ClipboardDocumentListIcon,
   DocumentDuplicateIcon,
   PencilIcon,
@@ -13,7 +14,7 @@ import { ApiRoutes } from "lib/ApiRoutes";
 import { refundableTipStatuses } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
-import { getClaimUrl } from "lib/utils";
+import { getAppUrl, getClaimUrl } from "lib/utils";
 import { useRouter } from "next/router";
 import React from "react";
 import toast from "react-hot-toast";
@@ -23,6 +24,7 @@ import { TipGroupWithTips } from "types/TipGroupWithTips";
 enum actionKeys {
   copyAll = "copyAll",
   copyIndividual = "copyIndividual",
+  copyStaticLink = "copyStaticLink",
   reclaimTips = "reclaimTips",
   deleteTipGroup = "deleteTipGroup",
 }
@@ -102,6 +104,15 @@ export function TipGroupSettingsDropdown({
     })();
   }, [tipGroup]);
 
+  const copyStaticLink = React.useCallback(() => {
+    (async () => {
+      if (tipGroup) {
+        copy(`${getAppUrl()}/tip-groups/${tipGroup.id}/static`);
+        toast.success("Copied static link to clipboard");
+      }
+    })();
+  }, [tipGroup]);
+
   const menuItems = React.useMemo(
     () =>
       tipGroup
@@ -128,6 +139,20 @@ export function TipGroupSettingsDropdown({
                   >
                     Print
                   </Dropdown.Item>,
+                  ...(tipGroup.enableStaticLink
+                    ? [
+                        <Dropdown.Item
+                          key={actionKeys.copyStaticLink}
+                          icon={
+                            <Icon>
+                              <ClipboardDocumentIcon />
+                            </Icon>
+                          }
+                        >
+                          Copy static link
+                        </Dropdown.Item>,
+                      ]
+                    : []),
                   <Dropdown.Item
                     key={actionKeys.copyAll}
                     icon={
@@ -198,6 +223,9 @@ export function TipGroupSettingsDropdown({
         case actionKeys.copyIndividual:
           setCopyIndividualLinksEnabled();
           break;
+        case actionKeys.copyStaticLink:
+          copyStaticLink();
+          break;
         case actionKeys.reclaimTips:
           reclaimTips();
           break;
@@ -210,6 +238,7 @@ export function TipGroupSettingsDropdown({
     },
     [
       copyAllTipUrls,
+      copyStaticLink,
       deleteTipGroup,
       reclaimTips,
       router,

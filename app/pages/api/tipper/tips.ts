@@ -186,6 +186,7 @@ async function handlePostTip(
         quantity: createTipRequest.quantity,
         status: TipGroupStatus.UNFUNDED,
         tipperId: session.user.id,
+        enableStaticLink: createTipRequest.enableStaticLink,
         tips: {
           createMany: {
             data: [...new Array(createTipRequest.quantity)].map((_, index) => ({
