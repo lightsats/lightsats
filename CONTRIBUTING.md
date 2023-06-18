@@ -1,3 +1,7 @@
+# Running the app locally
+
+See [app/README.md](app/README.md)
+
 # Translations
 
 ## Adding a new language
