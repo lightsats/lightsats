@@ -1,0 +1,9 @@
+{
+    "welcome": "Welcome",
+    "chooseSignIn": "Please choose your preferred way to sign in.",
+    "generatingQrCode": "Generating QR code…",
+    "scanQrCode": "Scan this code or copy and paste it to your Lightning wallet. Or click to log in with your web browser's wallet.",
+    "clickToConnect": "Click to connect",
+    "use": "Use",
+    "instead": "instead"
+}

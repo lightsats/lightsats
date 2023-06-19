@@ -1,0 +1,74 @@
+{
+    "header": {
+        "progress": "Step {{page}} of {{numPages}}"
+    },
+    "footer": {
+        "nextUp": "Next up"
+    },
+    "claimed": {
+        "title": "Nice work 👍",
+        "subtitle": "You've successfully claimed your tip",
+        "description": "Your tip is ready to be withdrawn into your custody. If you don't withdraw your tip before it expires, it will be returned to {{tipperName}}.",
+        "getStarted": "Let's get started on your Bitcoin journey!",
+        "footer": {
+            "text": "Start your journey",
+            "cta": "What is Bitcoin?"
+        }
+    },
+    "bitcoin": {
+        "needAWallet": "To withdraw your Bitcoin, you'll first need a Bitcoin wallet. Find out more in the next step.",
+        "footer": {
+            "text": "Continue",
+            "cta": "Install a wallet"
+        },
+        "digitalCash": {
+            "title": "Bitcoin is Digital Cash",
+            "description": "Bitcoin is a digital currency that lets you send money directly to another person without using a bank or other intermediary. It's like paying with paper money at a newspaper stand."
+        },
+        "anytimeAnywhere": {
+            "title": "Anytime, Anywhere",
+            "description": "Bitcoin doesn't close on weekends. All you need is a computer or mobile phone to get started. Bitcoin lets you transact anywhere across the world."
+        },
+        "beYourOwnBank": {
+            "title": "Be your Own Bank",
+            "description": "Take control of your money with Bitcoin. Say goodbye to big bank bailouts and fractional reserve banking. And forget about personal questions and forms - with Bitcoin, you can transact quickly and easily."
+        },
+        "deflationary": {
+            "title": "Bitcoin is Deflationary",
+            "description": "Bitcoin lets you take control of your money and protect it from unfair policies and inflation. With a fixed supply, it's a stable alternative to regular currencies."
+        },
+        "freedom": {
+            "title": "Bitcoin is Freedom",
+            "description": "The alternative to Bitcoin is government-controlled digital currencies, or CBDCs. With these, your government can decide how and when you can spend your money, and even take it away from you if you don't use it fast enough."
+        },
+        "absoluteScarcity": {
+            "title": "Absolute Scarcity",
+            "description": "Bitcoin is the only currency with a fixed, finite supply. Unlike gold, which we don't know how much exists, the maximum amount of Bitcoin is capped at 21 million. This makes it the ultimate scarce asset."
+        },
+        "bitcoinNotCrypto": {
+            "title": "Bitcoin is not \"Crypto\"",
+            "description": "Bitcoin has no marketing team, no premine, and no venture capital backing. It was launched as fairly as possible, with no initial value in dollars. There is no second best."
+        },
+        "renewableEnergy": {
+            "title": "Pushing Renewable Energy",
+            "description": "Bitcoin miners use electricity to compete and earn new bitcoins, helping to keep the network secure. Cheap, renewable electricity gives miners an advantage and makes the grid more stable."
+        }
+    },
+    "wallet": {
+        "needAWallet": "You need to download a wallet in order to self custody your bitcoin.",
+        "selfCustody": "Self custody of bitcoin is like keeping your own house keys. Having the keys gives you direct access and control to your property and helps ensure that no one else can enter or access it without your permission.",
+        "footer": {
+            "text": "Continue",
+            "cta": "Withdraw"
+        }
+    },
+    "congratulations": {
+        "title": "You did it! 🎉",
+        "subtitle": "You are a proud new owner of a fraction of a bitcoin.",
+        "quote": "Rumors say - those who are gifted bitcoin are a very special kind of people.",
+        "footer": {
+            "text": "Continue",
+            "cta": "Use Bitcoin"
+        }
+    }
+}

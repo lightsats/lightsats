@@ -1,0 +1,162 @@
+{
+  "SELF_CLAIMED": {
+    "title": "Claimed",
+    "description": "You claimed your first tip."
+  },
+  "BECAME_TIPPER": {
+    "title": "Tipper",
+    "description": "You've become a Lightsats tipper."
+  },
+  "LINKED_EMAIL": {
+    "title": "Email",
+    "description": "You can now login and receive notifications via email."
+  },
+  "LINKED_WALLET": {
+    "title": "Wallet",
+    "description": "You can now login via your lightning wallet."
+  },
+  "SET_NAME": {
+    "title": "Name",
+    "description": "You're no longer an Anon."
+  },
+  "SET_AVATAR_URL": {
+    "title": "Avatar",
+    "description": "You put a face to your name. Great!"
+  },
+  "SET_LIGHTNING_ADDRESS": {
+    "title": "Lightning Address",
+    "description": "You can now be tipped directly by other Lightsats users."
+  },
+  "CREATED_TIP": {
+    "title": "Tip Created",
+    "description": "You created your first tip."
+  },
+  "FUNDED_TIP": {
+    "title": "Tip Funded",
+    "description": "You funded your first tip."
+  },
+  "TIP_CLAIMED": {
+    "title": "Tip Claimed",
+    "description": "Your first tip was claimed."
+  },
+  "TIP_WITHDRAWN": {
+    "title": "Tip Withdrawn",
+    "description": "You got someone to withdraw their sats!"
+  },
+  "WEBLN_WITHDRAWN": {
+    "title": "WebLN Withdrawal",
+    "description": "WebLN saves a lot of clicks!"
+  },
+  "MANUAL_WITHDRAWN": {
+    "title": "Manual Withdrawal",
+    "description": "There are better methods than this, but it's good to know how to do manual withdrawals!"
+  },
+  "LNURL_WITHDRAWN": {
+    "title": "LNURL withdrawal",
+    "description": "You withdrew to a LNURL-withdraw capable wallet. Nice!"
+  },
+  "EARLY_SUPPORTER": {
+    "title": "Early Supporter",
+    "description": "You were one of the first to successfully tip someone using Lightsats!"
+  },
+  "SENT_1K": {
+    "title": "1000 sats",
+    "description": "Your recipients have withdrawn over one thousand sats!"
+  },
+  "SENT_10K": {
+    "title": "10,000 sats",
+    "description": "Your recipients have withdrawn over ten thousand sats!"
+  },
+  "SENT_100K": {
+    "title": "100,000 sats",
+    "description": "Your recipients have withdrawn over one hundred thousand sats!"
+  },
+  "SENT_1M": {
+    "title": "1,000,000 sats",
+    "description": "Your recipients have withdrawn over one million sats!"
+  },
+  "TOP_10": {
+    "title": "Leaderboard Top 10",
+    "description": "You achieved a position in the top 10!"
+  },
+  "TOP_3": {
+    "title": "Leaderboard Top 3",
+    "description": "You achieved a position in the top 3!"
+  },
+  "TOP_1": {
+    "title": "Top of the Leaderboard",
+    "description": "You achieved the top position on the leaderboard!"
+  },
+  "MOST_WITHDRAWN_TIPS": {
+    "title": "Champion",
+    "description": "You have created the most successful tips out of any Lightsats tipper."
+  },
+  "PWA": {
+    "title": "Added to Homescreen",
+    "description": "You added the Lightsats PWA to your mobile homescreen. Use LNURL auth to login!"
+  },
+  "TIPS_10": {
+    "title": "Sent 10 Tips",
+    "description": "You sent 10 tips that were successfully withdrawn by their recipient."
+  },
+  "TIPS_25": {
+    "title": "Sent 25 Tips",
+    "description": "You sent 25 tips that were successfully withdrawn by their recipient."
+  },
+  "TIPS_50": {
+    "title": "Sent 50 Tips",
+    "description": "You sent 50 tips that were successfully withdrawn by their recipient."
+  },
+  "TIPS_100": {
+    "title": "Sent 100 Tips",
+    "description": "You sent 100 tips that were successfully withdrawn by their recipient."
+  },
+  "TIPPED_A_BITCOINER": {
+    "title": "Tipped a Bitcoiner",
+    "description": "Your tip was withdrawn using \"Skip Onboarding\" mode."
+  },
+  "BULK_TIP_CREATED": {
+    "title": "Bulk Tips Created",
+    "description": "You created multiple tips in one go."
+  },
+  "BULK_TIP_FUNDED": {
+    "title": "Bulk Tips Funded",
+    "description": "You funded all your tips by paying a single invoice!"
+  },
+  "BULK_TIP_CLAIMED": {
+    "title": "Bulk Tip Claimed",
+    "description": "One of your bulk tips was claimed"
+  },
+  "BULK_TIP_WITHDRAWN": {
+    "title": "Bulk Tip Withdrawn",
+    "description": "One of your bulk tips was withdrawn"
+  },
+  "BULK_TIP_ALL_WITHDRAWN": {
+    "title": "All Bulk Tips Withdrawn",
+    "description": "All tips you created in bulk were successfully withdrawn!"
+  },
+  "BULK_TIP_10": {
+    "title": "Bulk 10 Tips",
+    "description": "You created and funded 10 or more tips in bulk"
+  },
+  "BULK_TIP_25": {
+    "title": "Bulk 25 Tips",
+    "description": "You created and funded 25 or more tips in bulk"
+  },
+  "BULK_TIP_50": {
+    "title": "Bulk 50 Tips",
+    "description": "You created and funded 50 or more tips in bulk"
+  },
+  "BULK_TIP_100": {
+    "title": "Bulk 100 Tips",
+    "description": "You created and funded 100 or more tips in bulk"
+  },
+  "PRINTED_CARD_TIP_CLAIMED": {
+    "title": "Printed Card Claimed",
+    "description": "A tip that you printed onto a card was claimed!"
+  },
+  "PRINTED_CARD_TIP_WITHDRAWN": {
+    "title": "Printed Card Withdrawn",
+    "description": "A tip that you printed onto a card was withdrawn!"
+  }
+}

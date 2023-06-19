@@ -1,0 +1,10 @@
+{
+    "tippee": {
+        "expired": "You didn't withdraw this tip in time 😭",
+        "willExpire": "This tip will expire. Better hurry up! ✌️"
+    },
+    "tipper": {
+        "expired": "Your recipient didn't withdraw their tip in time. It expired {{distance}} ago 😭",
+        "willExpire": "Your recipient will receive occasional reminders to claim and withdraw their tip before it expires ✌️"
+    }
+}
