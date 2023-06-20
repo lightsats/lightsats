@@ -1,22 +1,22 @@
 {
-  "install": "Install",
-  "open": "Open",
-  "compatibleWallets": "Compatible Wallets",
-  "recommendedWallet": "Recommended wallet",
-  "otherWallets": "Other wallets",
-  "recommendedItems": "Recommended",
-  "otherItems": "More",
-  "minBalance": "{{minBalance}}⚡ min balance",
-  "nonCustodial": "non-custodial",
-  "custodial": "custodial",
-  "scanToLogin": "Scan to login",
-  "lightningAddress": "Lightning address",
+  "install": "Installeren",
+  "open": "Openen",
+  "compatibleWallets": "Compatibele portemonnee",
+  "recommendedWallet": "Aanbevolen portemonnee",
+  "otherWallets": "Andere portemonnees",
+  "recommendedItems": "Aanbevolen",
+  "otherItems": "Meer",
+  "minBalance": "{{minBalance}}⚡ min saldo",
+  "nonCustodial": "niet beheerd door een derde partij",
+  "custodial": "beheerd door een derde partij",
+  "scanToLogin": "Scannen om in te loggen",
+  "lightningAddress": "Lightning-adres",
   "platforms": {
-    "mobile": "Mobile",
+    "mobile": "Mobiel",
     "desktop": "Desktop",
     "web": "Web",
     "android-only": "Android",
     "ios-only": "iOS"
   },
-  "features": "Features"
+  "features": "Functies"
 }

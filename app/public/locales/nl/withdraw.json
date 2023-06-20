@@ -1,6 +1,6 @@
 {
-  "title": "Ready to withdraw?",
-  "withdrawing": "Withdrawing...",
-  "lnurlInstructions": "Scan, tap or copy the below link into your bitcoin wallet to withdraw.",
-  "withdrawAvailableBalance": "Withdraw {{availableBalance}} sats to your wallet"
+  "title": "Klaar om op te nemen?",
+  "withdrawing": "Opnemen...",
+  "lnurlInstructions": "Scan, tik of kopieer de onderstaande link naar je Bitcoin-portemonnee om op te nemen.",
+  "withdrawAvailableBalance": "Neem {{availableBalance}} sats op naar je portemonnee"
 }

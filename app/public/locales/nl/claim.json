@@ -1,11 +1,11 @@
 {
-  "hello": "Hello {{tippeeName}}.",
-  "tipperHasGiftedYou": "{{tipperName}} has gifted you",
-  "youHaveBeenGifted": "You've been gifted",
-  "expired": "This tip has expired.",
-  "instructions.phone": "Enter your phone number below and press the button to claim your funds.",
-  "instructions.email": "Enter your e-mail address below and press the button to claim your funds.",
-  "instructions.lightning": "Log in with your Lightning wallet to claim your funds.",
-  "expiresIn": "Expires in {{expiry}}",
-  "claim": "Claim my funds"
+  "hello": "Hallo {{tippeeName}}.",
+  "tipperHasGiftedYou": "{{tipperName}} heeft je een gift gegeven",
+  "youHaveBeenGifted": "Je hebt een gift gekregen",
+  "expired": "Deze gift is verlopen.",
+  "instructions.phone": "Voer hieronder je telefoonnummer in en druk op de knop om je geld te claimen.",
+  "instructions.email": "Voer hieronder je e-mailadres in en druk op de knop om je geld te claimen.",
+  "instructions.lightning": "Log in met je Lightning-portemonnee om je geld te claimen.",
+  "expiresIn": "Verloopt over {{expiry}}",
+  "claim": "Claim mijn geld"
 }
