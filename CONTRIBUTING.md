@@ -1,8 +1,8 @@
+# Running the app locally
+
+See [app/README.md](app/README.md)
+
 # Translations
-
-## Weblate
-
-We use Weblate for Translations: https://hosted.weblate.org/projects/lightsats/
 
 ## Adding a new language
 
