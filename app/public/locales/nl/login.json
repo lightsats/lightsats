@@ -1,0 +1,9 @@
+{
+    "welcome": "Welkom",
+    "chooseSignIn": "Kies alstublieft je voorkeursmethode om in te loggen.",
+    "generatingQrCode": "QR-code genereren...",
+    "scanQrCode": "Scan deze code of kopieer en plak het naar je Lightning-portemonnee. Of klik om in te loggen met de portemonnee van je webbrowser.",
+    "clickToConnect": "Klik om te verbinden",
+    "use": "Gebruik",
+    "instead": "in plaats van"
+}
