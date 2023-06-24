@@ -32,7 +32,7 @@ import { useUser } from "hooks/useUser";
 import { useUserRoles } from "hooks/useUserRoles";
 import { PageRoutes } from "lib/PageRoutes";
 import { getUserAvatarUrl } from "lib/utils";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -250,7 +250,15 @@ export function AppNavbar() {
                 aria-label="User menu actions"
                 disabledKeys={["language"]}
                 onAction={(key: React.Key) => {
-                  router.push(key as string);
+                  if (key === PageRoutes.logout) {
+                    (async () => {
+                      await signOut({
+                        callbackUrl: PageRoutes.home,
+                      });
+                    })();
+                  } else {
+                    router.push(key as string);
+                  }
                 }}
               >
                 <Dropdown.Item
