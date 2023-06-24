@@ -25,7 +25,12 @@ import { usePublicTip } from "hooks/usePublicTip";
 import { useTips } from "hooks/useTips";
 import { useUser } from "hooks/useUser";
 import { PageRoutes } from "lib/PageRoutes";
-import { WITHDRAWAL_RETRY_DELAY, unclaimedTipStatuses } from "lib/constants";
+import {
+  MAX_TIPS_WITHDRAWABLE,
+  MAX_TIP_SATS,
+  WITHDRAWAL_RETRY_DELAY,
+  unclaimedTipStatuses,
+} from "lib/constants";
 import { getStaticProps } from "lib/i18n/i18next";
 import { CategoryFilterOptions } from "lib/items/getRecommendedItems";
 import { hasTipExpired, tryGetErrorMessage } from "lib/utils";
@@ -196,6 +201,10 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
     ? withdrawableTips.map((tip) => tip.amount).reduce((a, b) => a + b)
     : 0;
 
+  const balanceIsOverLimit =
+    availableBalance > MAX_TIP_SATS ||
+    (withdrawableTips?.length || 0) > MAX_TIPS_WITHDRAWABLE;
+
   const [prevAvailableBalance, setPrevAvailableBalance] =
     React.useState(availableBalance);
   const [hasWithdrawn, setWithdrawn] = React.useState(false);
@@ -251,6 +260,9 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
   ]);
 
   React.useEffect(() => {
+    if (balanceIsOverLimit) {
+      return;
+    }
     if (firstTipType !== "CUSTODIAL") {
       // TODO: use LNURL-withdraw to request an invoice from the user's wallet and then return it
       // to the webapp so they don't need to enter it manually
@@ -284,7 +296,14 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
         }
       })();
     }
-  }, [availableBalance, flow, tipId, isPreview, firstTipType]);
+  }, [
+    availableBalance,
+    flow,
+    tipId,
+    isPreview,
+    firstTipType,
+    balanceIsOverLimit,
+  ]);
 
   React.useEffect(() => {
     if (
@@ -298,9 +317,9 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
   }, [prevWithdrawalLinkLnurl, withdrawalLinkLnurl]);
 
   React.useEffect(() => {
-    if (availableBalance > 0) {
+    if (availableBalance > 0 && !isPreview && !balanceIsOverLimit) {
       (async () => {
-        if (window.webln && !isPreview) {
+        if (window.webln) {
           try {
             if (!hasLaunchedWebln) {
               setLaunchedWebln(true);
@@ -319,7 +338,14 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
         }
       })();
     }
-  }, [availableBalance, executeWithdrawal, flow, hasLaunchedWebln, isPreview]);
+  }, [
+    availableBalance,
+    balanceIsOverLimit,
+    executeWithdrawal,
+    flow,
+    hasLaunchedWebln,
+    isPreview,
+  ]);
 
   const copyWithdrawLinkUrl = React.useCallback(() => {
     if (withdrawalLinkLnurl) {
@@ -346,6 +372,33 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
     lastWithdrawalTime &&
     Date.now() - new Date(lastWithdrawalTime).getTime() <
       WITHDRAWAL_RETRY_DELAY;
+
+  if (balanceIsOverLimit) {
+    return (
+      <>
+        <Text h3>Manual Withdraw Unavailable</Text>
+        <Text h5>
+          {availableBalance} sats, {withdrawableTips?.length} tips
+        </Text>
+        <Text>
+          Sorry, your balance is too large or you have too many tips to be
+          processed within a single payment.&nbsp;
+          {user?.lightningAddress ? (
+            <>
+              Multiple payments of up to a maximum of {MAX_TIP_SATS} sats or{" "}
+              {MAX_TIPS_WITHDRAWABLE} tips will be sent to{" "}
+              <b>{user.lightningAddress}</b> over the next few days.
+            </>
+          ) : (
+            <>
+              Please set a lightning address in your profile so your sats can be
+              returned to you in multiple payments.
+            </>
+          )}
+        </Text>
+      </>
+    );
+  }
 
   if ((!session && flow !== "anonymous") || !tips) {
     return <Loading />;
