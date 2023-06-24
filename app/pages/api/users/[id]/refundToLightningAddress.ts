@@ -3,6 +3,7 @@ import { LightningAddress } from "alby-tools";
 import { StatusCodes } from "http-status-codes";
 import { payWithdrawalInvoice } from "lib/payWithdrawalInvoice";
 import prisma from "lib/prismadb";
+import { limitTips } from "lib/utils";
 import { getWithdrawableTipsQuery } from "lib/withdrawal";
 import { withErrorMessage } from "lib/withErrorMessage";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -38,12 +39,14 @@ export default async function handler(
   const withdrawalFlow: WithdrawalFlow = "tipper";
   const withdrawalMethod: WithdrawalMethod = "lightning_address";
 
-  const tips = await prisma.tip.findMany({
-    where: getWithdrawableTipsQuery(withdrawalFlow, user.id, undefined),
-    include: {
-      tipper: true,
-    },
-  });
+  const tips = limitTips(
+    await prisma.tip.findMany({
+      where: getWithdrawableTipsQuery(withdrawalFlow, user.id, undefined),
+      include: {
+        tipper: true,
+      },
+    })
+  );
 
   if (!tips.length) {
     const errorMessage = "No tips are available to withdraw";

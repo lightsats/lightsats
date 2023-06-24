@@ -6,6 +6,8 @@ import { bulkGiftCardThemes } from "lib/bulkGiftCardThemes";
 import {
   expirableTipStatuses,
   FEE_PERCENT,
+  MAX_TIP_SATS,
+  MAX_TIPS_WITHDRAWABLE,
   MINIMUM_FEE_SATS,
   refundableTipStatuses,
   SATS_TO_BTC,
@@ -254,3 +256,22 @@ export const isValidNostrConnectUrl = (url: string) => {
     url.indexOf("&secret=") > 0
   );
 };
+
+export function limitTips<T extends Tip>(tips: T[]) {
+  const limitedTips: T[] = tips
+    // take the largest tips first
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, MAX_TIPS_WITHDRAWABLE);
+
+  while (
+    limitedTips.map((tip) => tip.amount).reduce((a, b) => a + b, 0) >
+    MAX_TIP_SATS
+  ) {
+    limitedTips.pop();
+  }
+  // console.log(
+  //   "LimitTips: " + limitedTips.length + " / " + tips.length,
+  //   limitedTips.map((tip) => tip.id)
+  // );
+  return limitedTips;
+}
