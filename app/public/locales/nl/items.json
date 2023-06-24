@@ -1,0 +1,22 @@
+{
+  "install": "Installeren",
+  "open": "Openen",
+  "compatibleWallets": "Compatibele portemonnee",
+  "recommendedWallet": "Aanbevolen portemonnee",
+  "otherWallets": "Andere portemonnees",
+  "recommendedItems": "Aanbevolen",
+  "otherItems": "Meer",
+  "minBalance": "{{minBalance}}⚡ min saldo",
+  "nonCustodial": "niet beheerd door een derde partij",
+  "custodial": "beheerd door een derde partij",
+  "scanToLogin": "Scannen om in te loggen",
+  "lightningAddress": "Lightning-adres",
+  "platforms": {
+    "mobile": "Mobiel",
+    "desktop": "Desktop",
+    "web": "Web",
+    "android-only": "Android",
+    "ios-only": "iOS"
+  },
+  "features": "Functies"
+}

@@ -1,0 +1,74 @@
+{
+  "header": {
+    "progress": "Stap {{page}} van {{numPages}}"
+  },
+  "footer": {
+    "nextUp": "Hierna"
+  },
+  "claimed": {
+    "title": "Goed gedaan 👍",
+    "subtitle": "Je hebt succesvol je gift geclaimd",
+    "description": "Je gift is klaar om te worden opgenomen in jouw bezit. Als je je gift niet opneemt voordat deze verloopt, wordt deze teruggegeven aan {{tipperName}}.",
+    "getStarted": "Laten we beginnen met jouw Bitcoin-reis!",
+    "footer": {
+      "text": "Begin jouw reis",
+      "cta": "Wat is Bitcoin?"
+    }
+  },
+  "bitcoin": {
+    "needAWallet": "Om jouw Bitcoin op te nemen, heb je eerst een Bitcoin-portemonnee nodig. Ontdek meer in de volgende stap.",
+    "footer": {
+      "text": "Doorgaan",
+      "cta": "Installeer een portemonnee"
+    },
+    "digitalCash": {
+      "title": "Bitcoin is Digitaal Geld",
+      "description": "Bitcoin is een digitale valuta waarmee je rechtstreeks geld naar een andere persoon kunt sturen zonder een bank of andere tussenpersoon te gebruiken. Het is vergelijkbaar met betalen met papiergeld bij een krantenkiosk."
+    },
+    "anytimeAnywhere": {
+      "title": "Altijd en overal",
+      "description": "Bitcoin is niet gesloten in het weekend. Het enige wat je nodig hebt is een computer of mobiele telefoon om te beginnen. Met Bitcoin kun je overal ter wereld transacties uitvoeren."
+    },
+    "beYourOwnBank": {
+      "title": "Wees je eigen bank",
+      "description": "Neem de controle over jouw geld met Bitcoin. Zeg vaarwel tegen het redden van omgevallen banken en fractioneel bankieren. En vergeet persoonlijke vragen en formulieren van banken - met Bitcoin kun je snel en gemakkelijk transacties uitvoeren."
+    },
+    "deflationary": {
+      "title": "Bitcoin is Deflatie Bevorderend",
+      "description": "Bitcoin stelt je in staat om controle te nemen over jouw geld en het te beschermen tegen oneerlijk beleid en inflatie. Met een vast aanbod is het een stabiel alternatief voor reguliere valuta's."
+    },
+    "freedom": {
+      "title": "Bitcoin is Vrijheid",
+      "description": "De alternatieve optie voor Bitcoin zijn door de overheid gecontroleerde digitale valuta's, of CBDC's. Met deze valuta's kan jouw overheid bepalen hoe en wanneer je jouw geld kunt besteden, en het zelfs van je afnemen als je het niet snel genoeg gebruikt."
+    },
+    "absoluteScarcity": {
+      "title": "Absolute Schaarste",
+      "description": "Bitcoin is de enige valuta met een vast, beperkt aanbod. In tegenstelling tot goud, waarvan we niet weten hoeveel er bestaat, is de maximale hoeveelheid Bitcoin beperkt tot 21 miljoen. Dit maakt het hét ultieme schaarse bezit."
+    },
+    "bitcoinNotCrypto": {
+      "title": "Bitcoin is geen \"Crypto\"",
+      "description": "Bitcoin heeft geen marketingteam, geen vooraf gedolven munten en geen durfkapitaal. Het werd zo eerlijk mogelijk gelanceerd, zonder aanvankelijke waarde in dollars. Er is geen op een na beste optie."
+    },
+    "renewableEnergy": {
+      "title": "Stimuleren van Hernieuwbare Energie",
+      "description": "Bitcoin-miners gebruiken elektriciteit om te concurreren en nieuwe bitcoins te verdienen, wat helpt om het netwerk veilig te houden. Goedkope, hernieuwbare elektriciteit geeft mijnwerkers een voordeel en maakt het elektriciteitsnet stabieler."
+    }
+  },
+  "wallet": {
+    "needAWallet": "Je moet een portemonnee downloaden om zelf jouw bitcoin in eigen beheer te hebben.",
+    "selfCustody": "Zelfbeheer van bitcoin is als het hebben van je eigen huissleutels. Het hebben van de sleutels geeft je directe toegang en controle over jouw bezittingen en zorgt ervoor dat niemand anders zonder jouw toestemming kan binnenkomen of toegang kan krijgen.",
+    "footer": {
+      "text": "Doorgaan",
+      "cta": "Opnemen"
+    }
+  },
+  "congratulations": {
+    "title": "Gefeliciteerd! 🎉",
+    "subtitle": "Je bent de trotse nieuwe eigenaar van een fractie van een bitcoin.",
+    "quote": "Geruchten zeggen dat degenen die bitcoin krijgen, een heel speciaal soort mensen zijn.",
+    "footer": {
+      "text": "Doorgaan",
+      "cta": "Bitcoin gebruiken"
+    }
+  }
+}

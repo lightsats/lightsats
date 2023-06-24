@@ -1,0 +1,11 @@
+{
+  "hello": "Hallo {{tippeeName}}.",
+  "tipperHasGiftedYou": "{{tipperName}} heeft je een gift gegeven",
+  "youHaveBeenGifted": "Je hebt een gift gekregen",
+  "expired": "Deze gift is verlopen.",
+  "instructions.phone": "Voer hieronder je telefoonnummer in en druk op de knop om je geld te claimen.",
+  "instructions.email": "Voer hieronder je e-mailadres in en druk op de knop om je geld te claimen.",
+  "instructions.lightning": "Log in met je Lightning-portemonnee om je geld te claimen.",
+  "expiresIn": "Verloopt over {{expiry}}",
+  "claim": "Claim mijn geld"
+}

@@ -1,0 +1,10 @@
+{
+    "tippee": {
+        "expired": "Je hebt deze gift niet op tijd opgenomen 😭",
+        "willExpire": "Deze gift zal verlopen. Je kunt maar beter opschieten! ✌️"
+    },
+    "tipper": {
+        "expired": "Je ontvanger heeft hun gift niet op tijd opgenomen. Het is {{distance}} geleden verlopen 😭",
+        "willExpire": "Je ontvanger ontvangt af en toe herinneringen om hun gift te claimen en op te nemen voordat deze verloopt ✌️"
+    }
+}

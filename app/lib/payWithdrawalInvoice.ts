@@ -5,6 +5,7 @@ import { WITHDRAWAL_RETRY_DELAY } from "lib/constants";
 import { getPayment } from "lib/lnbits/getPayment";
 import { payInvoice } from "lib/lnbits/payInvoice";
 import prisma from "lib/prismadb";
+import { limitTips } from "lib/utils";
 import { getWithdrawableTipsQuery } from "lib/withdrawal";
 
 export async function payWithdrawalInvoice(
@@ -91,12 +92,15 @@ export async function payWithdrawalInvoice(
     parseInt(bolt11.decode(invoice).millisatoshis || "0") / 1000;
 
   // FIXME: this needs to be in a transaction / only use the ids of tips originally retrieved, not the same query
-  const tips = await prisma.tip.findMany({
-    where: getWithdrawableTipsQuery(withdrawalFlow, userId, tipId),
-    include: {
-      tipper: true,
-    },
-  });
+  // NOTE: it is partially addressed by the balance check, however there is no guarantee that the same tips are withdrawn
+  const tips = limitTips(
+    await prisma.tip.findMany({
+      where: getWithdrawableTipsQuery(withdrawalFlow, userId, tipId),
+      include: {
+        tipper: true,
+      },
+    })
+  );
 
   if (!tips.length) {
     const errorMessage = "No tips are available to withdraw";

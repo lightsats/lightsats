@@ -1,0 +1,6 @@
+{
+  "title": "Klaar om op te nemen?",
+  "withdrawing": "Opnemen...",
+  "lnurlInstructions": "Scan, tik of kopieer de onderstaande link naar je Bitcoin-portemonnee om op te nemen.",
+  "withdrawAvailableBalance": "Neem {{availableBalance}} sats op naar je portemonnee"
+}

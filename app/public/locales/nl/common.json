@@ -1,0 +1,18 @@
+{
+  "email": "📧 E-mail",
+  "phone": "📱 Telefoon",
+  "lightning": "⚡ Lightning",
+  "loginWithLightning": "Inloggen met Lightning",
+  "or": "of",
+  "copy": "Kopiëren",
+  "copiedToClipboard": "Gekopieerd naar klembord",
+  "verifyPhoneMessage": "Lightsats-login",
+  "checkEmailTitle": "Controleer je inbox",
+  "checkEmailText": "Er is een magische link 🪄 naar je inbox gestuurd. Klik erop om je e-mailadres te bevestigen.",
+  "checkSMSTitle": "Controleer je telefoon",
+  "checkSMSText": "Er is een magische link 🪄 naar je telefoon gestuurd. Klik erop om je telefoonnummer te bevestigen.",
+  "createdAgo": "gemaakt {{distance}} geleden",
+  "amountInSats": "{{amount}} sats",
+  "openInWallet": "Openen in portemonnee",
+  "alternativeWaysToSignIn": "Alternatieve manieren om in te loggen"
+}
