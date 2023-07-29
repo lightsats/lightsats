@@ -86,9 +86,12 @@ async function deleteTipGroup(
       groupId: tipGroup.id,
     },
   });
-  await prisma.tipGroup.delete({
+  await prisma.tipGroup.update({
     where: {
       id: tipGroup.id,
+    },
+    data: {
+      status: "DELETED",
     },
   });
   return res.status(StatusCodes.NO_CONTENT).end();

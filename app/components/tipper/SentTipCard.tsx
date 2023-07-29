@@ -10,13 +10,14 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
+import { ExpiryBadge } from "components/ExpiryBadge";
 import { FiatPrice } from "components/FiatPrice";
 import { NextLink } from "components/NextLink";
 import { TipStatusBadge } from "components/tipper/TipStatusBadge";
 import copy from "copy-to-clipboard";
 import { formatDistance, formatDistanceStrict } from "date-fns";
 import { useExchangeRates } from "hooks/useExchangeRates";
-import { DEFAULT_FIAT_CURRENCY, expirableTipStatuses } from "lib/constants";
+import { DEFAULT_FIAT_CURRENCY } from "lib/constants";
 import { PageRoutes } from "lib/PageRoutes";
 import { getClaimUrl, hasTipExpired } from "lib/utils";
 import React, { CSSProperties } from "react";
@@ -54,59 +55,14 @@ export function SentTipCard({
               }}
             >
               <Card.Body>
-                <Row justify="space-between">
-                  <Row css={{ gap: "$1" }}>
+                <Row justify="space-between" align="center">
+                  <Row css={{ gap: "$1" }} align="center">
                     <TipStatusBadge tip={tip} />
-                    {!hasExpired &&
-                      expirableTipStatuses.indexOf(tip.status) >= 0 && (
-                        <Tooltip
-                          content={`Expires in ${formatDistance(
-                            new Date(),
-                            new Date(tip.expiry)
-                          )}`}
-                          color="primary"
-                          triggerCss={{ display: "inline" }}
-                        >
-                          <Badge
-                            color="primary"
-                            variant="flat"
-                            size="xs"
-                            css={{
-                              letterSpacing: 0,
-                              fontWeight: 400,
-                            }}
-                          >
-                            ⌛{" "}
-                            {formatDistance(new Date(tip.expiry), Date.now())}
-                          </Badge>
-                        </Tooltip>
-                      )}
-                    {hasExpired && (
-                      <Tooltip
-                        content={`Expired ${formatDistance(
-                          new Date(),
-                          new Date(tip.expiry)
-                        )} ago`}
-                        color="primary"
-                        triggerCss={{ display: "inline" }}
-                      >
-                        <Badge variant="flat" color="warning" size="xs">
-                          ⌛ Expired
-                        </Badge>
-                      </Tooltip>
-                    )}
+                    <ExpiryBadge tip={tip} viewing="tippee" />
                     {tip.type === "NON_CUSTODIAL_NWC" && (
-                      <Tooltip
-                        content={
-                          "Non-custodial tips currently cannot be reclaimed"
-                        }
-                        color="primary"
-                        triggerCss={{ display: "inline" }}
-                      >
-                        <Badge variant="flat" color="success" size="xs">
-                          NON-CUSTODIAL
-                        </Badge>
-                      </Tooltip>
+                      <Badge variant="flat" color="success" size="xs">
+                        NON-CUSTODIAL
+                      </Badge>
                     )}
                   </Row>
                   <Text b>
