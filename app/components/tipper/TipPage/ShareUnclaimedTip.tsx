@@ -109,10 +109,14 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
     );
     await nwc.initNWC({
       name: `Lightsats Tip ${tip.id}`,
+      budgetRenewal: "never",
+      editable: false,
+      expiresAt: new Date(tip.expiry),
+      maxAmount: tip.amount,
     });
 
     setNwcConnectionString(nwc.getNostrWalletConnectUrl(true));
-  }, [tip.id]);
+  }, [tip.id, tip.expiry, tip.amount]);
 
   React.useEffect(() => {
     if (isGeneratingPassphrase && tip.passphrase) {
@@ -224,8 +228,8 @@ export function ShareUnclaimedTip({ tip }: ShareUnclaimedTipProps) {
                 <Row justify="center">
                   <Text size="small" b>
                     Warning: only tip users you trust and do not share this tip
-                    link publically as there is currently no limit on how much
-                    funds can be drawn from your wallet.
+                    link publically. Make sure to set a budget to the tip
+                    amount.
                   </Text>
                 </Row>
                 <Spacer />

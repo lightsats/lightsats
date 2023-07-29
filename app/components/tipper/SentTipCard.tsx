@@ -95,6 +95,19 @@ export function SentTipCard({
                         </Badge>
                       </Tooltip>
                     )}
+                    {tip.type === "NON_CUSTODIAL_NWC" && (
+                      <Tooltip
+                        content={
+                          "Non-custodial tips currently cannot be reclaimed"
+                        }
+                        color="primary"
+                        triggerCss={{ display: "inline" }}
+                      >
+                        <Badge variant="flat" color="success" size="xs">
+                          NON-CUSTODIAL
+                        </Badge>
+                      </Tooltip>
+                    )}
                   </Row>
                   <Text b>
                     <FiatPrice

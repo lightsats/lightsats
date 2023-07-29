@@ -19,5 +19,10 @@ const transport = nodemailer.createTransport({
   },
 });
 
-export const sendEmail = (...args: Parameters<typeof transport.sendMail>) =>
-  transport.sendMail(...args);
+export const sendEmail = (...args: Parameters<typeof transport.sendMail>) => {
+  try {
+    transport.sendMail(...args);
+  } catch (error) {
+    console.error("Failed to send email", error, args);
+  }
+};

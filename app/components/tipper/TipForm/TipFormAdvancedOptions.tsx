@@ -1,4 +1,5 @@
 import {
+  Badge,
   Col,
   Input,
   Link,
@@ -112,39 +113,47 @@ export function TipFormAdvancedOptions({
   return (
     <>
       {mode === "create" && <Spacer />}
-      <Row align="flex-start">
-        <Col>
-          <Text>⌛ Tip expiry</Text>
-          <Text small css={{ mt: 6, lineHeight: 1.2, display: "inline-block" }}>
-            Days until the tip returns back to you.
-          </Text>
-        </Col>
-        <Col css={{ ta: "right" }}>
-          <Controller
-            name="expiresIn"
-            control={control}
-            render={({ field }) => (
-              <Input
-                aria-label="Tip expires in"
-                {...field}
-                {...register("expiresIn", {
-                  valueAsNumber: true,
-                })}
-                min={1}
-                style={{
-                  textAlign: "center",
-                }}
-                width="100px"
-                type="number"
-                inputMode="decimal"
-                bordered
-                color="primary"
-              />
-            )}
-          />
-        </Col>
-      </Row>
-      <Divider />
+      {mode === "create" ||
+        (watchedTipType !== "NON_CUSTODIAL_NWC" && (
+          <>
+            <Row align="flex-start">
+              <Col>
+                <Text>⌛ Tip expiry</Text>
+                <Text
+                  small
+                  css={{ mt: 6, lineHeight: 1.2, display: "inline-block" }}
+                >
+                  Days until the tip returns back to you.
+                </Text>
+              </Col>
+              <Col css={{ ta: "right" }}>
+                <Controller
+                  name="expiresIn"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      aria-label="Tip expires in"
+                      {...field}
+                      {...register("expiresIn", {
+                        valueAsNumber: true,
+                      })}
+                      min={1}
+                      style={{
+                        textAlign: "center",
+                      }}
+                      width="100px"
+                      type="number"
+                      inputMode="decimal"
+                      bordered
+                      color="primary"
+                    />
+                  )}
+                />
+              </Col>
+            </Row>
+            <Divider />
+          </>
+        ))}
       <Radio.Group
         label="Onboarding Flow"
         value={watchedOnboardingFlow}
@@ -310,25 +319,29 @@ Micheal Saylor`
       >
         Hide your info from your recipient
       </Text>
-      <Divider />
-      <Row align="flex-start">
-        <Col>
-          <Text css={{ whiteSpace: "nowrap" }}>🆒 Generate Passphrase</Text>
-        </Col>
-        <Col css={{ ta: "right" }}>
-          <Controller
-            name="generatePassphrase"
-            control={control}
-            render={({ field }) => (
-              <Switch
-                {...field}
-                checked={field.value}
-                onChange={(e) => field.onChange(e.target.checked)}
+      {watchedTipType !== "NON_CUSTODIAL_NWC" && (
+        <>
+          <Divider />
+          <Row align="flex-start">
+            <Col>
+              <Text css={{ whiteSpace: "nowrap" }}>🆒 Generate Passphrase</Text>
+            </Col>
+            <Col css={{ ta: "right" }}>
+              <Controller
+                name="generatePassphrase"
+                control={control}
+                render={({ field }) => (
+                  <Switch
+                    {...field}
+                    checked={field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                )}
               />
-            )}
-          />
-        </Col>
-      </Row>
+            </Col>
+          </Row>
+        </>
+      )}
       {/*watchedGeneratePassphrase && (
         <>
           <Row justify="space-between" align="center">
@@ -444,7 +457,8 @@ Micheal Saylor`
         }}
       >
         Advertise an external service or website on the congratulations screen.
-        Only shown for Default and Lightning onboarding flows.
+        Only shown for Default and Lightning onboarding flows. To show an
+        advertisement, both URL and image must be provided.
       </Text>
       <Spacer y={0.5} />
       <Row>
@@ -478,6 +492,59 @@ Micheal Saylor`
           )}
         />
       </Row>
+      {mode === "create" && (
+        <>
+          <Divider />
+          <Row justify="space-between" align="center">
+            <Row>
+              <Text>Non-Custodial</Text>
+              <Spacer x={0.25} />
+              <Badge color="warning">BETA</Badge>
+            </Row>
+            <Spacer x={0.5} />
+
+            <Switch
+              checked={watchedTipType === "NON_CUSTODIAL_NWC"}
+              disabled={quantity !== 1}
+              onChange={(e) =>
+                setValue(
+                  "type",
+                  e.target.checked ? "NON_CUSTODIAL_NWC" : "CUSTODIAL"
+                )
+              }
+            />
+          </Row>
+          {quantity !== 1 && (
+            <Text b>
+              Non-custodial mode currently only available for single tips
+            </Text>
+          )}
+          <Row>
+            <Text size="small">
+              Retain custody of your unclaimed sats. Only pay routing fees.
+              Powered by{" "}
+              <Link
+                href="https://nwc.getalby.com"
+                target="_blank"
+                css={{ display: "inline" }}
+              >
+                NWC
+              </Link>
+            </Text>
+          </Row>
+          {watchedTipType === "NON_CUSTODIAL_NWC" && (
+            <Row>
+              <Text size="small" b>
+                WARNING: Recipient will not reminders to withdraw tip as NWC URL
+                cannot be shared with a mail or SMS service. Tip expiry cannot
+                be edited. Only manual withdrawal via invoice is supported.
+                Printed cards are not currently supported. Passphrase option is
+                not supported because lightsats does not store NWC URL.
+              </Text>
+            </Row>
+          )}
+        </>
+      )}
     </>
   );
 }

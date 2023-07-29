@@ -4,17 +4,14 @@ import {
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 import {
-  Badge,
   Button,
   Card,
   Col,
   Collapse,
   Input,
-  Link,
   Loading,
   Row,
   Spacer,
-  Switch,
   Text,
   Tooltip,
 } from "@nextui-org/react";
@@ -50,7 +47,6 @@ import {
   getSatsAmount,
   getSymbolFromCurrencyWithFallback,
 } from "lib/utils";
-import { useRouter } from "next/router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -99,8 +95,6 @@ export function TipForm({
     [mode, tips]
   );
 
-  const router = useRouter();
-  const NON_CUSTODIAL_TIPS_ENABLED = router.query.experimental === "true";
   const { data: exchangeRates } = useExchangeRates();
 
   const { control, handleSubmit, watch, setValue, setFocus, register } =
@@ -204,6 +198,11 @@ export function TipForm({
     (data: TipFormData) => {
       let satsAmount = 0;
       try {
+        if (!!data.advertisementImageUrl !== !!data.advertisementUrl) {
+          throw new Error(
+            "Both advertisement options must be provided, or neither"
+          );
+        }
         if (!watchedExchangeRate) {
           throw new Error("Exchange rates not loaded");
         }
@@ -269,51 +268,6 @@ export function TipForm({
         <>
           <Card css={{ dropShadow: "$sm", w: "100%" }}>
             <Card.Body>
-              {NON_CUSTODIAL_TIPS_ENABLED && (
-                <>
-                  <Row justify="space-between" align="center">
-                    <Row>
-                      <Text>Non-Custodial</Text>
-                      <Spacer x={0.25} />
-                      <Badge color="warning">BETA</Badge>
-                    </Row>
-                    <Spacer x={0.5} />
-                    <Switch
-                      checked={watchedTipType === "NON_CUSTODIAL_NWC"}
-                      onChange={(e) =>
-                        setValue(
-                          "type",
-                          e.target.checked ? "NON_CUSTODIAL_NWC" : "CUSTODIAL"
-                        )
-                      }
-                    />
-                  </Row>
-                  <Row>
-                    <Text size="small">
-                      Retain custody of your unclaimed sats. Only pay routing
-                      fees. Powered by{" "}
-                      <Link
-                        href="https://nwc.getalby.com"
-                        target="_blank"
-                        css={{ display: "inline" }}
-                      >
-                        NWC
-                      </Link>
-                    </Text>
-                  </Row>
-                  {watchedTipType === "NON_CUSTODIAL_NWC" && (
-                    <Row>
-                      <Text size="small" b>
-                        WARNING: non-custodial functionality is very limited and
-                        provides a less user-friendly experience for the
-                        recipient.
-                      </Text>
-                    </Row>
-                  )}
-                  <Divider />
-                  <Spacer />
-                </>
-              )}
               <Row justify="space-between" align="center">
                 <Col>Currency</Col>
                 <Col>
