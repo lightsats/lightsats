@@ -2,21 +2,22 @@ import { Button, Card, Col, Link, Row, Spacer, Text } from "@nextui-org/react";
 import { Icon } from "components/Icon";
 import { NextLink } from "components/NextLink";
 import { WithdrawSuggestion } from "components/tippee/WithdrawSuggestion";
+import { useGuides } from "hooks/useGuides";
 import { useReceivedTips } from "hooks/useTips";
 import { PageRoutes } from "lib/PageRoutes";
 import { hasTipExpired } from "lib/utils";
-import { guides } from "pages/guide";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Guide } from "types/Guide";
-
-const suggestions: Guide[] = [guides[0], guides[2], guides[7]];
 
 export function TippeeSuggestions() {
   const { data: tips } = useReceivedTips();
   const hasWithdrawableTip = tips?.some(
     (tip) => tip.status === "CLAIMED" && !hasTipExpired(tip)
   );
+
+  const guides = useGuides();
+  const suggestions: Guide[] = [guides[0], guides[2], guides[7]];
 
   return hasWithdrawableTip ? (
     <WithdrawSuggestion />
