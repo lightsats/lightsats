@@ -44,7 +44,7 @@ export function SentTips() {
 
   return (
     <>
-      {filteredTips && filteredTips.length > 0 ? (
+      {tips && tips.length > 0 && (
         <>
           <Row align="flex-start">
             <Col>
@@ -68,6 +68,10 @@ export function SentTips() {
               />
             </Col>
           </Row>
+        </>
+      )}
+      {filteredTips && filteredTips.length > 0 ? (
+        <>
           <Grid.Container justify="center" gap={1}>
             {filteredTips.map((tip) =>
               tip.group ? (
