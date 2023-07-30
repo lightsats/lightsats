@@ -21,10 +21,8 @@ export function PayInvoice({ variant, invoice }: PayInvoiceProps) {
         if (window.webln) {
           try {
             console.log("Launching webln");
-            const result = await window.webln.enable();
-            if (result.enabled) {
-              window.webln.sendPayment(invoice);
-            }
+            await window.webln.enable();
+            window.webln.sendPayment(invoice);
           } catch (error) {
             console.error("Failed to load webln", error);
           }
