@@ -535,11 +535,12 @@ Micheal Saylor`
           {watchedTipType === "NON_CUSTODIAL_NWC" && (
             <Row>
               <Text size="small" b>
-                WARNING: Recipient will not reminders to withdraw tip as NWC URL
-                cannot be shared with a mail or SMS service. Tip expiry cannot
-                be edited. Only manual withdrawal via invoice is supported.
-                Printed cards are not currently supported. Passphrase option is
-                not supported because lightsats does not store NWC URL.
+                WARNING: Recipient will not receive reminders to withdraw tip as
+                NWC URL cannot be safely shared with a mail or SMS service. Tip
+                expiry cannot be edited. Only manual withdrawal via invoice is
+                supported. Printed cards are not currently supported. Passphrase
+                option is not supported because lightsats does not store NWC
+                URL.
               </Text>
             </Row>
           )}
