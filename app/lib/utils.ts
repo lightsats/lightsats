@@ -111,7 +111,9 @@ export const getCurrentUrl = (router: NextRouter) => {
 };
 
 export const hasTipExpired = (tip: Tip | PublicTip) =>
-  expirableTipStatuses.indexOf(tip.status) >= 0 &&
+  expirableTipStatuses.indexOf(tip.status) >= 0 && isOldTip(tip);
+
+export const isOldTip = (tip: Tip | PublicTip) =>
   isAfter(new Date(), new Date(tip.expiry));
 
 export const formatAmount = (amount: number, decimals = 2) => {

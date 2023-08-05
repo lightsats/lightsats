@@ -45,7 +45,7 @@ export function ExpiryBadge({ tip, viewing }: Props) {
             })}
           </>
         )}
-        {hasExpired && <>Expired</>}
+        {hasExpired && <>⌛ Expired</>}
       </Badge>
     </Tooltip>
   );

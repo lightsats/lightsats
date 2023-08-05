@@ -7,6 +7,7 @@ import {
   Text,
   Tooltip,
 } from "@nextui-org/react";
+import { ExpiryBadge } from "components/ExpiryBadge";
 import { FiatPrice } from "components/FiatPrice";
 import { NextLink } from "components/NextLink";
 import { TipGroupProgress } from "components/tipper/TipGroupProgress";
@@ -39,7 +40,7 @@ export function SentTipGroupCard({ tipGroup }: SentTipGroupCardProps) {
           <Card isPressable isHoverable css={{ dropShadow: "$sm", zIndex: 10 }}>
             <Card.Body>
               <Row justify="space-between" align="center">
-                <Row css={{ gap: "$1" }}>
+                <Row css={{ gap: "$1" }} align="center">
                   <Tooltip
                     color="primary"
                     triggerCss={{ display: "inline" }}
@@ -59,6 +60,7 @@ export function SentTipGroupCard({ tipGroup }: SentTipGroupCardProps) {
                     </Badge>
                   </Tooltip>
                   <TipGroupStatusBadge tipGroup={tipGroup} />
+                  <ExpiryBadge tip={firstTip} viewing="tippee" />
                 </Row>
                 <Text b>
                   <FiatPrice

@@ -82,6 +82,13 @@ export function TipGroupSettingsDropdown({
   );
 
   const deleteTipGroup = React.useCallback(() => {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this tip group? any sats sent to it cannot be recovered"
+      )
+    ) {
+      return;
+    }
     (async () => {
       router.push(PageRoutes.dashboard);
       const result = await fetch(`${ApiRoutes.tipGroups}/${id}`, {

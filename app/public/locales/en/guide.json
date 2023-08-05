@@ -1,0 +1,41 @@
+{
+  "title": "What would you like to do with your Bitcoin?",
+  "spend": {
+    "name": "Spend 🛒",
+    "description": "Spend at stores accepting Bitcoin, purchase gift cards, pre-paid visa cards, pay bills",
+    "shortDescription": "Spend at stores accepting Bitcoin"
+  },
+  "earn": {
+    "name": "Earn 🤑",
+    "description": "Earn extra Bitcoin"
+  },
+  "buy": {
+    "name": "Buy 🌽",
+    "description": "Buy Bitcoin from trusted exchanges"
+  },
+  "save": {
+    "name": "Save 🏦",
+    "description": "How to safely store your Bitcoin long-term"
+  },
+  "send": {
+    "name": "Send ↗️",
+    "description": "Send Bitcoin to a loved one"
+  },
+  "tip": {
+    "name": "Tip 💁🏽‍♀️",
+    "description": "Send a tip directly or onboard a new user with Lightsats!"
+  },
+  "donate": {
+    "name": "Donate 🧡",
+    "description": "Donate Bitcoin to someone in need"
+  },
+  "learn": {
+    "name": "Learn 📙",
+    "description": "Learn more about Bitcoin and why \"Bitcoin Fixes This\" - Philosophy, Engineering, Economics, Politics, History...",
+    "shortDescription": "Learn more about Bitcoin and Lightning"
+  },
+  "wallets": {
+    "name": "Wallets 👛",
+    "description": "View recommended Lightning wallets"
+  }
+}

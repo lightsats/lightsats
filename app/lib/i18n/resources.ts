@@ -2,6 +2,7 @@ import achievements from "public/locales/en/achievements.json";
 import claim from "public/locales/en/claim.json";
 import common from "public/locales/en/common.json";
 import email from "public/locales/en/email.json";
+import guide from "public/locales/en/guide.json";
 import items from "public/locales/en/items.json";
 import journey from "public/locales/en/journey.json";
 import login from "public/locales/en/login.json";
@@ -19,6 +20,7 @@ export const resources = {
     items,
     withdraw,
     journey,
+    guide,
   },
 } as const;
 

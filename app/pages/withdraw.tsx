@@ -324,13 +324,11 @@ export function Withdraw({ flow, tipId, isPreview }: WithdrawProps) {
             if (!hasLaunchedWebln) {
               setLaunchedWebln(true);
               console.log("Launching webln");
-              const result = await window.webln.enable();
-              if (result.enabled) {
-                const makeInvoiceResponse = await window.webln.makeInvoice({
-                  amount: availableBalance,
-                });
-                executeWithdrawal(makeInvoiceResponse.paymentRequest, true);
-              }
+              await window.webln.enable();
+              const makeInvoiceResponse = await window.webln.makeInvoice({
+                amount: availableBalance,
+              });
+              executeWithdrawal(makeInvoiceResponse.paymentRequest, true);
             }
           } catch (error) {
             console.error("Failed to load webln", error);

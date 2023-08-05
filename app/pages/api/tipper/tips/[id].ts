@@ -66,9 +66,12 @@ async function deleteTip(
     console.warn("No lnbits user+wallet for tip " + tip.id);
   }
 
-  await prisma.tip.delete({
+  await prisma.tip.update({
     where: {
       id: tip.id,
+    },
+    data: {
+      status: "DELETED",
     },
   });
 

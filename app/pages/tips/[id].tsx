@@ -74,6 +74,13 @@ const TipPage: NextPage = () => {
   const placing = useLeaderboardPosition(session?.user.id);
 
   const deleteTip = React.useCallback(() => {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this tip? any sats sent to it cannot be recovered"
+      )
+    ) {
+      return;
+    }
     (async () => {
       router.push(PageRoutes.dashboard);
       const result = await fetch(`/api/tipper/tips/${id}`, {
@@ -88,6 +95,12 @@ const TipPage: NextPage = () => {
   }, [id, router, mutateTips]);
 
   const reclaimTip = React.useCallback(() => {
+    if (!tip?.type || tip.type === "NON_CUSTODIAL_NWC") {
+      window.alert(
+        "non-custodial tips cannot be reclaimed. Please manually remove the NWC connection."
+      );
+      return;
+    }
     if (
       hasExpired ||
       window.confirm(
@@ -106,7 +119,7 @@ const TipPage: NextPage = () => {
         }
       })();
     }
-  }, [hasExpired, id, mutateTips, router]);
+  }, [hasExpired, id, mutateTips, router, tip?.type]);
 
   if (tip) {
     return (
@@ -232,7 +245,7 @@ const TipPage: NextPage = () => {
 
 export default TipPage;
 
-export { getStaticProps, getStaticPaths };
+export { getStaticPaths, getStaticProps };
 
 function TipGroupLink({ groupId }: { groupId: string }) {
   return (

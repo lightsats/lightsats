@@ -395,6 +395,7 @@ enum ReminderType {
 enum TipGroupStatus {
   UNFUNDED
   FUNDED
+  DELETED
 }
 
 enum TipStatus {
@@ -409,6 +410,7 @@ enum TipStatus {
   UNAVAILABLE // tip version is out of date - tip can no longer be claimed or withdrawn
   UNSEEN
   SEEN
+  DELETED
 }
 
 enum WithdrawalFlow {
