@@ -65,7 +65,6 @@ export default async function handler(
           verifyUrl,
           i18n,
         }),
-        from: `Lightsats <${process.env.EMAIL_FROM}>`,
       });
       return res.status(StatusCodes.NO_CONTENT).end();
     } catch (error) {
