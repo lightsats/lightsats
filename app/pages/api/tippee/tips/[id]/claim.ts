@@ -118,7 +118,6 @@ async function handleClaimTip(
           tip,
           tip.tipper.locale
         )}">click here</a>`,
-        from: `Lightsats <${process.env.EMAIL_FROM}>`,
       });
     } catch (error) {
       console.error(

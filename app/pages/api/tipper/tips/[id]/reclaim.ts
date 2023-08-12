@@ -76,7 +76,6 @@ async function handleReclaimTip(
               ? `Your sats will be automatically returned to ${tip.tipper.lightningAddress}.`
               : `Set a lightning address in your <a href="${getAppUrl()}/profile">Lightsats profile</a> to get your sats automatically returned to you.`
           }`,
-          from: `Lightsats <${process.env.EMAIL_FROM}>`,
         });
       }
     } catch (error) {

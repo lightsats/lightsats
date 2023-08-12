@@ -204,7 +204,6 @@ async function sendReminder(reminder: Reminder) {
           ? "Reminder: You haven't withdrawn your Lightsats Tip yet!"
           : "Reminder: Your Lightsats Tip is expiring tomorrow!",
       html: `Withdraw your tip before it expires. To continue your journey <a href="${verifyUrl}">click here</a>`,
-      from: `Lightsats <${process.env.EMAIL_FROM}>`,
     });
   } else if (reminder.phoneNumber) {
     const shortUrl = (await generateShortLink(verifyUrl)) ?? verifyUrl;
