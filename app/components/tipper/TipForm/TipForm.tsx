@@ -4,6 +4,7 @@ import {
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 import {
+  Badge,
   Button,
   Card,
   Col,
@@ -15,17 +16,18 @@ import {
   Text,
   Tooltip,
 } from "@nextui-org/react";
+import { TipType } from "@prisma/client";
 import { Alert } from "components/Alert";
 import { CustomSelect, SelectOption } from "components/CustomSelect";
 import { Divider } from "components/Divider";
-import { FiatPrice } from "components/FiatPrice";
 import { FlexBox } from "components/FlexBox";
 import { Icon } from "components/Icon";
 import { HiddenWallets } from "components/tipper/TipForm/HiddenWallets";
-import { TipFormAdvancedOptions } from "components/tipper/TipForm/TipFormAdvancedOptions";
 import {
+  InputMethod,
   TipFormData,
   TipFormSubmitData,
+  TipTier,
 } from "components/tipper/TipForm/TipFormData";
 import { useRecommendedWalletSelectOptions } from "components/tipper/TipForm/useRecommendedWalletSelectOptions";
 import { useExchangeRates } from "hooks/useExchangeRates";
@@ -36,20 +38,22 @@ import {
   MAX_TIP_GROUP_QUANTITY,
   MAX_TIP_SATS,
   MINIMUM_FEE_SATS,
-  MIN_TIP_SATS,
+  //MIN_TIP_SATS,
   USE_PREV_TIP_PROPERTIES,
   appName,
 } from "lib/constants";
 import { wallets } from "lib/items/wallets";
-import {
-  calculateFee,
-  getFiatAmount,
-  getSatsAmount,
-  getSymbolFromCurrencyWithFallback,
-} from "lib/utils";
+import { getSymbolFromCurrencyWithFallback } from "lib/utils";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
+import {
+  Control,
+  Controller,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+  useForm,
+} from "react-hook-form";
+//import { toast } from "react-hot-toast";
 
 const formStyle: React.CSSProperties = {
   display: "flex",
@@ -70,8 +74,13 @@ type TipFormProps = {
 export function TipForm({
   onSubmit: onSubmitProp,
   defaultValues = {
-    quantity: 1,
-    amountString: "1",
+    tiers: [
+      {
+        quantity: 1,
+        amountString: "1",
+        amount: 1,
+      },
+    ],
     currency: "USD",
     expiresIn: 21,
     expiryUnit: "days",
@@ -84,8 +93,8 @@ export function TipForm({
     onboardingFlow: "DEFAULT",
   },
   mode,
-  quantity = 1,
-}: TipFormProps) {
+}: //quantity = 1,
+TipFormProps) {
   const [isSubmitting, setSubmitting] = React.useState(false);
   const { data: tips } = useTips(
     USE_PREV_TIP_PROPERTIES ? "tipper" : undefined
@@ -103,7 +112,7 @@ export function TipForm({
     });
 
   React.useEffect(() => {
-    setFocus("amount");
+    setFocus("tiers.0.amount");
   }, [setFocus]);
 
   React.useEffect(() => {
@@ -115,53 +124,47 @@ export function TipForm({
     }
   }, [mode, prevTip, setValue]);
 
-  const watchedAmountString = watch("amountString");
   const watchedTipType = watch("type");
-  const watchedAmount = watch("amount");
-  let watchedQuantity = watch("quantity");
-  if (isNaN(watchedQuantity)) {
-    watchedQuantity = quantity;
-  }
+  const watchedTiers = watch("tiers");
+
+  // FIXME: quantity
+  //quantity = quantity || watchedTiers.map(t => t.quantity).reduce((a,b) => a + b, 0)
+
   const watchedInputMethod = watch("inputMethod");
   const watchedCurrency = watch("currency");
   const watchedShowAdvancedOptions = watch("showAdvancedOptions");
   const watchedExchangeRate = exchangeRates?.[watchedCurrency];
-  const watchedAmountInSats =
+  const watchedAmountInSats = 0; /*
     watchedInputMethod === "fiat" && watchedExchangeRate
       ? getSatsAmount(watchedAmount, watchedExchangeRate)
-      : watchedAmount;
-  const watchedFeeInSats =
+      : watchedAmount;*/
+  const watchedFeeInSats = 0; /*
     watchedExchangeRate && watchedTipType !== "NON_CUSTODIAL_NWC"
       ? calculateFee(watchedAmountInSats)
-      : 0;
+      : 0;*/
 
-  React.useEffect(() => {
-    const parsedValue = parseFloat(watchedAmountString);
-    if (!isNaN(parsedValue)) {
-      setValue("amount", parsedValue);
-    }
-  }, [setValue, watchedAmountString]);
-
-  React.useEffect(() => {
+  /*React.useEffect(() => {
     if (watchedTipType === "NON_CUSTODIAL_NWC") {
+      throw new Error("FIXME");
       setValue("quantity", 1);
     }
-  }, [setValue, watchedTipType]);
+  }, [setValue, watchedTipType]);*/
 
-  const toggleInputMethod = React.useCallback(() => {
-    if (watchedExchangeRate) {
-      setValue("inputMethod", watchedInputMethod === "fiat" ? "sats" : "fiat");
-      setValue(
-        "amountString",
-        (watchedInputMethod === "fiat"
-          ? getSatsAmount(watchedAmount, watchedExchangeRate)
-          : Math.round(
-              getFiatAmount(watchedAmount, watchedExchangeRate) * 100
-            ) / 100
-        ).toString()
-      );
-    }
-  }, [watchedAmount, watchedExchangeRate, watchedInputMethod, setValue]);
+  // const toggleInputMethod = React.useCallback(() => {
+  //   if (watchedExchangeRate) {
+  //     setValue("inputMethod", watchedInputMethod === "fiat" ? "sats" : "fiat");
+  //     setValue(
+  //       "amountString",
+  //       (watchedInputMethod === "fiat"
+  //         ? getSatsAmount(watchedAmount, watchedExchangeRate)
+  //         : Math.round(
+  //             getFiatAmount(watchedAmount, watchedExchangeRate) * 100
+  //           ) / 100
+  //       ).toString()
+  //     );
+  //     throw new Error("FIXME");
+  //   }
+  // }, [watchedAmount, watchedExchangeRate, watchedInputMethod, setValue]);
 
   React.useEffect(() => {
     // automatically change to enter in sats if the user selects "BTC" as the fiat currency
@@ -194,7 +197,9 @@ export function TipForm({
     watchedOnboardingFlow
   );
 
-  const onSubmit = React.useCallback(
+  const onSubmit = () => {
+    throw new Error("FIXME");
+  }; /*React.useCallback(
     (data: TipFormData) => {
       let satsAmount = 0;
       try {
@@ -209,6 +214,7 @@ export function TipForm({
         if (isSubmitting) {
           throw new Error("Already submitting");
         }
+        throw new Error("FIXME");
         satsAmount =
           watchedInputMethod === "fiat"
             ? getSatsAmount(data.amount, watchedExchangeRate)
@@ -248,9 +254,9 @@ export function TipForm({
       })();
     },
     [watchedExchangeRate, isSubmitting, watchedInputMethod, mode, onSubmitProp]
-  );
+  );*/
 
-  const advancedOptions = watchedShowAdvancedOptions && (
+  const advancedOptions = /*watchedShowAdvancedOptions && (
     <TipFormAdvancedOptions
       mode={mode}
       register={register}
@@ -260,7 +266,7 @@ export function TipForm({
       quantity={watchedQuantity}
       satsAmount={watchedAmountInSats}
     />
-  );
+  );*/ null;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={formStyle}>
@@ -280,187 +286,44 @@ export function TipForm({
                   )}
                 </Col>
               </Row>
-              <Divider />
-              <Spacer />
-              <Row>
-                <Col>
-                  Amount
-                  <br />
-                  <Text small css={{ position: "relative", top: "-5px" }}>
-                    in{" "}
-                    {watchedInputMethod === "fiat"
-                      ? watchedCurrency
-                      : watchedInputMethod}
-                  </Text>
-                </Col>
-                <Col>
-                  <Row justify="flex-end" align="center" css={{ gap: "$5" }}>
-                    <FlexBox
-                      style={{
-                        flexDirection: "row",
-                        gap: "5px",
-                        overflow: "visible",
-                        position: "relative",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: "40px",
-                          height: "36px",
-                          position: "absolute",
-                          border: "1px solid black",
-                          background: "rgba(0,0,0, 0.2)",
-                          borderRadius: "50%",
-                          top: "50%",
-                          left: "50%",
-                          transform: "translate(-50%, -50%)",
-                          zIndex: -1,
-                        }}
-                      >
-                        <Icon
-                          width={12}
-                          height={12}
-                          color="black"
-                          style={{
-                            position: "absolute",
-                            top: -6,
-                            left: 8,
-                            rotate: "-15deg",
-                          }}
-                        >
-                          <ChevronRightIcon />
-                        </Icon>
-                        <Icon
-                          width={12}
-                          height={12}
-                          color="black"
-                          style={{
-                            position: "absolute",
-                            bottom: -6,
-                            right: 8,
-                            rotate: "-15deg",
-                          }}
-                        >
-                          <ChevronLeftIcon />
-                        </Icon>
-                      </div>
-                      <Button
-                        size="xs"
-                        auto
-                        css={{
-                          px: "4px",
-                          position: "relative",
-                          background:
-                            watchedInputMethod !== "sats"
-                              ? "$accents1"
-                              : undefined,
-                          border: "1px solid black",
-                        }}
-                        onClick={toggleInputMethod}
-                      >
-                        <div style={{ width: "16px" }}>{"⚡"}</div>
-                      </Button>
-                      <Button
-                        size="xs"
-                        auto
-                        css={{
-                          px: "4px",
-                          position: "relative",
-                          background:
-                            watchedInputMethod !== "fiat"
-                              ? "$accents1"
-                              : undefined,
-                          color:
-                            watchedInputMethod !== "fiat"
-                              ? "$accents8"
-                              : undefined,
-                          border: "1px solid black",
-                        }}
-                        onClick={toggleInputMethod}
-                      >
-                        <div style={{ width: "16px" }}>
-                          {getSymbolFromCurrencyWithFallback(watchedCurrency)}
-                        </div>
-                      </Button>
-                    </FlexBox>
-                    <Controller
-                      name="amountString"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          // {...register("amount", {
-                          //   valueAsNumber: true,
-                          // }) causes iOS decimal input bug, resetting field value }
-                          min={0}
-                          max={MAX_TIP_SATS}
-                          step={
-                            watchedInputMethod === "fiat"
-                              ? watchedCurrency === "BTC"
-                                ? 0.00000001
-                                : 0.01
-                              : 1
-                          }
-                          type="number"
-                          inputMode="decimal"
-                          aria-label="amount"
-                          css={{ width: "160px" }}
-                          size="lg"
-                          fullWidth
-                          bordered
-                          autoFocus
-                        />
-                      )}
-                    />
-                  </Row>
-                </Col>
-              </Row>
-              <Spacer />
-              <Row align="center">
-                <Row align="center">
-                  <Tooltip
-                    placement="right"
-                    content={`Create and print tips in bulk!`}
-                  >
-                    <Text>Quantity</Text>
-                  </Tooltip>
-                </Row>
-                <Col>
-                  <Row justify="flex-end">
-                    <Controller
-                      name="quantity"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          {...register("quantity", {
-                            valueAsNumber: true,
-                          })}
-                          min={1}
-                          max={MAX_TIP_GROUP_QUANTITY}
-                          step={1}
-                          type="number"
-                          inputMode="numeric"
-                          aria-label="quantity"
-                          css={{ width: "100px" }}
-                          size="lg"
-                          fullWidth
-                          bordered
-                          autoFocus
-                          disabled={watchedTipType === "NON_CUSTODIAL_NWC"}
-                        />
-                      )}
-                    />
-                  </Row>
-                </Col>
-              </Row>
-              {watchedTipType === "NON_CUSTODIAL_NWC" && (
+              {watchedTiers.map((_, index) => (
+                <TierCard
+                  key={index}
+                  index={index}
+                  control={control}
+                  register={register}
+                  setValue={setValue}
+                  watch={watch}
+                  watchedTiers={watchedTiers}
+                  //toggleInputMethod={toggleInputMethod}
+                  toggleInputMethod={() => alert("FIXME")}
+                  watchedCurrency={watchedCurrency}
+                  watchedInputMethod={watchedInputMethod}
+                  watchedTipType={watchedTipType}
+                />
+              ))}
+              {watchedTipType !== "NON_CUSTODIAL_NWC" && (
                 <>
-                  <Spacer y={0.5} />
-                  <Row>
-                    <Text size="small" css={{ color: "$accents7" }}>
-                      Currently non-custodial only supports single tips
-                    </Text>
+                  <Row justify="space-between" align="flex-end">
+                    <Row align="flex-end">
+                      <Text>Add Tier</Text>
+                      <Spacer x={0.25} />
+                      <Badge color="warning">BETA</Badge>
+                    </Row>
+                    <Spacer x={0.5} />
+
+                    <Button
+                      onClick={() =>
+                        setValue("tiers", [
+                          ...watchedTiers,
+                          { amount: 1, amountString: "1", quantity: 1 },
+                        ])
+                      }
+                      auto
+                      size="sm"
+                    >
+                      +
+                    </Button>
                   </Row>
                 </>
               )}
@@ -485,7 +348,7 @@ export function TipForm({
                     </Tooltip>
                   </Row>
                 </Col>
-                <Col css={{ ta: "right", alignItems: "flex-end", fd: "row" }}>
+                {/*<Col css={{ ta: "right", alignItems: "flex-end", fd: "row" }}>
                   {watchedExchangeRate ? (
                     <>
                       <Text>
@@ -509,12 +372,12 @@ export function TipForm({
                   ) : (
                     <Loading color="currentColor" size="sm" />
                   )}
-                </Col>
+                  </Col>*/}
               </Row>
               <Divider />
               {exchangeRates && watchedExchangeRate && (
                 <Row>
-                  <Col>
+                  {/*<Col>
                     <Text b>Total</Text>
                   </Col>
                   <Col css={{ ta: "right" }}>
@@ -544,7 +407,7 @@ export function TipForm({
                         watchedQuantity}{" "}
                       sats
                     </Text>
-                  </Col>
+                      </Col>*/}
                 </Row>
               )}
             </Card.Body>
@@ -600,16 +463,263 @@ export function TipForm({
           <Loading color="currentColor" size="sm" />
         ) : (
           <>
-            {watchedQuantity > 1
+            {
+              /*watchedQuantity > 1
               ? mode === "create"
                 ? "Create tips"
                 : "Update tips"
               : mode === "create"
               ? "Create tip"
-              : "Update tip"}
+        : "Update tip"*/ "FIXME"
+            }
           </>
         )}
       </Button>
     </form>
+  );
+}
+
+type TierCardProps = {
+  index: number;
+  control: Control<TipFormData, unknown>;
+  register: UseFormRegister<TipFormData>;
+  watch: UseFormWatch<TipFormData>;
+  setValue: UseFormSetValue<TipFormData>;
+  watchedInputMethod: InputMethod;
+  watchedCurrency: string;
+  watchedTipType: TipType | undefined;
+  watchedTiers: TipTier[];
+  toggleInputMethod(): void;
+};
+
+function TierCard({
+  index,
+  control,
+  register,
+  watch,
+  setValue,
+  watchedInputMethod,
+  watchedCurrency,
+  toggleInputMethod,
+  watchedTipType,
+  watchedTiers,
+}: TierCardProps) {
+  const amountFieldName = `tiers.${index}.amount` as const;
+  const amountStringFieldName = `tiers.${index}.amountString` as const;
+  const quantityFieldName = `tiers.${index}.quantity` as const;
+
+  const watchedAmountString = watch(amountStringFieldName);
+  //const watchedAmount = watch(amountFieldName);
+  let watchedQuantity = watch(quantityFieldName);
+  if (isNaN(watchedQuantity)) {
+    watchedQuantity = 1;
+  }
+  React.useEffect(() => {
+    const parsedValue = parseFloat(watchedAmountString);
+    if (!isNaN(parsedValue)) {
+      setValue(amountFieldName, parsedValue);
+    }
+  }, [amountFieldName, setValue, watchedAmountString]);
+  return (
+    <>
+      <Divider />
+      <Row justify="space-between">
+        <Text size="small">Tier {index + 1}</Text>
+        {index > 0 && (
+          <Button
+            auto
+            size="xs"
+            color="error"
+            onClick={() => {
+              const newTiers: TipTier[] = [];
+              for (let i = 0; i < watchedTiers.length; i++) {
+                if (i !== index) {
+                  newTiers.push(watchedTiers[i]);
+                }
+              }
+              setValue("tiers", newTiers);
+            }}
+          >
+            -
+          </Button>
+        )}
+      </Row>
+      <Spacer y={0.5} />
+      <Row>
+        <Col>
+          Amount
+          <br />
+          <Text small css={{ position: "relative", top: "-5px" }}>
+            in{" "}
+            {watchedInputMethod === "fiat"
+              ? watchedCurrency
+              : watchedInputMethod}
+          </Text>
+        </Col>
+        <Col>
+          <Row justify="flex-end" align="center" css={{ gap: "$5" }}>
+            <FlexBox
+              style={{
+                flexDirection: "row",
+                gap: "5px",
+                overflow: "visible",
+                position: "relative",
+              }}
+            >
+              <div
+                style={{
+                  width: "40px",
+                  height: "36px",
+                  position: "absolute",
+                  border: "1px solid black",
+                  background: "rgba(0,0,0, 0.2)",
+                  borderRadius: "50%",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: -1,
+                }}
+              >
+                <Icon
+                  width={12}
+                  height={12}
+                  color="black"
+                  style={{
+                    position: "absolute",
+                    top: -6,
+                    left: 8,
+                    rotate: "-15deg",
+                  }}
+                >
+                  <ChevronRightIcon />
+                </Icon>
+                <Icon
+                  width={12}
+                  height={12}
+                  color="black"
+                  style={{
+                    position: "absolute",
+                    bottom: -6,
+                    right: 8,
+                    rotate: "-15deg",
+                  }}
+                >
+                  <ChevronLeftIcon />
+                </Icon>
+              </div>
+              <Button
+                size="xs"
+                auto
+                css={{
+                  px: "4px",
+                  position: "relative",
+                  background:
+                    watchedInputMethod !== "sats" ? "$accents1" : undefined,
+                  border: "1px solid black",
+                }}
+                onClick={toggleInputMethod}
+              >
+                <div style={{ width: "16px" }}>{"⚡"}</div>
+              </Button>
+              <Button
+                size="xs"
+                auto
+                css={{
+                  px: "4px",
+                  position: "relative",
+                  background:
+                    watchedInputMethod !== "fiat" ? "$accents1" : undefined,
+                  color:
+                    watchedInputMethod !== "fiat" ? "$accents8" : undefined,
+                  border: "1px solid black",
+                }}
+                onClick={toggleInputMethod}
+              >
+                <div style={{ width: "16px" }}>
+                  {getSymbolFromCurrencyWithFallback(watchedCurrency)}
+                </div>
+              </Button>
+            </FlexBox>
+            <Controller
+              name={amountFieldName}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  // {...register(amountFieldName, {
+                  //   valueAsNumber: true,
+                  // }) causes iOS decimal input bug, resetting field value }
+                  min={0}
+                  max={MAX_TIP_SATS}
+                  step={
+                    watchedInputMethod === "fiat"
+                      ? watchedCurrency === "BTC"
+                        ? 0.00000001
+                        : 0.01
+                      : 1
+                  }
+                  type="number"
+                  inputMode="decimal"
+                  aria-label="amount"
+                  css={{ width: "160px" }}
+                  size="lg"
+                  fullWidth
+                  bordered
+                  autoFocus
+                />
+              )}
+            />
+          </Row>
+        </Col>
+      </Row>
+
+      <Spacer />
+      <Row align="center">
+        <Row align="center">
+          <Tooltip placement="right" content={`Create and print tips in bulk!`}>
+            <Text>Quantity</Text>
+          </Tooltip>
+        </Row>
+        <Col>
+          <Row justify="flex-end">
+            <Controller
+              name={quantityFieldName}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  {...register(quantityFieldName, {
+                    valueAsNumber: true,
+                  })}
+                  min={1}
+                  max={MAX_TIP_GROUP_QUANTITY}
+                  step={1}
+                  type="number"
+                  inputMode="numeric"
+                  aria-label="quantity"
+                  css={{ width: "100px" }}
+                  size="lg"
+                  fullWidth
+                  bordered
+                  autoFocus
+                  disabled={watchedTipType === "NON_CUSTODIAL_NWC"}
+                />
+              )}
+            />
+          </Row>
+        </Col>
+      </Row>
+      {watchedTipType === "NON_CUSTODIAL_NWC" && (
+        <>
+          <Spacer y={0.5} />
+          <Row>
+            <Text size="small" css={{ color: "$accents7" }}>
+              Currently non-custodial only supports single tips
+            </Text>
+          </Row>
+        </>
+      )}
+      <Spacer />
+    </>
   );
 }

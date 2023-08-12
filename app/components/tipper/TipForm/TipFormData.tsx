@@ -7,12 +7,14 @@ import {
 
 export const ExpiryUnitValues = ["minutes", "hours", "days"] as const;
 export type ExpiryUnit = typeof ExpiryUnitValues[number];
-type InputMethod = "fiat" | "sats";
+export type InputMethod = "fiat" | "sats";
+export type TipTier = {
+  amount: number;
+  amountString: string;
+  quantity: number;
+};
 
 export type TipFormData = {
-  amount: number;
-  quantity: number;
-  amountString: string;
   currency: string;
   note: string | undefined;
   expiresIn: number;
@@ -33,6 +35,7 @@ export type TipFormData = {
   advertisementImageUrl: string | undefined;
   type: TipType | undefined;
   enableStaticLink: boolean | undefined;
+  tiers: TipTier[];
 };
 
 export type TipFormSubmitData = Omit<
