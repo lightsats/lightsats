@@ -1,9 +1,15 @@
-# fly.toml file generated for lightsats on 2022-10-12T14:48:18+07:00
+# fly.toml app configuration file generated for lightsats on 2023-10-17T11:51:21+07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
 app = "lightsats"
+primary_region = "lax"
 kill_signal = "SIGINT"
-kill_timeout = 5
-processes = []
+kill_timeout = "5s"
+
+[experimental]
+  auto_rollback = true
 
 [build]
   dockerfile = "Dockerfile"
@@ -14,32 +20,28 @@ processes = []
 [env]
   PORT = "8080"
 
-[experimental]
-  allowed_public_ports = []
-  auto_rollback = true
+[processes]
+  app = ""
 
 [[services]]
-  http_checks = []
+  protocol = "tcp"
   internal_port = 8080
   processes = ["app"]
-  protocol = "tcp"
-  script_checks = []
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
   [services.concurrency]
+    type = "connections"
     hard_limit = 25
     soft_limit = 20
-    type = "connections"
-
-  [[services.ports]]
-    force_https = true
-    handlers = ["http"]
-    port = 80
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
 
   [[services.tcp_checks]]
-    grace_period = "1s"
     interval = "15s"
-    restart_limit = 0
     timeout = "2s"
+    grace_period = "1s"
