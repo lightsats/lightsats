@@ -33,13 +33,13 @@ async function handleReplaceLnbitsWallet(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const { id } = req.query;
   try {
     const migrationDateString = process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE;
     if (!migrationDateString) {
       throw new Error("No NEXT_PUBLIC_LNBITS_MIGRATION_DATE set");
     }
 
-    const { id } = req.query;
     const tipWithOldLnbitsWallet = await prisma.tip.findUniqueOrThrow({
       where: {
         id: id as string,
@@ -106,6 +106,29 @@ async function handleReplaceLnbitsWallet(
     return res.status(StatusCodes.NO_CONTENT).end();
   } catch (error) {
     console.error("Failed to replace tip LNbits wallet", error);
+
+    // the replacement failed, so update the tip's Lnbits wallet creation date
+    // so that it will still be pending replacement
+    const tipLnbitsWalletResponse = await prisma.tip.findUniqueOrThrow({
+      where: {
+        id: id as string,
+      },
+      select: {
+        lnbitsWallet: true,
+      },
+    });
+
+    if (tipLnbitsWalletResponse?.lnbitsWallet) {
+      await prisma.lnbitsWallet.update({
+        where: {
+          id: tipLnbitsWalletResponse.lnbitsWallet.id,
+        },
+        data: {
+          created: new Date("0001-01-01"),
+        },
+      });
+    }
+
     return res.status(500).json((error as Error).message);
   }
 }
