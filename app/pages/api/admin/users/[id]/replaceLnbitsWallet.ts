@@ -36,9 +36,9 @@ async function handleReplaceLnbitsWallet(
 ) {
   const { id } = req.query;
   try {
-    const migrationDateString = process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE;
+    const migrationDateString = process.env.LNBITS_MIGRATION_DATE;
     if (!migrationDateString) {
-      throw new Error("No NEXT_PUBLIC_LNBITS_MIGRATION_DATE set");
+      throw new Error("No LNBITS_MIGRATION_DATE set");
     }
 
     const userWithOldLnbitsWallet = await prisma.user.findUniqueOrThrow({
