@@ -82,5 +82,6 @@ async function handleGetTip(
       ? `${process.env.LNBITS_URL}/wallet?usr=${tip.lnbitsWallet.lnbitsUserId}`
       : undefined,
     walletBalance,
+    lnbitsMigrationDate: process.env.LNBITS_MIGRATION_DATE,
   });
 }

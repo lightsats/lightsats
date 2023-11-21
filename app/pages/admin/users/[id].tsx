@@ -56,12 +56,10 @@ const AdminUserPage: NextPage = () => {
           )}
         </Text>
       </Row>
-      {process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE &&
+      {user.lnbitsMigrationDate &&
         (!user.lnbitsWallet ||
           new Date(user.lnbitsWallet.created).getTime() <
-            new Date(
-              process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE
-            ).getTime()) && (
+            new Date(user.lnbitsMigrationDate).getTime()) && (
           <>
             <Alert>
               LNbits Wallet outdated!

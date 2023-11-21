@@ -66,12 +66,10 @@ const AdminTipPage: NextPage = () => {
         </Text>
       </Row>
       {unclaimedTipStatuses.indexOf(tip.status) > -1 &&
-        process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE &&
+        tip.lnbitsMigrationDate &&
         (!tip.lnbitsWallet ||
           new Date(tip.lnbitsWallet.created).getTime() <
-            new Date(
-              process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE
-            ).getTime()) && (
+            new Date(tip.lnbitsMigrationDate).getTime()) && (
           <>
             <Alert>
               LNbits Wallet outdated!

@@ -25,6 +25,7 @@ export type AdminExtendedUser = User & {
   withdrawals: AdminExtendedWithdrawal[];
   withdrawalErrors: AdminExtendedWithdrawalError[];
   tipGroups: TipGroupWithTips[];
+  lnbitsMigrationDate: string | undefined;
 };
 
 export type AdminExtendedTip = Tip & {
@@ -35,6 +36,7 @@ export type AdminExtendedTip = Tip & {
   withdrawalErrors: AdminExtendedWithdrawalError[];
   lnbitsWallet: LnbitsWallet | null;
   lnbitsWalletUrl: string | undefined;
+  lnbitsMigrationDate: string | undefined;
   walletBalance: number;
   group: TipGroupWithTips | null;
 };

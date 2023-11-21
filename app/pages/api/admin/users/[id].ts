@@ -95,5 +95,6 @@ async function handleGetUser(
       ? `${process.env.LNBITS_URL}/wallet?usr=${user.lnbitsWallet.lnbitsUserId}`
       : undefined,
     walletBalance,
+    lnbitsMigrationDate: process.env.LNBITS_MIGRATION_DATE,
   });
 }
