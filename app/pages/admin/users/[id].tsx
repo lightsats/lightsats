@@ -8,7 +8,7 @@ import { AdminWithdrawalsList } from "components/admin/AdminWithdrawalsList";
 import { Alert } from "components/Alert";
 import { NextUIUser } from "components/NextUIUser";
 import { ApiRoutes } from "lib/ApiRoutes";
-import { calculateUserWalletBalance } from "lib/calcateUserWalletBalance";
+import { calculateUserWalletBalance } from "lib/calculateUserWalletBalance";
 import { DEFAULT_NAME } from "lib/constants";
 import { defaultFetcher } from "lib/swr";
 import { getUserAvatarUrl } from "lib/utils";

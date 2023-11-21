@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { isAdmin } from "lib/admin/isAdmin";
 import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
-import { calculateUserWalletBalance } from "lib/calcateUserWalletBalance";
+import { calculateUserWalletBalance } from "lib/calculateUserWalletBalance";
 import { createUserStagingLnbitsWallet } from "lib/createUserStagingLnbitsWallet";
 import { deleteOldLnbitsWallet } from "lib/deleteOldLnbitsWallet";
 import { createInvoice } from "lib/lnbits/createInvoice";
