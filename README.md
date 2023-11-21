@@ -11,6 +11,7 @@ Project on Bolt fun: https://makers.bolt.fun/project/Lightsats
 Roadmap: https://github.com/orgs/lightsats/projects/1
 
 ## Lightsats API
+
 View the API docs at https://lightsats.github.io/Lightsats-API-docs
 
 ## Contributing
