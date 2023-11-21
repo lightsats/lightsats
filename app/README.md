@@ -52,3 +52,15 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 ### Automatic Deployments (Scheduler app)
 
 TODO
+
+## Migrating to a separate LNbits instance
+
+1. Update `LNBITS_API_KEY` and `LNBITS_USER_ID` to point at new instance
+2. Set `LNBITS_MIGRATION_SKIP_DELETING_WALLETS=true` (no need to delete from the old instance)
+3. Continue with "Recovering / Repairing Lnbits wallets"
+
+## Recovering / Repairing Lnbits wallets
+
+1. Set `LNBITS_MIGRATION_DATE="YOUR_DATE"` where `YOUR_DATE` is `YYYY-MM-DD` e.g. `2023-11-21`.
+2. Make sure you have admin access (add your user as superadmin to the user role table)
+3. Open the admin dashboard and execute migration buttons for tips and users

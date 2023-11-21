@@ -9,6 +9,7 @@ import {
   Text,
 } from "@nextui-org/react";
 import { Tip, TipStatus, User } from "@prisma/client";
+import { Alert } from "components/Alert";
 import { AdminJSONDumpCard } from "components/admin/AdminJSONDumpCard";
 import { AdminTipCardContents } from "components/admin/AdminTipCardContents";
 import { AdminTipGroupCard } from "components/admin/AdminTipGroupCard";
@@ -17,6 +18,7 @@ import { AdminWithdrawalCard } from "components/admin/AdminWithdrawalCard";
 import { AdminWithdrawalErrorsList } from "components/admin/AdminWithdrawalErrorsList";
 import { formatDistance } from "date-fns";
 import { ApiRoutes } from "lib/ApiRoutes";
+import { incompleteFundedTipStatuses } from "lib/constants";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -54,9 +56,28 @@ const AdminTipPage: NextPage = () => {
             <>
               <Text color="error">Warning: do not share this link</Text>
               <Link onClick={() => window.open(tip.lnbitsWalletUrl, "_blank")}>
-                LNBITS Tip wallet
+                LNbits Tip wallet
               </Link>
               <Text b>Balance: {tip.walletBalance} sats</Text>
+
+              {incompleteFundedTipStatuses.indexOf(tip.status) > -1 &&
+                process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE &&
+                (!tip.lnbitsWallet ||
+                  new Date(tip.lnbitsWallet.created).getTime() <
+                    new Date(
+                      process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE
+                    ).getTime()) && (
+                  <>
+                    <Alert>
+                      LNbits Wallet outdated!
+                      <br />
+                      Expected balance: {tip.amount + tip.fee}
+                      <Button onClick={() => replaceLnbitsWallet(tip)}>
+                        Replace
+                      </Button>
+                    </Alert>
+                  </>
+                )}
             </>
           ) : (
             <Text color="error">Tip has not been funded yet</Text>
@@ -171,5 +192,32 @@ async function changeTipStatus(tip: Tip) {
     }
   } else if (status) {
     alert("Invalid status: " + status);
+  }
+}
+
+async function replaceLnbitsWallet(tip: Tip) {
+  const confirmation = window.prompt('Type "YES" to continue');
+  if (confirmation !== "YES") {
+    return;
+  }
+
+  const result = await fetch(
+    `${ApiRoutes.adminTips}/${tip.id}/replaceLnbitsWallet`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+  if (!result.ok) {
+    toast.error(
+      "Failed to replace lnbits wallet: " +
+        result.statusText +
+        " " +
+        (await result.text()) +
+        ". Please try again."
+    );
+  } else {
+    toast.success("LNbits wallet replaced");
+    window.location.reload();
   }
 }
