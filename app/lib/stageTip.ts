@@ -1,11 +1,8 @@
 // move a tip to a user's staging wallet in preparation for withdrawal
 
 import { WithdrawalFlow } from "@prisma/client";
+import { createUserStagingLnbitsWallet } from "lib/createUserStagingLnbitsWallet";
 import { createInvoice } from "lib/lnbits/createInvoice";
-import {
-  createLnbitsUserAndWallet,
-  generateUserAndWalletName,
-} from "lib/lnbits/createLnbitsUserAndWallet";
 import { payInvoice } from "lib/lnbits/payInvoice";
 import prisma from "lib/prismadb";
 import { TipWithWallet } from "types/TipWithWallet";
@@ -35,34 +32,7 @@ export async function stageTip(
   });
 
   if (!userWallet) {
-    console.log("Creating new staging wallet for user " + userId);
-    const { createLnbitsUserResponse, createLnbitsUserResponseBody } =
-      await createLnbitsUserAndWallet(
-        generateUserAndWalletName("user", userId)
-      );
-    if (!createLnbitsUserResponse.ok) {
-      console.error(
-        "Failed to create lnbits user+wallet for user",
-        createLnbitsUserResponseBody
-      );
-
-      throw new Error("Failed to create lnbits user+wallet for user");
-    }
-
-    const lnbitsWallet = createLnbitsUserResponseBody.wallets[0];
-
-    // save the newly-created lnbits wallet (for creating/paying invoice)
-    userWallet = await prisma.lnbitsWallet.create({
-      data: {
-        userId,
-        id: lnbitsWallet.id,
-        lnbitsUserId: lnbitsWallet.user,
-        adminKey: lnbitsWallet.adminkey,
-      },
-    });
-    if (!userWallet) {
-      throw new Error("user lnbits wallet was not created");
-    }
+    userWallet = await createUserStagingLnbitsWallet(userId);
   } else {
     console.log("user " + userId + " already has a staging wallet");
   }

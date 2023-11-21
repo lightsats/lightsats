@@ -38,6 +38,10 @@ export const expirableTipStatuses: TipStatus[] = [
 
 export const unclaimedTipStatuses: TipStatus[] = ["UNSEEN", "SEEN"];
 
+export const pendingWithdrawalTipStatuses: TipStatus[] = [
+  "CLAIMED",
+  "RECLAIMED",
+];
 export const completedTipStatuses: TipStatus[] = ["REFUNDED", "WITHDRAWN"];
 
 export const placeholderDataUrl = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAABJ0AAASdAHeZh94AAAAAmJLR0QAAd2KE6QAAAAHdElNRQfmCwYODiT2bNinAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIyLTExLTA2VDE0OjE0OjM2KzAwOjAwu1S7CwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMi0xMS0wNlQxNDoxNDozNiswMDowMMoJA7cAAAANSURBVBhXY2BgYPgPAAEEAQBwIGULAAAAAElFTkSuQmCC`;
