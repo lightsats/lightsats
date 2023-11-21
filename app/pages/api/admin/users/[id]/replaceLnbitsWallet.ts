@@ -1,10 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { isAdmin } from "lib/admin/isAdmin";
 import { getLightsatsServerSession } from "lib/auth/getLightsatsServerSession";
+import { calculateUserWalletBalance } from "lib/calcateUserWalletBalance";
+import { createUserStagingLnbitsWallet } from "lib/createUserStagingLnbitsWallet";
 import { deleteOldLnbitsWallet } from "lib/deleteOldLnbitsWallet";
 import { createInvoice } from "lib/lnbits/createInvoice";
 import { payInvoice } from "lib/lnbits/payInvoice";
-import { prepareFundingWallet } from "lib/prepareFundingWallet";
 import prisma from "lib/prismadb";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -40,28 +41,32 @@ async function handleReplaceLnbitsWallet(
       throw new Error("No NEXT_PUBLIC_LNBITS_MIGRATION_DATE set");
     }
 
-    const tipWithOldLnbitsWallet = await prisma.tip.findUniqueOrThrow({
+    const userWithOldLnbitsWallet = await prisma.user.findUniqueOrThrow({
       where: {
         id: id as string,
       },
       include: {
         lnbitsWallet: true,
+        tipsReceived: true,
       },
     });
 
-    if (tipWithOldLnbitsWallet.lnbitsWallet) {
-      await deleteOldLnbitsWallet(tipWithOldLnbitsWallet.lnbitsWallet);
+    if (userWithOldLnbitsWallet.lnbitsWallet) {
+      await deleteOldLnbitsWallet(userWithOldLnbitsWallet.lnbitsWallet);
     }
 
-    const newLnbitsWalletAdminKey = await prepareFundingWallet(
-      id as string,
-      undefined
+    const newLnbitsWallet = await createUserStagingLnbitsWallet(
+      userWithOldLnbitsWallet.id
+    );
+
+    const userWalletBalance = calculateUserWalletBalance(
+      userWithOldLnbitsWallet
     );
 
     const fundingInvoice = await createInvoice(
-      tipWithOldLnbitsWallet.amount + tipWithOldLnbitsWallet.fee,
-      newLnbitsWalletAdminKey,
-      "Replace Tip wallet",
+      userWalletBalance,
+      newLnbitsWallet.adminKey,
+      "Replace User wallet",
       undefined
     );
 
@@ -87,11 +92,11 @@ async function handleReplaceLnbitsWallet(
 
     return res.status(StatusCodes.NO_CONTENT).end();
   } catch (error) {
-    console.error("Failed to replace tip LNbits wallet", error);
+    console.error("Failed to replace user LNbits wallet", error);
 
-    // the replacement failed, so update the tip's Lnbits wallet creation date
+    // the replacement failed, so update the user's Lnbits wallet creation date
     // so that it will still be pending replacement
-    const tipLnbitsWalletResponse = await prisma.tip.findUniqueOrThrow({
+    const userLnbitsWalletResponse = await prisma.user.findUniqueOrThrow({
       where: {
         id: id as string,
       },
@@ -100,10 +105,10 @@ async function handleReplaceLnbitsWallet(
       },
     });
 
-    if (tipLnbitsWalletResponse?.lnbitsWallet) {
+    if (userLnbitsWalletResponse?.lnbitsWallet) {
       await prisma.lnbitsWallet.update({
         where: {
-          id: tipLnbitsWalletResponse.lnbitsWallet.id,
+          id: userLnbitsWalletResponse.lnbitsWallet.id,
         },
         data: {
           created: new Date("0001-01-01"),

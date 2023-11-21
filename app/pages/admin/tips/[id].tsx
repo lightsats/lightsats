@@ -18,7 +18,7 @@ import { AdminWithdrawalCard } from "components/admin/AdminWithdrawalCard";
 import { AdminWithdrawalErrorsList } from "components/admin/AdminWithdrawalErrorsList";
 import { formatDistance } from "date-fns";
 import { ApiRoutes } from "lib/ApiRoutes";
-import { incompleteFundedTipStatuses } from "lib/constants";
+import { unclaimedTipStatuses } from "lib/constants";
 import { defaultFetcher } from "lib/swr";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -59,31 +59,35 @@ const AdminTipPage: NextPage = () => {
                 LNbits Tip wallet
               </Link>
               <Text b>Balance: {tip.walletBalance} sats</Text>
-
-              {incompleteFundedTipStatuses.indexOf(tip.status) > -1 &&
-                process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE &&
-                (!tip.lnbitsWallet ||
-                  new Date(tip.lnbitsWallet.created).getTime() <
-                    new Date(
-                      process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE
-                    ).getTime()) && (
-                  <>
-                    <Alert>
-                      LNbits Wallet outdated!
-                      <br />
-                      Expected balance: {tip.amount + tip.fee}
-                      <Button onClick={() => replaceLnbitsWallet(tip)}>
-                        Replace
-                      </Button>
-                    </Alert>
-                  </>
-                )}
             </>
           ) : (
             <Text color="error">Tip has not been funded yet</Text>
           )}
         </Text>
       </Row>
+      {unclaimedTipStatuses.indexOf(tip.status) > -1 &&
+        process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE &&
+        (!tip.lnbitsWallet ||
+          new Date(tip.lnbitsWallet.created).getTime() <
+            new Date(
+              process.env.NEXT_PUBLIC_LNBITS_MIGRATION_DATE
+            ).getTime()) && (
+          <>
+            <Alert>
+              LNbits Wallet outdated!
+              <br />
+              Expected balance: {tip.amount + tip.fee} sats
+              <Button
+                size="sm"
+                color="error"
+                css={{ m: 10 }}
+                onClick={() => replaceLnbitsWallet(tip)}
+              >
+                Replace
+              </Button>
+            </Alert>
+          </>
+        )}
       <Spacer />
       <Row>
         <Text>Funding invoice</Text>
