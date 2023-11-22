@@ -119,6 +119,27 @@ const AdminPage: NextPage = () => {
           </a>
         </NextLink>
       </Row>
+      {adminDashboard.lnbitsMigrationDate && (
+        <>
+          <Spacer y={2} />
+          <Text h4>LNbits migration</Text>
+          <Divider />
+          <Spacer />
+          <Row justify="center" align="center">
+            <NextLink href={PageRoutes.adminLnbitsMigrateUsers}>
+              <a>
+                <Button css={{ bg: "$cyan700" }}>Users</Button>
+              </a>
+            </NextLink>
+            <Spacer />
+            <NextLink href={PageRoutes.adminLnbitsMigrateTips}>
+              <a>
+                <Button css={{ bg: "$purple700" }}>Tips</Button>
+              </a>
+            </NextLink>
+          </Row>
+        </>
+      )}
     </>
   );
 };

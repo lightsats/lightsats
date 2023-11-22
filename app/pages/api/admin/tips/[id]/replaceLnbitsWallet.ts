@@ -49,6 +49,10 @@ async function handleReplaceLnbitsWallet(
       },
     });
 
+    if (tipWithOldLnbitsWallet.type === "NON_CUSTODIAL_NWC") {
+      throw new Error("Cannot replace NWC tips");
+    }
+
     if (tipWithOldLnbitsWallet.lnbitsWallet) {
       await deleteOldLnbitsWallet(tipWithOldLnbitsWallet.lnbitsWallet);
     }

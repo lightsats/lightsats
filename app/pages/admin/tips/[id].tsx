@@ -69,7 +69,8 @@ const AdminTipPage: NextPage = () => {
         tip.lnbitsMigrationDate &&
         (!tip.lnbitsWallet ||
           new Date(tip.lnbitsWallet.created).getTime() <
-            new Date(tip.lnbitsMigrationDate).getTime()) && (
+            new Date(tip.lnbitsMigrationDate).getTime()) &&
+        tip.type !== "NON_CUSTODIAL_NWC" && (
           <>
             <Alert>
               LNbits Wallet outdated!

@@ -43,6 +43,8 @@ export enum PageRoutes {
   newLeaderboard = "/leaderboards/new",
   tipGroups = "/tip-groups",
   adminTipGroups = "/admin/tip-groups",
+  adminLnbitsMigrateUsers = "admin/lnbits-migration/users",
+  adminLnbitsMigrateTips = "admin/lnbits-migration/tips",
 }
 
 export const bitcoinJourneyPages = [

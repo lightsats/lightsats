@@ -5,7 +5,11 @@ export function calculateUserWalletBalance(
   userWithTipsReceived: User & { tipsReceived: Tip[] }
 ) {
   return userWithTipsReceived.tipsReceived
-    .filter((tip) => pendingWithdrawalTipStatuses.indexOf(tip.status) > -1)
+    .filter(
+      (tip) =>
+        tip.type !== "NON_CUSTODIAL_NWC" &&
+        pendingWithdrawalTipStatuses.indexOf(tip.status) > -1
+    )
     .map((tip) => tip.amount + tip.fee)
     .reduce((a, b) => a + b, 0);
 }
