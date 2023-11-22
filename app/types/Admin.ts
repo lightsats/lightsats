@@ -14,6 +14,16 @@ export type AdminDashboard = {
   lnbitsDashboardUrl: string;
   walletBalance: number;
   smsForSatsAccountBalance: number;
+  lnbitsMigrationDate: string | undefined;
+};
+
+export type AdminLnbitsMigrationTips = {
+  lnbitsMigrationDate: string | undefined;
+  tips: { id: string }[];
+};
+export type AdminLnbitsMigrationUsers = {
+  lnbitsMigrationDate: string | undefined;
+  users: { id: string }[];
 };
 
 export type AdminExtendedUser = User & {

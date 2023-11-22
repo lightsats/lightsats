@@ -62,32 +62,33 @@ async function handleReplaceLnbitsWallet(
     const userWalletBalance = calculateUserWalletBalance(
       userWithOldLnbitsWallet
     );
-
-    const fundingInvoice = await createInvoice(
-      userWalletBalance,
-      newLnbitsWallet.adminKey,
-      "Replace User wallet",
-      undefined
-    );
-
-    if (!process.env.LNBITS_API_KEY) {
-      throw new Error("No LNBITS_API_KEY provided");
-    }
-
-    const { payInvoiceResponse, payInvoiceResponseBody } = await payInvoice(
-      fundingInvoice.invoice,
-      process.env.LNBITS_API_KEY
-    );
-
-    if (!payInvoiceResponse.ok) {
-      throw new Error(
-        "Failed to pay funding invoice: " +
-          payInvoiceResponse.status +
-          " " +
-          payInvoiceResponse.statusText +
-          " " +
-          JSON.stringify(payInvoiceResponseBody)
+    if (userWalletBalance > 0) {
+      const fundingInvoice = await createInvoice(
+        userWalletBalance,
+        newLnbitsWallet.adminKey,
+        "Replace User wallet",
+        undefined
       );
+
+      if (!process.env.LNBITS_API_KEY) {
+        throw new Error("No LNBITS_API_KEY provided");
+      }
+
+      const { payInvoiceResponse, payInvoiceResponseBody } = await payInvoice(
+        fundingInvoice.invoice,
+        process.env.LNBITS_API_KEY
+      );
+
+      if (!payInvoiceResponse.ok) {
+        throw new Error(
+          "Failed to pay funding invoice: " +
+            payInvoiceResponse.status +
+            " " +
+            payInvoiceResponse.statusText +
+            " " +
+            JSON.stringify(payInvoiceResponseBody)
+        );
+      }
     }
 
     return res.status(StatusCodes.NO_CONTENT).end();
