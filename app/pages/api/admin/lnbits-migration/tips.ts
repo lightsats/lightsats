@@ -41,11 +41,20 @@ async function handleGetLnbitsMigrationTips(
             status: {
               in: unclaimedTipStatuses,
             },
-            lnbitsWallet: {
-              created: {
-                lt: new Date(process.env.LNBITS_MIGRATION_DATE),
+            OR: [
+              {
+                lnbitsWallet: {
+                  is: null,
+                },
               },
-            },
+              {
+                lnbitsWallet: {
+                  created: {
+                    lt: new Date(process.env.LNBITS_MIGRATION_DATE),
+                  },
+                },
+              },
+            ],
           },
           select: {
             id: true,
