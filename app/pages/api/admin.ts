@@ -62,5 +62,6 @@ async function handleGetAdminDashboard(
     lnbitsDashboardUrl: `${process.env.LNBITS_URL}/wallet?usr=${process.env.LNBITS_USER_ID}`,
     walletBalance,
     smsForSatsAccountBalance,
+    lnbitsMigrationDate: process.env.LNBITS_MIGRATION_DATE,
   });
 }
