@@ -21,8 +21,6 @@ async function getTip(
 ) {
   const session = await getLightsatsServerSession(req, res);
 
-  const result: StaticTipRedirect = {};
-
   const tipGroup = await prisma.tipGroup.findUnique({
     where: {
       id: req.query.id as string,
@@ -37,7 +35,15 @@ async function getTip(
     },
   });
 
-  if (tipGroup?.enableStaticLink) {
+  if (!tipGroup) {
+    return res.status(StatusCodes.NOT_FOUND).end();
+  }
+
+  const result: StaticTipRedirect = {
+    tippeeLocale: tipGroup.tips[0].tippeeLocale ?? undefined,
+  };
+
+  if (tipGroup.enableStaticLink) {
     // only allow a tippee to claim at most one tip from the group
     // prioritize unseen tips, then seen tips
     const tip =

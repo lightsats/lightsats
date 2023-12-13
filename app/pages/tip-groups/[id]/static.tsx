@@ -2,8 +2,8 @@ import { Loading, Spacer } from "@nextui-org/react";
 import { HomeButton } from "components/HomeButton";
 import { UnavailableTipActions } from "components/UnavailableTipActions";
 import { ApiRoutes } from "lib/ApiRoutes";
-import { PageRoutes } from "lib/PageRoutes";
 import { defaultFetcher } from "lib/swr";
+import { getClaimUrl } from "lib/utils";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -19,12 +19,16 @@ const StaticTipGroupPage: NextPage = () => {
     defaultFetcher
   );
 
-  const tipId = staticTipRedirect?.tipId;
   React.useEffect(() => {
-    if (tipId) {
-      router.replace(`${PageRoutes.tips}/${tipId}/claim`);
+    if (staticTipRedirect?.tipId) {
+      router.replace(
+        getClaimUrl({
+          id: staticTipRedirect.tipId,
+          tippeeLocale: staticTipRedirect.tippeeLocale,
+        })
+      );
     }
-  }, [router, tipId]);
+  }, [router, staticTipRedirect]);
 
   if (!staticTipRedirect || staticTipRedirect.tipId) {
     return <Loading color="currentColor" size="lg" />;
