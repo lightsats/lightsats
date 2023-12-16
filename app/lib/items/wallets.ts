@@ -88,8 +88,6 @@ const breez: Wallet = {
   minBalance: 0,
   link: "https://lgt.st/bluewallet",
   image: "blue.png",
-  placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AAAAVgAPYgAPYQAAVAAAXLsAfN0AeNkAWroAg+f/qP//u///l/P/AGfO+nnY/4/k/4Dc/997Gf6eenRqAAAAAElFTkSuQmCC",
   name: "Blue Wallet",
   slogan: "Radically Simple & Powerful Bitcoin Wallet",
   languageCodes: [
@@ -211,7 +209,7 @@ const blink: Wallet = {
   link: "https://lgt.st/bbw",
   image: "blink.png",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVR4nGP4////+eV9T87u+///P8P///+btRj2tGRBOH/FGVQYRGIhnH/1sw/N3nkFyAEAqOAjYOEgd8oAAAAASUVORK5CYII=",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGPg52bXlBFXlRDjZWdjkODnfvv03v+fX8XZ2RlkxQT+/3n/8tEtKX4eBn4+Tj1VSTVZMT5udgBpYA3xV26GrgAAAABJRU5ErkJggg==",
   name: "Blink",
   slogan: "The everyday Bitcoin wallet",
   languageCodes: [
@@ -232,7 +230,7 @@ const lifpay: Wallet = {
   link: "https://lgt.st/lifpay",
   image: "lifpay.jpeg",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVR4nGP4////+eV9T87u+///P8P///+btRj2tGRBOH/FGVQYRGIhnH/1sw/N3nkFyAEAqOAjYOEgd8oAAAAASUVORK5CYII=",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGNQ1XL0cPfOS3FjYJVmEJWz+3+39v+3LgZmdQZBWbv/r9r+f2jnFDNlUNFyKkv083ZyU9F0BACv7hDRf22pAwAAAABJRU5ErkJggg==",
   name: "LifPay",
   slogan: "More Than A Bitcoin Lightning Wallet",
   languageCodes: [getLanguageCode("English")],
@@ -246,7 +244,7 @@ const mutiny: Wallet = {
   link: "https://lgt.st/mutiny",
   image: "mutiny.png",
   placeholderDataUrl:
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVR4nGP4////+eV9T87u+///P8P///+btRj2tGRBOH/FGVQYRGIhnH/1sw/N3nkFyAEAqOAjYOEgd8oAAAAASUVORK5CYII=",
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AP/+///+//32+MqjrwCNQ15CAAJyFj+man0A1LS+VQAdQQABllJqANu/x//4+9S0vrmHlwwIHIJFQrEgAAAAAElFTkSuQmCC",
   name: "Mutiny",
   slogan: "Unstoppable bitcoin. For everyone.",
   languageCodes: [getLanguageCode("English")],
