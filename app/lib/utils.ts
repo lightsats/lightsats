@@ -71,7 +71,7 @@ export function getUserAvatarUrl(user: User | PublicUser | undefined) {
 export function getAvatarUrl(avatarUrl: string | undefined, fallbackId = "1") {
   return avatarUrl?.length
     ? avatarUrl
-    : `https://avatars.dicebear.com/api/miniavs/${fallbackId}.svg`;
+    : `https://api.dicebear.com/7.x/miniavs/svg?seed=${fallbackId}`;
 }
 
 // from https://stackoverflow.com/a/34842797/4562693

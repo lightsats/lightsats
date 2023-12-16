@@ -76,7 +76,7 @@ export const spend: Item[] = [
     languageCodes: [getLanguageCode("English")],
     link: "https://lgt.st/shamory",
     placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAALklEQVR4nGNgYGBgYWERFxdnZmZmYGBgePPmzb9//0AsTk7O3bt329jYgDjIAAAHRwkZ5bhLBwAAAABJRU5ErkJggg==",
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAOklEQVR4nGMIZWA44M+wzY0hlIGB4Uaa3P9Pcf9v+9zLUmb43Gh0rpxtZxzDtxZjhggGhgIwimBgAADpwRE39DLAegAAAABJRU5ErkJggg==",
     name: "SHAmory",
     slogan:
       "Buy SHAmory, the Bitcoin card game for kids 5+ and adults, as well as Goodnight Bitcoin and products ideal for Bitcoin babies, kids and parents	",
