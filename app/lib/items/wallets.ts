@@ -202,19 +202,18 @@ const obw: Wallet = {
   languageCodes: [getLanguageCode("English")],
   platforms: ["android-only"],
 };
-const bbw: Wallet = {
-  id: "bbw",
+const blink: Wallet = {
+  id: "blink",
   features: ["lnurl-withdraw", "lightning address"],
   lightsatsRecommended: true,
   category: "wallets",
   minBalance: 0,
   link: "https://lgt.st/bbw",
-  image: "bbw.png",
+  image: "blink.png",
   placeholderDataUrl:
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVR4nGP4////+eV9T87u+///P8P///+btRj2tGRBOH/FGVQYRGIhnH/1sw/N3nkFyAEAqOAjYOEgd8oAAAAASUVORK5CYII=",
-  name: "Bitcoin Beach Wallet",
-  slogan:
-    "The Bitcoin Beach Wallet, the most secure and accessible Lightning-enabled Bitcoin wallet that makes receiving, saving and spending Bitcoin easy.",
+  name: "Blink",
+  slogan: "The everyday Bitcoin wallet",
   languageCodes: [
     getLanguageCode("English"),
     getLanguageCode("Spanish"),
@@ -224,6 +223,34 @@ const bbw: Wallet = {
     getLanguageCode("French"),
   ],
   platforms: ["mobile"],
+};
+const lifpay: Wallet = {
+  id: "lifpay",
+  features: ["lnurl-withdraw", "lnurl-auth", "lightning address"],
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/lifpay",
+  image: "lifpay.jpeg",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVR4nGP4////+eV9T87u+///P8P///+btRj2tGRBOH/FGVQYRGIhnH/1sw/N3nkFyAEAqOAjYOEgd8oAAAAASUVORK5CYII=",
+  name: "LifPay",
+  slogan: "More Than A Bitcoin Lightning Wallet",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile", "web"],
+};
+const mutiny: Wallet = {
+  id: "mutiny",
+  features: ["non-custodial"],
+  category: "wallets",
+  minBalance: 100000,
+  link: "https://lgt.st/mutiny",
+  image: "mutiny.png",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVR4nGP4////+eV9T87u+///P8P///+btRj2tGRBOH/FGVQYRGIhnH/1sw/N3nkFyAEAqOAjYOEgd8oAAAAASUVORK5CYII=",
+  name: "Mutiny",
+  slogan: "Unstoppable bitcoin. For everyone.",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile", "web"],
 };
 const zeus: Wallet = {
   id: "zeus",
@@ -332,7 +359,9 @@ export const wallets: Wallet[] = [
   phoenix,
   lntips,
   obw,
-  bbw,
+  blink,
+  lifpay,
+  mutiny,
   zeus,
   zebedee,
   blixt,

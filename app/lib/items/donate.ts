@@ -64,17 +64,6 @@ export const donate: Item[] = [
   },
   {
     category: "donate",
-    link: "https://lgt.st/bitcoinbeach",
-    image: "bitcoinbeach.png",
-    languageCodes: [getLanguageCode("English")],
-    placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AP///7eVZrmYaf///wD///+DUQCCUQD+//8A5+jpBwQEHBoZ5OXmAPLy8ltcYmZpbvLy80mGHs83LiIlAAAAAElFTkSuQmCC",
-    name: "Bitcoin Beach",
-    slogan: "Bitcoin Beach - The first circular economy on bitcoin.",
-    platforms: ["web"],
-  },
-  {
-    category: "donate",
     link: "https://lgt.st/praiabitcoin",
     image: "praiabitcoin.jpeg",
     languageCodes: [getLanguageCode("English")],
