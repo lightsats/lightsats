@@ -10,7 +10,7 @@ Project on Bolt fun: https://makers.bolt.fun/project/Lightsats
 
 Roadmap: https://github.com/orgs/lightsats/projects/1
 
-🥇 Bitcoin Connect won the original [BOLT FUN Legends of Lightning](https://boltfun.substack.com/p/legendsoflightning-2022-winners) hackathon on 8 December, 2022.
+Awards: 🥇 Lightsats won the original [BOLT FUN Legends of Lightning](https://boltfun.substack.com/p/legendsoflightning-2022-winners) hackathon on 8 December, 2022.
 
 ## Lightsats API
 
