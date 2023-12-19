@@ -1,0 +1,10 @@
+{
+    "tippee": {
+        "expired": "Nagrade nisi dvignil pred potekom 😭",
+        "willExpire": "Ta nagrada se bo kmalu iztekla, pohiti! ✌️"
+    },
+    "tipper": {
+        "expired": "Prejemnik ni pravočasno dvignil nagrade. Potekla je pred {{distance}} 😭",
+        "willExpire": "Prejemnik bo občasno prejel opomnik za dvig nagrade preden le-ta poteče ✌️"
+    }
+}
