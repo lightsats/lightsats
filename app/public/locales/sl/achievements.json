@@ -1,0 +1,162 @@
+{
+  "SELF_CLAIMED": {
+    "title": "Prevzeto",
+    "description": "Prevzel si svojo prvo nagrado."
+  },
+  "BECAME_TIPPER": {
+    "title": "Nagrajevalec",
+    "description": "Postal si Lightsats nagrajevalec."
+  },
+  "LINKED_EMAIL": {
+    "title": "E-pošta",
+    "description": "Lahko se prijaviš in prejemaš obvestila po e-pošti."
+  },
+  "LINKED_WALLET": {
+    "title": "Denarnica",
+    "description": "Lahko se prijaviš s svojo Lightning denarnico."
+  },
+  "SET_NAME": {
+    "title": "Ime",
+    "description": "Nič več nisi brez imena."
+  },
+  "SET_AVATAR_URL": {
+    "title": "Avatar",
+    "description": "K svojemu imenu si naložil sliko. Super!"
+  },
+  "SET_LIGHTNING_ADDRESS": {
+    "title": "Lightning Naslov",
+    "description": "Sedaj te lahko nagradijo ostali Lightsats uporabniki."
+  },
+  "CREATED_TIP": {
+    "title": "Nagrada ustvarjena",
+    "description": "Ustvaril si svojo prvo nagrado."
+  },
+  "FUNDED_TIP": {
+    "title": "Nagrada napolnjena",
+    "description": "Napolnil si svojo prvo nagrado."
+  },
+  "TIP_CLAIMED": {
+    "title": "Nagrada prevzeta",
+    "description": "Tvoja prva nagrada je bila prevzeta."
+  },
+  "TIP_WITHDRAWN": {
+    "title": "Nagrada dvignjena",
+    "description": "Nekdo je prevzel in dvignil sredstva iz tvoje nagrade!"
+  },
+  "WEBLN_WITHDRAWN": {
+    "title": "WebLN Dvig",
+    "description": "WebLN prihrani veliko klikov!"
+  },
+  "MANUAL_WITHDRAWN": {
+    "title": "Ročni dvig",
+    "description": "Obstajajo boljše metode, a vseeno je poznati tudi možnost ročnega dviga!"
+  },
+  "LNURL_WITHDRAWN": {
+    "title": "LNURL dvig",
+    "description": "Dvignil si na LNURL-withdraw kompatibilno denarico. Super!"
+  },
+  "EARLY_SUPPORTER": {
+    "title": "Prvi podpornik",
+    "description": "Bil si eden izmed prvih, ki je za nagrajevanje uporabil Lightsats!"
+  },
+  "SENT_1K": {
+    "title": "1000 satsov",
+    "description": "Tvoj prejemnik je dvignil več kot 1000 satsov!"
+  },
+  "SENT_10K": {
+    "title": "10,000 satsov",
+    "description": "Tvoj prejemnik je dvignil več kot 10.000 satsov!"
+  },
+  "SENT_100K": {
+    "title": "100,000 satsov",
+    "description": "Tvoj prejemnik je dvignil več kot 100.000 satsov!"
+  },
+  "SENT_1M": {
+    "title": "1,000,000 satsov",
+    "description": "Tvoj prejemnik je dvignil več kot milijon satsov!"
+  },
+  "TOP_10": {
+    "title": "Lista prvih 10",
+    "description": "Si eden izmed prvih 10!"
+  },
+  "TOP_3": {
+    "title": "Lista prvi trije",
+    "description": "Si eden izmed prvih treh!"
+  },
+  "TOP_1": {
+    "title": "Prvi na listi",
+    "description": "Prišel si na prvo pozicijo na listi!"
+  },
+  "MOST_WITHDRAWN_TIPS": {
+    "title": "Zmagovalec",
+    "description": "Ustvaril si največ uspešnih nagrad med vsemi Lightsats nagrajevalci"
+  },
+  "PWA": {
+    "title": "Dodano na domači zaslon",
+    "description": "Dodal si Lightsats PWA na domači zaslon. Za prijavo uporabi LNURL!"
+  },
+  "TIPS_10": {
+    "title": "Poslal si 10 nagrad",
+    "description": "Poslal si 10 nagrad, ki so bile uspešno prevzete!"
+  },
+  "TIPS_25": {
+    "title": "Poslal si 25 nagrad",
+    "description": "Poslal si 25 nagrad, ki so bile uspešno prevzete!"
+  },
+  "TIPS_50": {
+    "title": "Poslal si 50 nagrad",
+    "description": "Poslal si 50 nagrad, ki so bile uspešno prevzete!"
+  },
+  "TIPS_100": {
+    "title": "Poslal si 100 nagrad",
+    "description": "Poslal si 100 nagrad, ki so bile uspešno prevzete!"
+  },
+  "TIPPED_A_BITCOINER": {
+    "title": "Nagradil si bitcoinerja",
+    "description": "Tvojo nagrado je prevzel nekdo brez prebiranja Bitcoin potovanja."
+  },
+  "BULK_TIP_CREATED": {
+    "title": "Paket nagrad ustvarjen",
+    "description": "Ustvaril si več nagrad naenkrat."
+  },
+  "BULK_TIP_FUNDED": {
+    "title": "Paket nagrad napolnjen",
+    "description": "Napolnil si več nagrad naenkrat!"
+  },
+  "BULK_TIP_CLAIMED": {
+    "title": "Nagrada iz paketa prevzeta",
+    "description": "Ena nagrada iz paketa je bila prevzeta."
+  },
+  "BULK_TIP_WITHDRAWN": {
+    "title": "Nagrada iz paketa dvignjena",
+    "description": "Ena nagrada iz paketa je bila dvignjena."
+  },
+  "BULK_TIP_ALL_WITHDRAWN": {
+    "title": "Vse nagrade iz paketa dvignjene",
+    "description": "Vse nagrade iz paketa so bile uspešno dvignjene!"
+  },
+  "BULK_TIP_10": {
+    "title": "Paket 10 nagrad",
+    "description": "Ustvaril in napolnil si 10 ali več nagrad v paketu"
+  },
+  "BULK_TIP_25": {
+    "title": "Paket 25 nagrad",
+    "description": "Ustvaril in napolnil si 25 ali več nagrad v paketu"
+  },
+  "BULK_TIP_50": {
+    "title": "Paket 50 nagrad",
+    "description": "Ustvaril in napolnil si 50 ali več nagrad v paketu"
+  },
+  "BULK_TIP_100": {
+    "title": "Paket 100 nagrad",
+    "description": "Ustvaril in napolnil si 100 ali več nagrad v paketu"
+  },
+  "PRINTED_CARD_TIP_CLAIMED": {
+    "title": "Nagrada prevzeta",
+    "description": "Nagrada, ki si jo natisnil, je bila prevzeta!"
+  },
+  "PRINTED_CARD_TIP_WITHDRAWN": {
+    "title": "Nagrada dvignjena",
+    "description": "Nagrada, ki si jo natisnil, je bila dvignjena!"
+  }
+}

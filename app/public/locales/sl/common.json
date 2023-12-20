@@ -1,0 +1,18 @@
+{
+  "email": "📧 E-pošta",
+  "phone": "📱 Telefon",
+  "lightning": "⚡ Lightning",
+  "loginWithLightning": "Prijavi se z Lightning-om",
+  "or": "ali",
+  "copy": "kopiraj",
+  "copiedToClipboard": "Skopirano",
+  "verifyPhoneMessage": "Lightsats prijava",
+  "checkEmailTitle": "Poglej e-pošto",
+  "checkEmailText": "Na e-pošto smo ti poslali magično povezavo 🪄. Klikni jo za potrditev e-pošte.",
+  "checkSMSTitle": "Poglej na telefon",
+  "checkSMSText": "Na telefon smo ti poslali magično povezavo 🪄. Klikni jo za potrditev telefonske številke.",
+  "createdAgo": "ustvarjeno pred {{distance}}",
+  "amountInSats": "{{amount}} satsov",
+  "openInWallet": "Odpri v denarnici",
+  "alternativeWaysToSignIn": "Drugi načini prijave"
+}

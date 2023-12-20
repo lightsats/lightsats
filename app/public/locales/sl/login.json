@@ -1,0 +1,9 @@
+{
+    "welcome": "Dobrodošel",
+    "chooseSignIn": "Prosim izberi način prijave.",
+    "generatingQrCode": "Generiranje QR kode…",
+    "scanQrCode": "Skeniraj kodo ali skopiraj/prilepi v svojo Lightning denarnico. Ali klikni za prijavo v spletno denarnico.",
+    "clickToConnect": "Klikni za povezavo",
+    "use": "Uporabi",
+    "instead": "namesto"
+}
