@@ -7,8 +7,8 @@
     },
     "claimed": {
         "title": "Lepo opravljeno 👍",
-        "subtitle": "Uspešno si dvignil nagrado",
-        "description": "Tvoja nagrada je pripravljena za prevzem. Če je ne dvigneš pred potekom, se bo vrnila uporabniku {{tipperName}}.",
+        "subtitle": "Uspešno si prevzel nagrado",
+        "description": "Tvoja nagrada je pripravljena. Če je ne dvigneš pred potekom, se bo vrnila uporabniku {{tipperName}}.",
         "getStarted": "Pa začnimo s tvojim Bitcoin potovanjem!",
         "footer": {
             "text": "Začni",
