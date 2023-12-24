@@ -1,0 +1,22 @@
+{
+  "install": "Namesti",
+  "open": "Odpri",
+  "compatibleWallets": "Primerne denarnice",
+  "recommendedWallet": "Priporočene denarnice",
+  "otherWallets": "Druge denarnice",
+  "recommendedItems": "Priporočeno",
+  "otherItems": "Več",
+  "minBalance": "{{minBalance}}⚡ min stanje",
+  "nonCustodial": "lastniški",
+  "custodial": "skrbniški",
+  "scanToLogin": "Skeniraj za prijavo",
+  "lightningAddress": "Lightning naslov",
+  "platforms": {
+    "mobile": "Mobilnik",
+    "desktop": "Računalnik",
+    "web": "Splet",
+    "android-only": "Android",
+    "ios-only": "iOS"
+  },
+  "features": "Lastnosti"
+}

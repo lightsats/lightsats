@@ -1,0 +1,41 @@
+{
+  "title": "Kaj želiš početi z Bitcoinom?",
+  "spend": {
+    "name": "Porabiti 🛒",
+    "description": "Porabi Bitcoin v trgovinah, za darilne ali predplačniške kartice ali za plačilo računov",
+    "shortDescription": "Porabi ga v trgovinah, ki sprejemajo Bitcoin"
+  },
+  "earn": {
+    "name": "Zaslužiti 🤑",
+    "description": "Zasluži več Bitcoina"
+  },
+  "buy": {
+    "name": "Kupiti 🌽",
+    "description": "Kupi Bitcoin na spletnih trgovalnicah"
+  },
+  "save": {
+    "name": "Varčevati 🏦",
+    "description": "Kako varno hraniš Bitcoin na dolgi rok"
+  },
+  "send": {
+    "name": "Podariti ↗️",
+    "description": "Podari Bitcoin bližnjim"
+  },
+  "tip": {
+    "name": "Nagradi z napitnino 💁🏽‍♀️",
+    "description": "Pošlji nagrado neposredno ali preko Lightsats!"
+  },
+  "donate": {
+    "name": "Pomagati 🧡",
+    "description": "Podari Bitcoin tistim, ki so v stiski"
+  },
+  "learn": {
+    "name": "Izvedeti več 📙",
+    "description": "Izvedi več o Bitcoinu in zakaj pravijo, da \"Bitcoin to reši\" - filozofija, tehnologija, ekonomija, politika, zgodovina...",
+    "shortDescription": "Izvedi več o Bitcoin in Lightning omrežju"
+  },
+  "wallets": {
+    "name": "Denarnice 👛",
+    "description": "Poglej priporočene Lightning denarnice"
+  }
+}

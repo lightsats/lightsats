@@ -1,0 +1,11 @@
+{
+  "hello": "Živjo {{tippeeName}}.",
+  "tipperHasGiftedYou": "{{tipperName}} ti je podaril",
+  "youHaveBeenGifted": "Dobil si darilo.",
+  "expired": "Ta nagrada je potekla.",
+  "instructions.phone": "Vpiši tel. številko in pritisni na gumb za prevzem.",
+  "instructions.email": "Vpiši e-poštni naslov in pritisni na gumb za prevzem.",
+  "instructions.lightning": "Prijavi se s svojo Lightning denarnico za prevzem.",
+  "expiresIn": "Poteče v {{expiry}}",
+  "claim": "Prevzemi"
+}

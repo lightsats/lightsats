@@ -1,0 +1,74 @@
+{
+    "header": {
+        "progress": "Korak {{page}} od {{numPages}}"
+    },
+    "footer": {
+        "nextUp": "Sledi"
+    },
+    "claimed": {
+        "title": "Lepo opravljeno 👍",
+        "subtitle": "Uspešno si prevzel nagrado",
+        "description": "Tvoja nagrada je pripravljena. Če je ne dvigneš pred potekom, se bo vrnila uporabniku {{tipperName}}.",
+        "getStarted": "Pa začnimo s tvojim Bitcoin potovanjem!",
+        "footer": {
+            "text": "Začni",
+            "cta": "Kaj je Bitcoin?"
+        }
+    },
+    "bitcoin": {
+        "needAWallet": "Za prevzem Bitcoin sredstev boš potreboval Bitcoin denarnico. Izvedi več v naslednjem koraku.",
+        "footer": {
+            "text": "Nadaljuj",
+            "cta": "Namesti denarnico"
+        },
+        "digitalCash": {
+            "title": "Bitcoin je digitalna gotovina",
+            "description": "Bitcoin je digitalna valuta, ki jo lahko pošlješ napre brez uporabe banke ali posrednika. Podobno, kakor z gotovino kupiš časopis na kiosku."
+        },
+        "anytimeAnywhere": {
+            "title": "Kadarkoli in kjerkoli",
+            "description": "Bitcoin se tudi med vikendom ne ustavi. Vse kar potrebuješ je računalnik ali mobilnik. Uporabljaš ga lahko kjerkoli po svetu."
+        },
+        "beYourOwnBank": {
+            "title": "Bodi sam svoja banka",
+            "description": "Prevzemi nadzor nad svojim denarjem z Bitcoinom. V slovo Pomahaj reševanju bank z davkoplačevalskim denarjem in frakcijskemu bančništvu. In pozabi na nadležne obrazce in vprašanja - z Bitcoinom lahko posluješ hitro in z lahkoto."
+        },
+        "deflationary": {
+            "title": "Bitcoin je deflacijski",
+            "description": "Bitcoin ti omogoča popoln nadzor nad svojim denarjem in te ščiti pred nepoštenim ravnanjem centralnih bank. S fiksno količino denarja v obtoku predstavlja stabilno alternativo preostalim valutam."
+        },
+        "freedom": {
+            "title": "Bitcoin je svoboda",
+            "description": "Nasprotje Bitcoina je digitalna valuta centralnih bank oz. CBDC. S takšno valuto se lahko vladujoča organizacija odloča, kako ti bo dovolila uporabiti prislužen denar, ali pa ga celo zasegla, če ga ne boš porabil dovolj kmalu."
+        },
+        "absoluteScarcity": {
+            "title": "Absolutna redkost",
+            "description": "Bitcoin je edina valuta, ki ima preverljivo, fiksno in končno količino. Za razliko od zlata, je Bitcoin omejen na 21 milijonov enot, kar ga postavlja na prvo mesto med redkimi dobrinami."
+        },
+        "bitcoinNotCrypto": {
+            "title": "Bitcoin ni kripto",
+            "description": "Bitcoin nima ekipe za marketing, ustanoviteljev ali vlagateljev s predhodno zalogo. Ustanovljen je bil na pošten način, brez predhodne razdelitve zaloge. Drugi najboljši ne obstaja."
+        },
+        "renewableEnergy": {
+            "title": "Za obnovljive vire energije",
+            "description": "Bitcoin rudarji uporabljajo elektriko za zagotavljanje varnosti Bitcoin omrežja. Poceni elektrika iz obnovljivih virov daje prednost rudarjem, ki prispevajo k stabilizaciji električnega omrežja."
+        }
+    },
+    "wallet": {
+        "needAWallet": "Za prevzem bitcoina potrebuješ Bitcoin denarnico.",
+        "selfCustody": "Skrbništvo bitcoina je podobno skrbništvu ključev svojega doma. Če razpolagaš s ključi, imaš neposreden dostop do svoje lastnine, drugi pa za dostop potrebujejo tvoje dovoljenje.",
+        "footer": {
+            "text": "Nadaljuj",
+            "cta": "Dvigni"
+        }
+    },
+    "congratulations": {
+        "title": "Uspelo ti je! 🎉",
+        "subtitle": "Si novi lastnik/-ca majhnega delca bitcoina.",
+        "quote": "Govori se, da kdor za darilo prejme bitcoin, mora biti nekaj posebnega.",
+        "footer": {
+            "text": "Nadaljuj",
+            "cta": "Uporabi Bitcoin"
+        }
+    }
+}

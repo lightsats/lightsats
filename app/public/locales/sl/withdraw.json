@@ -1,0 +1,6 @@
+{
+  "title": "Pripravljen za dvig?",
+  "withdrawing": "Dvig v postopku...",
+  "lnurlInstructions": "Klikni, skeniraj ali skopiraj spodnjo povezavo v svojo Bitcoin denarnico za dvig.",
+  "withdrawAvailableBalance": "Dvigni {{availableBalance}} satsov v svojo denarnico"
+}
