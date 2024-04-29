@@ -27,16 +27,4 @@ export const tip: Item[] = [
     link: "https://lgt.st/tippin.me",
     lightsatsRecommended: false,
   },
-  {
-    category: "tip",
-    image: "lncash.png",
-    languageCodes: [getLanguageCode("English")],
-    platforms: ["web"],
-    placeholderDataUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/AHtG13hB1gAAqgAAowCyhfC7ivOsgO0AALEA3sP///L/+9z/AACyAKS0/Vtt30Fh2QAApaNmGtJWYQUuAAAAAElFTkSuQmCC",
-    name: "ln.cash",
-    slogan: "Send and receive bitcoin on ln.cash",
-    link: "https://lgt.st/lncash",
-    lightsatsRecommended: false,
-  },
 ];
