@@ -388,7 +388,7 @@ export const wallets: Wallet[] = [
   obw,
   blink,
   lifpay,
-  mutiny,
+  // mutiny,
   zeus,
   zebedee,
   blixt,
