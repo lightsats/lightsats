@@ -384,7 +384,7 @@ export const wallets: Wallet[] = [
   breez,
   albyLBE,
   phoenix,
-  lntips,
+  // lntips,
   obw,
   blink,
   lifpay,
