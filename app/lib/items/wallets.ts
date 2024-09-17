@@ -133,7 +133,7 @@ const breez: Wallet = {
   platforms: ["mobile"],
 };*/
 
-const alby: Wallet = {
+const albyLBE: Wallet = {
   id: "alby",
   features: [
     "lnurl-auth",
@@ -148,7 +148,7 @@ const alby: Wallet = {
   image: "alby.png",
   placeholderDataUrl:
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAP0lEQVR4nAE0AMv/APX09re0qbOuo/j4+gD4+PcfFAAXBQDz8/MA9/j8QDscQz0e6+zuAP///+3t7Ovq6v///1l5IlUqU4AsAAAAAElFTkSuQmCC",
-  name: "Alby Wallet",
+  name: "Alby Lightning Browser Extension",
   slogan: "Lightning buzz for your Browser!",
   languageCodes: [
     getLanguageCode("English"),
@@ -156,6 +156,35 @@ const alby: Wallet = {
     getLanguageCode("Portuguese"),
   ],
   platforms: ["desktop"],
+};
+const albyGo: Wallet = {
+  id: "alby-go",
+  features: ["non-custodial", "lightning address"],
+  category: "wallets",
+  minBalance: 0,
+  link: "https://lgt.st/alby-go",
+  image: "alby-go.png",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAPUlEQVR4nGPg4raVFk7SVcpjZTBjUJbM+P/h/8FNRzjZwhikhOP+//j/5PJVcYEIBmYGE34eHxmxUAFBBwCmVhAbFz9ikQAAAABJRU5ErkJggg==",
+  name: "Alby Go",
+  slogan: "The easiest mobile app to use bitcoin on the Go!",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile"],
+};
+
+const bitkit: Wallet = {
+  id: "bitkit",
+  features: ["non-custodial"],
+  category: "wallets",
+  minBalance: 3000,
+  link: "https://lgt.st/bitkit",
+  image: "bitkit.png",
+  placeholderDataUrl:
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAANklEQVR4nGOYw8DQwcAQw8AwlwHMCmFg+PP7VzIDA0MoA0MWA0Oujlg5AwPDbAaGSAaGJjADAB2ZCkSwVcR7AAAAAElFTkSuQmCC",
+  name: "Bitkit",
+  slogan: "Change your wallet. Change the world",
+  languageCodes: [getLanguageCode("English")],
+  platforms: ["mobile"],
 };
 const phoenix: Wallet = {
   id: "phoenix",
@@ -353,7 +382,7 @@ export const wallets: Wallet[] = [
   // blue,
   muun,
   breez,
-  alby,
+  albyLBE,
   phoenix,
   lntips,
   obw,
@@ -366,4 +395,6 @@ export const wallets: Wallet[] = [
   strike,
   cashapp,
   pouch,
+  bitkit,
+  albyGo,
 ];
