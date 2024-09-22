@@ -1,0 +1,68 @@
+# fly.toml app configuration file generated for lightsats-prod-db on 2023-10-17T11:32:05+07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "lightsats-db"
+kill_signal = "SIGTERM"
+kill_timeout = 300
+processes = []
+services = []
+primary_region = 'sin'
+
+[build]
+image = 'registry-1.docker.io/flyio/postgres:14.6@sha256:3c25db96357a78e827ca7dbbf4963089bdfcd48fb05a40cd82cfff5c61fb7710'
+
+[checks]
+  [checks.pg]
+    grace_period = "30s"
+    headers = []
+    interval = "15s"
+    method = "get"
+    path = "/flycheck/pg"
+    port = 5500
+    protocol = "http"
+    restart_limit = 0
+    timeout = "10s"
+    tls_skip_verify = false
+    type = "http"
+  [checks.role]
+    grace_period = "30s"
+    headers = []
+    interval = "15s"
+    method = "get"
+    path = "/flycheck/role"
+    port = 5500
+    protocol = "http"
+    restart_limit = 0
+    timeout = "10s"
+    tls_skip_verify = false
+    type = "http"
+  [checks.vm]
+    grace_period = "1s"
+    headers = []
+    interval = "1m"
+    method = "get"
+    path = "/flycheck/vm"
+    port = 5500
+    protocol = "http"
+    restart_limit = 0
+    timeout = "10s"
+    tls_skip_verify = false
+    type = "http"
+
+[env]
+
+[experimental]
+  auto_rollback = false
+  enable_consul = true
+  private_network = true
+
+[metrics]
+  path = "/metrics"
+  port = 9187
+
+[[mounts]]
+  destination = "/data"
+  encrypted = false
+  source = "pg_data"
