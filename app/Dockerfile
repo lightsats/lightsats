@@ -2,7 +2,7 @@
 # See https://github.com/prisma/prisma/issues/14073
 #FROM node:16-alpine AS builder
 #FROM node:16-alpine3.16 AS builder
-FROM node:20-alpine AS builder
+FROM node:20-bullseye-slim AS builder
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -15,8 +15,6 @@ RUN yarn install --frozen-lockfile --ignore-engines
 # RUN npm ci
 
 ENV NEXT_TELEMETRY_DISABLED 1
-
-RUN yarn prisma generate
 
 RUN --mount=type=secret,id=DATABASE_URL \
     DATABASE_URL="$(cat /run/secrets/DATABASE_URL)" \
@@ -46,7 +44,7 @@ RUN --mount=type=secret,id=DATABASE_URL \
 # See https://github.com/prisma/prisma/issues/14073
 #FROM node:16-alpine AS runner
 #FROM node:16-alpine3.16 AS runner
-FROM node:20-alpine AS runner
+FROM node:20-bullseye-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
