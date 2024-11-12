@@ -16,6 +16,8 @@ RUN yarn install --frozen-lockfile --ignore-engines
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
+RUN yarn prisma generate
+
 RUN --mount=type=secret,id=DATABASE_URL \
     DATABASE_URL="$(cat /run/secrets/DATABASE_URL)" \
     yarn db:migrate:deploy
