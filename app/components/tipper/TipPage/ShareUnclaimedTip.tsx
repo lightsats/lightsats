@@ -1,3 +1,4 @@
+import { webln } from "@getalby/sdk";
 import {
   ArrowTopRightOnSquareIcon,
   ClipboardDocumentIcon,
@@ -16,7 +17,6 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 import { Tip } from "@prisma/client";
-import { webln } from "alby-js-sdk";
 import { Icon } from "components/Icon";
 import { LightningQRCode } from "components/LightningQRCode";
 import { NextLink } from "components/NextLink";

@@ -1,3 +1,4 @@
+import { webln } from "@getalby/sdk";
 import { ClipboardDocumentIcon, WalletIcon } from "@heroicons/react/24/solid";
 import {
   Button,
@@ -10,7 +11,6 @@ import {
   Text,
 } from "@nextui-org/react";
 import { WithdrawalFlow } from "@prisma/client";
-import { webln } from "alby-js-sdk";
 import { Alert } from "components/Alert";
 import { FlexBox } from "components/FlexBox";
 import { HomeButton } from "components/HomeButton";

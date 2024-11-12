@@ -255,6 +255,19 @@
   dependencies:
     tslib "2.4.0"
 
+"@getalby/lightning-tools@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@getalby/lightning-tools/-/lightning-tools-5.1.0.tgz#85fae6c6501e59e3fc1ae836e365a35df00bab41"
+  integrity sha512-KhLnKu6hboNYxVmmegRi06ufW3J0o/5gZ5vMe4e94tKC1o8glN/fDn1fTL4hRIqgZjfzvDPPmV1A3YUkNtQttA==
+
+"@getalby/sdk@^3.7.1":
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/@getalby/sdk/-/sdk-3.7.1.tgz#b4560bfbfad8cac243b18cfdefccbbd643473574"
+  integrity sha512-fn/JrnH7NvD4Hu9REXQ8TLQVPN/BYnv0QcCO7L5M6gQg2Clndoj7JHn7CY/fX5BQq7d9jvfujeNrXgBJkEklnw==
+  dependencies:
+    eventemitter3 "^5.0.1"
+    nostr-tools "^1.17.0"
+
 "@heroicons/react@^2.0.12":
   version "2.0.12"
   resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.12.tgz#7e5a16c82512f89a30266dd36f8b8465b3e3e216"
@@ -443,6 +456,11 @@
     "@react-types/overlays" "3.6.2"
     "@react-types/shared" "3.14.0"
     "@stitches/react" "1.2.8"
+
+"@noble/ciphers@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@noble/ciphers/-/ciphers-0.2.0.tgz#a12cda60f3cf1ab5d7c77068c3711d2366649ed7"
+  integrity sha512-6YBxJDAapHSdd3bLDv6x2wRPwq4QFMUaB3HvljNBUTThDd12eSm7/3F+2lnfzx2jvM+S6Nsy0jEt9QbPqSwqRw==
 
 "@noble/curves@1.1.0", "@noble/curves@~1.1.0":
   version "1.1.0"
@@ -1620,24 +1638,6 @@ ajv@^6.10.0, ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-alby-js-sdk@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/alby-js-sdk/-/alby-js-sdk-2.1.2.tgz#fc822832eb68f8dd08067d84924fc2bb8d9f74fd"
-  integrity sha512-dl3sKcfH14kZ3vPokSWp7u64hJx2WoKXA0PejKh+yiVC3bNkS2Os3NPB9bvX0Tlgcqsse4b8b0t1iQknHxOTQg==
-  dependencies:
-    crypto-js "^4.1.1"
-    nostr-tools "^1.13.1"
-
-alby-tools@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/alby-tools/-/alby-tools-2.2.0.tgz#44c2ccde41922e1e603043d14bef957f78db586b"
-  integrity sha512-E5UHrd5QnHDuipKw01YGsYlbhTkJ/YhC1EfiOCrSGPb2Yz6VNbmdrnIMY+MsKT/8JybLAU/6tFzCxTdFT1Pp1A==
-  dependencies:
-    "@webbtc/webln-types" "^1.0.10"
-    cross-fetch "^3.1.5"
-    crypto-js "^4.1.1"
-    light-bolt11-decoder "^3.0.0"
-
 ansi-colors@^4.1.1:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/ansi-colors/-/ansi-colors-4.1.3.tgz#37611340eb2243e70cc604cad35d63270d48781b"
@@ -2323,13 +2323,6 @@ create-require@^1.1.0:
   resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
 
-cross-fetch@^3.1.5:
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
-  integrity sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==
-  dependencies:
-    node-fetch "2.6.7"
-
 cross-spawn@^7.0.2, cross-spawn@^7.0.3:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.3.tgz#f73a85b9d5d41d045551c177e2882d4ac85728a6"
@@ -2338,11 +2331,6 @@ cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
-
-crypto-js@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.1.1.tgz#9e485bcf03521041bd85844786b83fb7619736cf"
-  integrity sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==
 
 css-select@^4.3.0:
   version "4.3.0"
@@ -2992,6 +2980,11 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
+
+eventemitter3@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-5.0.1.tgz#53f5ffd0a492ac800721bb42c66b841de96423c4"
+  integrity sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==
 
 expand-template@^2.0.3:
   version "2.0.3"
@@ -3904,13 +3897,6 @@ lie@3.1.1:
   dependencies:
     immediate "~3.0.5"
 
-light-bolt11-decoder@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/light-bolt11-decoder/-/light-bolt11-decoder-3.0.0.tgz#f644576120426c9ef65621bde254f11016055044"
-  integrity sha512-AKvOigD2pmC8ktnn2TIqdJu0K0qk6ukUmTvHwF3JNkm8uWCqt18Ijn33A/a7gaRZ4PghJ59X+8+MXrzLKdBTmQ==
-  dependencies:
-    "@scure/base" "1.1.1"
-
 lightning-backends@1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/lightning-backends/-/lightning-backends-1.5.1.tgz#40059e085d5ac789df386f44bc56b9639867c5dd"
@@ -4664,11 +4650,12 @@ normalize-path@^3.0.0, normalize-path@~3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==
 
-nostr-tools@^1.13.1:
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/nostr-tools/-/nostr-tools-1.13.1.tgz#191298d85a977cc50790e1c1d1cb83b86d3a9656"
-  integrity sha512-DTwpbxTH1/ar+afWd4gmVdpHH8CF290kdaxi00Llra88SHE6e38XuyzlRABVTcrBaceLMnoDdHmV3x16MoEFJg==
+nostr-tools@^1.17.0:
+  version "1.17.0"
+  resolved "https://registry.yarnpkg.com/nostr-tools/-/nostr-tools-1.17.0.tgz#b6f62e32fedfd9e68ec0a7ce57f74c44fc768e8c"
+  integrity sha512-LZmR8GEWKZeElbFV5Xte75dOeE9EFUW/QLI1Ncn3JKn0kFddDKEfBbFN8Mu4TMs+L4HR/WTPha2l+PPuRnJcMw==
   dependencies:
+    "@noble/ciphers" "0.2.0"
     "@noble/curves" "1.1.0"
     "@noble/hashes" "1.3.1"
     "@scure/base" "1.1.1"
