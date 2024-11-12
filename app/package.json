@@ -94,7 +94,7 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "plaiceholder": "^2.5.0",
     "prettier": "2.7.1",
-    "prisma": "^4.4.0",
+    "prisma": "4.16.2",
     "sharp": "^0.31.2",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
