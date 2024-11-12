@@ -7,12 +7,7 @@ import { limitTips } from "lib/utils";
 import { getWithdrawableTipsQuery } from "lib/withdrawal";
 import { withErrorMessage } from "lib/withErrorMessage";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as crypto from "node:crypto"; // required in node.js < 20
 import { ErrorResponse } from "types/ErrorResponse";
-if (!global.crypto) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (global as any).crypto = crypto;
-}
 
 export default async function handler(
   req: NextApiRequest,
