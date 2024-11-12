@@ -8,7 +8,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY . .
 
-RUN yarn install --frozen-lockfile
+#RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --ignore-engines
 
 # If using npm with a `package-lock.json` comment out above and use below instead
 # RUN npm ci
