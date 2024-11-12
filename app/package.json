@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "tsc -noEmit && next lint && yarn prettier:check",
     "db:start": "sudo service postgresql start",
-    "docker:start": "docker-compose up",
+    "docker:start": "docker compose up",
     "db:generate:local": "dotenv -e .env.local -- yarn prisma generate",
     "db:push:local": "cli-confirm \"Do you really want to do a push?\" && dotenv -e .env.local -- yarn prisma db push",
     "db:migrate:local": "dotenv -e .env.local -- prisma migrate dev",
