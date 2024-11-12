@@ -1,5 +1,5 @@
+import { LightningAddress } from "@getalby/lightning-tools";
 import { WithdrawalFlow, WithdrawalMethod } from "@prisma/client";
-import { LightningAddress } from "alby-tools";
 import { StatusCodes } from "http-status-codes";
 import { payWithdrawalInvoice } from "lib/payWithdrawalInvoice";
 import prisma from "lib/prismadb";
