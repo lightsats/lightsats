@@ -1,1 +1,162 @@
-
+{
+  "SELF_CLAIMED": {
+    "title": "Diklaim",
+    "description": "Kamu sudah klaim tip pertamamu."
+  },
+  "BECAME_TIPPER": {
+    "title": "Pemberi Tip",
+    "description": "Kamu sekarang jadi pemberi tip di Lightsats."
+  },
+  "LINKED_EMAIL": {
+    "title": "Email",
+    "description": "Kamu sekarang bisa login dan terima notifikasi lewat email."
+  },
+  "LINKED_WALLET": {
+    "title": "Dompet",
+    "description": "Kamu sekarang bisa login lewat dompet Lightning."
+  },
+  "SET_NAME": {
+    "title": "Nama",
+    "description": "Kamu nggak anonim lagi."
+  },
+  "SET_AVATAR_URL": {
+    "title": "Avatar",
+    "description": "Sekarang ada foto untuk namamu. Keren!"
+  },
+  "SET_LIGHTNING_ADDRESS": {
+    "title": "Alamat Lightning",
+    "description": "Kamu sekarang bisa dapat tip langsung dari pengguna Lightsats lainnya."
+  },
+  "CREATED_TIP": {
+    "title": "Tip Dibuat",
+    "description": "Kamu membuat tip pertamamu."
+  },
+  "FUNDED_TIP": {
+    "title": "Tip Didanai",
+    "description": "Kamu mendanai tip pertamamu."
+  },
+  "TIP_CLAIMED": {
+    "title": "Tip Diklaim",
+    "description": "Tip pertamamu sudah diklaim."
+  },
+  "TIP_WITHDRAWN": {
+    "title": "Tip Ditarik",
+    "description": "Seseorang sudah menarik sats-nya!"
+  },
+  "WEBLN_WITHDRAWN": {
+    "title": "Penarikan WebLN",
+    "description": "WebLN bikin semuanya lebih gampang!"
+  },
+  "MANUAL_WITHDRAWN": {
+    "title": "Penarikan Manual",
+    "description": "Ada cara yang lebih gampang, tapi ini juga bagus untuk belajar!"
+  },
+  "LNURL_WITHDRAWN": {
+    "title": "Penarikan LNURL",
+    "description": "Kamu menariknya ke dompet yang support LNURL. Mantap!"
+  },
+  "EARLY_SUPPORTER": {
+    "title": "Pendukung Awal",
+    "description": "Kamu salah satu yang pertama yang berhasil kasih tip lewat Lightsats!"
+  },
+  "SENT_1K": {
+    "title": "1,000 sats",
+    "description": "Penerima sudah menarik lebih dari seribu sats!"
+  },
+  "SENT_10K": {
+    "title": "10,000 sats",
+    "description": "Penerima sudah menarik lebih dari sepuluh ribu sats!"
+  },
+  "SENT_100K": {
+    "title": "100,000 sats",
+    "description": "Penerima sudah menarik lebih dari seratus ribu sats!"
+  },
+  "SENT_1M": {
+    "title": "1,000,000 sats",
+    "description": "Penerima sudah menarik lebih dari satu juta sats!"
+  },
+  "TOP_10": {
+    "title": "10 Teratas",
+    "description": "Kamu berhasil masuk posisi 10 teratas!"
+  },
+  "TOP_3": {
+    "title": "3 Teratas",
+    "description": "Kamu berhasil masuk posisi 3 teratas!"
+  },
+  "TOP_1": {
+    "title": "Peringkat 1",
+    "description": "Kamu berhasil menduduki peringkat teratas di leaderboard!"
+  },
+  "MOST_WITHDRAWN_TIPS": {
+    "title": "Juara",
+    "description": "Kamu bikin tip paling sukses dibandingkan pemberi tip lainnya di Lightsats."
+  },
+  "PWA": {
+    "title": "Ditambahkan ke Layar Utama",
+    "description": "Kamu tambahkan Lightsats PWA ke layar utamamu. Gunakan LNURL auth untuk login!"
+  },
+  "TIPS_10": {
+    "title": "Kirim 10 Tip",
+    "description": "Kamu mengirimkan 10 tip yang berhasil ditarik penerimanya."
+  },
+  "TIPS_25": {
+    "title": "Kirim 25 Tip",
+    "description": "Kamu mengirimkan 25 tip yang berhasil ditarik penerimanya."
+  },
+  "TIPS_50": {
+    "title": "Kirim 50 Tip",
+    "description": "Kamu mengirimkan 50 tip yang berhasil ditarik penerimanya."
+  },
+  "TIPS_100": {
+    "title": "Kirim 100 Tip",
+    "description": "Kamu mengirimkan 100 tip yang berhasil ditarik penerimanya."
+  },
+  "TIPPED_A_BITCOINER": {
+    "title": "Kasih Tip ke Bitcoiner",
+    "description": "Tip-mu ditarik dengan mode \"Lewati Onboarding.\""
+  },
+  "BULK_TIP_CREATED": {
+    "title": "Tip Massal Dibuat",
+    "description": "Kamu bikin beberapa tip sekaligus."
+  },
+  "BULK_TIP_FUNDED": {
+    "title": "Tip Massal Didanai",
+    "description": "Kamu mendanai semua tip dengan satu invoice!"
+  },
+  "BULK_TIP_CLAIMED": {
+    "title": "Tip Massal Diklaim",
+    "description": "Salah satu tip massalmu sudah diklaim."
+  },
+  "BULK_TIP_WITHDRAWN": {
+    "title": "Tip Massal Ditarik",
+    "description": "Salah satu tip massalmu sudah ditarik."
+  },
+  "BULK_TIP_ALL_WITHDRAWN": {
+    "title": "Semua Tip Massal Ditarik",
+    "description": "Semua tip massal yang kamu buat berhasil ditarik!"
+  },
+  "BULK_TIP_10": {
+    "title": "10 Tip Massal",
+    "description": "Kamu bikin dan mendanai 10 tip massal atau lebih."
+  },
+  "BULK_TIP_25": {
+    "title": "25 Tip Massal",
+    "description": "Kamu bikin dan mendanai 25 tip massal atau lebih."
+  },
+  "BULK_TIP_50": {
+    "title": "50 Tip Massal",
+    "description": "Kamu bikin dan mendanai 50 tip massal atau lebih."
+  },
+  "BULK_TIP_100": {
+    "title": "100 Tip Massal",
+    "description": "Kamu bikin dan mendanai 100 tip massal atau lebih."
+  },
+  "PRINTED_CACARD_TIP_CLAIMED": {
+    "title": "Kartu tip yang dicetak sudah di klaim",
+    "description": "Tip yang anda cetak menjadi kartu telah diklaim!"
+  },
+  "PRINTED_CARD_TIP_WITHDRAWN": {
+    "title": "Penarikan kartu tip yang dicetak",
+    "description": "A tip that you printed onto a card was withdrawn!"
+  }
+}
