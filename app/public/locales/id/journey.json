@@ -1,0 +1,74 @@
+{
+    "header": {
+        "progress": "Langkah {{page}} dari {{numPages}}"
+    },
+    "footer": {
+        "nextUp": "Selanjutnya"
+    },
+    "claimed": {
+        "title": "Kerja bagus 👍",
+        "subtitle": "Kamu berhasil klaim tip-mu",
+        "description": "Tip-mu siap ditarik ke dalam kendalimu. Jika kamu tidak menariknya sebelum kedaluwarsa, tip ini akan dikembalikan ke {{tipperName}}.",
+        "getStarted": "Mari mulai perjalanan Bitcoin-mu!",
+        "footer": {
+            "text": "Mulai perjalananmu",
+            "cta": "Apa itu Bitcoin?"
+        }
+    },
+    "bitcoin": {
+        "needAWallet": "Untuk menarik Bitcoin-mu, kamu butuh dompet Bitcoin terlebih dahulu. Pelajari lebih lanjut di langkah berikutnya.",
+        "footer": {
+            "text": "Lanjutkan",
+            "cta": "Instal dompet"
+        },
+        "digitalCash": {
+            "title": "Bitcoin adalah Uang Digital",
+            "description": "Bitcoin adalah mata uang digital yang memungkinkan kamu mengirim uang langsung ke orang lain tanpa bank atau perantara. Seperti membayar dengan uang tunai di kios koran."
+        },
+        "anytimeAnywhere": {
+            "title": "Kapan Saja, Di Mana Saja",
+            "description": "Bitcoin tidak libur akhir pekan. Kamu hanya butuh komputer atau ponsel untuk memulai. Bitcoin memungkinkan transaksi di mana saja di seluruh dunia."
+        },
+        "beYourOwnBank": {
+            "title": "Jadi Bank untuk Dirimu Sendiri",
+            "description": "Kendalikan uangmu dengan Bitcoin. Ucapkan selamat tinggal pada bailout bank besar dan perbankan cadangan fraksional. Tanpa pertanyaan pribadi atau formulir - dengan Bitcoin, transaksi jadi cepat dan mudah."
+        },
+        "deflationary": {
+            "title": "Bitcoin Deflasi",
+            "description": "Bitcoin memungkinkanmu mengontrol uangmu dan melindunginya dari kebijakan yang tidak adil dan inflasi. Dengan pasokan tetap, ini adalah alternatif stabil untuk mata uang biasa."
+        },
+        "freedom": {
+            "title": "Bitcoin adalah Kebebasan",
+            "description": "Alternatif Bitcoin adalah mata uang digital yang dikendalikan pemerintah, atau CBDC. Dengan ini, pemerintah bisa memutuskan bagaimana dan kapan kamu bisa menghabiskan uangmu, bahkan mengambilnya jika tidak digunakan."
+        },
+        "absoluteScarcity": {
+            "title": "Kelangkaan Absolut",
+            "description": "Bitcoin adalah satu-satunya mata uang dengan pasokan tetap dan terbatas. Tidak seperti emas, yang jumlahnya tidak pasti, Bitcoin hanya ada maksimum 21 juta. Ini menjadikannya aset langka yang terbaik."
+        },
+        "bitcoinNotCrypto": {
+            "title": "Bitcoin Bukan \"Kripto\"",
+            "description": "Bitcoin tidak memiliki tim pemasaran, premine, atau dukungan modal ventura. Bitcoin diluncurkan seadil mungkin tanpa nilai awal dalam dolar. Tidak ada yang bisa menandingi."
+        },
+        "renewableEnergy": {
+            "title": "Mendorong Energi Terbarukan",
+            "description": "Penambang Bitcoin menggunakan listrik untuk bersaing dan mendapatkan bitcoin baru, membantu menjaga jaringan tetap aman. Listrik terbarukan yang murah memberikan keuntungan bagi penambang dan membuat jaringan lebih stabil."
+        }
+    },
+    "wallet": {
+        "needAWallet": "Kamu perlu mengunduh dompet untuk menyimpan Bitcoin-mu sendiri.",
+        "selfCustody": "Menyimpan Bitcoin sendiri seperti menyimpan kunci rumahmu sendiri. Memiliki kunci memberikan akses langsung dan kendali penuh atas properti dan memastikan tidak ada orang lain yang bisa mengaksesnya tanpa izinmu.",
+        "footer": {
+            "text": "Lanjutkan",
+            "cta": "Tarik"
+        }
+    },
+    "congratulations": {
+        "title": "Kamu berhasil! 🎉",
+        "subtitle": "Sekarang kamu adalah pemilik bangga dari pecahan Bitcoin.",
+        "quote": "Ada rumor - mereka yang mendapatkan Bitcoin adalah orang-orang yang sangat istimewa.",
+        "footer": {
+            "text": "Lanjutkan",
+            "cta": "Gunakan Bitcoin"
+        }
+    }
+}

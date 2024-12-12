@@ -1,0 +1,9 @@
+{
+    "welcome": "Selamat Datang",
+    "chooseSignIn": "Pilih cara masuk yang kamu inginkan.",
+    "generatingQrCode": "Sedang membuat kode QR…",
+    "scanQrCode": "Scan kode ini atau salin dan tempel ke dompet Lightning-mu. Atau klik untuk masuk dengan dompet di browser-mu.",
+    "clickToConnect": "Klik untuk terhubung",
+    "use": "Gunakan",
+    "instead": "sebagai gantinya"
+}

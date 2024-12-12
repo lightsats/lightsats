@@ -1,0 +1,11 @@
+{
+  "hello": "Halo {{tippeeName}}.",
+  "tipperHasGiftedYou": "{{tipperName}} telah memberikanmu hadiah",
+  "youHaveBeenGifted": "Kamu mendapatkan hadiah",
+  "expired": "Tip ini sudah kedaluwarsa.",
+  "instructions.phone": "Masukkan nomor teleponmu di bawah ini dan tekan tombol untuk klaim dana.",
+  "instructions.email": "Masukkan alamat emailmu di bawah ini dan tekan tombol untuk klaim dana.",
+  "instructions.lightning": "Login dengan dompet Lightning-mu untuk klaim dana.",
+  "expiresIn": "Kedaluwarsa dalam {{expiry}}",
+  "claim": "Klaim dana saya"
+}

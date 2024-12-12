@@ -1,0 +1,18 @@
+{
+  "email": "📧 E-mail",
+  "phone": "📱 Telepon",
+  "lightning": "⚡ Lightning",
+  "loginWithLightning": "Login dengan Lightning",
+  "or": "atau",
+  "copy": "Salin",
+  "copiedToClipboard": "Disalin ke clipboard",
+  "verifyPhoneMessage": "Login Lightsats",
+  "checkEmailTitle": "Cek inbox email",
+  "checkEmailText": "Link ajaib 🪄 telah dikirim ke inbox-mu. Klik untuk konfirmasi alamat e-mail.",
+  "checkSMSTitle": "Cek pesanmu",
+  "checkSMSText": "Link ajaib 🪄 telah dikirim ke ponselmu. Klik untuk konfirmasi nomor telepon.",
+  "createdAgo": "dibuat {{distance}} lalu",
+  "amountInSats": "{{amount}} sats",
+  "openInWallet": "Buka di dompet",
+  "alternativeWaysToSignIn": "Cara lain untuk masuk"
+}
