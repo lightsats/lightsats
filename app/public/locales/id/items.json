@@ -1,0 +1,22 @@
+{
+  "install": "Instal",
+  "open": "Buka",
+  "compatibleWallets": "Dompet yang Kompatibel",
+  "recommendedWallet": "Dompet yang Direkomendasikan",
+  "otherWallets": "Dompet Lainnya",
+  "recommendedItems": "Rekomendasi",
+  "otherItems": "Lainnya",
+  "minBalance": "Saldo minimum {{minBalance}}⚡",
+  "nonCustodial": "non-kustodian",
+  "custodial": "kustodian",
+  "scanToLogin": "Scan untuk masuk",
+  "lightningAddress": "Alamat Lightning",
+  "platforms": {
+    "mobile": "Mobile",
+    "desktop": "Desktop",
+    "web": "Web",
+    "android-only": "Android",
+    "ios-only": "iOS"
+  },
+  "features": "Fitur"
+}
