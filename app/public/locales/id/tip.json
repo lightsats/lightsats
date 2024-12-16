@@ -1,0 +1,10 @@
+{
+    "tippee": {
+        "expired": "Kamu tidak menarik tip ini tepat waktu 😭",
+        "willExpire": "Tip ini akan kedaluwarsa. Cepat klaim sekarang! ✌️"
+    },
+    "tipper": {
+        "expired": "Penerima tidak menarik tip-mu tepat waktu. Tip ini kedaluwarsa {{distance}} yang lalu 😭",
+        "willExpire": "Penerima akan mendapatkan pengingat sesekali untuk klaim dan menarik tip mereka sebelum kedaluwarsa ✌️"
+    }
+}

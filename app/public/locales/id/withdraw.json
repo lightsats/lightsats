@@ -1,0 +1,6 @@
+{
+  "title": "Siap untuk menarik?",
+  "withdrawing": "Sedang menarik...",
+  "lnurlInstructions": "Scan, tap, atau salin link di bawah ini ke dompet Bitcoin-mu untuk menarik dana.",
+  "withdrawAvailableBalance": "Tarik {{availableBalance}} sats ke dompetmu"
+}

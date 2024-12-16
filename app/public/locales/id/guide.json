@@ -1,0 +1,41 @@
+{
+  "title": "Apa yang ingin kamu lakukan dengan Bitcoin-mu?",
+  "spend": {
+    "name": "Belanja 🛒",
+    "description": "Belanja di toko yang menerima Bitcoin, beli gift card, kartu visa prabayar, atau bayar tagihan",
+    "shortDescription": "Belanja di toko yang menerima Bitcoin"
+  },
+  "earn": {
+    "name": "Dapatkan 🤑",
+    "description": "Dapatkan Bitcoin tambahan"
+  },
+  "buy": {
+    "name": "Beli 🌽",
+    "description": "Beli Bitcoin dari bursa terpercaya"
+  },
+  "save": {
+    "name": "Simpan 🏦",
+    "description": "Cara menyimpan Bitcoin-mu dengan aman untuk jangka panjang"
+  },
+  "send": {
+    "name": "Kirim ↗️",
+    "description": "Kirim Bitcoin ke orang tercinta"
+  },
+  "tip": {
+    "name": "Tip 💁🏽‍♀️",
+    "description": "Kirim tip langsung atau ajak pengguna baru dengan Lightsats!"
+  },
+  "donate": {
+    "name": "Donasi 🧡",
+    "description": "Donasikan Bitcoin ke mereka yang membutuhkan"
+  },
+  "learn": {
+    "name": "Belajar 📙",
+    "description": "Pelajari lebih lanjut tentang Bitcoin dan kenapa \"Bitcoin Bisa Memperbaiki Ini\" - Filosofi, Teknik, Ekonomi, Politik, Sejarah...",
+    "shortDescription": "Pelajari lebih lanjut tentang Bitcoin dan Lightning"
+  },
+  "wallets": {
+    "name": "Dompet 👛",
+    "description": "Lihat rekomendasi dompet Lightning"
+  }
+}
