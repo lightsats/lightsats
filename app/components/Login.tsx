@@ -45,6 +45,18 @@ export function Login({
           <Spacer />
         </>
       )}
+      <Text size="small">
+        By authenticating, you agree to our{" "}
+        <a href="/terms" target="_blank">
+          Terms
+        </a>{" "}
+        and{" "}
+        <a href="/privacy" target="_blank">
+          Privacy Policy
+        </a>
+        .
+      </Text>
+      <Spacer y={2} />
       {loginMethod === "phone" && (
         <PhoneSignIn
           callbackUrl={callbackUrl}
