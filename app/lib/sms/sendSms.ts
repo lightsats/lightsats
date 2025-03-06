@@ -11,7 +11,7 @@ export async function sendSms(
   let success = false;
   let usedProvider: string | undefined;
   for (const smsProvider of smsProviders) {
-    success = await smsProvider.sendMessage(to, body);
+    success = await smsProvider.sendMessage(to, body + " Reply STOP to unsubscribe");
     if (success) {
       usedProvider = smsProvider.name;
       console.log("Sent SMS to " + to + " via " + smsProvider.name);
