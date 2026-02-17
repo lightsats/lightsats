@@ -124,6 +124,9 @@ async function handlePostTip(
   if (!process.env.LNBITS_USER_ID) {
     throw new Error("No LNBITS_USER_ID provided");
   }
+  if (process.env.CREATE_TIP_ENABLED !== "true") {
+    throw new Error("Creating tips is currently disabled");
+  }
 
   const createTipRequest = req.body as CreateTipRequest;
   if (
